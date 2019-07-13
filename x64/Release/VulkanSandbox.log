@@ -1,0 +1,7 @@
+﻿  main.cpp
+  Generating code
+  33 of 3400 functions ( 1.0%) were compiled, the rest were copied from previous compilation.
+    9 functions were new in current compilation
+    159 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  VulkanSandbox.vcxproj -> C:\Users\Colin\source\repos\VulkanSandbox\x64\Release\VulkanSandbox.exe
