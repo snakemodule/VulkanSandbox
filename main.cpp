@@ -36,6 +36,9 @@
 #include <assimp/scene.h> // Output data structure
 #include <assimp/postprocess.h> // Post processing flags
 
+#include "AnimationStuff.h"
+#include "Model.h"
+
 const int WIDTH = 800;
 const int HEIGHT = 600;
 
@@ -90,79 +93,6 @@ struct SwapChainSupportDetails {
 	std::vector<VkPresentModeKHR> presentModes;
 };
 
-struct Vertex {
-	glm::vec3 pos;
-	glm::vec3 color;
-	glm::vec2 texCoord;
-	glm::ivec4 boneIndex = { 0,0,0,0 };
-	glm::vec4 animWeight = { 0.0f,0.0f,0.0f,0.0f };
-
-	Vertex(glm::vec3 posVec, glm::vec3 colorvec, glm::vec2 texCoordVec) {
-		pos = posVec;
-		color = colorvec;
-		texCoord = texCoordVec;
-	}
-
-	void AddBoneData(size_t BoneID, float Weight)
-	{
-		for (int i = 0; i < 4; i++) {
-			if (animWeight[i] == 0.0f) {
-				boneIndex[i] = BoneID;
-				animWeight[i] = Weight;
-				return;
-			}
-		}
-
-		// should never get here - more bones than we have space for
-		assert(0);
-	}
-
-	static VkVertexInputBindingDescription getBindingDescription() {
-		VkVertexInputBindingDescription bindingDescription = {};
-		bindingDescription.binding = 0;
-		bindingDescription.stride = sizeof(Vertex);
-		bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
-
-		return bindingDescription;
-	}
-
-	//TODO change vertex info **done?
-	static std::array<VkVertexInputAttributeDescription, 5> getAttributeDescriptions() {
-		std::array<VkVertexInputAttributeDescription, 5> attributeDescriptions = {};
-
-		attributeDescriptions[0].binding = 0;
-		attributeDescriptions[0].location = 0;
-		attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
-		attributeDescriptions[0].offset = offsetof(Vertex, pos);
-
-		attributeDescriptions[1].binding = 0;
-		attributeDescriptions[1].location = 1;
-		attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
-		attributeDescriptions[1].offset = offsetof(Vertex, color);
-
-		attributeDescriptions[2].binding = 0;
-		attributeDescriptions[2].location = 2;
-		attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
-		attributeDescriptions[2].offset = offsetof(Vertex, texCoord);
-
-		attributeDescriptions[3].binding = 0;
-		attributeDescriptions[3].location = 3;
-		attributeDescriptions[3].format = VK_FORMAT_R32G32B32A32_SFLOAT;
-		attributeDescriptions[3].offset = offsetof(Vertex, boneIndex);
-
-		attributeDescriptions[4].binding = 0;
-		attributeDescriptions[4].location = 4;
-		attributeDescriptions[4].format = VK_FORMAT_R32G32B32A32_SFLOAT;
-		attributeDescriptions[4].offset = offsetof(Vertex, animWeight);
-
-		return attributeDescriptions;
-	}
-
-	bool operator==(const Vertex& other) const {
-		return pos == other.pos && color == other.color && texCoord == other.texCoord;
-	}
-};
-
 namespace std {
 	template<> struct hash<Vertex> {
 		size_t operator()(Vertex const& vertex) const {
@@ -171,27 +101,11 @@ namespace std {
 	};
 }
 
-struct Mesh {
-	std::vector<Vertex> vertexBuffer;
-
-	std::vector<unsigned int> indexBuffer;
-
-	Mesh(): vertexBuffer(), indexBuffer() {
-
-	}
-
-};
-
-
-
-
 struct UniformBufferObject {
 	alignas(16) glm::mat4 model;
 	alignas(16) glm::mat4 view;
 	alignas(16) glm::mat4 proj;
 	alignas(16) glm::mat4 boneTransforms[52];
-
-
 };
 
 void indent(int indent) {
@@ -222,12 +136,6 @@ void PrintNode(const aiNode* node, const aiScene* scene, int nrindent) {
 			
 			indent(nrindent);
 			std::cout << "vertexes affected: " << scene->mMeshes[i]->mBones[j]->mNumWeights << "\n";
-			/*for (size_t k = 0; k < scene->mMeshes[i]->mBones[j]->mNumWeights; k++) {
-				indent(nrindent);
-				std::cout << scene->mMeshes[i]->mBones[j]->mWeights[k].mVertexId << std::endl;
-				//indent(nrindent);
-				//std::cout << scene->mMeshes[i]->mBones[j]->mWeights[k].mWeight << std::endl;
-			}*/
 		}
 	}
 
@@ -300,45 +208,8 @@ private:
 	std::vector<VkBuffer> indexBuffer;
 	std::vector<VkDeviceMemory> indexBufferMemory;
 
-	struct BoneInfo
-    {
-        glm::mat4 BoneOffset;
-        glm::mat4 FinalTransformation;        
-
-        BoneInfo()
-        {
-            
-        }
-    };
-
-
-	struct Skeleton{
-		std::vector<uint16_t> hierarchy;
-		std::vector<aiNodeAnim*> animationChannel; //only stores the keys of one animation
-		std::vector<glm::mat4> localTransform; //this isn't even my final form
-		std::vector<glm::mat4> offsetMatrix; 
-		std::vector<glm::mat4> globalTransform;
-		std::vector<glm::mat4> inverseBindPose;
-		std::vector<glm::mat4> finalTransformation; //behold my final form
-	};
-
-	struct Model {
-		std::vector<Mesh> meshes;
-		//std::map<std::string, size_t> boneIndexMap; //key=name, value=bone index
-		std::map<std::string, size_t> jointIndex;
-		std::vector<BoneInfo> bones;
-		Skeleton skeleton;
-	};
-
 	//custom model struct
 	Model* mymodel = nullptr;
-
-	struct BoneAnimationKeys {
-		int BoneId;
-		std::vector<aiQuatKey> rotationKeys;
-		std::vector<aiVectorKey> scaleKeys;
-		std::vector<aiVectorKey> positionKeys;
-	};	
 
 	std::vector<VkBuffer> uniformBuffers;
 	std::vector<VkDeviceMemory> uniformBuffersMemory;
@@ -1337,11 +1208,6 @@ private:
 
 	void loadModel() {
 
-		//Assimp::Importer modelImporter;
-		//Assimp::Importer animationImporter;
-		//const aiScene* modelScene;
-		//const aiScene* animationScene;
-
 		modelScene = modelImporter.ReadFile("jump.fbx",
 			aiProcess_CalcTangentSpace |
 			aiProcess_Triangulate |
@@ -1358,11 +1224,10 @@ private:
 
 		mymodel = new Model;
 
-		auto rootJoint = findRootJoint(modelScene->mRootNode);
-		//buildJointSet(rootJoint, *mymodel);
+		auto rootJoint = AnimationStuff::findRootJoint(modelScene->mRootNode, modelScene);
 		auto totalNumberOfBones = mymodel->jointIndex.size();
 
-		flattenJointHierarchy(rootJoint, *mymodel, 0, -1);
+		AnimationStuff::flattenJointHierarchy(rootJoint, *mymodel, 0, -1, modelScene);
 
 		prepareInverseBindPose(mymodel->skeleton);
 
@@ -1419,36 +1284,6 @@ private:
 				}
 				
 			}
-			//-------------------instead index into the flattened hierarchy ^^^^^^
-
-			/*load bone data
-			for (unsigned int i = 0; i < modelScene->mNumMeshes; i++) {
-				const aiMesh* currentMesh = modelScene->mMeshes[i];
-
-				//read bone data
-				for (size_t j = 0; j < currentMesh->mNumBones; j++)
-				{
-					size_t BoneIndex = 0;
-					std::string BoneName = currentMesh->mBones[j]->mName.C_Str();
-
-					if (mymodel->boneIndexMap.find(BoneName) == mymodel->boneIndexMap.end()) {
-						BoneIndex = mymodel->bones.size();
-						mymodel->bones.emplace_back();
-						mymodel->boneIndexMap[BoneName] = BoneIndex;
-					}
-					else {
-						BoneIndex = mymodel->boneIndexMap[BoneName];
-					}
-
-					mymodel->bones[BoneIndex].BoneOffset = glmMatFromAiMat(currentMesh->mBones[j]->mOffsetMatrix);
-
-					for (size_t k = 0; k < currentMesh->mBones[j]->mNumWeights; k++) {
-						size_t VertexID = currentMesh->mBones[j]->mWeights[k].mVertexId; //TODO figure this out
-						float Weight = currentMesh->mBones[j]->mWeights[k].mWeight;
-						mymodel->meshes[i].vertexBuffer[VertexID].AddBoneData(BoneIndex, Weight);
-					}
-				}
-			}*/
 		}
 	}
 
@@ -1477,86 +1312,11 @@ private:
 		}
 	}
 
-	aiBone* isInMeshBones(aiString name) {
-		for (unsigned int i = 0; i < modelScene->mNumMeshes; i++) {
-			for (size_t j = 0; j < modelScene->mMeshes[i]->mNumBones; j++)
-			{
-				//std::cout << "searching for root..." << std::endl;
-				if (name == modelScene->mMeshes[i]->mBones[j]->mName) {
-					return modelScene->mMeshes[i]->mBones[j];
-				}
-			}
-		}
-		return nullptr;
-	}
+	
 
-	aiNode* findRootJoint(aiNode* node) {
-
-		if (isInMeshBones(node->mName))
-		{
-			if (node->mParent == nullptr || !isInMeshBones(node->mParent->mName))
-			{
-				return node;
-			}
-		}
-		
-		for (size_t i = 0; i < node->mNumChildren; i++)
-		{
-			auto result = findRootJoint(node->mChildren[i]);
-			if ( result )  {
-				return result;
-			}
-		}
-		return nullptr;
-	}
 
 	//only handles the first animation
-	aiNodeAnim* boneIsInAnimation(aiString name) {
-		for (size_t j = 0; j < modelScene->mAnimations[0]->mNumChannels; j++)
-		{
-			if (name == modelScene->mAnimations[0]->mChannels[j]->mNodeName) {
-				return modelScene->mAnimations[0]->mChannels[j];
-			}
-		}
-		return nullptr;
-	}
-
-	int flattenJointHierarchy(aiNode* node, Model& model, int insertIndex, int parentIndex)
-	{	
-		int createdEntry = 0;
-		aiBone* boneExists = isInMeshBones(node->mName);
-		if (boneExists)
-		{
-			model.skeleton.hierarchy.emplace_back(parentIndex);
-
-			aiNodeAnim* animChannelOfBone = boneIsInAnimation(node->mName);
-			if (animChannelOfBone) {
-				model.skeleton.animationChannel.emplace_back(animChannelOfBone);
-			}
-
-			model.skeleton.localTransform.emplace_back(glmMatFromAiMat(node->mTransformation));
-
-			model.skeleton.offsetMatrix.emplace_back(glmMatFromAiMat(boneExists->mOffsetMatrix));
-
-			aiQuaternion q;
-			aiVector3D v;
-			boneExists->mOffsetMatrix.DecomposeNoScaling(q,v);
-
-			model.jointIndex.insert(std::pair<std::string,size_t>(node->mName.C_Str(),insertIndex)); //plan: use this map to set boneindex of vertex
-			createdEntry = 1;
-			parentIndex = insertIndex;
-		}
-			
-
-		// then do the same for each of its children
-		int childCounter = 0;
-		for (unsigned int i = 0; (i < node->mNumChildren); i++)
-		{
-			childCounter += flattenJointHierarchy(node->mChildren[i], model, insertIndex+createdEntry+childCounter, parentIndex);
-		}
-
-		return childCounter + createdEntry; //return number of entries created
-	}
+	
 
 
 	//TODO use new vertexbuffer/indexbuffer
@@ -1616,23 +1376,6 @@ private:
 			vkDestroyBuffer(device, stagingBuffer, nullptr);
 			vkFreeMemory(device, stagingBufferMemory, nullptr);
 		}
-		/*VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
-
-		VkBuffer stagingBuffer;
-		VkDeviceMemory stagingBufferMemory;
-		createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
-
-		void* data;
-		vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
-		memcpy(data, indices.data(), (size_t)bufferSize);
-		vkUnmapMemory(device, stagingBufferMemory);
-
-		createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, indexBuffer, indexBufferMemory);
-
-		copyBuffer(stagingBuffer, indexBuffer, bufferSize);
-
-		vkDestroyBuffer(device, stagingBuffer, nullptr);
-		vkFreeMemory(device, stagingBufferMemory, nullptr);*/
 	}
 
 	void createUniformBuffers() {
@@ -1832,13 +1575,6 @@ private:
 
 			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
 
-			/*VkBuffer vertexBuffers[] = { vertexBuffer };
-			//VkDeviceSize offsets[] = { 0 };
-			//vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffer.data(), offsets);
-			//vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT32);
-			//vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
-			//vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);*/
-
 			//same descriptor for each mesh, yes?
 			vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
 			
@@ -1881,150 +1617,7 @@ private:
 				throw std::runtime_error("failed to create synchronization objects for a frame!");
 			}
 		}
-	}
-
-	glm::mat4 glmMatFromAiMat(aiMatrix4x4 aiMat) {
-		auto t = aiMat;
-		glm::mat4 glmmat; 
-		/*glmmat[0] = {t.a1, t.a2, t.a3, t.a4};
-		glmmat[1] = {t.b1, t.b2, t.b3, t.b4};
-		glmmat[2] = {t.c1, t.c2, t.c3, t.c4};
-		glmmat[3] = {t.d1, t.d2, t.d3, t.d4};*/
-
-		glmmat[0] = { t.a1, t.b1, t.c1, t.d1 };
-		glmmat[1] = { t.a2, t.b2, t.c2, t.d2 };
-		glmmat[2] = { t.a3, t.b3, t.c3, t.d3 };
-		glmmat[3] = { t.a4, t.b4, t.c4, t.d4 };
-
-		
-		/*{ t.a1, t.a2, t.a3, t.a4,
-						   t.b1, t.b2, t.b3, t.b4,
-						   t.c1, t.c2, t.c3, t.c4,
-						   t.d1, t.d2, t.d3, t.d4 }*/
-		return glmmat;
-	}
-
-	unsigned int FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim)
-	{
-		for (unsigned int i = 0; i < pNodeAnim->mNumPositionKeys - 1; i++) {
-			if (AnimationTime < (float)pNodeAnim->mPositionKeys[i + 1].mTime) {
-				return i;
-			}
-		}
-
-		assert(0);
-
-		return 0;
-	}
-
-	unsigned int FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim)
-	{
-		assert(pNodeAnim->mNumRotationKeys > 0);
-
-		for (unsigned int i = 0; i < pNodeAnim->mNumRotationKeys - 1; i++) {
-			if (AnimationTime < (float)pNodeAnim->mRotationKeys[i + 1].mTime) {
-				return i;
-			}
-		}
-
-		assert(0);
-
-		return 0;
-	}
-
-	unsigned int FindScaling(float AnimationTime, const aiNodeAnim* pNodeAnim)
-	{
-		assert(pNodeAnim->mNumScalingKeys > 0);
-
-		for (unsigned int i = 0; i < pNodeAnim->mNumScalingKeys - 1; i++) {
-			if (AnimationTime < (float)pNodeAnim->mScalingKeys[i + 1].mTime) {
-				return i;
-			}
-		}
-
-		assert(0);
-
-		return 0;
-	}
-
-	void CalcInterpolatedPosition(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim)
-	{
-		if (pNodeAnim->mNumPositionKeys == 1) {
-			Out = pNodeAnim->mPositionKeys[0].mValue;
-			return;
-		}
-
-		int PositionIndex = FindPosition(AnimationTime, pNodeAnim);
-		int NextPositionIndex = (PositionIndex + 1);
-		assert(NextPositionIndex < pNodeAnim->mNumPositionKeys);
-		float DeltaTime = (float)(pNodeAnim->mPositionKeys[NextPositionIndex].mTime - pNodeAnim->mPositionKeys[PositionIndex].mTime);
-		float Factor = (AnimationTime - (float)pNodeAnim->mPositionKeys[PositionIndex].mTime) / DeltaTime;
-		assert(Factor >= 0.0f && Factor <= 1.0f);
-		const aiVector3D& Start = pNodeAnim->mPositionKeys[PositionIndex].mValue;
-		const aiVector3D& End = pNodeAnim->mPositionKeys[NextPositionIndex].mValue;
-		aiVector3D Delta = End - Start;
-		Out = Start + Factor * Delta;
-	}
-
-	void CalcInterpolatedRotation(aiQuaternion& Out, float AnimationTime, const aiNodeAnim* pNodeAnim)
-	{
-		// we need at least two values to interpolate...
-		if (pNodeAnim->mNumRotationKeys == 1) {
-			Out = pNodeAnim->mRotationKeys[0].mValue;
-			return;
-		}
-
-		int RotationIndex = FindRotation(AnimationTime, pNodeAnim);
-		int NextRotationIndex = (RotationIndex + 1);
-		assert(NextRotationIndex < pNodeAnim->mNumRotationKeys);
-		float DeltaTime = (float)(pNodeAnim->mRotationKeys[NextRotationIndex].mTime - pNodeAnim->mRotationKeys[RotationIndex].mTime);
-		float Factor = (AnimationTime - (float)pNodeAnim->mRotationKeys[RotationIndex].mTime) / DeltaTime;
-		assert(Factor >= 0.0f && Factor <= 1.0f);
-		const aiQuaternion& StartRotationQ = pNodeAnim->mRotationKeys[RotationIndex].mValue;
-		const aiQuaternion& EndRotationQ = pNodeAnim->mRotationKeys[NextRotationIndex].mValue;
-		aiQuaternion::Interpolate(Out, StartRotationQ, EndRotationQ, Factor);
-		Out = Out.Normalize();
-	}
-
-	void CalcInterpolatedScaling(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim)
-	{
-		if (pNodeAnim->mNumScalingKeys == 1) {
-			Out = pNodeAnim->mScalingKeys[0].mValue;
-			return;
-		}
-
-		int ScalingIndex = FindScaling(AnimationTime, pNodeAnim);
-		int NextScalingIndex = (ScalingIndex + 1);
-		assert(NextScalingIndex < pNodeAnim->mNumScalingKeys);
-		float DeltaTime = (float)(pNodeAnim->mScalingKeys[NextScalingIndex].mTime - pNodeAnim->mScalingKeys[ScalingIndex].mTime);
-		float Factor = (AnimationTime - (float)pNodeAnim->mScalingKeys[ScalingIndex].mTime) / DeltaTime;
-		assert(Factor >= 0.0f && Factor <= 1.0f);
-		const aiVector3D& Start = pNodeAnim->mScalingKeys[ScalingIndex].mValue;
-		const aiVector3D& End = pNodeAnim->mScalingKeys[NextScalingIndex].mValue;
-		aiVector3D Delta = End - Start;
-		Out = Start + Factor * Delta;
-	}
-
-	glm::mat4 makeAnimationMatrix(aiNodeAnim* channel, float AnimationTime) {
-
-		// Interpolate scaling and generate scaling transformation matrix
-		aiVector3D Scaling;
-		CalcInterpolatedScaling(Scaling, AnimationTime, channel);
-		glm::mat4 ScalingM = glm::scale(glm::mat4(1.0f), glm::vec3(Scaling.x, Scaling.y, Scaling.z));
-
-		// Interpolate rotation and generate rotation transformation matrix
-		aiQuaternion RotationQ;
-		CalcInterpolatedRotation(RotationQ, AnimationTime, channel);
-		glm::mat4 RotationM = glm::toMat4(glm::quat(RotationQ.w, RotationQ.x, RotationQ.y, RotationQ.z));
-
-		// Interpolate translation and generate translation transformation matrix
-		aiVector3D Translation;
-		CalcInterpolatedPosition(Translation, AnimationTime, channel);
-		glm::mat4 TranslationM = glm::translate(glm::mat4(1.0f), glm::vec3(Translation.x, Translation.y, Translation.z));
-
-		// Combine the above transformations
-		return TranslationM * RotationM;// *ScalingM;
-	}
+	}	
 
 	void updateUniformBuffer(uint32_t currentImage) {
 
@@ -2041,7 +1634,7 @@ private:
 		Skeleton& s = mymodel->skeleton;
 
 		// the root has no parent
-		s.localTransform[0] = makeAnimationMatrix(s.animationChannel[0], AnimationTime); //local animation transformation
+		s.localTransform[0] = AnimationStuff::makeAnimationMatrix(s.animationChannel[0], AnimationTime); //local animation transformation
 		s.globalTransform[0] = s.localTransform[0];					//for root node local=global
 		s.finalTransformation[0] = s.inverseBindPose[0] * s.globalTransform[0] * s.offsetMatrix[0];
 
@@ -2049,9 +1642,9 @@ private:
 		for (unsigned int i = 1; i < mymodel->jointIndex.size(); ++i)
 		{
 			const uint16_t parentJointIndex = s.hierarchy[i];
-			s.localTransform[i] = makeAnimationMatrix(s.animationChannel[i], AnimationTime); //local animation transformation
+			s.localTransform[i] = AnimationStuff::makeAnimationMatrix(s.animationChannel[i], AnimationTime); //local animation transformation
 			s.globalTransform[i] = s.globalTransform[parentJointIndex] * s.localTransform[i]; //animation transform in space of the parent
-			s.finalTransformation[i] = s.inverseBindPose[i] * s.globalTransform[i] * s.offsetMatrix[i];
+			s.finalTransformation[i] = s.inverseBindPose[1] * s.globalTransform[i] * s.offsetMatrix[i];
 		}
 
 		UniformBufferObject ubo = {};
@@ -2062,10 +1655,7 @@ private:
 		ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 		ubo.proj = glm::perspective(glm::radians(45.0f), swapChainExtent.width / (float)swapChainExtent.height, 0.1f, 10.0f);
 		ubo.proj[1][1] *= -1;
-		//ubo.boneTransforms = mymodel->skeleton.globalTransform.data();
-		//ubo.boneTransforms = std::move(transforms.data());
 		memcpy(ubo.boneTransforms, mymodel->skeleton.finalTransformation.data(), sizeof(glm::mat4)*mymodel->skeleton.finalTransformation.size());
-		//memcpy(ubo.boneTransforms, mymodel->skeleton.globalTransform.data(), sizeof(glm::mat4)*mymodel->skeleton.globalTransform.size());
 
 		void* data;
 		vkMapMemory(device, uniformBuffersMemory[currentImage], 0, sizeof(ubo), 0, &data);
