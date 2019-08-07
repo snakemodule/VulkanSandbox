@@ -11,6 +11,14 @@
 
 #include <assimp/scene.h>
 
+const int MAXIMUM_BONES = 80;
+
+struct Vertex;
+struct Skeleton;
+struct Material;
+struct Mesh;
+struct Model;
+
 struct Vertex {
 	glm::vec3 pos;
 	glm::vec3 color;
@@ -68,7 +76,7 @@ struct Vertex {
 
 		attributeDescriptions[3].binding = 0;
 		attributeDescriptions[3].location = 3;
-		attributeDescriptions[3].format = VK_FORMAT_R32G32B32A32_SFLOAT;
+		attributeDescriptions[3].format = VK_FORMAT_R32G32B32A32_SINT;
 		attributeDescriptions[3].offset = offsetof(Vertex, boneIndex);
 
 		attributeDescriptions[4].binding = 0;
@@ -87,6 +95,8 @@ struct Vertex {
 struct Skeleton {
 	std::vector<uint16_t> hierarchy;
 	std::vector<aiNodeAnim*> animationChannel; //only stores the keys of one animation
+
+	//maybe put these matrices close in memory? take a look at access pattern
 	std::vector<glm::mat4> localTransform; //this isn't even my final form
 	std::vector<glm::mat4> offsetMatrix;
 	std::vector<glm::mat4> globalTransform;
@@ -94,16 +104,25 @@ struct Skeleton {
 	std::vector<glm::mat4> finalTransformation; //behold my final form
 };
 
+struct Material {
+	glm::vec4 ambientColor;
+	glm::vec4 diffuseColor;
+	glm::vec4 specularColor;
+};
+
 struct Mesh {
 	std::vector<Vertex> vertexBuffer;
-
 	std::vector<unsigned int> indexBuffer;
+
+	Material material;
 
 	Mesh() : vertexBuffer(), indexBuffer() {
 
 	}
 
 };
+
+
 
 struct Model {
 	std::vector<Mesh> meshes;

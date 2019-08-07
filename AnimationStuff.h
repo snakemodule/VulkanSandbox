@@ -31,6 +31,8 @@ class AnimationStuff
 
 public:
 
+	static void prepareInverseBindPose(Skeleton& s);
+
 	static glm::mat4 makeAnimationMatrix(aiNodeAnim* channel, float AnimationTime);
 
 	static aiNode* findRootJoint(aiNode* node, const aiScene* scene);

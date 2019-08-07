@@ -2,11 +2,17 @@
 
 #extension GL_ARB_separate_shader_objects : enable
 
+//TODO split UBO for use with multiple models?
 layout(binding = 0) uniform UniformBufferObject {
+	//vec3 lightPosition;
+	//vec4 lightColor;
+	//vec4 specularColor;
+	//vec4 diffuseColor;
+	//vec4 ambientColor;
     mat4 model;
     mat4 view;
     mat4 proj;
-	mat4 boneTransforms[52];
+	mat4 boneTransforms[52]; //TODO set maximum number of bones
 } ubo;
 
 layout(location = 0) in vec3 inPosition;

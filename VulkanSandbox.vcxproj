@@ -175,6 +175,7 @@
     <ClInclude Include="AnimationStuff.h" />
     <ClInclude Include="fbxsdkstuff.h" />
     <ClInclude Include="glfwsetup.h" />
+    <ClInclude Include="Header.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="vulkansetup.h" />
   </ItemGroup>

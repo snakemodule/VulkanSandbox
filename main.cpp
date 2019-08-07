@@ -39,6 +39,8 @@
 #include "AnimationStuff.h"
 #include "Model.h"
 
+#include "Header.h"
+
 const int WIDTH = 800;
 const int HEIGHT = 600;
 
@@ -46,6 +48,7 @@ const std::string MODEL_PATH = "models/chalet.obj";
 const std::string TEXTURE_PATH = "textures/chalet.jpg";
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
+
 
 const std::vector<const char*> validationLayers = {
 	"VK_LAYER_KHRONOS_validation"
@@ -60,6 +63,30 @@ const bool enableValidationLayers = false;
 #else
 const bool enableValidationLayers = true;
 #endif
+
+// Wrapper functions for aligned memory allocation
+// There is currently no standard for this in C++ that works across all platforms and vendors, so we abstract this
+void* alignedAlloc(size_t size, size_t alignment)
+{
+	void *data = nullptr;
+#if defined(_MSC_VER) || defined(__MINGW32__)
+	data = _aligned_malloc(size, alignment);
+#else 
+	int res = posix_memalign(&data, alignment, size);
+	if (res != 0)
+		data = nullptr;
+#endif
+	return data;
+}
+
+void alignedFree(void* data)
+{
+#if	defined(_MSC_VER) || defined(__MINGW32__)
+	_aligned_free(data);
+#else 
+	free(data);
+#endif
+}
 
 VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) {
 	auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
@@ -107,6 +134,23 @@ struct UniformBufferObject {
 	alignas(16) glm::mat4 proj;
 	alignas(16) glm::mat4 boneTransforms[52];
 };
+
+struct ShadingUBO {
+	/*alignas(16) glm::vec3 lightPosition;
+	alignas(16) glm::vec4 lightColor;
+	alignas(16) glm::vec4 specularColor;
+	alignas(16) glm::vec4 diffuseColor;
+	alignas(16) glm::vec4 ambientColor;*/
+	//alignas(256) 
+	glm::vec4 specularColor;
+	//alignas(256) 
+	glm::vec4 diffuseColor;
+	//alignas(256) 
+	glm::vec4 ambientColor;
+};
+
+ShadingUBO* shadingUboData;
+
 
 void indent(int indent) {
 	for (size_t i = 0; i < indent; i++)
@@ -157,6 +201,10 @@ public:
 	}
 
 	~HelloTriangleApplication() {
+		if (shadingUboData)
+		{
+			alignedFree(shadingUboData);
+		}
 		delete(mymodel);
 	}
 
@@ -202,17 +250,23 @@ private:
 	VkImageView textureImageView;
 	VkSampler textureSampler;
 
-	//TODO cleanup all of these
-	std::vector<VkBuffer> vertexBuffers;
-	std::vector<VkDeviceMemory> vertexBufferMemory;
-	std::vector<VkBuffer> indexBuffer;
-	std::vector<VkDeviceMemory> indexBufferMemory;
+	//TODO cleanup all of these? restructure rendering data
+	//std::vector<VkBuffer> vertexBuffers;
+	//std::vector<VkDeviceMemory> vertexBufferMemory;
+	//std::vector<VkBuffer> indexBuffer;
+	//std::vector<VkDeviceMemory> indexBufferMemory;
 
 	//custom model struct
 	Model* mymodel = nullptr;
 
 	std::vector<VkBuffer> uniformBuffers;
 	std::vector<VkDeviceMemory> uniformBuffersMemory;
+
+	std::vector<VkBuffer> shadingUniformBuffers;
+	std::vector<VkDeviceMemory> shadingUniformBuffersMemory;
+
+	std::vector<VkBuffer> transformationgUB;
+	std::vector<VkDeviceMemory> transformationUBMemory;
 
 	VkDescriptorPool descriptorPool;
 	std::vector<VkDescriptorSet> descriptorSets;
@@ -225,6 +279,9 @@ private:
 	size_t currentFrame = 0;
 
 	bool framebufferResized = false;
+
+	size_t dynamicAlignment;
+	size_t dynamicBufferSize;
 
 	void initWindow() {
 		glfwInit();
@@ -308,6 +365,11 @@ private:
 			vkFreeMemory(device, uniformBuffersMemory[i], nullptr);
 		}
 
+		for (size_t i = 0; i < swapChainImages.size(); i++) {
+			vkDestroyBuffer(device, shadingUniformBuffers[i], nullptr);
+			vkFreeMemory(device, shadingUniformBuffersMemory[i], nullptr);
+		}
+
 		vkDestroyDescriptorPool(device, descriptorPool, nullptr);
 	}
 
@@ -322,21 +384,14 @@ private:
 
 		vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
 
-		for (size_t i = 0; i < indexBuffer.size(); i++)
+		for (size_t i = 0; i < drawables.size(); i++)
 		{
-			vkDestroyBuffer(device, indexBuffer[i], nullptr);
-			vkFreeMemory(device, indexBufferMemory[i], nullptr);
-		}
-		//vkDestroyBuffer(device, indexBuffer, nullptr);
-		//vkFreeMemory(device, indexBufferMemory, nullptr);
+			vkDestroyBuffer(device, drawables[i].IndexBuffer, nullptr);
+			vkFreeMemory(device, drawables[i].IndexBufferMemory, nullptr);
 
-		for (size_t i = 0; i < vertexBuffers.size(); i++)
-		{
-			vkDestroyBuffer(device, vertexBuffers[i], nullptr);
-			vkFreeMemory(device, vertexBufferMemory[i], nullptr);
+			vkDestroyBuffer(device, drawables[i].VertexBuffer, nullptr);
+			vkFreeMemory(device, drawables[i].VertexBufferMemory, nullptr);
 		}
-		//vkDestroyBuffer(device, vertexBuffer, nullptr);
-		//vkFreeMemory(device, vertexBufferMemory, nullptr);
 
 		for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
 			vkDestroySemaphore(device, renderFinishedSemaphores[i], nullptr);
@@ -667,7 +722,16 @@ private:
 		samplerLayoutBinding.pImmutableSamplers = nullptr;
 		samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 
-		std::array<VkDescriptorSetLayoutBinding, 2> bindings = { uboLayoutBinding, samplerLayoutBinding };
+		//dynamic
+		VkDescriptorSetLayoutBinding shadingUboLayoutBinding = {};
+		shadingUboLayoutBinding.binding = 2;
+		shadingUboLayoutBinding.descriptorCount = 1;
+		shadingUboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
+		shadingUboLayoutBinding.pImmutableSamplers = nullptr;
+		shadingUboLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+
+		//add dynamic here
+		std::array<VkDescriptorSetLayoutBinding, 3> bindings = { uboLayoutBinding, samplerLayoutBinding, shadingUboLayoutBinding };
 		VkDescriptorSetLayoutCreateInfo layoutInfo = {};
 		layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
 		layoutInfo.bindingCount = static_cast<uint32_t>(bindings.size());
@@ -889,6 +953,8 @@ private:
 	}
 
 	void createTextureImage() {
+
+		//TODO move loading to model loading. get model with textures
 		int texWidth, texHeight, texChannels;
 		stbi_uc* pixels = stbi_load(TEXTURE_PATH.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 		VkDeviceSize imageSize = texWidth * texHeight * 4;
@@ -1214,22 +1280,20 @@ private:
 			aiProcess_JoinIdenticalVertices |
 			aiProcess_SortByPType |
 			aiProcess_ValidateDataStructure);
-		
-		for (size_t j = 0; j < modelScene->mNumMeshes; j++)
-		{
-			std::cout << j << " " << modelScene->mMeshes[j]->mName.C_Str() << std::endl;
-		}
 
-		PrintNode(modelScene->mRootNode, modelScene, 0);
+		//PrintNode(modelScene->mRootNode, modelScene, 0);
 
 		mymodel = new Model;
+
+		//todo maybe use this with alignas(256)?
+		//shadingUboData = new ShadingUBO[2];
 
 		auto rootJoint = AnimationStuff::findRootJoint(modelScene->mRootNode, modelScene);
 		auto totalNumberOfBones = mymodel->jointIndex.size();
 
 		AnimationStuff::flattenJointHierarchy(rootJoint, *mymodel, 0, -1, modelScene);
 
-		prepareInverseBindPose(mymodel->skeleton);
+		AnimationStuff::prepareInverseBindPose(mymodel->skeleton);
 
 		if (modelScene->HasMeshes())
 		{
@@ -1282,103 +1346,162 @@ private:
 						mymodel->meshes[i].vertexBuffer[meshVertexID].AddBoneData(boneHierarchyIndex, Weight);
 					}
 				}
-				
+
+				if (modelScene->HasMaterials())
+				{
+					auto material = modelScene->mMaterials[currentMesh->mMaterialIndex];
+
+					aiColor4D specular;
+					aiColor4D diffuse;
+					aiColor4D ambient;
+					float shine;
+
+					aiGetMaterialColor(material, AI_MATKEY_COLOR_SPECULAR, &specular);
+					aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &diffuse);
+					aiGetMaterialColor(material, AI_MATKEY_COLOR_AMBIENT, &ambient);
+					aiGetMaterialFloat(material, AI_MATKEY_SHININESS, &shine);
+
+					mymodel->meshes[i].material.diffuseColor = { diffuse.r, diffuse.g, diffuse.b, diffuse.a };
+					mymodel->meshes[i].material.ambientColor = { ambient.r, ambient.g , ambient.b ,ambient.a };
+					mymodel->meshes[i].material.specularColor = { specular.r, specular.g, specular.b, specular.a};
+				}
 			}
 		}
+
 	}
-
-
-	void prepareInverseBindPose(Skeleton& s)
-	{
-		s.hierarchy.shrink_to_fit();
-		s.animationChannel.shrink_to_fit();
-		s.localTransform.shrink_to_fit();
-		s.offsetMatrix.shrink_to_fit();
-		s.globalTransform.resize(mymodel->skeleton.hierarchy.size());
-		s.inverseBindPose.resize(mymodel->skeleton.hierarchy.size());
-		s.finalTransformation.resize(mymodel->skeleton.hierarchy.size());
-		
-		
-		// the root has no parent
-		s.globalTransform[0] = s.localTransform[0];
-		s.inverseBindPose[0] = glm::inverse(s.globalTransform[0]);
-
-
-		for (unsigned int i = 1; i < mymodel->jointIndex.size(); ++i)
-		{
-			const uint16_t parentJoint = s.hierarchy[i];
-			s.globalTransform[i] = s.globalTransform[parentJoint]*s.localTransform[i];
-			s.inverseBindPose[i] = glm::inverse(s.globalTransform[i]);
-		}
-	}
-
-	
-
 
 	//only handles the first animation
 	
 
 
-	//TODO use new vertexbuffer/indexbuffer
+	//TODO make function take model argument?
 	void createVertexBuffer() {
 
-		//vertexBuffers.clear();
 		for (size_t i = 0; i < mymodel->meshes.size(); i++)
 		{
+			VkDeviceSize bufferSize = sizeof(Vertex) * mymodel->meshes[i].vertexBuffer.size();
+			VkDeviceSize indexBufferSize = sizeof(unsigned int) * mymodel->meshes[i].indexBuffer.size();
+
+			//------
 			VkBuffer stagingBuffer;
 			VkDeviceMemory stagingBufferMemory;
-			VkDeviceSize bufferSize = sizeof(Vertex) * mymodel->meshes[i].vertexBuffer.size();
 			createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
 
+			VkBuffer stagingIndexBuffer;
+			VkDeviceMemory stagingIndexBufferMemory;
+			createBuffer(indexBufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingIndexBuffer, stagingIndexBufferMemory);
+
+			//------
 			void* data;
 			vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
 			memcpy(data, mymodel->meshes[i].vertexBuffer.data(), (size_t)bufferSize);
 			vkUnmapMemory(device, stagingBufferMemory);
 
 
-			
+			void* indexdata;
+			vkMapMemory(device, stagingIndexBufferMemory, 0, indexBufferSize, 0, &indexdata);
+			memcpy(indexdata, mymodel->meshes[i].indexBuffer.data(), (size_t)indexBufferSize);
+			vkUnmapMemory(device, stagingIndexBufferMemory);
+			//-----
 			VkBuffer newVertexBuffer;
 			VkDeviceMemory newVertexBufferMemory;
 			createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, newVertexBuffer, newVertexBufferMemory);
-			vertexBuffers.push_back(newVertexBuffer);
-			vertexBufferMemory.push_back(newVertexBufferMemory);
 
-			copyBuffer(stagingBuffer, vertexBuffers.back(), bufferSize);
+			VkBuffer newIndexBuffer;
+			VkDeviceMemory newIndexBufferMemory;
+			createBuffer(indexBufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, newIndexBuffer, newIndexBufferMemory);
+			
+			//----
+			drawables.emplace_back();
+			drawables.back().id = drawables.size() - 1;
+			drawables.back().VertexBuffer = newVertexBuffer;
+			drawables.back().IndexBuffer = newIndexBuffer;
+			drawables.back().VertexBufferMemory = newVertexBufferMemory;
+			drawables.back().IndexBufferMemory = newIndexBufferMemory;
+			drawables.back().IndexCount = mymodel->meshes[i].indexBuffer.size();
+			drawables.back().AmbientColor = mymodel->meshes[i].material.ambientColor;
+			drawables.back().DiffuseColor = mymodel->meshes[i].material.diffuseColor;
+			drawables.back().SpecularColor = mymodel->meshes[i].material.specularColor;
 
+
+			//vertexBuffers.push_back(newVertexBuffer);
+			//vertexBufferMemory.push_back(newVertexBufferMemory);
+			
+			//indexBuffer.push_back(newIndexBuffer);
+			//indexBufferMemory.push_back(newIndexBufferMemory);
+			//-----
+
+			copyBuffer(stagingBuffer, drawables.back().VertexBuffer, bufferSize);
+			copyBuffer(stagingIndexBuffer, drawables.back().IndexBuffer, indexBufferSize);
+			//----
 			vkDestroyBuffer(device, stagingBuffer, nullptr);
 			vkFreeMemory(device, stagingBufferMemory, nullptr);
+
+			vkDestroyBuffer(device, stagingIndexBuffer, nullptr);
+			vkFreeMemory(device, stagingIndexBufferMemory, nullptr);
 		}
 		
 	}
 
 	void createIndexBuffer() {
-		for (size_t i = 0; i < mymodel->meshes.size(); i++)
+		/*for (size_t i = 0; i < mymodel->meshes.size(); i++)
 		{
-			VkDeviceSize bufferSize = sizeof(unsigned int) * mymodel->meshes[i].indexBuffer.size();
+			VkDeviceSize indexBufferSize = sizeof(unsigned int) * mymodel->meshes[i].indexBuffer.size();
 
-			VkBuffer stagingBuffer;
-			VkDeviceMemory stagingBufferMemory;
-			createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+			VkBuffer stagingIndexBuffer;
+			VkDeviceMemory stagingIndexBufferMemory;
+			createBuffer(indexBufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingIndexBuffer, stagingIndexBufferMemory);
 
 			void* data;
-			vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
-			memcpy(data, mymodel->meshes[i].indexBuffer.data(), (size_t)bufferSize);
-			vkUnmapMemory(device, stagingBufferMemory);
+			vkMapMemory(device, stagingIndexBufferMemory, 0, indexBufferSize, 0, &data);
+			memcpy(data, mymodel->meshes[i].indexBuffer.data(), (size_t)indexBufferSize);
+			vkUnmapMemory(device, stagingIndexBufferMemory);
 
 			VkBuffer newIndexBuffer;
 			VkDeviceMemory newIndexBufferMemory;
-			createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, newIndexBuffer, newIndexBufferMemory);
+			createBuffer(indexBufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, newIndexBuffer, newIndexBufferMemory);
 			indexBuffer.push_back(newIndexBuffer);
 			indexBufferMemory.push_back(newIndexBufferMemory);
 
-			copyBuffer(stagingBuffer, indexBuffer[i], bufferSize);
+			copyBuffer(stagingIndexBuffer, indexBuffer[i], indexBufferSize);
 
-			vkDestroyBuffer(device, stagingBuffer, nullptr);
-			vkFreeMemory(device, stagingBufferMemory, nullptr);
-		}
+			vkDestroyBuffer(device, stagingIndexBuffer, nullptr);
+			vkFreeMemory(device, stagingIndexBufferMemory, nullptr);
+		}*/
 	}
 
 	void createUniformBuffers() {
+		// Allocate data for the dynamic uniform buffer object
+		// We allocate this manually as the alignment of the offset differs between GPUs
+
+		// Calculate required alignment based on minimum device offset alignment
+		VkPhysicalDeviceProperties physicalDeviceProperties;
+		vkGetPhysicalDeviceProperties(physicalDevice, &physicalDeviceProperties);
+
+		size_t minUboAlignment = physicalDeviceProperties.limits.minUniformBufferOffsetAlignment;
+		dynamicAlignment = sizeof(ShadingUBO);
+		if (minUboAlignment > 0) {
+			dynamicAlignment = (dynamicAlignment + minUboAlignment - 1) & ~(minUboAlignment - 1);
+		}
+
+		dynamicBufferSize = drawables.size() * dynamicAlignment;
+
+		shadingUboData = (ShadingUBO*)alignedAlloc(dynamicBufferSize, dynamicAlignment);
+		assert(shadingUboData);
+
+		for (size_t i = 0; i < drawables.size(); i++)
+		{
+			ShadingUBO* shubo = (ShadingUBO*)(((uint64_t)shadingUboData + (i * dynamicAlignment)));
+			shubo->ambientColor = drawables[i].AmbientColor;
+			shubo->diffuseColor = drawables[i].DiffuseColor;
+			shubo->specularColor = drawables[i].SpecularColor;
+		}
+
+		shadingUniformBuffers.resize(swapChainImages.size());
+		shadingUniformBuffersMemory.resize(swapChainImages.size());
+
+		//------------------------------
+
 		VkDeviceSize bufferSize = sizeof(UniformBufferObject);
 
 		uniformBuffers.resize(swapChainImages.size());
@@ -1386,15 +1509,27 @@ private:
 
 		for (size_t i = 0; i < swapChainImages.size(); i++) {
 			createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
+			createBuffer(dynamicBufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, shadingUniformBuffers[i], shadingUniformBuffersMemory[i]);
+		}
+
+		for (size_t i = 0; i < shadingUniformBuffersMemory.size(); i++)
+		{
+			void* data;
+			vkMapMemory(device, shadingUniformBuffersMemory[i], 0, dynamicBufferSize, 0, &data);
+			memcpy(data, shadingUboData, dynamicBufferSize);
+			vkUnmapMemory(device, shadingUniformBuffersMemory[i]);
 		}
 	}
 
 	void createDescriptorPool() {
-		std::array<VkDescriptorPoolSize, 2> poolSizes = {};
+		//add dynamic
+		std::array<VkDescriptorPoolSize, 3> poolSizes = {};
 		poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 		poolSizes[0].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
 		poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 		poolSizes[1].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
+		poolSizes[2].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
+		poolSizes[2].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
 
 		VkDescriptorPoolCreateInfo poolInfo = {};
 		poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
@@ -1426,12 +1561,21 @@ private:
 			bufferInfo.offset = 0;
 			bufferInfo.range = sizeof(UniformBufferObject);
 
+			VkDescriptorBufferInfo dynamicBufferInfo = {};
+			dynamicBufferInfo.buffer = shadingUniformBuffers[i];
+			dynamicBufferInfo.offset = 0;
+			dynamicBufferInfo.range = dynamicAlignment;
+
+
+
+
 			VkDescriptorImageInfo imageInfo = {};
 			imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 			imageInfo.imageView = textureImageView;
 			imageInfo.sampler = textureSampler;
 
-			std::array<VkWriteDescriptorSet, 2> descriptorWrites = {};
+			//now three descriptor sets
+			std::array<VkWriteDescriptorSet, 3> descriptorWrites = {};
 
 			descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 			descriptorWrites[0].dstSet = descriptorSets[i];
@@ -1448,6 +1592,15 @@ private:
 			descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 			descriptorWrites[1].descriptorCount = 1;
 			descriptorWrites[1].pImageInfo = &imageInfo;
+
+			descriptorWrites[2].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			descriptorWrites[2].dstSet = descriptorSets[i];
+			descriptorWrites[2].dstBinding = 2;
+			descriptorWrites[2].dstArrayElement = 0;
+			//descriptorType must match the type of dstBinding
+			descriptorWrites[2].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
+			descriptorWrites[2].descriptorCount = 1;
+			descriptorWrites[2].pBufferInfo = &dynamicBufferInfo;
 
 			vkUpdateDescriptorSets(device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
 		}
@@ -1574,21 +1727,37 @@ private:
 			vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
 			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
-
-			//same descriptor for each mesh, yes?
-			vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
 			
-			for (size_t j = 0; j < vertexBuffers.size(); j++)
+			/*for (size_t j = 0; j < vertexBuffers.size(); j++)
 			{
-				VkBuffer vert[] = { vertexBuffers[j] };
+				uint32_t offset = j * static_cast<uint32_t>(dynamicAlignment);
+				vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[i], 1, &offset);
+
+				//VkBuffer vert[] = { vertexBuffers[j] };
+				VkBuffer vert[] = { drawables[j].VertexBuffer };
 				VkDeviceSize offsets[] = { 0 };
 				vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vert, offsets);
 
-				vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer[j], 0, VK_INDEX_TYPE_UINT32);
+				//vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer[j], 0, VK_INDEX_TYPE_UINT32);
+				vkCmdBindIndexBuffer(commandBuffers[i], drawables[j].IndexBuffer, 0, VK_INDEX_TYPE_UINT32);
 
 				vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(mymodel->meshes[j].indexBuffer.size()), 1, 0, 0, 0);
+			}*/
+
+			for (size_t j = 0; j < drawables.size(); j++)
+			{
+				uint32_t offset = j * static_cast<uint32_t>(dynamicAlignment);
+				vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[i], 1, &offset);
+
+				VkBuffer vert[] = { drawables[j].VertexBuffer };
+				VkDeviceSize offsets[] = { 0 };
+				vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vert, offsets);
+
+				//vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer[j], 0, VK_INDEX_TYPE_UINT32);
+				vkCmdBindIndexBuffer(commandBuffers[i], drawables[j].IndexBuffer, 0, VK_INDEX_TYPE_UINT32);
+
+				vkCmdDrawIndexed(commandBuffers[i], drawables[j].IndexCount, 1, 0, 0, 0);
 			}
-			//TODO how does this shit work?
 
 			vkCmdEndRenderPass(commandBuffers[i]);
 
@@ -1625,7 +1794,6 @@ private:
 
 		auto currentTime = std::chrono::high_resolution_clock::now();
 		float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
-
 		float TicksPerSecond = modelScene->mAnimations[0]->mTicksPerSecond != 0 ?
 			modelScene->mAnimations[0]->mTicksPerSecond : 25.0f;
 		float TimeInTicks = time * TicksPerSecond;
@@ -1661,6 +1829,7 @@ private:
 		vkMapMemory(device, uniformBuffersMemory[currentImage], 0, sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, uniformBuffersMemory[currentImage]);
+
 	}
 
 	void drawFrame() {

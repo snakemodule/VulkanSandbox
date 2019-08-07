@@ -216,6 +216,31 @@ glm::mat4 AnimationStuff::glmMatFromAiMat(aiMatrix4x4 t) {
 	return glmmat;
 }
 
+void AnimationStuff::prepareInverseBindPose(Skeleton& s)
+{
+	s.hierarchy.shrink_to_fit();
+	s.animationChannel.shrink_to_fit();
+	s.localTransform.shrink_to_fit();
+	s.offsetMatrix.shrink_to_fit();
+	s.globalTransform.resize(s.hierarchy.size());
+	s.inverseBindPose.resize(s.hierarchy.size());
+	s.finalTransformation.resize(s.hierarchy.size());
+
+
+	// the root has no parent
+	s.globalTransform[0] = s.localTransform[0];
+	s.inverseBindPose[0] = glm::inverse(s.globalTransform[0]);
+
+
+	for (unsigned int i = 1; i < s.hierarchy.size(); ++i)
+	{
+		const uint16_t parentJoint = s.hierarchy[i];
+		s.globalTransform[i] = s.globalTransform[parentJoint] * s.localTransform[i];
+		s.inverseBindPose[i] = glm::inverse(s.globalTransform[i]);
+	}
+}
+
+
 AnimationStuff::AnimationStuff()
 {
 }
