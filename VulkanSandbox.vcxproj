@@ -169,6 +169,7 @@
     <ClCompile Include="fbxsdkstuff.cpp" />
     <ClCompile Include="glfwsetup.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="SbCamera.cpp" />
     <ClCompile Include="vulkansetup.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -177,6 +178,7 @@
     <ClInclude Include="glfwsetup.h" />
     <ClInclude Include="Header.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="SbCamera.h" />
     <ClInclude Include="vulkansetup.h" />
   </ItemGroup>
   <ItemGroup>

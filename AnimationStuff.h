@@ -6,7 +6,7 @@
 #include "Model.h"
 
 /*
-This class should be functions in a namespace instead of class.
+This class should be functions in a namespace instead of class?
 */
 class AnimationStuff
 {

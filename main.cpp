@@ -41,6 +41,8 @@
 
 #include "Header.h"
 
+#include "SbCamera.h"
+
 const int WIDTH = 800;
 const int HEIGHT = 600;
 
@@ -193,6 +195,13 @@ void PrintNode(const aiNode* node, const aiScene* scene, int nrindent) {
 
 class HelloTriangleApplication {
 public:
+
+	HelloTriangleApplication() 
+		:cam(WIDTH,HEIGHT)
+	{
+		
+	}
+
 	void run() {
 		initWindow();
 		initVulkan();
@@ -283,14 +292,25 @@ private:
 	size_t dynamicAlignment;
 	size_t dynamicBufferSize;
 
+	SbCamera cam;
+
+
 	void initWindow() {
 		glfwInit();
 
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
 		window = glfwCreateWindow(WIDTH, HEIGHT, "Vulkan", nullptr, nullptr);
+		glfwSetKeyCallback(window, key_callback);
 		glfwSetWindowUserPointer(window, this);
 		glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
+	}
+
+	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+	{
+		//if (key == GLFW_KEY_E && action == GLFW_PRESS);
+			//activate_airship();
+		std::cout << "basic key callback" << std::endl;
 	}
 
 	static void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
@@ -1816,13 +1836,11 @@ private:
 		}
 
 		UniformBufferObject ubo = {};
-		ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(30.0f), glm::vec3(0.0f, 0.0f, 1.0f)) 
-			* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f))
-			* glm::translate(glm::mat4(1.0f), { 0.0f,-1.0f,0.0f })
-			* glm::scale(glm::mat4(1.0f), { 0.01f,0.01f ,0.01f });
-		ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-		ubo.proj = glm::perspective(glm::radians(45.0f), swapChainExtent.width / (float)swapChainExtent.height, 0.1f, 10.0f);
-		ubo.proj[1][1] *= -1;
+		ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f)) 
+																//* glm::translate(glm::mat4(1.0f), { 0.0f,-1.0f,0.0f })
+			* glm::scale(glm::mat4(1.0f), { 0.01f,0.01f ,0.01f });//* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f))
+		ubo.view = cam.getViewMatrix();
+		ubo.proj = cam.getProjectionMatrix();
 		memcpy(ubo.boneTransforms, mymodel->skeleton.finalTransformation.data(), sizeof(glm::mat4)*mymodel->skeleton.finalTransformation.size());
 
 		void* data;
