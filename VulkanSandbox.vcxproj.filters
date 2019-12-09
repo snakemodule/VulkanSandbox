@@ -36,6 +36,18 @@
     <ClCompile Include="SbCamera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RenderpassSetup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SbDescriptorPool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SbLayout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SbDescriptorSets.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vulkansetup.h">
@@ -59,6 +71,24 @@
     <ClInclude Include="SbCamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="VulkanInitializers.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanHelperFunctions.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="algo.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SbDescriptorPool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SbLayout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SbDescriptorSets.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\shader.frag">
@@ -70,5 +100,22 @@
     <None Include="shaders\compile.bat">
       <Filter>Resource Files\shaders</Filter>
     </None>
+    <None Include="shaders\attachmentread.frag">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\attachmentread.vert">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\attachmentwrite.frag">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\attachmentwrite.vert">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="tasks.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
