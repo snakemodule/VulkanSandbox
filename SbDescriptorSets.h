@@ -10,7 +10,6 @@
 This class holds a number of descriptor sets (DS) that have been allocated from a pool. 
 Each DS has a number of image/bufferinfos used to bind data to a binding in the DS
 */
-
 class SbDescriptorSets
 {	
 public:
@@ -21,19 +20,22 @@ public:
 
 	struct SbImageInfo {
 		VkSampler sampler;
-		VkImageView* pView;
+		VkImageView * pView; //VkImageView* pView;
 		VkImageLayout layout;
 		BindingMode mode;
 	};
 
 	struct SbBufferInfo {
-		VkBuffer* pBuffer;
+		VkBuffer * pBuffer; //VkBuffer* pBuffer;
 		VkDeviceSize offset; 
 		VkDeviceSize range;
 		BindingMode mode;
 	};
 	
-	
+	//public for testing
+	std::map<const uint32_t, VkDescriptorSetLayoutBinding> bindings;
+	std::map<const uint32_t, SbImageInfo> imgInfo;
+	std::map<const uint32_t, SbBufferInfo> bufInfo;
 private:
 	/*
 	struct AllocatedDS{
@@ -42,9 +44,7 @@ private:
 		std::vector<std::pair<const uint32_t, VkDescriptorBufferInfo>> bufferInfo;
 	};
 	*/
-	std::map<const uint32_t, const VkDescriptorSetLayoutBinding> bindings;
-	std::map<const uint32_t, const SbImageInfo> imgInfo;
-	std::map<const uint32_t, const SbBufferInfo> bufInfo;
+	
 	
 
 	//const uint32_t DSCount;

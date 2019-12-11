@@ -1248,32 +1248,42 @@ private:
 	}
 
 	void createDescriptorSetLayout() {
-
-
-
 		//first create attachment write layout
 		{
 			attachmentWriteSubpass.descriptorSets = std::make_unique<SbDescriptorSets>(device, swapChainImages.size());
 			SbDescriptorSets & DS = *attachmentWriteSubpass.descriptorSets.get();
-
+			
 			//create bindings
 			DS.addBufferBinding(
 				vkinit::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, 0), 
-				{ uniformBuffers.data(), 0, sizeof(UniformBufferObject), SbDescriptorSets::eBindingMode_Separate });
-
+				{ 
+					uniformBuffers.data(),
+					0, 
+					sizeof(UniformBufferObject), 
+					SbDescriptorSets::eBindingMode_Separate
+				});
 			DS.addImageBinding(
 				vkinit::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1), 
-				{ textureSampler, &textureImageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, SbDescriptorSets::eBindingMode_Shared });
-
+				{ 
+					textureSampler, 
+					&textureImageView, 
+					VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+					SbDescriptorSets::eBindingMode_Shared 
+				});
 			DS.addBufferBinding(
 				vkinit::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, VK_SHADER_STAGE_FRAGMENT_BIT, 2), 
-				{ shadingUniformBuffers.data(), 0, static_cast<VkDeviceSize>(dynamicAlignment), SbDescriptorSets::eBindingMode_Separate });
-
+				{ 
+					shadingUniformBuffers.data(),
+					0, 
+					static_cast<VkDeviceSize>(dynamicAlignment), 
+					SbDescriptorSets::eBindingMode_Separate 
+				});
+			
 			//with bindings created, create layout
 			DS.createDSLayout();
 			DS.createPipelineLayout();
 
-			//allocate descriptors and update them with
+			//allocate descriptors and update them with resources
 			DS.allocateDescriptorSets(*descriptorPool.get());
 			//DS.updateDescriptors();
 
@@ -1375,34 +1385,36 @@ private:
 				vkUpdateDescriptorSets(device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
 			}
 			*/
+			
 			for (size_t i = 0; i < DS.allocatedDSs.size(); i++) {
+				auto info = DS.bufInfo.find(0)->second;
 				VkDescriptorBufferInfo bufferInfo = {};
-				bufferInfo.buffer = uniformBuffers[i];
+				bufferInfo.buffer = (info.mode == SbDescriptorSets::eBindingMode_Shared) ? info.pBuffer[0] : info.pBuffer[i];//uniformBuffers[i];
 				bufferInfo.offset = 0;
 				bufferInfo.range = sizeof(UniformBufferObject);
 
-				VkDescriptorBufferInfo dynamicBufferInfo = {};
-				dynamicBufferInfo.buffer = shadingUniformBuffers[i];
-				dynamicBufferInfo.offset = 0;
-				dynamicBufferInfo.range = dynamicAlignment;
-
+				auto imginfo = DS.imgInfo.find(1)->second;
 				VkDescriptorImageInfo imageInfo = {};
 				imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-				imageInfo.imageView = textureImageView;
+				imageInfo.imageView = (imginfo.mode == SbDescriptorSets::eBindingMode_Shared) ? imginfo.pView[0] : imginfo.pView[i];//textureImageView;
 				imageInfo.sampler = textureSampler;
 
+				info = DS.bufInfo.find(2)->second;
+				VkDescriptorBufferInfo dynamicBufferInfo = {};
+				dynamicBufferInfo.buffer = (info.mode == SbDescriptorSets::eBindingMode_Shared) ? info.pBuffer[0] : info.pBuffer[i];//shadingUniformBuffers[i];
+				dynamicBufferInfo.offset = 0;
+				dynamicBufferInfo.range = dynamicAlignment;
 
 				//todo get descriptorwrites for this layouy from SbLayout?
 				std::array<VkWriteDescriptorSet, 3> descriptorWrites = {};
 
 				descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-				descriptorWrites[0].dstSet = DS.allocatedDSs[i];// descriptorSets.attachmentWrite[i];
+				descriptorWrites[0].dstSet = DS.allocatedDSs[i];//descriptorSets.attachmentWrite[i];
 				descriptorWrites[0].dstBinding = 0;
 				//descriptorWrites[0].dstArrayElement = 0;
 				descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 				descriptorWrites[0].descriptorCount = 1;
 				descriptorWrites[0].pBufferInfo = &bufferInfo;
-
 
 				descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 				descriptorWrites[1].dstSet = DS.allocatedDSs[i];
@@ -1420,6 +1432,7 @@ private:
 				descriptorWrites[2].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
 				descriptorWrites[2].descriptorCount = 1;
 				descriptorWrites[2].pBufferInfo = &dynamicBufferInfo;
+				
 				/*
 				descriptorWrites[0] = vks::initializers::writeDescriptorSet(attachmentWriteSubpass.allocatedDSs[i],
 					bindings[0].descriptorType, bindings[0].binding, &bufferInfo);
@@ -1433,7 +1446,6 @@ private:
 
 				vkUpdateDescriptorSets(device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
 			}
-
 		}
 
 		//now create attachment read layout
@@ -1452,7 +1464,7 @@ private:
 			DS.createPipelineLayout();
 
 			DS.allocateDescriptorSets(*descriptorPool.get());
-			//DS.updateDescriptors(); dsupdatetest
+			//DS.updateDescriptors(); 
 
 			/*
 			layout.addBinding(vkinit::descriptorSetLayoutBinding(
@@ -1542,20 +1554,19 @@ private:
 			}
 			*/
 			//dsupdatetest
+			
 			for (auto i = 0; i < DS.allocatedDSs.size(); i++) {
-
-
+				auto imginfo = DS.imgInfo.find(0)->second;
 				VkDescriptorImageInfo colorImageInfo = {};
 				colorImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-				colorImageInfo.imageView = attachmentSets[eSetIndex_Color].view[i];
+				colorImageInfo.imageView = (imginfo.mode == SbDescriptorSets::eBindingMode_Shared) ? imginfo.pView[0] : imginfo.pView[i];//attachmentSets[eSetIndex_Color].view[i];
 				colorImageInfo.sampler = VK_NULL_HANDLE;
-
+				
+				imginfo = DS.imgInfo.find(1)->second;
 				VkDescriptorImageInfo depthImageInfo = {};
 				depthImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-				depthImageInfo.imageView = attachmentSets[eSetIndex_Depth].view[i];
+				depthImageInfo.imageView = (imginfo.mode == SbDescriptorSets::eBindingMode_Shared) ? imginfo.pView[0] : imginfo.pView[i]; //attachmentSets[eSetIndex_Depth].view[i];
 				depthImageInfo.sampler = VK_NULL_HANDLE;
-
-
 
 				std::array<VkWriteDescriptorSet, 2> descriptorWrites = {};
 
@@ -1575,6 +1586,7 @@ private:
 
 				vkUpdateDescriptorSets(device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
 			}
+			
 
 		}
 	}
