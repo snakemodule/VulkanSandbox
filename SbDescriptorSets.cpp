@@ -69,48 +69,55 @@ void SbDescriptorSets::updateDescriptors()
 		vkUpdateDescriptorSets(device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
 	}
 	*/
-	
 
 	for (size_t i = 0; i < allocatedDSs.size(); i++)
 	{
 		std::vector<VkWriteDescriptorSet> descriptorWrites(bindings.size());
+		std::vector<VkDescriptorBufferInfo> bufferInfos(bufInfo.size());
+		std::vector<VkDescriptorImageInfo> imageInfos(imgInfo.size());
 
-		std::vector<VkDescriptorBufferInfo> bufferInfo;
-		std::vector<VkDescriptorImageInfo> imageInfo;
-		VkImageView view;
-		VkBuffer buffer;
-		for (auto& p : bindings) {
-			auto bindingIndex = p.first;
-			bufferInfo.clear();
-			imageInfo.clear();
-			if (imgInfo.find(bindingIndex) != imgInfo.end())
-			{
-				auto & info = imgInfo.find(bindingIndex)->second;
-				view = (info.mode == eBindingMode_Shared) ? info.pView[0] : info.pView[i];
-				imageInfo.push_back({ info.sampler, view, info.layout });
-				descriptorWrites[p.second.binding] = vks::initializers::writeDescriptorSet(allocatedDSs[i], p.second.descriptorType, bindingIndex, &imageInfo.back());
-			}
-			if (bufInfo.find(bindingIndex) != bufInfo.end())
-			{
+		int infoInsertCounter = 0;
+		for (auto& pair : imgInfo) {
+			SbImageInfo & info = pair.second;
+			int bindingIndex = pair.first;
+			auto binding = bindings.find(bindingIndex)->second;
+			
+			VkDescriptorImageInfo imageInfo = {};
+			imageInfo.imageLayout = info.layout;// VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			imageInfo.imageView = (info.mode == SbDescriptorSets::eBindingMode_Shared) ? info.pView[0] : info.pView[i];//textureImageView;
+			imageInfo.sampler = info.sampler;// textureSampler;
+			imageInfos[infoInsertCounter] = imageInfo;
 
-				auto & info = bufInfo.find(bindingIndex)->second;
-				buffer = (info.mode == eBindingMode_Shared) ? info.pBuffer[0] : info.pBuffer[i];
-				bufferInfo.push_back({ buffer, info.offset, info.range });
-				descriptorWrites[p.second.binding] = 
-				vks::initializers::writeDescriptorSet(allocatedDSs[i], p.second.descriptorType, bindingIndex, &bufferInfo.back());
-				/*
-				{
-					descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-					descriptorWrites[1].dstSet = allocatedDSs[i];
-					descriptorWrites[1].dstBinding = bindingIndex;
-					//descriptorWrites[1].dstArrayElement = 0;
-					descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-					descriptorWrites[1].descriptorCount = 1;
-					descriptorWrites[1].pImageInfo = //&imageInfo;
-				};
-				*/
-			}
+			descriptorWrites[bindingIndex].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			descriptorWrites[bindingIndex].dstSet = allocatedDSs[i];
+			descriptorWrites[bindingIndex].dstBinding = binding.binding;
+			descriptorWrites[bindingIndex].descriptorType = binding.descriptorType;//VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			descriptorWrites[bindingIndex].descriptorCount = 1;
+			descriptorWrites[bindingIndex].pImageInfo = &imageInfos[infoInsertCounter];
+			++infoInsertCounter;
 		}
+
+		infoInsertCounter = 0;
+		for (auto& pair : bufInfo) {
+			SbBufferInfo & info = pair.second;
+			int bindingIndex = pair.first;
+			auto binding = bindings.find(bindingIndex)->second;
+
+			VkDescriptorBufferInfo bufferInfo = {};
+			bufferInfo.buffer = (info.mode == SbDescriptorSets::eBindingMode_Shared) ? info.pBuffer[0] : info.pBuffer[i];//uniformBuffers[i];
+			bufferInfo.offset = info.offset;
+			bufferInfo.range = info.range;
+			bufferInfos[infoInsertCounter] = bufferInfo;
+
+			descriptorWrites[binding.binding].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			descriptorWrites[binding.binding].dstSet = allocatedDSs[i];//descriptorSets.attachmentWrite[i];
+			descriptorWrites[binding.binding].dstBinding = binding.binding;//0;
+			descriptorWrites[binding.binding].descriptorType = binding.descriptorType;// VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+			descriptorWrites[binding.binding].descriptorCount = 1;
+			descriptorWrites[binding.binding].pBufferInfo = &bufferInfos[infoInsertCounter];//&bufferInfo;
+			++infoInsertCounter;
+		}
+		
 		vkUpdateDescriptorSets(device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
 	}
 
@@ -168,8 +175,8 @@ std::vector<VkDescriptorPoolSize> SbDescriptorSets::getRequiredPoolSizesForBindi
 std::vector<VkDescriptorSetLayoutBinding> SbDescriptorSets::bindingsAsVector()
 {
 	std::vector<VkDescriptorSetLayoutBinding> resultVector;
-	for (auto item : bindings) {
-		auto & binding = item.second;
+	for (auto pair : bindings) {
+		auto & binding = pair.second;
 		resultVector.push_back(binding);
 	}
 	return resultVector;
