@@ -9,7 +9,7 @@ namespace vks
 {
 	namespace helper
 	{
-		VkShaderModule loadShader(const char *fileName, VkDevice device)
+		inline VkShaderModule loadShader(const char *fileName, VkDevice device)
 		{
 			std::ifstream is(fileName, std::ios::binary | std::ios::in | std::ios::ate);
 
@@ -42,7 +42,7 @@ namespace vks
 			}
 		}
 
-		VkPipelineShaderStageCreateInfo loadShader(std::string fileName, VkShaderStageFlagBits stage, VkDevice device)
+		inline VkPipelineShaderStageCreateInfo loadShader(std::string fileName, VkShaderStageFlagBits stage, VkDevice device)
 		{
 			VkPipelineShaderStageCreateInfo shaderStage = {};
 			shaderStage.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -51,6 +51,26 @@ namespace vks
 			shaderStage.pName = "main"; // todo : make param
 			assert(shaderStage.module != VK_NULL_HANDLE);
 			return shaderStage;
+		}
+
+		inline VkImageView createImageView(VkDevice device, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels) {
+			VkImageViewCreateInfo viewInfo = {};
+			viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+			viewInfo.image = image;
+			viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+			viewInfo.format = format;
+			viewInfo.subresourceRange.aspectMask = aspectFlags;
+			viewInfo.subresourceRange.baseMipLevel = 0;
+			viewInfo.subresourceRange.levelCount = mipLevels;
+			viewInfo.subresourceRange.baseArrayLayer = 0;
+			viewInfo.subresourceRange.layerCount = 1;
+
+			VkImageView imageView;
+			if (vkCreateImageView(device, &viewInfo, nullptr, &imageView) != VK_SUCCESS) {
+				throw std::runtime_error("failed to create texture image view!");
+			}
+
+			return imageView;
 		}
 
 	}

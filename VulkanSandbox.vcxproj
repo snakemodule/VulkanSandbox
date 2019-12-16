@@ -169,11 +169,16 @@
     <ClCompile Include="fbxsdkstuff.cpp" />
     <ClCompile Include="glfwsetup.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="RenderpassSetup.cpp" />
+    <ClCompile Include="SbLogicalDevice.cpp" />
+    <ClCompile Include="SbPhysicalDevice.cpp" />
+    <ClCompile Include="SbRenderpassAttachment.cpp" />
     <ClCompile Include="SbCamera.cpp" />
     <ClCompile Include="SbDescriptorPool.cpp" />
     <ClCompile Include="SbDescriptorSets.cpp" />
     <ClCompile Include="SbLayout.cpp" />
+    <ClCompile Include="SbPipeline.cpp" />
+    <ClCompile Include="SbRenderpass.cpp" />
+    <ClCompile Include="SbSwapchain.cpp" />
     <ClCompile Include="vulkansetup.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -182,12 +187,18 @@
     <ClInclude Include="fbxsdkstuff.h" />
     <ClInclude Include="glfwsetup.h" />
     <ClInclude Include="Header.h" />
+    <ClInclude Include="VulkanHelperFunctions.hpp" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="SbLogicalDevice.h" />
+    <ClInclude Include="SbPhysicalDevice.h" />
+    <ClInclude Include="SbRenderpassAttachment.h" />
     <ClInclude Include="SbCamera.h" />
     <ClInclude Include="SbDescriptorPool.h" />
     <ClInclude Include="SbDescriptorSets.h" />
     <ClInclude Include="SbLayout.h" />
-    <ClInclude Include="VulkanHelperFunctions.hpp" />
+    <ClInclude Include="SbPipeline.h" />
+    <ClInclude Include="SbRenderpass.h" />
+    <ClInclude Include="SbSwapchain.h" />
     <ClInclude Include="VulkanInitializers.hpp" />
     <ClInclude Include="vulkansetup.h" />
   </ItemGroup>
@@ -201,6 +212,7 @@
     <None Include="shaders\shader.vert" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="scraps.txt" />
     <Text Include="tasks.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,18 +1,17 @@
-﻿  SbDescriptorSets.cpp
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\sbdescriptorsets.cpp(155): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+﻿  SbSwapchain.cpp
   main.cpp
 c:\users\colin\source\repos\vulkansandbox\vulkansandbox\model.h(41): warning C4267: '=': conversion from 'size_t' to 'T', possible loss of data
           with
           [
               T=glm::i32
           ]
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(2637): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(2642): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(2977): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(3032): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(3035): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1771): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1776): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(2111): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(2166): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(2169): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
 c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.16.27023\include\memory(2538): warning C4267: 'argument': conversion from 'size_t' to 'const uint32_t', possible loss of data
-  c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1253): note: see reference to function template instantiation 'std::unique_ptr<SbDescriptorSets,std::default_delete<_Ty>> std::make_unique<SbDescriptorSets,VkDevice&,unsigned __int64,0>(VkDevice &,unsigned __int64 &&)' being compiled
+  c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(873): note: see reference to function template instantiation 'std::unique_ptr<SbDescriptorSets,std::default_delete<_Ty>> std::make_unique<SbDescriptorSets,VkDevice&,unsigned __int64,0>(VkDevice &,unsigned __int64 &&)' being compiled
           with
           [
               _Ty=SbDescriptorSets
