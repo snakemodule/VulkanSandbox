@@ -179,6 +179,7 @@
     <ClCompile Include="SbPipeline.cpp" />
     <ClCompile Include="SbRenderpass.cpp" />
     <ClCompile Include="SbSwapchain.cpp" />
+    <ClCompile Include="SbVulkanBase.cpp" />
     <ClCompile Include="vulkansetup.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -187,6 +188,7 @@
     <ClInclude Include="fbxsdkstuff.h" />
     <ClInclude Include="glfwsetup.h" />
     <ClInclude Include="Header.h" />
+    <ClInclude Include="SbVulkanBase.h" />
     <ClInclude Include="VulkanHelperFunctions.hpp" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="SbLogicalDevice.h" />
