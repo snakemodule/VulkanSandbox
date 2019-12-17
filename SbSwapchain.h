@@ -23,9 +23,28 @@ public:
 
 	VkSwapchainKHR handle;
 	std::vector<VkImage> swapChainImages;
-	VkFormat swapChainImageFormat;
+	//VkFormat swapChainImageFormat;
 	VkExtent2D swapChainExtent;
 	std::vector<VkImageView> swapChainImageViews;
+	VkAttachmentDescription swapchainAttachmentDescription;
+
+	struct SwapchainAttachment {
+		std::vector<VkImage> image;
+		std::vector<VkDeviceMemory> mem;
+		std::vector<VkImageView> view;
+		//VkFormat format;
+		//VkSampleCountFlagBits samples = VK_SAMPLE_COUNT_1_BIT;
+
+		VkAttachmentDescription description;
+
+		SwapchainAttachment(size_t size)
+			: image(size), mem(size), view(size)
+		{	}
+	};
+
+	enum attachmentIndex { eSetIndex_Color, eSetIndex_Depth, eSetIndex_COUNT, eSetIndex_MAX = eSetIndex_Depth };
+	std::vector<SwapchainAttachment> swapchainAttachmentSets;
+
 	std::vector<VkFramebuffer> swapChainFramebuffers;
 
 	void createSwapChain(VkSurfaceKHR surface, GLFWwindow * window);

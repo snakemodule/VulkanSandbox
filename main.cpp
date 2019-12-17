@@ -264,9 +264,11 @@ private:
 
 	enum
 	{
-		kAttachment_BACK = 0,
-		kAttachment_COLOR = 1,
-		kAttachment_DEPTH = 2
+		kAttachment_BACK,
+		kAttachment_COLOR,
+		kAttachment_DEPTH,
+		kAttachment_COUNT,
+		kAttachment_MAX = kAttachment_DEPTH
 	};
 	enum
 	{
@@ -276,12 +278,13 @@ private:
 
 
 	//todo transition attachments to swapchain?
+	/*
 	struct AttachmentSet {
 		std::vector<VkImage> image;
 		std::vector<VkDeviceMemory> mem;
 		std::vector<VkImageView> view;
-		VkFormat format;
-		VkSampleCountFlagBits samples = VK_SAMPLE_COUNT_1_BIT;
+		//VkFormat format;
+		//VkSampleCountFlagBits samples = VK_SAMPLE_COUNT_1_BIT;
 
 		AttachmentSet(size_t size)
 			: image(size), mem(size), view(size) 
@@ -290,6 +293,7 @@ private:
 
 	enum attachmentIndex { eSetIndex_Color, eSetIndex_Depth, eSetIndex_COUNT, eSetIndex_MAX = eSetIndex_Depth};
 	std::vector<AttachmentSet> attachmentSets;
+	*/
 
 	uint32_t mipLevels;
 	VkImage textureImage;
@@ -365,8 +369,10 @@ private:
 
 		createSwapChain();
 		createAttachmentResources();
+
 		createRenderPass();
 		createFramebuffers();
+
 		createTextureImage();
 		createTextureImageView();
 		createTextureSampler();
@@ -397,12 +403,15 @@ private:
 
 		for (size_t i = 0; i < swapchain->swapChainImages.size(); i++)
 		{
+			//todo
+			/*
 			vkDestroyImageView(logicalDevice->device, attachmentSets[eSetIndex_Color].view[i], nullptr);
 			vkDestroyImageView(logicalDevice->device, attachmentSets[eSetIndex_Depth].view[i], nullptr);
 			vkDestroyImage(logicalDevice->device, attachmentSets[eSetIndex_Color].image[i], nullptr);
 			vkDestroyImage(logicalDevice->device, attachmentSets[eSetIndex_Depth].image[i], nullptr); 
 			vkFreeMemory(logicalDevice->device, attachmentSets[eSetIndex_Color].mem[i], nullptr);
 			vkFreeMemory(logicalDevice->device, attachmentSets[eSetIndex_Depth].mem[i], nullptr);
+			*/
 		}
 
 		/*vkDestroyImageView(device, depthAttachment.view, nullptr);
@@ -530,15 +539,16 @@ private:
 		swapchain = std::make_unique<SbSwapchain>(*physicalDevice, *logicalDevice);
 		swapchain->createSwapChain(vulkanBase->surface, window);
 		swapchain->createImageViews(logicalDevice->device);	
-
-
-
 	}
 	
 	void createRenderPass() {
 		//willems attachments demo
-		std::array<VkAttachmentDescription, 3> attachments{};
+		std::array<VkAttachmentDescription, kAttachment_COUNT> attachments {};
+		attachments[kAttachment_BACK] = swapchain->swapchainAttachmentDescription;
+		attachments[kAttachment_COLOR] = swapchain->swapchainAttachmentSets[SbSwapchain::attachmentIndex::eSetIndex_Color].description;
+		attachments[kAttachment_DEPTH] = swapchain->swapchainAttachmentSets[SbSwapchain::attachmentIndex::eSetIndex_Depth].description;
 
+		/*
 		// Swap chain image color attachment
 		// Will be transitioned to present layout
 		attachments[0].format = swapchain->swapChainImageFormat;
@@ -572,6 +582,7 @@ private:
 		attachments[2].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
 		attachments[2].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 		attachments[2].finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+		*/
 
 		std::array<VkSubpassDescription, 2> subpassDescriptions {};
 
@@ -699,10 +710,20 @@ private:
 
 			DS.addImageBinding(
 				vkinit::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, VK_SHADER_STAGE_FRAGMENT_BIT, 0),
-				{ VK_NULL_HANDLE, attachmentSets[eSetIndex_Color].view.data(), VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, SbDescriptorSets::eBindingMode_Separate });
+				{ 
+					VK_NULL_HANDLE, 
+					swapchain->swapchainAttachmentSets[SbSwapchain::attachmentIndex::eSetIndex_Color].view.data(),
+					VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+					SbDescriptorSets::eBindingMode_Separate 
+				});
 			DS.addImageBinding(
 				vkinit::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, VK_SHADER_STAGE_FRAGMENT_BIT, 1),
-				{VK_NULL_HANDLE, attachmentSets[eSetIndex_Depth].view.data(), VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, SbDescriptorSets::eBindingMode_Separate });
+				{
+					VK_NULL_HANDLE,
+					swapchain->swapchainAttachmentSets[SbSwapchain::attachmentIndex::eSetIndex_Depth].view.data(),
+					VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, 
+					SbDescriptorSets::eBindingMode_Separate 
+				});
 			//VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
 			DS.createDSLayout();
 			DS.createPipelineLayout();
@@ -804,8 +825,8 @@ private:
 		for (size_t i = 0; i < swapchain->swapChainImageViews.size(); i++) {			
 			
 			attachmentViews[kAttachment_BACK] = swapchain->swapChainImageViews[i];
-			attachmentViews[kAttachment_COLOR] = attachmentSets[eSetIndex_Color].view[i]; //attachments[i].color.view;
-			attachmentViews[kAttachment_DEPTH] = attachmentSets[eSetIndex_Depth].view[i];
+			attachmentViews[kAttachment_COLOR] = swapchain->swapchainAttachmentSets[SbSwapchain::attachmentIndex::eSetIndex_Color].view[i]; //attachments[i].color.view;
+			attachmentViews[kAttachment_DEPTH] = swapchain->swapchainAttachmentSets[SbSwapchain::attachmentIndex::eSetIndex_Depth].view[i];
 
 			if (vkCreateFramebuffer(logicalDevice->device, &framebufferCI, nullptr, &swapchain->swapChainFramebuffers[i]) != VK_SUCCESS) {
 				throw std::runtime_error("failed to create framebuffer!");
@@ -827,18 +848,46 @@ private:
 	}
 
 	void createAttachmentResources() {
-		const AttachmentSet as(swapchain->swapChainImages.size());
-		attachmentSets = std::vector<AttachmentSet>(eSetIndex_COUNT, as);
+		const SbSwapchain::SwapchainAttachment as(swapchain->swapChainImages.size());
+		swapchain->swapchainAttachmentSets = 
+			std::vector<SbSwapchain::SwapchainAttachment>(SbSwapchain::attachmentIndex::eSetIndex_COUNT, as);		
+		// Input attachments
+		// These will be written in the first subpass, transitioned to input attachments 
+		// and then read in the secod subpass
 
+		// Color
+		auto & colorAttachment = swapchain->swapchainAttachmentSets[SbSwapchain::attachmentIndex::eSetIndex_Color].description;
+		colorAttachment.format = swapchain->swapchainAttachmentDescription.format;
+		colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+		colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+		colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+		colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+		colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+		colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		colorAttachment.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+		
+		// Depth
+		auto & depthAttachment = swapchain->swapchainAttachmentSets[SbSwapchain::attachmentIndex::eSetIndex_Depth].description;
+		depthAttachment.format = findDepthFormat();
+		depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+		depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+		depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+		depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+		depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+		depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+		
 		for (size_t i = 0; i < swapchain->swapChainImages.size(); i++)
 		{
 			{
-				auto& format = attachmentSets[eSetIndex_Color].format;
-				auto& samples = attachmentSets[eSetIndex_Color].samples;
-				auto& image = attachmentSets[eSetIndex_Color].image[i];
-				auto& memory = attachmentSets[eSetIndex_Color].mem[i];
-				auto& view = attachmentSets[eSetIndex_Color].view[i];
-				format = swapchain->swapChainImageFormat;
+				auto& attachment = swapchain->swapchainAttachmentSets[SbSwapchain::attachmentIndex::eSetIndex_Color];
+				auto& format = attachment.description.format;
+				auto& samples = attachment.description.samples;
+				auto& image = attachment.image[i];
+				auto& memory = attachment.mem[i];
+				auto& view = attachment.view[i];
+				format = swapchain->swapchainAttachmentDescription.format;
 				createImage(swapchain->swapChainExtent.width, swapchain->swapChainExtent.height, 1, samples, format, VK_IMAGE_TILING_OPTIMAL, 
 					VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT, 
 					VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, image, memory);
@@ -846,11 +895,12 @@ private:
 				transitionImageLayout(image, format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, 1);
 			}
 			{
-				auto& format = attachmentSets[eSetIndex_Depth].format;
-				auto& samples = attachmentSets[eSetIndex_Depth].samples;
-				auto& image = attachmentSets[eSetIndex_Depth].image[i];
-				auto& memory = attachmentSets[eSetIndex_Depth].mem[i];
-				auto& view = attachmentSets[eSetIndex_Depth].view[i];
+				auto& attachment = swapchain->swapchainAttachmentSets[SbSwapchain::attachmentIndex::eSetIndex_Depth];
+				auto& format =	attachment.description.format;
+				auto& samples = attachment.description.samples;
+				auto& image =	attachment.image[i];
+				auto& memory =	attachment.mem[i];
+				auto& view =	attachment.view[i];
 				format = findDepthFormat();
 				createImage(swapchain->swapChainExtent.width, swapchain->swapChainExtent.height, 1, samples, format,
 					VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT, 
@@ -859,6 +909,7 @@ private:
 				transitionImageLayout(image, format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, 1);
 			}
 		}
+
 		/*colorAttachment.format = swapChainImageFormat;
 		createImage(swapChainExtent.width, swapChainExtent.height, 1, msaaSamples, colorAttachment.format, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, colorAttachment.image, colorAttachment.mem);
 		colorAttachment.view = createImageView(colorAttachment.image, colorAttachment.format, VK_IMAGE_ASPECT_COLOR_BIT, 1);

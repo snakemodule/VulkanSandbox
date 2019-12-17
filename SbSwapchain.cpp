@@ -65,7 +65,8 @@ void SbSwapchain::createSwapChain(VkSurfaceKHR surface, GLFWwindow* window)
 	swapChainImages.resize(imageCount);
 	vkGetSwapchainImagesKHR(logDevice.device, handle, &imageCount, swapChainImages.data());
 
-	swapChainImageFormat = surfaceFormat.format;
+	//swapChainImageFormat = surfaceFormat.format;
+	swapchainAttachmentDescription.format = surfaceFormat.format;
 	swapChainExtent = extent;
 }
 
@@ -116,9 +117,21 @@ VkExtent2D SbSwapchain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabil
 }
 
 void SbSwapchain::createImageViews(VkDevice device) {
+
+	// Swap chain image color attachment
+	// Will be transitioned to present layout
+	auto & desc = swapchainAttachmentDescription;
+	desc.samples = VK_SAMPLE_COUNT_1_BIT;
+	desc.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+	desc.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+	desc.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+	desc.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+	desc.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	desc.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+
 	swapChainImageViews.resize(swapChainImages.size());
 
 	for (uint32_t i = 0; i < swapChainImages.size(); i++) {
-		swapChainImageViews[i] = vks::helper::createImageView(device, swapChainImages[i], swapChainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1);
+		swapChainImageViews[i] = vks::helper::createImageView(device, swapChainImages[i], desc.format, VK_IMAGE_ASPECT_COLOR_BIT, 1);
 	}
 }
