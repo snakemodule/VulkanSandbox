@@ -808,30 +808,7 @@ private:
 	}
 	
 	void createFramebuffers() {
-		swapchain->swapChainFramebuffers.resize(swapchain->swapChainImageViews.size());
-
-
-		std::array<VkImageView, 3> attachmentViews = {};
-
-		VkFramebufferCreateInfo framebufferCI = {};
-		framebufferCI.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-		framebufferCI.renderPass = renderPass;
-		framebufferCI.attachmentCount = static_cast<uint32_t>(attachmentViews.size());
-		framebufferCI.pAttachments = attachmentViews.data();
-		framebufferCI.width = swapchain->swapChainExtent.width;
-		framebufferCI.height = swapchain->swapChainExtent.height;
-		framebufferCI.layers = 1;
-
-		for (size_t i = 0; i < swapchain->swapChainImageViews.size(); i++) {			
-			
-			attachmentViews[kAttachment_BACK] = swapchain->swapChainImageViews[i];
-			attachmentViews[kAttachment_COLOR] = swapchain->swapchainAttachmentSets[SbSwapchain::attachmentIndex::eSetIndex_Color].view[i]; //attachments[i].color.view;
-			attachmentViews[kAttachment_DEPTH] = swapchain->swapchainAttachmentSets[SbSwapchain::attachmentIndex::eSetIndex_Depth].view[i];
-
-			if (vkCreateFramebuffer(logicalDevice->device, &framebufferCI, nullptr, &swapchain->swapChainFramebuffers[i]) != VK_SUCCESS) {
-				throw std::runtime_error("failed to create framebuffer!");
-			}
-		}
+		swapchain->createFramebuffers(renderPass);
 	}
 
 	void createCommandPool() {
@@ -848,9 +825,7 @@ private:
 	}
 
 	void createAttachmentResources() {
-		const SbSwapchain::SwapchainAttachment as(swapchain->swapChainImages.size());
-		swapchain->swapchainAttachmentSets = 
-			std::vector<SbSwapchain::SwapchainAttachment>(SbSwapchain::attachmentIndex::eSetIndex_COUNT, as);		
+			
 		// Input attachments
 		// These will be written in the first subpass, transitioned to input attachments 
 		// and then read in the secod subpass
@@ -888,7 +863,7 @@ private:
 				auto& memory = attachment.mem[i];
 				auto& view = attachment.view[i];
 				format = swapchain->swapchainAttachmentDescription.format;
-				createImage(swapchain->swapChainExtent.width, swapchain->swapChainExtent.height, 1, samples, format, VK_IMAGE_TILING_OPTIMAL, 
+				createImage(swapchain->swapchainCI.imageExtent.width, swapchain->swapchainCI.imageExtent.height, 1, samples, format, VK_IMAGE_TILING_OPTIMAL,
 					VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT, 
 					VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, image, memory);
 				view = vks::helper::createImageView(logicalDevice->device, image, format, VK_IMAGE_ASPECT_COLOR_BIT, 1);
@@ -902,7 +877,7 @@ private:
 				auto& memory =	attachment.mem[i];
 				auto& view =	attachment.view[i];
 				format = findDepthFormat();
-				createImage(swapchain->swapChainExtent.width, swapchain->swapChainExtent.height, 1, samples, format,
+				createImage(swapchain->swapchainCI.imageExtent.width, swapchain->swapchainCI.imageExtent.height, 1, samples, format,
 					VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT, 
 					VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, image, memory);
 				view = vks::helper::createImageView(logicalDevice->device, image, format, VK_IMAGE_ASPECT_DEPTH_BIT, 1);
@@ -1607,7 +1582,7 @@ private:
 			renderPassInfo.renderPass = renderPass;
 			renderPassInfo.framebuffer = swapchain->swapChainFramebuffers[i];
 			renderPassInfo.renderArea.offset = { 0, 0 };
-			renderPassInfo.renderArea.extent = swapchain->swapChainExtent;
+			renderPassInfo.renderArea.extent = swapchain->swapchainCI.imageExtent;
 
 			//std::array<VkClearValue, 2> clearValues = {};
 			//clearValues[0].color = { 0.0f, 0.0f, 0.0f, 1.0f };
@@ -1623,10 +1598,12 @@ private:
 
 			vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-			VkViewport viewport = vks::initializers::viewport((float)swapchain->swapChainExtent.width, (float)swapchain->swapChainExtent.height, 0.0f, 1.0f);
+			VkViewport viewport = vks::initializers::viewport(
+				(float)swapchain->swapchainCI.imageExtent.width, 
+				(float)swapchain->swapchainCI.imageExtent.height, 0.0f, 1.0f);
 			vkCmdSetViewport(commandBuffers[i], 0, 1, &viewport);
 
-			VkRect2D scissor = vks::initializers::rect2D(swapchain->swapChainExtent, 0, 0);
+			VkRect2D scissor = vks::initializers::rect2D(swapchain->swapchainCI.imageExtent, 0, 0);
 			vkCmdSetScissor(commandBuffers[i], 0, 1, &scissor);
 
 			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, attachmentWriteSubpass.Pipeline);

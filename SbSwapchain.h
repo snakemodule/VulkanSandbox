@@ -21,10 +21,14 @@ public:
 	SbPhysicalDevice & physDevice; 
 	SbLogicalDevice & logDevice;	
 
+
+	VkSwapchainCreateInfoKHR swapchainCI;
 	VkSwapchainKHR handle;
-	std::vector<VkImage> swapChainImages;
+
+	//VkExtent2D swapChainExtent;
+
 	//VkFormat swapChainImageFormat;
-	VkExtent2D swapChainExtent;
+	std::vector<VkImage> swapChainImages;
 	std::vector<VkImageView> swapChainImageViews;
 	VkAttachmentDescription swapchainAttachmentDescription;
 
@@ -57,6 +61,8 @@ public:
 	VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR & capabilities, GLFWwindow * window);
 
 	void createImageViews(VkDevice device);
+
+	void createFramebuffers(VkRenderPass renderpass);
 
 };
 

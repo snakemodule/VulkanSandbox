@@ -57,17 +57,14 @@ void SbSwapchain::createSwapChain(VkSurfaceKHR surface, GLFWwindow* window)
 	createInfo.presentMode = presentMode;
 	createInfo.clipped = VK_TRUE;
 
+	swapchainCI = createInfo;
+
 	if (vkCreateSwapchainKHR(logDevice.device, &createInfo, nullptr, &handle) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create swap chain!");
 	}
 
-	vkGetSwapchainImagesKHR(logDevice.device, handle, &imageCount, nullptr);
-	swapChainImages.resize(imageCount);
-	vkGetSwapchainImagesKHR(logDevice.device, handle, &imageCount, swapChainImages.data());
+	
 
-	//swapChainImageFormat = surfaceFormat.format;
-	swapchainAttachmentDescription.format = surfaceFormat.format;
-	swapChainExtent = extent;
 }
 
 
@@ -118,9 +115,15 @@ VkExtent2D SbSwapchain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabil
 
 void SbSwapchain::createImageViews(VkDevice device) {
 
+	uint32_t imageCount;
+	vkGetSwapchainImagesKHR(logDevice.device, handle, &imageCount, nullptr);
+	swapChainImages.resize(imageCount);
+	vkGetSwapchainImagesKHR(logDevice.device, handle, &imageCount, swapChainImages.data());
+
 	// Swap chain image color attachment
 	// Will be transitioned to present layout
 	auto & desc = swapchainAttachmentDescription;
+	desc.format = swapchainCI.imageFormat;
 	desc.samples = VK_SAMPLE_COUNT_1_BIT;
 	desc.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
 	desc.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -133,5 +136,39 @@ void SbSwapchain::createImageViews(VkDevice device) {
 
 	for (uint32_t i = 0; i < swapChainImages.size(); i++) {
 		swapChainImageViews[i] = vks::helper::createImageView(device, swapChainImages[i], desc.format, VK_IMAGE_ASPECT_COLOR_BIT, 1);
+	}
+
+	const SbSwapchain::SwapchainAttachment as(swapChainImages.size());
+	swapchainAttachmentSets = std::vector<SbSwapchain::SwapchainAttachment>(SbSwapchain::attachmentIndex::eSetIndex_COUNT, as);
+}
+
+void SbSwapchain::createFramebuffers(VkRenderPass renderpass) {
+	swapChainFramebuffers.resize(swapChainImageViews.size());
+
+
+	std::vector<VkImageView> attachmentViews (1+swapchainAttachmentSets.size());
+
+	VkFramebufferCreateInfo framebufferCI = {};
+	framebufferCI.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+	framebufferCI.renderPass = renderpass;
+	framebufferCI.attachmentCount = static_cast<uint32_t>(attachmentViews.size());
+	framebufferCI.pAttachments = attachmentViews.data();
+	framebufferCI.width = swapchainCI.imageExtent.width;
+	framebufferCI.height = swapchainCI.imageExtent.height;
+	framebufferCI.layers = 1;
+
+	for (size_t i = 0; i < swapChainImageViews.size(); i++) {
+
+		attachmentViews[0] = swapChainImageViews[i];
+		for (size_t j = 0; j < swapchainAttachmentSets.size(); j++)
+		{
+			attachmentViews[1+j] = swapchainAttachmentSets[j].view[i];
+		}
+		//attachmentViews[kAttachment_COLOR] = swapchainAttachmentSets[SbSwapchain::attachmentIndex::eSetIndex_Color].view[i]; //attachments[i].color.view;
+		//attachmentViews[kAttachment_DEPTH] = swapchainAttachmentSets[SbSwapchain::attachmentIndex::eSetIndex_Depth].view[i];
+
+		if (vkCreateFramebuffer(logDevice.device, &framebufferCI, nullptr, &swapChainFramebuffers[i]) != VK_SUCCESS) {
+			throw std::runtime_error("failed to create framebuffer!");
+		}
 	}
 }
