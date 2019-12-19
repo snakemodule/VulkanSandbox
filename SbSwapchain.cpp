@@ -125,7 +125,7 @@ void SbSwapchain::createImageViews(VkDevice device) {
 	auto & desc = swapchainAttachmentDescription;
 	desc.format = swapchainCI.imageFormat;
 	desc.samples = VK_SAMPLE_COUNT_1_BIT;
-	desc.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+	desc.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
 	desc.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
 	desc.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
 	desc.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
@@ -172,3 +172,30 @@ void SbSwapchain::createFramebuffers(VkRenderPass renderpass) {
 		}
 	}
 }
+
+/*
+void SbSwapchain::createAttachment(uint32_t attachmentIndex, VkFormat format, 
+	VkSampleCountFlagBits samples, VkImageLayout finalLayout, 
+	VkImageLayout initLayout = VK_IMAGE_LAYOUT_UNDEFINED, 
+	VkAttachmentLoadOp loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR, 
+	VkAttachmentStoreOp storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE, 
+	VkAttachmentLoadOp stencilLoad = VK_ATTACHMENT_LOAD_OP_DONT_CARE, 
+	VkAttachmentStoreOp stencilStore = VK_ATTACHMENT_STORE_OP_DONT_CARE) 
+{
+	for (size_t i = 0; i < swapChainImages.size(); i++)
+	{
+		auto& attachment = swapchainAttachmentSets[SbSwapchain::attachmentIndex::eSetIndex_Color];
+		auto& format = attachment.description.format;
+		auto& samples = attachment.description.samples;
+		auto& image = attachment.image[i];
+		auto& memory = attachment.mem[i];
+		auto& view = attachment.view[i];
+		format = swapchainAttachmentDescription.format;
+		vks::helper::createImage(physDevice.device, logDevice.device, swapchainCI.imageExtent.width, swapchainCI.imageExtent.height, 1, samples, format, VK_IMAGE_TILING_OPTIMAL,
+			VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT,
+			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, image, memory);
+		view = vks::helper::createImageView(logDevice.device, image, format, VK_IMAGE_ASPECT_COLOR_BIT, 1);
+		transitionImageLayout(image, format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, 1);
+	}
+}
+*/

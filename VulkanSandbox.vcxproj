@@ -169,6 +169,7 @@
     <ClCompile Include="fbxsdkstuff.cpp" />
     <ClCompile Include="glfwsetup.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="SbCommandPool.cpp" />
     <ClCompile Include="SbLogicalDevice.cpp" />
     <ClCompile Include="SbPhysicalDevice.cpp" />
     <ClCompile Include="SbRenderpassAttachment.cpp" />
@@ -188,6 +189,7 @@
     <ClInclude Include="fbxsdkstuff.h" />
     <ClInclude Include="glfwsetup.h" />
     <ClInclude Include="Header.h" />
+    <ClInclude Include="SbCommandPool.h" />
     <ClInclude Include="SbVulkanBase.h" />
     <ClInclude Include="VulkanHelperFunctions.hpp" />
     <ClInclude Include="Model.h" />

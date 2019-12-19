@@ -64,5 +64,7 @@ public:
 
 	void createFramebuffers(VkRenderPass renderpass);
 
+	//void createAttachment(uint32_t attachmentIndex, VkFormat format, VkSampleCountFlagBits samples, VkImageLayout finalLayout, VkImageLayout initLayout, VkAttachmentLoadOp loadOp, VkAttachmentStoreOp storeOp, VkAttachmentLoadOp stencilLoad, VkAttachmentStoreOp stencilStore);
+
 };
 

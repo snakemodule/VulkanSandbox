@@ -66,6 +66,9 @@
     <ClCompile Include="SbVulkanBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SbCommandPool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vulkansetup.h">
@@ -126,6 +129,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SbVulkanBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SbCommandPool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
