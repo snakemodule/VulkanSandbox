@@ -1,20 +1,20 @@
-﻿  SbSwapchain.cpp
-  main.cpp
+﻿  main.cpp
 c:\users\colin\source\repos\vulkansandbox\vulkansandbox\model.h(41): warning C4267: '=': conversion from 'size_t' to 'T', possible loss of data
           with
           [
               T=glm::i32
           ]
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1120): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1125): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1305): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1360): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1363): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1089): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1094): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1274): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1329): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1332): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
 c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.16.27023\include\memory(2538): warning C4267: 'argument': conversion from 'size_t' to 'const uint32_t', possible loss of data
-  c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(645): note: see reference to function template instantiation 'std::unique_ptr<SbDescriptorSets,std::default_delete<_Ty>> std::make_unique<SbDescriptorSets,VkDevice&,unsigned __int64,0>(VkDevice &,unsigned __int64 &&)' being compiled
+  c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(614): note: see reference to function template instantiation 'std::unique_ptr<SbDescriptorSets,std::default_delete<_Ty>> std::make_unique<SbDescriptorSets,VkDevice&,unsigned __int64,0>(VkDevice &,unsigned __int64 &&)' being compiled
           with
           [
               _Ty=SbDescriptorSets
           ]
+  SbSwapchain.cpp
   Generating Code...
   VulkanSandbox.vcxproj -> C:\Users\Colin\source\repos\VulkanSandbox\x64\Debug\VulkanSandbox.exe

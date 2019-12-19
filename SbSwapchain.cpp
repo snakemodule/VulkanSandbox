@@ -6,8 +6,8 @@
 
 #include "VulkanHelperFunctions.hpp"
 
-SbSwapchain::SbSwapchain(SbPhysicalDevice & physDevice, SbLogicalDevice & logDevice)
-	: logDevice(logDevice), physDevice(physDevice)
+SbSwapchain::SbSwapchain(SbVulkanBase & base)
+	:physicalDevice(*base.physicalDevice), logicalDevice(*base.logicalDevice), vulkanBase(base)
 {
 }
 
@@ -18,7 +18,7 @@ SbSwapchain::~SbSwapchain()
 
 void SbSwapchain::createSwapChain(VkSurfaceKHR surface, GLFWwindow* window)
 {
-	SwapChainSupportDetails swapChainSupport = physDevice.querySwapChainSupport(physDevice.device, surface);
+	SwapChainSupportDetails swapChainSupport = physicalDevice.querySwapChainSupport(physicalDevice.device, surface);
 
 	VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
 	VkPresentModeKHR presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
@@ -40,7 +40,7 @@ void SbSwapchain::createSwapChain(VkSurfaceKHR surface, GLFWwindow* window)
 	createInfo.imageArrayLayers = 1;
 	createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
-	QueueFamilyIndices indices = physDevice.findQueueFamilies(physDevice.device, surface);
+	QueueFamilyIndices indices = physicalDevice.findQueueFamilies(physicalDevice.device, surface);
 	uint32_t queueFamilyIndices[] = { indices.graphicsFamily.value(), indices.presentFamily.value() };
 
 	if (indices.graphicsFamily != indices.presentFamily) {
@@ -59,7 +59,7 @@ void SbSwapchain::createSwapChain(VkSurfaceKHR surface, GLFWwindow* window)
 
 	swapchainCI = createInfo;
 
-	if (vkCreateSwapchainKHR(logDevice.device, &createInfo, nullptr, &handle) != VK_SUCCESS) {
+	if (vkCreateSwapchainKHR(logicalDevice.device, &createInfo, nullptr, &handle) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create swap chain!");
 	}
 
@@ -116,9 +116,9 @@ VkExtent2D SbSwapchain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabil
 void SbSwapchain::createImageViews(VkDevice device) {
 
 	uint32_t imageCount;
-	vkGetSwapchainImagesKHR(logDevice.device, handle, &imageCount, nullptr);
+	vkGetSwapchainImagesKHR(logicalDevice.device, handle, &imageCount, nullptr);
 	swapChainImages.resize(imageCount);
-	vkGetSwapchainImagesKHR(logDevice.device, handle, &imageCount, swapChainImages.data());
+	vkGetSwapchainImagesKHR(logicalDevice.device, handle, &imageCount, swapChainImages.data());
 
 	// Swap chain image color attachment
 	// Will be transitioned to present layout
@@ -167,13 +167,13 @@ void SbSwapchain::createFramebuffers(VkRenderPass renderpass) {
 		//attachmentViews[kAttachment_COLOR] = swapchainAttachmentSets[SbSwapchain::attachmentIndex::eSetIndex_Color].view[i]; //attachments[i].color.view;
 		//attachmentViews[kAttachment_DEPTH] = swapchainAttachmentSets[SbSwapchain::attachmentIndex::eSetIndex_Depth].view[i];
 
-		if (vkCreateFramebuffer(logDevice.device, &framebufferCI, nullptr, &swapChainFramebuffers[i]) != VK_SUCCESS) {
+		if (vkCreateFramebuffer(logicalDevice.device, &framebufferCI, nullptr, &swapChainFramebuffers[i]) != VK_SUCCESS) {
 			throw std::runtime_error("failed to create framebuffer!");
 		}
 	}
 }
 
-/*
+
 void SbSwapchain::createAttachment(uint32_t attachmentIndex, VkFormat format, 
 	VkSampleCountFlagBits samples, VkImageLayout finalLayout, 
 	VkImageLayout initLayout = VK_IMAGE_LAYOUT_UNDEFINED, 
@@ -184,18 +184,17 @@ void SbSwapchain::createAttachment(uint32_t attachmentIndex, VkFormat format,
 {
 	for (size_t i = 0; i < swapChainImages.size(); i++)
 	{
-		auto& attachment = swapchainAttachmentSets[SbSwapchain::attachmentIndex::eSetIndex_Color];
+		auto& attachment = swapchainAttachmentSets[attachmentIndex];
 		auto& format = attachment.description.format;
 		auto& samples = attachment.description.samples;
 		auto& image = attachment.image[i];
 		auto& memory = attachment.mem[i];
 		auto& view = attachment.view[i];
 		format = swapchainAttachmentDescription.format;
-		vks::helper::createImage(physDevice.device, logDevice.device, swapchainCI.imageExtent.width, swapchainCI.imageExtent.height, 1, samples, format, VK_IMAGE_TILING_OPTIMAL,
+		vulkanBase.createImage(swapchainCI.imageExtent, 1, samples, format, VK_IMAGE_TILING_OPTIMAL,
 			VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT,
 			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, image, memory);
-		view = vks::helper::createImageView(logDevice.device, image, format, VK_IMAGE_ASPECT_COLOR_BIT, 1);
-		transitionImageLayout(image, format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, 1);
+		view = vks::helper::createImageView(logicalDevice.device, image, format, VK_IMAGE_ASPECT_COLOR_BIT, 1);
+		vulkanBase.commandPool->transitionImageLayout(image, format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, 1);
 	}
 }
-*/

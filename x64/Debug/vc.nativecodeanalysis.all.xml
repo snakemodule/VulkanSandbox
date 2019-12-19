@@ -1,0 +1,2142 @@
+﻿<?xml version="1.0" encoding="utf-8"?><DEFECTS><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>952</LINE>
+      <COLUMN>27</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__malloc_mad2</FUNCTION>
+    <DECORATED>?stbi__malloc_mad2@@YAPEAXHHH@Z</DECORATED>
+    <FUNCLINE>949</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>952</LINE>
+      <COLUMN>24</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__malloc_mad2</FUNCTION>
+    <DECORATED>?stbi__malloc_mad2@@YAPEAXHHH@Z</DECORATED>
+    <FUNCLINE>949</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>958</LINE>
+      <COLUMN>29</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__malloc_mad3</FUNCTION>
+    <DECORATED>?stbi__malloc_mad3@@YAPEAXHHHH@Z</DECORATED>
+    <FUNCLINE>955</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>958</LINE>
+      <COLUMN>26</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__malloc_mad3</FUNCTION>
+    <DECORATED>?stbi__malloc_mad3@@YAPEAXHHHH@Z</DECORATED>
+    <FUNCLINE>955</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>958</LINE>
+      <COLUMN>24</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__malloc_mad3</FUNCTION>
+    <DECORATED>?stbi__malloc_mad3@@YAPEAXHHHH@Z</DECORATED>
+    <FUNCLINE>955</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>965</LINE>
+      <COLUMN>31</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__malloc_mad4</FUNCTION>
+    <DECORATED>?stbi__malloc_mad4@@YAPEAXHHHHH@Z</DECORATED>
+    <FUNCLINE>962</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>965</LINE>
+      <COLUMN>28</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__malloc_mad4</FUNCTION>
+    <DECORATED>?stbi__malloc_mad4@@YAPEAXHHHHH@Z</DECORATED>
+    <FUNCLINE>962</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>965</LINE>
+      <COLUMN>26</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__malloc_mad4</FUNCTION>
+    <DECORATED>?stbi__malloc_mad4@@YAPEAXHHHHH@Z</DECORATED>
+    <FUNCLINE>962</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>965</LINE>
+      <COLUMN>24</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__malloc_mad4</FUNCTION>
+    <DECORATED>?stbi__malloc_mad4@@YAPEAXHHHHH@Z</DECORATED>
+    <FUNCLINE>962</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>1071</LINE>
+      <COLUMN>51</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__convert_8_to_16</FUNCTION>
+    <DECORATED>?stbi__convert_8_to_16@@YAPEAGPEAEHHH@Z</DECORATED>
+    <FUNCLINE>1065</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>1090</LINE>
+      <COLUMN>39</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__vertical_flip</FUNCTION>
+    <DECORATED>?stbi__vertical_flip@@YAXPEAXHHH@Z</DECORATED>
+    <FUNCLINE>1081</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>1090</LINE>
+      <COLUMN>33</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__vertical_flip</FUNCTION>
+    <DECORATED>?stbi__vertical_flip@@YAXPEAXHHH@Z</DECORATED>
+    <FUNCLINE>1081</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>1596</LINE>
+      <COLUMN>41</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__convert_format</FUNCTION>
+    <DECORATED>?stbi__convert_format@@YAPEAEPEAEHHII@Z</DECORATED>
+    <FUNCLINE>1581</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>1596</LINE>
+      <COLUMN>37</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__convert_format</FUNCTION>
+    <DECORATED>?stbi__convert_format@@YAPEAEPEAEHHII@Z</DECORATED>
+    <FUNCLINE>1581</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>1597</LINE>
+      <COLUMN>41</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__convert_format</FUNCTION>
+    <DECORATED>?stbi__convert_format@@YAPEAEPEAEHHII@Z</DECORATED>
+    <FUNCLINE>1581</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>1597</LINE>
+      <COLUMN>37</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__convert_format</FUNCTION>
+    <DECORATED>?stbi__convert_format@@YAPEAEPEAEHHII@Z</DECORATED>
+    <FUNCLINE>1581</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>1638</LINE>
+      <COLUMN>57</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__convert_format16</FUNCTION>
+    <DECORATED>?stbi__convert_format16@@YAPEAGPEAGHHII@Z</DECORATED>
+    <FUNCLINE>1630</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>1638</LINE>
+      <COLUMN>53</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__convert_format16</FUNCTION>
+    <DECORATED>?stbi__convert_format16@@YAPEAGPEAGHHII@Z</DECORATED>
+    <FUNCLINE>1630</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>1638</LINE>
+      <COLUMN>49</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__convert_format16</FUNCTION>
+    <DECORATED>?stbi__convert_format16@@YAPEAGPEAGHHII@Z</DECORATED>
+    <FUNCLINE>1630</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>1645</LINE>
+      <COLUMN>40</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__convert_format16</FUNCTION>
+    <DECORATED>?stbi__convert_format16@@YAPEAGPEAGHHII@Z</DECORATED>
+    <FUNCLINE>1630</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>1645</LINE>
+      <COLUMN>36</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__convert_format16</FUNCTION>
+    <DECORATED>?stbi__convert_format16@@YAPEAGPEAGHHII@Z</DECORATED>
+    <FUNCLINE>1630</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>1646</LINE>
+      <COLUMN>40</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__convert_format16</FUNCTION>
+    <DECORATED>?stbi__convert_format16@@YAPEAGPEAGHHII@Z</DECORATED>
+    <FUNCLINE>1630</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>1646</LINE>
+      <COLUMN>36</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__convert_format16</FUNCTION>
+    <DECORATED>?stbi__convert_format16@@YAPEAGPEAGHHII@Z</DECORATED>
+    <FUNCLINE>1630</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>2825</LINE>
+      <COLUMN>55</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__parse_entropy_coded_data</FUNCTION>
+    <DECORATED>?stbi__parse_entropy_coded_data@@YAHPEAUstbi__jpeg@@@Z</DECORATED>
+    <FUNCLINE>2752</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>2856</LINE>
+      <COLUMN>64</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__parse_entropy_coded_data</FUNCTION>
+    <DECORATED>?stbi__parse_entropy_coded_data@@YAHPEAUstbi__jpeg@@@Z</DECORATED>
+    <FUNCLINE>2752</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>2770</LINE>
+      <COLUMN>75</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__parse_entropy_coded_data</FUNCTION>
+    <DECORATED>?stbi__parse_entropy_coded_data@@YAHPEAUstbi__jpeg@@@Z</DECORATED>
+    <FUNCLINE>2752</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>2770</LINE>
+      <COLUMN>73</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__parse_entropy_coded_data</FUNCTION>
+    <DECORATED>?stbi__parse_entropy_coded_data@@YAHPEAUstbi__jpeg@@@Z</DECORATED>
+    <FUNCLINE>2752</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>2770</LINE>
+      <COLUMN>79</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__parse_entropy_coded_data</FUNCTION>
+    <DECORATED>?stbi__parse_entropy_coded_data@@YAHPEAUstbi__jpeg@@@Z</DECORATED>
+    <FUNCLINE>2752</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>2798</LINE>
+      <COLUMN>82</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__parse_entropy_coded_data</FUNCTION>
+    <DECORATED>?stbi__parse_entropy_coded_data@@YAHPEAUstbi__jpeg@@@Z</DECORATED>
+    <FUNCLINE>2752</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>2893</LINE>
+      <COLUMN>55</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__jpeg_finish</FUNCTION>
+    <DECORATED>?stbi__jpeg_finish@@YAXPEAUstbi__jpeg@@@Z</DECORATED>
+    <FUNCLINE>2883</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>2895</LINE>
+      <COLUMN>75</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__jpeg_finish</FUNCTION>
+    <DECORATED>?stbi__jpeg_finish@@YAXPEAUstbi__jpeg@@@Z</DECORATED>
+    <FUNCLINE>2883</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>2895</LINE>
+      <COLUMN>73</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__jpeg_finish</FUNCTION>
+    <DECORATED>?stbi__jpeg_finish@@YAXPEAUstbi__jpeg@@@Z</DECORATED>
+    <FUNCLINE>2883</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>2895</LINE>
+      <COLUMN>79</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__jpeg_finish</FUNCTION>
+    <DECORATED>?stbi__jpeg_finish@@YAXPEAUstbi__jpeg@@@Z</DECORATED>
+    <FUNCLINE>2883</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>3361</LINE>
+      <COLUMN>43</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__resample_row_hv_2_simd</FUNCTION>
+    <DECORATED>?stbi__resample_row_hv_2_simd@@YAPEAEPEAE00HH@Z</DECORATED>
+    <FUNCLINE>3304</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>3784</LINE>
+      <COLUMN>57</COLUMN>
+    </SFA>
+    <DEFECTCODE>6011</DEFECTCODE>
+    <DESCRIPTION>Dereferencing NULL pointer 'y'. </DESCRIPTION>
+    <FUNCTION>load_jpeg_image</FUNCTION>
+    <DECORATED>?load_jpeg_image@@YAPEAEPEAUstbi__jpeg@@PEAH11H@Z</DECORATED>
+    <FUNCLINE>3639</FUNCLINE>
+    <PROBABILITY>1</PROBABILITY>
+    <RANK>4</RANK>
+    <CATEGORY>
+      <RULECATEGORY>mspft</RULECATEGORY>
+    </CATEGORY>
+    <PATH>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3641</LINE>
+        <COLUMN>7</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3641</LINE>
+        <COLUMN>10</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3641</LINE>
+        <COLUMN>20</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3642</LINE>
+        <COLUMN>15</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3645</LINE>
+        <COLUMN>20</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3648</LINE>
+        <COLUMN>7</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3651</LINE>
+        <COLUMN>5</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3653</LINE>
+        <COLUMN>10</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3655</LINE>
+        <COLUMN>33</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3658</LINE>
+        <COLUMN>15</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3662</LINE>
+        <COLUMN>10</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3663</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3663</LINE>
+        <COLUMN>21</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3664</LINE>
+        <COLUMN>15</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3665</LINE>
+        <COLUMN>14</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3667</LINE>
+        <COLUMN>21</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3669</LINE>
+        <COLUMN>12</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3669</LINE>
+        <COLUMN>18</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3692</LINE>
+        <COLUMN>13</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3693</LINE>
+        <COLUMN>10</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3696</LINE>
+        <COLUMN>12</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3696</LINE>
+        <COLUMN>18</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3697</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3698</LINE>
+        <COLUMN>15</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3698</LINE>
+        <COLUMN>21</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3712</LINE>
+        <COLUMN>15</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3755</LINE>
+        <COLUMN>16</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3765</LINE>
+        <COLUMN>40</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3775</LINE>
+        <COLUMN>40</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3782</LINE>
+        <COLUMN>23</COLUMN>
+        <KEYEVENT>
+          <ID>1</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'y' may be NULL</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3783</LINE>
+        <COLUMN>21</COLUMN>
+        <KEYEVENT>
+          <ID>2</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Enter this branch, (assume 'n==1')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3784</LINE>
+        <COLUMN>24</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3784</LINE>
+        <COLUMN>30</COLUMN>
+        <KEYEVENT>
+          <ID>3</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Enter this loop, (assume 'i&lt;z-&gt;s-&gt;img_x')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>3784</LINE>
+        <COLUMN>57</COLUMN>
+        <KEYEVENT>
+          <ID>4</ID>
+          <KIND>usage</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'y' is dereferenced, but may still be NULL</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+    </PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>3674</LINE>
+      <COLUMN>71</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>load_jpeg_image</FUNCTION>
+    <DECORATED>?load_jpeg_image@@YAPEAEPEAUstbi__jpeg@@PEAH11H@Z</DECORATED>
+    <FUNCLINE>3639</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>3697</LINE>
+      <COLUMN>49</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>load_jpeg_image</FUNCTION>
+    <DECORATED>?load_jpeg_image@@YAPEAEPEAUstbi__jpeg@@PEAH11H@Z</DECORATED>
+    <FUNCLINE>3639</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>3697</LINE>
+      <COLUMN>35</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>load_jpeg_image</FUNCTION>
+    <DECORATED>?load_jpeg_image@@YAPEAEPEAUstbi__jpeg@@PEAH11H@Z</DECORATED>
+    <FUNCLINE>3639</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>4423</LINE>
+      <COLUMN>36</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__create_png_image_raw</FUNCTION>
+    <DECORATED>?stbi__create_png_image_raw@@YAHPEAUstbi__png@@PEAEIHIIHH@Z</DECORATED>
+    <FUNCLINE>4396</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>4432</LINE>
+      <COLUMN>17</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__create_png_image_raw</FUNCTION>
+    <DECORATED>?stbi__create_png_image_raw@@YAHPEAUstbi__png@@PEAEIHIIHH@Z</DECORATED>
+    <FUNCLINE>4396</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>4512</LINE>
+      <COLUMN>33</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__create_png_image_raw</FUNCTION>
+    <DECORATED>?stbi__create_png_image_raw@@YAHPEAUstbi__png@@PEAEIHIIHH@Z</DECORATED>
+    <FUNCLINE>4396</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>4525</LINE>
+      <COLUMN>39</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__create_png_image_raw</FUNCTION>
+    <DECORATED>?stbi__create_png_image_raw@@YAHPEAUstbi__png@@PEAEIHIIHH@Z</DECORATED>
+    <FUNCLINE>4396</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>4526</LINE>
+      <COLUMN>39</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__create_png_image_raw</FUNCTION>
+    <DECORATED>?stbi__create_png_image_raw@@YAHPEAUstbi__png@@PEAEIHIIHH@Z</DECORATED>
+    <FUNCLINE>4396</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>4526</LINE>
+      <COLUMN>45</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__create_png_image_raw</FUNCTION>
+    <DECORATED>?stbi__create_png_image_raw@@YAHPEAUstbi__png@@PEAEIHIIHH@Z</DECORATED>
+    <FUNCLINE>4396</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>4575</LINE>
+      <COLUMN>33</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__create_png_image_raw</FUNCTION>
+    <DECORATED>?stbi__create_png_image_raw@@YAHPEAUstbi__png@@PEAEIHIIHH@Z</DECORATED>
+    <FUNCLINE>4396</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>4638</LINE>
+      <COLUMN>47</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__create_png_image</FUNCTION>
+    <DECORATED>?stbi__create_png_image@@YAHPEAUstbi__png@@PEAEIHHHH@Z</DECORATED>
+    <FUNCLINE>4608</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>4638</LINE>
+      <COLUMN>35</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__create_png_image</FUNCTION>
+    <DECORATED>?stbi__create_png_image@@YAHPEAUstbi__png@@PEAEIHHHH@Z</DECORATED>
+    <FUNCLINE>4608</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>4638</LINE>
+      <COLUMN>65</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__create_png_image</FUNCTION>
+    <DECORATED>?stbi__create_png_image@@YAHPEAUstbi__png@@PEAEIHHHH@Z</DECORATED>
+    <FUNCLINE>4608</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>4639</LINE>
+      <COLUMN>38</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__create_png_image</FUNCTION>
+    <DECORATED>?stbi__create_png_image@@YAHPEAUstbi__png@@PEAEIHHHH@Z</DECORATED>
+    <FUNCLINE>4608</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>4639</LINE>
+      <COLUMN>35</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__create_png_image</FUNCTION>
+    <DECORATED>?stbi__create_png_image@@YAHPEAUstbi__png@@PEAEIHHHH@Z</DECORATED>
+    <FUNCLINE>4608</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>4639</LINE>
+      <COLUMN>33</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__create_png_image</FUNCTION>
+    <DECORATED>?stbi__create_png_image@@YAHPEAUstbi__png@@PEAEIHHHH@Z</DECORATED>
+    <FUNCLINE>4608</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>5367</LINE>
+      <COLUMN>49</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__bmp_load</FUNCTION>
+    <DECORATED>?stbi__bmp_load@@YAPEAXPEAUstbi__context@@PEAH11HPEAUstbi__result_info@@@Z</DECORATED>
+    <FUNCLINE>5209</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>5367</LINE>
+      <COLUMN>40</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__bmp_load</FUNCTION>
+    <DECORATED>?stbi__bmp_load@@YAPEAXPEAUstbi__context@@PEAH11HPEAUstbi__result_info@@@Z</DECORATED>
+    <FUNCLINE>5209</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>5368</LINE>
+      <COLUMN>52</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__bmp_load</FUNCTION>
+    <DECORATED>?stbi__bmp_load@@YAPEAXPEAUstbi__context@@PEAH11HPEAUstbi__result_info@@@Z</DECORATED>
+    <FUNCLINE>5209</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>5368</LINE>
+      <COLUMN>43</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__bmp_load</FUNCTION>
+    <DECORATED>?stbi__bmp_load@@YAPEAXPEAUstbi__context@@PEAH11HPEAUstbi__result_info@@@Z</DECORATED>
+    <FUNCLINE>5209</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>5368</LINE>
+      <COLUMN>40</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__bmp_load</FUNCTION>
+    <DECORATED>?stbi__bmp_load@@YAPEAXPEAUstbi__context@@PEAH11HPEAUstbi__result_info@@@Z</DECORATED>
+    <FUNCLINE>5209</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>5583</LINE>
+      <COLUMN>52</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__tga_load</FUNCTION>
+    <DECORATED>?stbi__tga_load@@YAPEAXPEAUstbi__context@@PEAH11HPEAUstbi__result_info@@@Z</DECORATED>
+    <FUNCLINE>5523</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>5583</LINE>
+      <COLUMN>42</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__tga_load</FUNCTION>
+    <DECORATED>?stbi__tga_load@@YAPEAXPEAUstbi__context@@PEAH11HPEAUstbi__result_info@@@Z</DECORATED>
+    <FUNCLINE>5523</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>5842</LINE>
+      <COLUMN>42</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__psd_load</FUNCTION>
+    <DECORATED>?stbi__psd_load@@YAPEAXPEAUstbi__context@@PEAH11HPEAUstbi__result_info@@H@Z</DECORATED>
+    <FUNCLINE>5767</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>5842</LINE>
+      <COLUMN>39</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__psd_load</FUNCTION>
+    <DECORATED>?stbi__psd_load@@YAPEAXPEAUstbi__context@@PEAH11HPEAUstbi__result_info@@H@Z</DECORATED>
+    <FUNCLINE>5767</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>5924</LINE>
+      <COLUMN>58</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__psd_load</FUNCTION>
+    <DECORATED>?stbi__psd_load@@YAPEAXPEAUstbi__context@@PEAH11HPEAUstbi__result_info@@H@Z</DECORATED>
+    <FUNCLINE>5767</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>5936</LINE>
+      <COLUMN>42</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__psd_load</FUNCTION>
+    <DECORATED>?stbi__psd_load@@YAPEAXPEAUstbi__context@@PEAH11HPEAUstbi__result_info@@H@Z</DECORATED>
+    <FUNCLINE>5767</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>6061</LINE>
+      <COLUMN>39</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__pic_load_core</FUNCTION>
+    <DECORATED>?stbi__pic_load_core@@YAPEAEPEAUstbi__context@@HHPEAHPEAE@Z</DECORATED>
+    <FUNCLINE>6028</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>6061</LINE>
+      <COLUMN>33</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__pic_load_core</FUNCTION>
+    <DECORATED>?stbi__pic_load_core@@YAPEAEPEAUstbi__context@@HHPEAHPEAE@Z</DECORATED>
+    <FUNCLINE>6028</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>6160</LINE>
+      <COLUMN>27</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__pic_load</FUNCTION>
+    <DECORATED>?stbi__pic_load@@YAPEAXPEAUstbi__context@@PEAH11HPEAUstbi__result_info@@@Z</DECORATED>
+    <FUNCLINE>6138</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>6160</LINE>
+      <COLUMN>25</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__pic_load</FUNCTION>
+    <DECORATED>?stbi__pic_load@@YAPEAXPEAUstbi__context@@PEAH11HPEAUstbi__result_info@@@Z</DECORATED>
+    <FUNCLINE>6138</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>6422</LINE>
+      <COLUMN>42</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__gif_load_next</FUNCTION>
+    <DECORATED>?stbi__gif_load_next@@YAPEAEPEAUstbi__context@@PEAUstbi__gif@@PEAHHPEAE@Z</DECORATED>
+    <FUNCLINE>6407</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>6423</LINE>
+      <COLUMN>49</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__gif_load_next</FUNCTION>
+    <DECORATED>?stbi__gif_load_next@@YAPEAEPEAUstbi__context@@PEAUstbi__gif@@PEAHHPEAE@Z</DECORATED>
+    <FUNCLINE>6407</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>6431</LINE>
+      <COLUMN>29</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__gif_load_next</FUNCTION>
+    <DECORATED>?stbi__gif_load_next@@YAPEAEPEAUstbi__context@@PEAUstbi__gif@@PEAHHPEAE@Z</DECORATED>
+    <FUNCLINE>6407</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>6432</LINE>
+      <COLUMN>36</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__gif_load_next</FUNCTION>
+    <DECORATED>?stbi__gif_load_next@@YAPEAEPEAUstbi__context@@PEAUstbi__gif@@PEAHHPEAE@Z</DECORATED>
+    <FUNCLINE>6407</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>6465</LINE>
+      <COLUMN>46</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__gif_load_next</FUNCTION>
+    <DECORATED>?stbi__gif_load_next@@YAPEAEPEAUstbi__context@@PEAUstbi__gif@@PEAHHPEAE@Z</DECORATED>
+    <FUNCLINE>6407</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>6465</LINE>
+      <COLUMN>39</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__gif_load_next</FUNCTION>
+    <DECORATED>?stbi__gif_load_next@@YAPEAEPEAUstbi__context@@PEAUstbi__gif@@PEAHHPEAE@Z</DECORATED>
+    <FUNCLINE>6407</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>6469</LINE>
+      <COLUMN>34</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__gif_load_next</FUNCTION>
+    <DECORATED>?stbi__gif_load_next@@YAPEAEPEAUstbi__context@@PEAUstbi__gif@@PEAHHPEAE@Z</DECORATED>
+    <FUNCLINE>6407</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>6606</LINE>
+      <COLUMN>32</COLUMN>
+    </SFA>
+    <DEFECTCODE>6308</DEFECTCODE>
+    <DESCRIPTION>'realloc' might return null pointer: assigning null pointer to 'out', which is passed as an argument to 'realloc', will cause the original memory block to be leaked.</DESCRIPTION>
+    <FUNCTION>stbi__load_gif_main</FUNCTION>
+    <DECORATED>?stbi__load_gif_main@@YAPEAXPEAUstbi__context@@PEAPEAHPEAH222H@Z</DECORATED>
+    <FUNCLINE>6581</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>6608</LINE>
+      <COLUMN>35</COLUMN>
+    </SFA>
+    <DEFECTCODE>6308</DEFECTCODE>
+    <DESCRIPTION>'realloc' might return null pointer: assigning null pointer to '*delays', which is passed as an argument to 'realloc', will cause the original memory block to be leaked.</DESCRIPTION>
+    <FUNCTION>stbi__load_gif_main</FUNCTION>
+    <DECORATED>?stbi__load_gif_main@@YAPEAXPEAUstbi__context@@PEAPEAHPEAH222H@Z</DECORATED>
+    <FUNCLINE>6581</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>6581</LINE>
+      <COLUMN>13</COLUMN>
+    </SFA>
+    <DEFECTCODE>6262</DEFECTCODE>
+    <DESCRIPTION>Function uses '35012' bytes of stack:  exceeds /analyze:stacksize '16384'.  Consider moving some data to heap.</DESCRIPTION>
+    <FUNCTION>stbi__load_gif_main</FUNCTION>
+    <DECORATED>?stbi__load_gif_main@@YAPEAXPEAUstbi__context@@PEAPEAHPEAH222H@Z</DECORATED>
+    <FUNCLINE>6581</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>6616</LINE>
+      <COLUMN>18</COLUMN>
+    </SFA>
+    <DEFECTCODE>6387</DEFECTCODE>
+    <DESCRIPTION>'out+((((layers-1))*stride))' could be '0':  this does not adhere to the specification for the function 'memcpy'. </DESCRIPTION>
+    <FUNCTION>stbi__load_gif_main</FUNCTION>
+    <DECORATED>?stbi__load_gif_main@@YAPEAXPEAUstbi__context@@PEAPEAHPEAH222H@Z</DECORATED>
+    <FUNCLINE>6581</FUNCLINE>
+    <PROBABILITY>1</PROBABILITY>
+    <RANK>4</RANK>
+    <CATEGORY>
+      <RULECATEGORY>mspft</RULECATEGORY>
+    </CATEGORY>
+    <PATH>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6583</LINE>
+        <COLUMN>21</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6584</LINE>
+        <COLUMN>10</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6585</LINE>
+        <COLUMN>14</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6586</LINE>
+        <COLUMN>14</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6587</LINE>
+        <COLUMN>14</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6588</LINE>
+        <COLUMN>16</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6589</LINE>
+        <COLUMN>10</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6590</LINE>
+        <COLUMN>12</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6591</LINE>
+        <COLUMN>10</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6596</LINE>
+        <COLUMN>11</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6597</LINE>
+        <COLUMN>15</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6599</LINE>
+        <COLUMN>13</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6600</LINE>
+        <COLUMN>15</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6601</LINE>
+        <COLUMN>15</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6602</LINE>
+        <COLUMN>12</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6603</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6605</LINE>
+        <COLUMN>16</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6611</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6612</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6616</LINE>
+        <COLUMN>18</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6617</LINE>
+        <COLUMN>23</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6621</LINE>
+        <COLUMN>16</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6625</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6596</LINE>
+        <COLUMN>11</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6597</LINE>
+        <COLUMN>15</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6599</LINE>
+        <COLUMN>13</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6600</LINE>
+        <COLUMN>15</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6601</LINE>
+        <COLUMN>15</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6602</LINE>
+        <COLUMN>12</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6603</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6605</LINE>
+        <COLUMN>16</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6606</LINE>
+        <COLUMN>19</COLUMN>
+        <KEYEVENT>
+          <ID>1</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'out' may be NULL</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6607</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6616</LINE>
+        <COLUMN>18</COLUMN>
+        <KEYEVENT>
+          <ID>2</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>'out' is an In/Out argument to 'memcpy' (declared at c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.16.27023\include\vcruntime_string.h:40)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6616</LINE>
+        <COLUMN>18</COLUMN>
+        <KEYEVENT>
+          <ID>3</ID>
+          <KIND>usage</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'out+((((layers-1))*stride))' should not be NULL, because this is not consistent with the SAL annotation on 'memcpy'</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+    </PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>6622</LINE>
+      <COLUMN>38</COLUMN>
+    </SFA>
+    <DEFECTCODE>28182</DEFECTCODE>
+    <DESCRIPTION>Dereferencing NULL pointer. '*delays' contains the same NULL value as 'realloc()`6608' did. </DESCRIPTION>
+    <FUNCTION>stbi__load_gif_main</FUNCTION>
+    <DECORATED>?stbi__load_gif_main@@YAPEAXPEAUstbi__context@@PEAPEAHPEAH222H@Z</DECORATED>
+    <FUNCLINE>6581</FUNCLINE>
+    <PROBABILITY>1</PROBABILITY>
+    <RANK>3</RANK>
+    <CATEGORY>
+      <RULECATEGORY>mspft</RULECATEGORY>
+    </CATEGORY>
+    <PATH>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6583</LINE>
+        <COLUMN>21</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6584</LINE>
+        <COLUMN>10</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6585</LINE>
+        <COLUMN>14</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6586</LINE>
+        <COLUMN>14</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6587</LINE>
+        <COLUMN>14</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6588</LINE>
+        <COLUMN>16</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6589</LINE>
+        <COLUMN>10</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6590</LINE>
+        <COLUMN>12</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6591</LINE>
+        <COLUMN>10</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6592</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6596</LINE>
+        <COLUMN>11</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6597</LINE>
+        <COLUMN>15</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6599</LINE>
+        <COLUMN>13</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6600</LINE>
+        <COLUMN>15</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6601</LINE>
+        <COLUMN>15</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6602</LINE>
+        <COLUMN>12</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6603</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6605</LINE>
+        <COLUMN>16</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6611</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6612</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6613</LINE>
+        <COLUMN>26</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6616</LINE>
+        <COLUMN>18</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6617</LINE>
+        <COLUMN>23</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6621</LINE>
+        <COLUMN>16</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6622</LINE>
+        <COLUMN>38</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6625</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6596</LINE>
+        <COLUMN>11</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6597</LINE>
+        <COLUMN>15</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6599</LINE>
+        <COLUMN>13</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6600</LINE>
+        <COLUMN>15</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6601</LINE>
+        <COLUMN>15</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6602</LINE>
+        <COLUMN>12</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6603</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6605</LINE>
+        <COLUMN>16</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6606</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6607</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6608</LINE>
+        <COLUMN>26</COLUMN>
+        <KEYEVENT>
+          <ID>1</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'*delays' may be NULL</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6616</LINE>
+        <COLUMN>18</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6617</LINE>
+        <COLUMN>23</COLUMN>
+        <KEYEVENT>
+          <ID>2</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Enter this branch, (assume 'layers&gt;=2')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6618</LINE>
+        <COLUMN>24</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6621</LINE>
+        <COLUMN>16</COLUMN>
+        <KEYEVENT>
+          <ID>3</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Enter this branch, (assume 'delays')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+        <FILENAME>stb_image.h</FILENAME>
+        <LINE>6622</LINE>
+        <COLUMN>38</COLUMN>
+        <KEYEVENT>
+          <ID>4</ID>
+          <KIND>usage</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'*delays' is dereferenced, but may still be NULL</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+    </PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>6606</LINE>
+      <COLUMN>32</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__load_gif_main</FUNCTION>
+    <DECORATED>?stbi__load_gif_main@@YAPEAXPEAUstbi__context@@PEAPEAHPEAH222H@Z</DECORATED>
+    <FUNCLINE>6581</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>6611</LINE>
+      <COLUMN>52</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__load_gif_main</FUNCTION>
+    <DECORATED>?stbi__load_gif_main@@YAPEAXPEAUstbi__context@@PEAPEAHPEAH222H@Z</DECORATED>
+    <FUNCLINE>6581</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>6616</LINE>
+      <COLUMN>40</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__load_gif_main</FUNCTION>
+    <DECORATED>?stbi__load_gif_main@@YAPEAXPEAUstbi__context@@PEAPEAHPEAH222H@Z</DECORATED>
+    <FUNCLINE>6581</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>6616</LINE>
+      <COLUMN>35</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__load_gif_main</FUNCTION>
+    <DECORATED>?stbi__load_gif_main@@YAPEAXPEAUstbi__context@@PEAPEAHPEAH222H@Z</DECORATED>
+    <FUNCLINE>6581</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>6618</LINE>
+      <COLUMN>34</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__load_gif_main</FUNCTION>
+    <DECORATED>?stbi__load_gif_main@@YAPEAXPEAUstbi__context@@PEAPEAHPEAH222H@Z</DECORATED>
+    <FUNCLINE>6581</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>6643</LINE>
+      <COLUMN>13</COLUMN>
+    </SFA>
+    <DEFECTCODE>6262</DEFECTCODE>
+    <DESCRIPTION>Function uses '34980' bytes of stack:  exceeds /analyze:stacksize '16384'.  Consider moving some data to heap.</DESCRIPTION>
+    <FUNCTION>stbi__gif_load</FUNCTION>
+    <DECORATED>?stbi__gif_load@@YAPEAXPEAUstbi__context@@PEAH11HPEAUstbi__result_info@@@Z</DECORATED>
+    <FUNCLINE>6643</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>6815</LINE>
+      <COLUMN>51</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__hdr_load</FUNCTION>
+    <DECORATED>?stbi__hdr_load@@YAPEAMPEAUstbi__context@@PEAH11HPEAUstbi__result_info@@@Z</DECORATED>
+    <FUNCLINE>6753</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>6815</LINE>
+      <COLUMN>43</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__hdr_load</FUNCTION>
+    <DECORATED>?stbi__hdr_load@@YAPEAMPEAUstbi__context@@PEAH11HPEAUstbi__result_info@@@Z</DECORATED>
+    <FUNCLINE>6753</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>6815</LINE>
+      <COLUMN>66</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__hdr_load</FUNCTION>
+    <DECORATED>?stbi__hdr_load@@YAPEAMPEAUstbi__context@@PEAH11HPEAUstbi__result_info@@@Z</DECORATED>
+    <FUNCLINE>6753</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>6872</LINE>
+      <COLUMN>52</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__hdr_load</FUNCTION>
+    <DECORATED>?stbi__hdr_load@@YAPEAMPEAUstbi__context@@PEAH11HPEAUstbi__result_info@@@Z</DECORATED>
+    <FUNCLINE>6753</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>6872</LINE>
+      <COLUMN>48</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__hdr_load</FUNCTION>
+    <DECORATED>?stbi__hdr_load@@YAPEAMPEAUstbi__context@@PEAH11HPEAUstbi__result_info@@@Z</DECORATED>
+    <FUNCLINE>6753</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>6872</LINE>
+      <COLUMN>41</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__hdr_load</FUNCTION>
+    <DECORATED>?stbi__hdr_load@@YAPEAMPEAUstbi__context@@PEAH11HPEAUstbi__result_info@@@Z</DECORATED>
+    <FUNCLINE>6753</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
+      <FILENAME>stb_image.h</FILENAME>
+      <LINE>6872</LINE>
+      <COLUMN>75</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>stbi__hdr_load</FUNCTION>
+    <DECORATED>?stbi__hdr_load@@YAPEAMPEAUstbi__context@@PEAH11HPEAUstbi__result_info@@@Z</DECORATED>
+    <FUNCLINE>6753</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\tinyobjloader</FILEPATH>
+      <FILENAME>tiny_obj_loader.h</FILENAME>
+      <LINE>857</LINE>
+      <COLUMN>41</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>tinyobj::tryParseDouble</FUNCTION>
+    <DECORATED>?tryParseDouble@tinyobj@@YA_NPEBD0PEAN@Z</DECORATED>
+    <FUNCLINE>805</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\tinyobjloader</FILEPATH>
+      <FILENAME>tiny_obj_loader.h</FILENAME>
+      <LINE>884</LINE>
+      <COLUMN>41</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>tinyobj::tryParseDouble</FUNCTION>
+    <DECORATED>?tryParseDouble@tinyobj@@YA_NPEBD0PEAN@Z</DECORATED>
+    <FUNCLINE>805</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\tinyobjloader</FILEPATH>
+      <FILENAME>tiny_obj_loader.h</FILENAME>
+      <LINE>1394</LINE>
+      <COLUMN>23</COLUMN>
+    </SFA>
+    <DEFECTCODE>26498</DEFECTCODE>
+    <DESCRIPTION>The function 'std::numeric_limits&lt;float&gt;::epsilon' is constexpr, mark variable 'epsilon' constexpr if compile-time evaluation is desired (con.5).</DESCRIPTION>
+    <FUNCTION>tinyobj::exportGroupsToShape</FUNCTION>
+    <DECORATED>?exportGroupsToShape@tinyobj@@YA_NPEAUshape_t@1@AEBUPrimGroup@1@AEBV?$vector@Utag_t@tinyobj@@V?$allocator@Utag_t@tinyobj@@@std@@@std@@HAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@5@_NAEBV?$vector@MV?$allocator@M@std@@@5@@Z</DECORATED>
+    <FUNCLINE>1331</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\tinyobjloader</FILEPATH>
+      <FILENAME>tiny_obj_loader.h</FILENAME>
+      <LINE>312</LINE>
+      <COLUMN>0</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'tinyobj::material_t::diffuse' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>tinyobj::material_t::{ctor}</FUNCTION>
+    <DECORATED>??0material_t@tinyobj@@QEAA@XZ</DECORATED>
+    <FUNCLINE>312</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\tinyobjloader</FILEPATH>
+      <FILENAME>tiny_obj_loader.h</FILENAME>
+      <LINE>167</LINE>
+      <COLUMN>0</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'tinyobj::texture_option_t::type' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>tinyobj::texture_option_t::{ctor}</FUNCTION>
+    <DECORATED>??0texture_option_t@tinyobj@@QEAA@XZ</DECORATED>
+    <FUNCLINE>167</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\assimp\include\assimp</FILEPATH>
+      <FILENAME>mesh.h</FILENAME>
+      <LINE>152</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'aiFace::mNumIndices' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>aiFace::{ctor}</FUNCTION>
+    <DECORATED>??0aiFace@@QEAA@AEBU0@@Z</DECORATED>
+    <FUNCLINE>152</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\assimp\include\assimp</FILEPATH>
+      <FILENAME>mesh.h</FILENAME>
+      <LINE>284</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'aiBone::mWeights' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>aiBone::{ctor}</FUNCTION>
+    <DECORATED>??0aiBone@@QEAA@AEBU0@@Z</DECORATED>
+    <FUNCLINE>284</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\assimp\include\assimp</FILEPATH>
+      <FILENAME>mesh.h</FILENAME>
+      <LINE>450</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'aiAnimMesh::mTextureCoords' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>aiAnimMesh::{ctor}</FUNCTION>
+    <DECORATED>??0aiAnimMesh@@QEAA@XZ</DECORATED>
+    <FUNCLINE>450</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\assimp\include\assimp</FILEPATH>
+      <FILENAME>mesh.h</FILENAME>
+      <LINE>709</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'aiMesh::mColors' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>aiMesh::{ctor}</FUNCTION>
+    <DECORATED>??0aiMesh@@QEAA@XZ</DECORATED>
+    <FUNCLINE>709</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>model.h</FILENAME>
+      <LINE>126</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'Mesh::material' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>Mesh::{ctor}</FUNCTION>
+    <DECORATED>??0Mesh@@QEAA@XZ</DECORATED>
+    <FUNCLINE>126</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>sbswapchain.h</FILENAME>
+      <LINE>45</LINE>
+      <COLUMN>2</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'SbSwapchain::SwapchainAttachment::description' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SbSwapchain::SwapchainAttachment::{ctor}</FUNCTION>
+    <DECORATED>??0SwapchainAttachment@SbSwapchain@@QEAA@_K@Z</DECORATED>
+    <FUNCLINE>45</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>main.cpp</FILENAME>
+      <LINE>179</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'HelloTriangleApplication::window' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>HelloTriangleApplication::{ctor}</FUNCTION>
+    <DECORATED>??0HelloTriangleApplication@@QEAA@XZ</DECORATED>
+    <FUNCLINE>179</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>main.cpp</FILENAME>
+      <LINE>882</LINE>
+      <COLUMN>48</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>HelloTriangleApplication::createTextureImage</FUNCTION>
+    <DECORATED>?createTextureImage@HelloTriangleApplication@@AEAAXXZ</DECORATED>
+    <FUNCLINE>877</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>main.cpp</FILENAME>
+      <LINE>882</LINE>
+      <COLUMN>36</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>HelloTriangleApplication::createTextureImage</FUNCTION>
+    <DECORATED>?createTextureImage@HelloTriangleApplication@@AEAAXXZ</DECORATED>
+    <FUNCLINE>877</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>main.cpp</FILENAME>
+      <LINE>217</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'HelloTriangleApplication::SubpassSetup::Pipeline' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>HelloTriangleApplication::SubpassSetup::{ctor}</FUNCTION>
+    <DECORATED>??0SubpassSetup@HelloTriangleApplication@@QEAA@XZ</DECORATED>
+    <FUNCLINE>217</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>header.h</FILENAME>
+      <LINE>20</LINE>
+      <COLUMN>0</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'DrawableMesh::id' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>DrawableMesh::{ctor}</FUNCTION>
+    <DECORATED>??0DrawableMesh@@QEAA@XZ</DECORATED>
+    <FUNCLINE>20</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT></DEFECTS>

@@ -6,20 +6,19 @@
 
 #include <GLFW/glfw3.h>
 
-#include "SbPhysicalDevice.h"
-#include "SbLogicalDevice.h"
+#include "SbVulkanBase.h"
 
 
 class SbSwapchain
 {
 public:
-	SbSwapchain(SbPhysicalDevice & physDevice, SbLogicalDevice & logDevice);
+	SbSwapchain(SbVulkanBase & base);
 	~SbSwapchain();
 
 
-
-	SbPhysicalDevice & physDevice; 
-	SbLogicalDevice & logDevice;	
+	SbVulkanBase & vulkanBase;
+	SbPhysicalDevice & physicalDevice; 
+	SbLogicalDevice & logicalDevice;	
 
 
 	VkSwapchainCreateInfoKHR swapchainCI;
@@ -64,7 +63,9 @@ public:
 
 	void createFramebuffers(VkRenderPass renderpass);
 
-	//void createAttachment(uint32_t attachmentIndex, VkFormat format, VkSampleCountFlagBits samples, VkImageLayout finalLayout, VkImageLayout initLayout, VkAttachmentLoadOp loadOp, VkAttachmentStoreOp storeOp, VkAttachmentLoadOp stencilLoad, VkAttachmentStoreOp stencilStore);
+	void createAttachment(uint32_t attachmentIndex, VkFormat format, VkSampleCountFlagBits samples, VkImageLayout finalLayout, VkImageLayout initLayout, VkAttachmentLoadOp loadOp, VkAttachmentStoreOp storeOp, VkAttachmentLoadOp stencilLoad, VkAttachmentStoreOp stencilStore);
+
+
 
 };
 

@@ -47,14 +47,17 @@
 
 #include "VulkanHelperFunctions.hpp"
 
-#include "SbVulkanBase.h"
+//#include "SbVulkanBase.h"
+
+
+
+#include "SbCommandPool.h"
 
 #include "SbLayout.h"
 #include "SbDescriptorPool.h"
 #include "SbDescriptorSets.h"
 
 #include "SbSwapchain.h"
-#include "SbCommandPool.h"
 
 
 namespace vkinit = vks::initializers;
@@ -67,19 +70,6 @@ const std::string TEXTURE_PATH = "textures/chalet.jpg";
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
-//TODO transition to vulkanbase
-/*
-const std::vector<const char*> validationLayers = {
-	"VK_LAYER_KHRONOS_validation"
-	//,"VK_LAYER_LUNARG_api_dump"
-};
-
-#ifdef NDEBUG
-const bool enableValidationLayers = false;
-#else
-const bool enableValidationLayers = true;
-#endif
-*/
 
 // Wrapper functions for aligned memory allocation
 // There is currently no standard for this in C++ that works across all platforms and vendors, so we abstract this
@@ -232,7 +222,7 @@ private:
 	//VkPipeline graphicsPipeline;
 
 	//VkCommandPool commandPool;
-	std::unique_ptr<SbCommandPool> commandPool;
+	//std::unique_ptr<SbCommandPool> commandPool;
 
 	enum
 	{
@@ -249,22 +239,10 @@ private:
 	};
 
 
-	//todo transition attachments to swapchain?
+	
 	/*
-	struct AttachmentSet {
-		std::vector<VkImage> image;
-		std::vector<VkDeviceMemory> mem;
-		std::vector<VkImageView> view;
-		//VkFormat format;
-		//VkSampleCountFlagBits samples = VK_SAMPLE_COUNT_1_BIT;
-
-		AttachmentSet(size_t size)
-			: image(size), mem(size), view(size) 
-			{	}
-	};
-
+	//todo here or in swap?
 	enum attachmentIndex { eSetIndex_Color, eSetIndex_Depth, eSetIndex_COUNT, eSetIndex_MAX = eSetIndex_Depth};
-	std::vector<AttachmentSet> attachmentSets;
 	*/
 
 	uint32_t mipLevels;
@@ -285,15 +263,7 @@ private:
 	std::vector<VkBuffer> transformationgUB;
 	std::vector<VkDeviceMemory> transformationUBMemory;
 
-	//VkDescriptorPool descriptorPool;
 	std::unique_ptr<SbDescriptorPool> descriptorPool;
-
-	//std::vector<VkDescriptorSet> descriptorSets;
-
-	/*struct {
-		std::vector <VkDescriptorSet> attachmentWrite;
-		std::vector<VkDescriptorSet> attachmentRead;
-	} descriptorSets;*/
 
 	std::vector<VkCommandBuffer> commandBuffers;
 
@@ -350,7 +320,6 @@ private:
 		createTextureSampler();
 		loadModel();
 		createVertexBuffer();
-		//createIndexBuffer();
 
 		createUniformBuffers();
 		createDescriptorPool();
@@ -398,7 +367,7 @@ private:
 			vkDestroyFramebuffer(vulkanBase->logicalDevice->device, framebuffer, nullptr);
 		}
 
-		vkFreeCommandBuffers(vulkanBase->logicalDevice->device, commandPool->handle, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
+		vkFreeCommandBuffers(vulkanBase->logicalDevice->device, vulkanBase->commandPool->handle, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
 
 		vkDestroyPipeline(vulkanBase->logicalDevice->device, attachmentWriteSubpass.Pipeline, nullptr);
 		vkDestroyPipeline(vulkanBase->logicalDevice->device, attachmentReadSubpass.Pipeline, nullptr);
@@ -452,7 +421,7 @@ private:
 			vkDestroyFence(vulkanBase->logicalDevice->device, inFlightFences[i], nullptr);
 		}
 
-		vkDestroyCommandPool(vulkanBase->logicalDevice->device, commandPool->handle, nullptr);
+		vkDestroyCommandPool(vulkanBase->logicalDevice->device, vulkanBase->commandPool->handle, nullptr);
 
 		vkDestroyDevice(vulkanBase->logicalDevice->device, nullptr);
 
@@ -513,7 +482,7 @@ private:
 	*/
 
 	void createSwapChain() {
-		swapchain = std::make_unique<SbSwapchain>(*vulkanBase->physicalDevice, *vulkanBase->logicalDevice);
+		swapchain = std::make_unique<SbSwapchain>(*vulkanBase);
 		swapchain->createSwapChain(vulkanBase->surface, window);
 		swapchain->createImageViews(vulkanBase->logicalDevice->device);	
 	}
@@ -790,7 +759,7 @@ private:
 
 	
 	void createCommandPool() {
-		commandPool = std::make_unique<SbCommandPool>(*vulkanBase);
+		vulkanBase->commandPool = std::make_unique<SbCommandPool>(*vulkanBase);
 	}
 	
 
@@ -835,11 +804,11 @@ private:
 				auto& memory = attachment.mem[i];
 				auto& view = attachment.view[i];
 				format = swapchain->swapchainAttachmentDescription.format;
-				vulkanBase->createImage(swapchain->swapchainCI.imageExtent.width, swapchain->swapchainCI.imageExtent.height, 1, samples, format, VK_IMAGE_TILING_OPTIMAL,
+				vulkanBase->createImage(swapchain->swapchainCI.imageExtent, 1, samples, format, VK_IMAGE_TILING_OPTIMAL,
 					VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT,
 					VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, image, memory);
 				view = vks::helper::createImageView(vulkanBase->logicalDevice->device, image, format, VK_IMAGE_ASPECT_COLOR_BIT, 1);
-				commandPool->transitionImageLayout(image, format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, 1);
+				vulkanBase->commandPool->transitionImageLayout(image, format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, 1);
 			}
 			{
 				auto& attachment = swapchain->swapchainAttachmentSets[SbSwapchain::attachmentIndex::eSetIndex_Depth];
@@ -849,11 +818,11 @@ private:
 				auto& memory =	attachment.mem[i];
 				auto& view =	attachment.view[i];
 				format = findDepthFormat();
-				vulkanBase->createImage(swapchain->swapchainCI.imageExtent.width, swapchain->swapchainCI.imageExtent.height, 1, samples, format, VK_IMAGE_TILING_OPTIMAL,
+				vulkanBase->createImage(swapchain->swapchainCI.imageExtent, 1, samples, format, VK_IMAGE_TILING_OPTIMAL,
 					VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT,
 					VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, image, memory);
 				view = vks::helper::createImageView(vulkanBase->logicalDevice->device, image, format, VK_IMAGE_ASPECT_DEPTH_BIT, 1);
-				commandPool->transitionImageLayout(image, format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, 1);
+				vulkanBase->commandPool->transitionImageLayout(image, format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, 1);
 			}
 		}
 
@@ -930,14 +899,14 @@ private:
 
 		vulkanBase->createImage(texWidth, texHeight, mipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, textureImage, textureImageMemory);
 
-		commandPool->transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mipLevels);
-		commandPool->copyBufferToImage(stagingBuffer, textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
+		vulkanBase->commandPool->transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mipLevels);
+		vulkanBase->commandPool->copyBufferToImage(stagingBuffer, textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
 		//transitioned to VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL while generating mipmaps
 
 		vkDestroyBuffer(vulkanBase->logicalDevice->device, stagingBuffer, nullptr);
 		vkFreeMemory(vulkanBase->logicalDevice->device, stagingBufferMemory, nullptr);
 
-		commandPool->generateMipmaps(textureImage, VK_FORMAT_R8G8B8A8_UNORM, texWidth, texHeight, mipLevels);
+		vulkanBase->commandPool->generateMipmaps(textureImage, VK_FORMAT_R8G8B8A8_UNORM, texWidth, texHeight, mipLevels);
 	}
 
 
@@ -1135,8 +1104,8 @@ private:
 			//indexBufferMemory.push_back(newIndexBufferMemory);
 			//-----
 
-			commandPool->copyBuffer(stagingBuffer, drawables.back().VertexBuffer, bufferSize);
-			commandPool->copyBuffer(stagingIndexBuffer, drawables.back().IndexBuffer, indexBufferSize);
+			vulkanBase->commandPool->copyBuffer(stagingBuffer, drawables.back().VertexBuffer, bufferSize);
+			vulkanBase->commandPool->copyBuffer(stagingIndexBuffer, drawables.back().IndexBuffer, indexBufferSize);
 			//----
 			vkDestroyBuffer(vulkanBase->logicalDevice->device, stagingBuffer, nullptr);
 			vkFreeMemory(vulkanBase->logicalDevice->device, stagingBufferMemory, nullptr);
@@ -1252,7 +1221,7 @@ private:
 
 		VkCommandBufferAllocateInfo allocInfo = {};
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-		allocInfo.commandPool = commandPool->handle;
+		allocInfo.commandPool = vulkanBase->commandPool->handle;
 		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
 		allocInfo.commandBufferCount = (uint32_t)commandBuffers.size();
 

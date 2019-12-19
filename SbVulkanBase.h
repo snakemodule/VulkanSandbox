@@ -8,8 +8,11 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
+class SbCommandPool;
+
 #include "SbPhysicalDevice.h"
 #include "SbLogicalDevice.h"
+#include "SbCommandPool.h"
 
 
 const std::vector<const char*> validationLayers = {
@@ -32,6 +35,7 @@ public:
 
 	std::unique_ptr<SbPhysicalDevice> physicalDevice;
 	std::unique_ptr<SbLogicalDevice> logicalDevice;
+	std::unique_ptr<SbCommandPool> commandPool;
 
 	//VkCommandPool commandPool;
 
@@ -49,6 +53,7 @@ public:
 
 	//temporary function location?
 	void createImage(uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage & image, VkDeviceMemory & imageMemory);
+	void createImage(VkExtent2D extent, uint32_t mipLevels, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage & image, VkDeviceMemory & imageMemory);
 	void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer & buffer, VkDeviceMemory & bufferMemory);
 	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 

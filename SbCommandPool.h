@@ -1,5 +1,10 @@
 #pragma once
 
+class SbVulkanBase;
+//#include "SbCommandPool.fwd.h"
+//#include "SbVulkanBase.fwd.h"
+
+
 #include "SbVulkanBase.h"
 
 class SbCommandPool
