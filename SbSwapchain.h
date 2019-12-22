@@ -29,7 +29,7 @@ public:
 	//VkFormat swapChainImageFormat;
 	std::vector<VkImage> swapChainImages;
 	std::vector<VkImageView> swapChainImageViews;
-	VkAttachmentDescription swapchainAttachmentDescription;
+	VkAttachmentDescription swapchainAttachmentDescription; //TODO make use of attachment enums and integrate with renderpass creation
 
 	struct SwapchainAttachment {
 		std::vector<VkImage> image;
@@ -45,7 +45,7 @@ public:
 		{	}
 	};
 
-	enum attachmentIndex { eSetIndex_Color, eSetIndex_Depth, eSetIndex_COUNT, eSetIndex_MAX = eSetIndex_Depth };
+	
 	std::vector<SwapchainAttachment> swapchainAttachmentSets;
 
 	std::vector<VkFramebuffer> swapChainFramebuffers;
@@ -61,11 +61,21 @@ public:
 
 	void createImageViews(VkDevice device);
 
+	void setAttachmentCount(uint32_t count);
+
 	void createFramebuffers(VkRenderPass renderpass);
 
-	void createAttachment(uint32_t attachmentIndex, VkFormat format, VkSampleCountFlagBits samples, VkImageLayout finalLayout, VkImageLayout initLayout, VkAttachmentLoadOp loadOp, VkAttachmentStoreOp storeOp, VkAttachmentLoadOp stencilLoad, VkAttachmentStoreOp stencilStore);
-
-
+	void createAttachment(
+		uint32_t attachmentIndex, 
+		VkFormat format,
+		VkImageLayout finalLayout,
+		VkImageUsageFlags usageBits,
+		VkImageAspectFlags aspectBits,
+		VkImageLayout initLayout = VK_IMAGE_LAYOUT_UNDEFINED,
+		VkAttachmentLoadOp loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
+		VkAttachmentStoreOp storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
+		VkAttachmentLoadOp stencilLoad = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+		VkAttachmentStoreOp stencilStore = VK_ATTACHMENT_STORE_OP_DONT_CARE);
 
 };
 

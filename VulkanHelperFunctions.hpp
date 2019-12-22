@@ -53,6 +53,7 @@ namespace vks
 			return shaderStage;
 		}
 
+		//todo flytta till SbVulkanBase?
 		inline VkImageView createImageView(VkDevice device, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels) {
 			VkImageViewCreateInfo viewInfo = {};
 			viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;

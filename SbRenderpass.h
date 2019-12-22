@@ -1,58 +1,47 @@
 #pragma once
 
 #include "vulkan/vulkan.h"
-#include <map>
+#include <vector>
 
-#include <memory>
-
-#include "SbRenderpassAttachment.h"
-
-
-/*
-
-class SbSubpass {
-public:
-	VkSubpassDescription desc;
-
-	std::map<const uint32_t, VkAttachmentReference> colorRefs;
-	std::map<const uint32_t, VkAttachmentReference> depthStencilRefs;
-	std::map<const uint32_t, VkAttachmentReference> inputRefs;
-
-	SbSubpass();
-	~SbSubpass();
-
-};
-
-class SbSubpassDependency {
-public:
-	VkSubpassDependency dep;
-
-	std::unique_ptr<SbSubpass> src = nullptr;
-	std::unique_ptr<SbSubpass> dst = nullptr;
-
-	SbSubpassDependency();
-	~SbSubpassDependency();
-};
-
+#include "SbSwapchain.h"
 
 class SbRenderpass
 {
 public:
-	SbRenderpass();
+
+	struct Subpass {
+		std::vector<VkAttachmentReference> inputAttachments;
+		std::vector<VkAttachmentReference> colorAttachments;
+		VkAttachmentReference depthStencilAttachment = { VK_ATTACHMENT_UNUSED , VK_IMAGE_LAYOUT_UNDEFINED };
+		VkPipelineStageFlags pipelineMaskAsDst;
+		VkPipelineStageFlags pipelineMaskAsSrc;
+		VkAccessFlags accessMaskAsDst;
+		VkAccessFlags accessMaskAsSrc;
+	};
+
+	std::vector<Subpass> subpasses;
+	std::vector<VkAttachmentDescription> attachments;
+
+	std::vector<std::pair<uint32_t, uint32_t>> dependencies;
+
+	VkRenderPass renderPass;
+
+	SbRenderpass(uint32_t subpassCount, uint32_t attachmentCount);
 	~SbRenderpass();
-
-	std::map<const uint32_t, SbRenderpassAttachment> attachments; //attachments to be used in this 
-
-
-	std::map<const uint32_t, SbSubpass> subpasses; //the subpasses that will use the attachments
-
-
-	std::map<const uint32_t, SbSubpassDependency> subpassDeps; 
-	//the dependencies (that will be partially generated from usage of attachments??? 
-	//since dependency and attachment formats in references should be codetermined?)
-
 	
+
+
+
+	void addAttachment(uint32_t attachmentIndex, VkAttachmentDescription desc);
+	void addColorAttachmentRef(uint32_t subpassIndex, uint32_t attachmentIndex);
+	void setDepthStencilAttachmentRef(uint32_t subpassIndex, uint32_t attachmentIndex);
+	void addInputAttachmentRef(uint32_t subpassIndex, uint32_t attachmentIndex);
+	void addSyncMasks(uint32_t subpassIndex,
+		VkPipelineStageFlags stageMaskAsDst, VkPipelineStageFlags stageMaskAsSrc,
+		VkAccessFlags accessMaskAsDst, VkAccessFlags accessMaskAsSrc);
+	void addDependency(uint32_t srcSubpassIndex, uint32_t dstSubpassIndex);
+	void createRenderpass(SbSwapchain swapchain);
 
 };
 
-*/
+

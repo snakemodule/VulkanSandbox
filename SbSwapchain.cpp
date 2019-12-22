@@ -123,6 +123,7 @@ void SbSwapchain::createImageViews(VkDevice device) {
 	// Swap chain image color attachment
 	// Will be transitioned to present layout
 	auto & desc = swapchainAttachmentDescription;
+	desc.flags = 0;
 	desc.format = swapchainCI.imageFormat;
 	desc.samples = VK_SAMPLE_COUNT_1_BIT;
 	desc.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
@@ -138,8 +139,12 @@ void SbSwapchain::createImageViews(VkDevice device) {
 		swapChainImageViews[i] = vks::helper::createImageView(device, swapChainImages[i], desc.format, VK_IMAGE_ASPECT_COLOR_BIT, 1);
 	}
 
+	
+}
+
+void SbSwapchain::setAttachmentCount(uint32_t count) {
 	const SbSwapchain::SwapchainAttachment as(swapChainImages.size());
-	swapchainAttachmentSets = std::vector<SbSwapchain::SwapchainAttachment>(SbSwapchain::attachmentIndex::eSetIndex_COUNT, as);
+	swapchainAttachmentSets = std::vector<SbSwapchain::SwapchainAttachment>(count, as);
 }
 
 void SbSwapchain::createFramebuffers(VkRenderPass renderpass) {
@@ -173,28 +178,40 @@ void SbSwapchain::createFramebuffers(VkRenderPass renderpass) {
 	}
 }
 
-
+//todo use enum to configure common types?
 void SbSwapchain::createAttachment(uint32_t attachmentIndex, VkFormat format, 
-	VkSampleCountFlagBits samples, VkImageLayout finalLayout, 
-	VkImageLayout initLayout = VK_IMAGE_LAYOUT_UNDEFINED, 
-	VkAttachmentLoadOp loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR, 
-	VkAttachmentStoreOp storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE, 
-	VkAttachmentLoadOp stencilLoad = VK_ATTACHMENT_LOAD_OP_DONT_CARE, 
-	VkAttachmentStoreOp stencilStore = VK_ATTACHMENT_STORE_OP_DONT_CARE) 
+	VkImageLayout finalLayout, 
+	VkImageUsageFlags usageBits, 
+	VkImageAspectFlags aspectBits,
+	VkImageLayout initLayout, 
+	VkAttachmentLoadOp loadOp, 
+	VkAttachmentStoreOp storeOp, 
+	VkAttachmentLoadOp stencilLoad, 
+	VkAttachmentStoreOp stencilStore) 
 {
+	// Color
+	auto & colorAttachment = swapchainAttachmentSets[attachmentIndex].description;
+	colorAttachment.flags = 0;
+	colorAttachment.format = format;
+	colorAttachment.samples = swapchainAttachmentDescription.samples;
+	colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR; // default for attachments
+	colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE; // // default for attachments
+	colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+	colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+	colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	colorAttachment.finalLayout = finalLayout;
+
+
 	for (size_t i = 0; i < swapChainImages.size(); i++)
 	{
-		auto& attachment = swapchainAttachmentSets[attachmentIndex];
-		auto& format = attachment.description.format;
-		auto& samples = attachment.description.samples;
-		auto& image = attachment.image[i];
-		auto& memory = attachment.mem[i];
-		auto& view = attachment.view[i];
-		format = swapchainAttachmentDescription.format;
+		auto& samples = swapchainAttachmentSets[attachmentIndex].description.samples;
+		auto& image = swapchainAttachmentSets[attachmentIndex].image[i];
+		auto& memory = swapchainAttachmentSets[attachmentIndex].mem[i];
+		auto& view = swapchainAttachmentSets[attachmentIndex].view[i];
 		vulkanBase.createImage(swapchainCI.imageExtent, 1, samples, format, VK_IMAGE_TILING_OPTIMAL,
-			VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT,
+			usageBits,//VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT,
 			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, image, memory);
-		view = vks::helper::createImageView(logicalDevice.device, image, format, VK_IMAGE_ASPECT_COLOR_BIT, 1);
-		vulkanBase.commandPool->transitionImageLayout(image, format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, 1);
+		view = vks::helper::createImageView(logicalDevice.device, image, format, aspectBits, 1);
+		vulkanBase.commandPool->transitionImageLayout(image, format, initLayout, finalLayout, 1); //should this be UNDEFINED or initlayout?
 	}
 }

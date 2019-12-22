@@ -57,7 +57,9 @@
 #include "SbDescriptorPool.h"
 #include "SbDescriptorSets.h"
 
-#include "SbSwapchain.h"
+//#include "SbSwapchain.h"
+
+#include "SbRenderpass.h"
 
 
 namespace vkinit = vks::initializers;
@@ -205,7 +207,9 @@ private:
 	//std::unique_ptr<SbLogicalDevice> logicalDevice;
 	std::unique_ptr<SbSwapchain> swapchain;	
 
-	VkRenderPass renderPass;
+	//VkRenderPass renderPass;
+
+	std::unique_ptr<SbRenderpass> renderPass;
 
 	struct SubpassSetup {
 		//std::unique_ptr<SbLayout> layout;
@@ -230,15 +234,17 @@ private:
 		kAttachment_COLOR,
 		kAttachment_DEPTH,
 		kAttachment_COUNT,
-		kAttachment_MAX = kAttachment_DEPTH
+		kAttachment_MAX = kAttachment_COUNT - 1
 	};
 	enum
 	{
-		kSubpass_GBUF = 0,
-		kSubpass_COMPOSE = 1
+		kSubpass_WRITE,
+		kSubpass_READ,
+		kSubpass_COUNT,
+		kSubpass_MAX = kSubpass_COUNT - 1
 	};
 
-
+	enum attachmentIndex { eSetIndex_Color, eSetIndex_Depth, eSetIndex_COUNT, eSetIndex_MAX = eSetIndex_Depth };
 	
 	/*
 	//todo here or in swap?
@@ -373,7 +379,7 @@ private:
 		vkDestroyPipeline(vulkanBase->logicalDevice->device, attachmentReadSubpass.Pipeline, nullptr);
 		vkDestroyPipelineLayout(vulkanBase->logicalDevice->device, attachmentWriteSubpass.descriptorSets.get()->pipelineLayout, nullptr);
 		vkDestroyPipelineLayout(vulkanBase->logicalDevice->device, attachmentReadSubpass.descriptorSets.get()->pipelineLayout, nullptr);
-		vkDestroyRenderPass(vulkanBase->logicalDevice->device, renderPass, nullptr);
+		vkDestroyRenderPass(vulkanBase->logicalDevice->device, renderPass->renderPass, nullptr);
 
 		for (auto imageView : swapchain->swapChainImageViews) {
 			vkDestroyImageView(vulkanBase->logicalDevice->device, imageView, nullptr);
@@ -489,53 +495,18 @@ private:
 	
 	void createRenderPass() {
 		//willems attachments demo
+		/*
 		std::array<VkAttachmentDescription, kAttachment_COUNT> attachments {};
 		attachments[kAttachment_BACK] = swapchain->swapchainAttachmentDescription;
-		attachments[kAttachment_COLOR] = swapchain->swapchainAttachmentSets[SbSwapchain::attachmentIndex::eSetIndex_Color].description;
-		attachments[kAttachment_DEPTH] = swapchain->swapchainAttachmentSets[SbSwapchain::attachmentIndex::eSetIndex_Depth].description;
-
-		/*
-		// Swap chain image color attachment
-		// Will be transitioned to present layout
-		attachments[0].format = swapchain->swapChainImageFormat;
-		attachments[0].samples = VK_SAMPLE_COUNT_1_BIT;
-		attachments[0].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-		attachments[0].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-		attachments[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-		attachments[0].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-		attachments[0].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-		attachments[0].finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-
-		// Input attachments
-		// These will be written in the first subpass, transitioned to input attachments 
-		// and then read in the secod subpass
-
-		// Color
-		attachments[1].format = swapchain->swapChainImageFormat;
-		attachments[1].samples = VK_SAMPLE_COUNT_1_BIT;
-		attachments[1].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-		attachments[1].storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-		attachments[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-		attachments[1].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-		attachments[1].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-		attachments[1].finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-		// Depth
-		attachments[2].format = findDepthFormat();
-		attachments[2].samples = VK_SAMPLE_COUNT_1_BIT;
-		attachments[2].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-		attachments[2].storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-		attachments[2].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-		attachments[2].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-		attachments[2].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-		attachments[2].finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-		*/
+		attachments[kAttachment_COLOR] = swapchain->swapchainAttachmentSets[eSetIndex_Color].description;
+		attachments[kAttachment_DEPTH] = swapchain->swapchainAttachmentSets[eSetIndex_Depth].description;
 
 		std::array<VkSubpassDescription, 2> subpassDescriptions {};
 
-		/*
-			First subpass
-			Fill the color and depth attachments
-		*/
+		
+			//First subpass
+			//Fill the color and depth attachments
+		
 		VkAttachmentReference colorReference = { kAttachment_COLOR, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL };
 		VkAttachmentReference depthReference = { kAttachment_DEPTH, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL };
 
@@ -544,10 +515,8 @@ private:
 		subpassDescriptions[0].pColorAttachments = &colorReference;
 		subpassDescriptions[0].pDepthStencilAttachment = &depthReference;
 
-		/*
-			Second subpass
-			Input attachment read and swap chain color attachment write
-		*/
+			//Second subpass
+			//Input attachment read and swap chain color attachment write
 
 		// Color and depth attachment written to in first sub pass will be used as input attachments to be read in the fragment shader
 		VkAttachmentReference inputReferences[2];
@@ -564,9 +533,7 @@ private:
 		subpassDescriptions[1].inputAttachmentCount = 2;
 		subpassDescriptions[1].pInputAttachments = inputReferences;
 
-		/*
-			Subpass dependencies for layout transitions
-		*/
+			//Subpass dependencies for layout transitions
 		std::array<VkSubpassDependency, 3> dependencies;
 
 		dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
@@ -606,6 +573,37 @@ private:
 		if (vkCreateRenderPass(vulkanBase->logicalDevice->device, &renderPassInfo, nullptr, &renderPass) != VK_SUCCESS) {
 			throw std::runtime_error("failed to create render pass!");
 		}
+		*/
+
+		renderPass = std::make_unique<SbRenderpass>(kSubpass_COUNT, kAttachment_COUNT);
+
+		renderPass->addAttachment(kAttachment_BACK, swapchain->swapchainAttachmentDescription);
+		renderPass->addAttachment(kAttachment_COLOR, swapchain->swapchainAttachmentSets[eSetIndex_Color].description);
+		renderPass->addAttachment(kAttachment_DEPTH, swapchain->swapchainAttachmentSets[eSetIndex_Depth].description);
+
+		renderPass->addColorAttachmentRef(kSubpass_WRITE, kAttachment_COLOR);
+		renderPass->setDepthStencilAttachmentRef(kSubpass_WRITE, kAttachment_DEPTH);
+
+		renderPass->addColorAttachmentRef(kSubpass_READ, kAttachment_BACK);
+		renderPass->addInputAttachmentRef(kSubpass_READ, kAttachment_COLOR);
+		renderPass->addInputAttachmentRef(kSubpass_READ, kAttachment_DEPTH);
+
+		renderPass->addSyncMasks(kSubpass_WRITE, 
+			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+			VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+			VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT);
+		renderPass->addSyncMasks(kSubpass_READ,
+			VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+			VK_ACCESS_SHADER_READ_BIT,
+			VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT);
+
+		renderPass->addDependency(VK_SUBPASS_EXTERNAL, kSubpass_WRITE);
+		renderPass->addDependency(kSubpass_WRITE, kSubpass_READ);
+		renderPass->addDependency(kSubpass_READ, VK_SUBPASS_EXTERNAL);
+
+		renderPass->createRenderpass(*swapchain);
 	}
 
 	void createDescriptorSetLayout() {
@@ -658,7 +656,7 @@ private:
 				vkinit::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, VK_SHADER_STAGE_FRAGMENT_BIT, 0),
 				{ 
 					VK_NULL_HANDLE, 
-					swapchain->swapchainAttachmentSets[SbSwapchain::attachmentIndex::eSetIndex_Color].view.data(),
+					swapchain->swapchainAttachmentSets[eSetIndex_Color].view.data(),
 					VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
 					SbDescriptorSets::eBindingMode_Separate 
 				});
@@ -666,7 +664,7 @@ private:
 				vkinit::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, VK_SHADER_STAGE_FRAGMENT_BIT, 1),
 				{
 					VK_NULL_HANDLE,
-					swapchain->swapchainAttachmentSets[SbSwapchain::attachmentIndex::eSetIndex_Depth].view.data(),
+					swapchain->swapchainAttachmentSets[eSetIndex_Depth].view.data(),
 					VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, 
 					SbDescriptorSets::eBindingMode_Separate 
 				});
@@ -694,7 +692,7 @@ private:
 		VkPipelineDynamicStateCreateInfo dynamicStateCI = vks::initializers::pipelineDynamicStateCreateInfo(dynamicStateEnables);
 		VkGraphicsPipelineCreateInfo pipelineCI = vks::initializers::pipelineCreateInfo();
 
-		pipelineCI.renderPass = renderPass;
+		pipelineCI.renderPass = renderPass->renderPass;
 		pipelineCI.pInputAssemblyState = &inputAssemblyStateCI;
 		pipelineCI.pRasterizationState = &rasterizationStateCI;
 		pipelineCI.pColorBlendState = &colorBlendStateCI;
@@ -710,7 +708,7 @@ private:
 		*/
 
 		// Pipeline will be used in first sub pass
-		pipelineCI.subpass = kSubpass_GBUF;
+		pipelineCI.subpass = kSubpass_WRITE;
 		pipelineCI.layout = attachmentWriteSubpass.descriptorSets->pipelineLayout;
 
 		// Binding description
@@ -736,7 +734,7 @@ private:
 		*/
 
 		// Pipeline will be used in second sub pass
-		pipelineCI.subpass = kSubpass_COMPOSE;
+		pipelineCI.subpass = kSubpass_READ;
 		pipelineCI.layout = attachmentReadSubpass.descriptorSets->pipelineLayout;
 
 		VkPipelineVertexInputStateCreateInfo emptyInputStateCI {};
@@ -754,7 +752,7 @@ private:
 	}
 	
 	void createFramebuffers() {
-		swapchain->createFramebuffers(renderPass);
+		swapchain->createFramebuffers(renderPass->renderPass);
 	}
 
 	
@@ -764,13 +762,28 @@ private:
 	
 
 	void createAttachmentResources() {
-			
+			//TODO USE SWAPCHAIN CREATE ATTACHMENT-----------------------------------------------------------
+		swapchain->setAttachmentCount(eSetIndex_COUNT);
+		swapchain->createAttachment(
+			eSetIndex_Color, 
+			swapchain->swapchainAttachmentDescription.format,
+			VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, 
+			VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT, 
+			VK_IMAGE_ASPECT_COLOR_BIT);
+		swapchain->createAttachment(
+			eSetIndex_Depth,
+			findDepthFormat(),
+			VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+			VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT,
+			VK_IMAGE_ASPECT_DEPTH_BIT);
+
+		/*
 		// Input attachments
 		// These will be written in the first subpass, transitioned to input attachments 
 		// and then read in the secod subpass
 
 		// Color
-		auto & colorAttachment = swapchain->swapchainAttachmentSets[SbSwapchain::attachmentIndex::eSetIndex_Color].description;
+		auto & colorAttachment = swapchain->swapchainAttachmentSets[eSetIndex_Color].description;
 		colorAttachment.flags = 0;
 		colorAttachment.format = swapchain->swapchainAttachmentDescription.format;
 		colorAttachment.samples = swapchain->swapchainAttachmentDescription.samples;
@@ -782,7 +795,7 @@ private:
 		colorAttachment.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 		
 		// Depth
-		auto & depthAttachment = swapchain->swapchainAttachmentSets[SbSwapchain::attachmentIndex::eSetIndex_Depth].description;
+		auto & depthAttachment = swapchain->swapchainAttachmentSets[eSetIndex_Depth].description;
 		depthAttachment.flags = 0;
 		depthAttachment.format = findDepthFormat();
 		depthAttachment.samples = swapchain->swapchainAttachmentDescription.samples;
@@ -797,7 +810,7 @@ private:
 		for (size_t i = 0; i < swapchain->swapChainImages.size(); i++)
 		{
 			{
-				auto& attachment = swapchain->swapchainAttachmentSets[SbSwapchain::attachmentIndex::eSetIndex_Color];
+				auto& attachment = swapchain->swapchainAttachmentSets[eSetIndex_Color];
 				auto& format = attachment.description.format;
 				auto& samples = attachment.description.samples;
 				auto& image = attachment.image[i];
@@ -811,7 +824,7 @@ private:
 				vulkanBase->commandPool->transitionImageLayout(image, format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, 1);
 			}
 			{
-				auto& attachment = swapchain->swapchainAttachmentSets[SbSwapchain::attachmentIndex::eSetIndex_Depth];
+				auto& attachment = swapchain->swapchainAttachmentSets[eSetIndex_Depth];
 				auto& format =	attachment.description.format;
 				auto& samples = attachment.description.samples;
 				auto& image =	attachment.image[i];
@@ -825,8 +838,8 @@ private:
 				vulkanBase->commandPool->transitionImageLayout(image, format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, 1);
 			}
 		}
-
-		/*colorAttachment.format = swapChainImageFormat;
+		
+		colorAttachment.format = swapChainImageFormat;
 		createImage(swapChainExtent.width, swapChainExtent.height, 1, msaaSamples, colorAttachment.format, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, colorAttachment.image, colorAttachment.mem);
 		colorAttachment.view = createImageView(colorAttachment.image, colorAttachment.format, VK_IMAGE_ASPECT_COLOR_BIT, 1);
 		transitionImageLayout(colorAttachment.image, colorAttachment.format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, 1);
@@ -860,6 +873,7 @@ private:
 		throw std::runtime_error("failed to find supported format!");
 	}
 
+	//todo move this?
 	VkFormat findDepthFormat() {
 		return findSupportedFormat(
 			{ VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT },
@@ -1240,7 +1254,7 @@ private:
 
 			VkRenderPassBeginInfo renderPassInfo = {};
 			renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-			renderPassInfo.renderPass = renderPass;
+			renderPassInfo.renderPass = renderPass->renderPass;
 			renderPassInfo.framebuffer = swapchain->swapChainFramebuffers[i];
 			renderPassInfo.renderArea.offset = { 0, 0 };
 			renderPassInfo.renderArea.extent = swapchain->swapchainCI.imageExtent;
