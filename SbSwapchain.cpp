@@ -16,7 +16,7 @@ SbSwapchain::~SbSwapchain()
 {
 }
 
-void SbSwapchain::createSwapChain(VkSurfaceKHR surface, GLFWwindow* window)
+void SbSwapchain::createSwapChain(VkSurfaceKHR surface, GLFWwindow* window, uint32_t attachmentCount)
 {
 	SwapChainSupportDetails swapChainSupport = physicalDevice.querySwapChainSupport(physicalDevice.device, surface);
 
@@ -63,7 +63,10 @@ void SbSwapchain::createSwapChain(VkSurfaceKHR surface, GLFWwindow* window)
 		throw std::runtime_error("failed to create swap chain!");
 	}
 
+	createImageViews();
 	
+	const SbSwapchain::SwapchainAttachment as(swapChainImages.size());
+	swapchainAttachmentSets = std::vector<SbSwapchain::SwapchainAttachment>(attachmentCount-1, as);
 
 }
 
@@ -113,7 +116,7 @@ VkExtent2D SbSwapchain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabil
 	}
 }
 
-void SbSwapchain::createImageViews(VkDevice device) {
+void SbSwapchain::createImageViews() {
 
 	uint32_t imageCount;
 	vkGetSwapchainImagesKHR(logicalDevice.device, handle, &imageCount, nullptr);
@@ -136,15 +139,10 @@ void SbSwapchain::createImageViews(VkDevice device) {
 	swapChainImageViews.resize(swapChainImages.size());
 
 	for (uint32_t i = 0; i < swapChainImages.size(); i++) {
-		swapChainImageViews[i] = vks::helper::createImageView(device, swapChainImages[i], desc.format, VK_IMAGE_ASPECT_COLOR_BIT, 1);
+		swapChainImageViews[i] = vks::helper::createImageView(logicalDevice.device, swapChainImages[i], desc.format, VK_IMAGE_ASPECT_COLOR_BIT, 1);
 	}
 
 	
-}
-
-void SbSwapchain::setAttachmentCount(uint32_t count) {
-	const SbSwapchain::SwapchainAttachment as(swapChainImages.size());
-	swapchainAttachmentSets = std::vector<SbSwapchain::SwapchainAttachment>(count, as);
 }
 
 void SbSwapchain::createFramebuffers(VkRenderPass renderpass) {
@@ -179,27 +177,44 @@ void SbSwapchain::createFramebuffers(VkRenderPass renderpass) {
 }
 
 //todo use enum to configure common types?
-void SbSwapchain::createAttachment(uint32_t attachmentIndex, VkFormat format, 
-	VkImageLayout finalLayout, 
-	VkImageUsageFlags usageBits, 
-	VkImageAspectFlags aspectBits,
-	VkImageLayout initLayout, 
+void SbSwapchain::createAttachment(
+	uint32_t attachmentIndex,
+	VkFormat format, 
+	VkImageUsageFlags usage,
+	VkImageUsageFlags additionalUsage,
 	VkAttachmentLoadOp loadOp, 
 	VkAttachmentStoreOp storeOp, 
 	VkAttachmentLoadOp stencilLoad, 
 	VkAttachmentStoreOp stencilStore) 
 {
-	// Color
+	assert(attachmentIndex > 0);
+	--attachmentIndex;
+
+	VkImageAspectFlags aspectMask = 0;
+	VkImageLayout imageLayout;
+	VkImageUsageFlags usageMask = (usage | additionalUsage);
+
+	if (usageMask & VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT)
+	{
+		aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		imageLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+	} 
+	else if (usageMask & VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
+	{
+		aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;// | VK_IMAGE_ASPECT_STENCIL_BIT;
+		imageLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+	}
+
 	auto & colorAttachment = swapchainAttachmentSets[attachmentIndex].description;
 	colorAttachment.flags = 0;
 	colorAttachment.format = format;
 	colorAttachment.samples = swapchainAttachmentDescription.samples;
-	colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR; // default for attachments
-	colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE; // // default for attachments
-	colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-	colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+	colorAttachment.loadOp = loadOp;
+	colorAttachment.storeOp = storeOp;
+	colorAttachment.stencilLoadOp = stencilLoad;
+	colorAttachment.stencilStoreOp = stencilStore;
 	colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-	colorAttachment.finalLayout = finalLayout;
+	colorAttachment.finalLayout = imageLayout;
 
 
 	for (size_t i = 0; i < swapChainImages.size(); i++)
@@ -209,9 +224,33 @@ void SbSwapchain::createAttachment(uint32_t attachmentIndex, VkFormat format,
 		auto& memory = swapchainAttachmentSets[attachmentIndex].mem[i];
 		auto& view = swapchainAttachmentSets[attachmentIndex].view[i];
 		vulkanBase.createImage(swapchainCI.imageExtent, 1, samples, format, VK_IMAGE_TILING_OPTIMAL,
-			usageBits,//VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT,
-			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, image, memory);
-		view = vks::helper::createImageView(logicalDevice.device, image, format, aspectBits, 1);
-		vulkanBase.commandPool->transitionImageLayout(image, format, initLayout, finalLayout, 1); //should this be UNDEFINED or initlayout?
+			usageMask, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, image, memory);
+		view = vks::helper::createImageView(logicalDevice.device, image, format, aspectMask, 1);
+		vulkanBase.commandPool->transitionImageLayout(image, format, colorAttachment.initialLayout, imageLayout, 1);
 	}
 }
+
+std::vector<VkImageView> & SbSwapchain::getAttachmentViews(uint32_t index)
+{
+	assert(index >= 0);
+	if (index==0)
+	{
+		return swapChainImageViews;
+	}
+	return swapchainAttachmentSets[index-1].view;
+}
+
+VkAttachmentDescription SbSwapchain::getAttachmentDescription(uint32_t index) {
+	assert(index >= 0);
+	if (index == 0)
+	{
+		return swapchainAttachmentDescription;
+	}
+	return swapchainAttachmentSets[index - 1].description;
+}
+
+uint32_t SbSwapchain::getSize()
+{
+	return swapChainImages.size();
+}
+

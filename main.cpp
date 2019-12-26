@@ -244,7 +244,7 @@ private:
 		kSubpass_MAX = kSubpass_COUNT - 1
 	};
 
-	enum attachmentIndex { eSetIndex_Color, eSetIndex_Depth, eSetIndex_COUNT, eSetIndex_MAX = eSetIndex_Depth };
+	//enum attachmentIndex { eSetIndex_Color, eSetIndex_Depth, eSetIndex_COUNT, eSetIndex_MAX = eSetIndex_Depth };
 	
 	/*
 	//todo here or in swap?
@@ -348,7 +348,7 @@ private:
 
 	void cleanupSwapChain() {
 
-		for (size_t i = 0; i < swapchain->swapChainImages.size(); i++)
+		for (size_t i = 0; i < swapchain->getSize(); i++)
 		{
 			//todo
 			/*
@@ -381,21 +381,26 @@ private:
 		vkDestroyPipelineLayout(vulkanBase->logicalDevice->device, attachmentReadSubpass.descriptorSets.get()->pipelineLayout, nullptr);
 		vkDestroyRenderPass(vulkanBase->logicalDevice->device, renderPass->renderPass, nullptr);
 
+		/*
+		//TODO swapchain cleanup function
 		for (auto imageView : swapchain->swapChainImageViews) {
 			vkDestroyImageView(vulkanBase->logicalDevice->device, imageView, nullptr);
 		}
 
 		vkDestroySwapchainKHR(vulkanBase->logicalDevice->device, swapchain->handle, nullptr);
 
+		//TODO swapchain cleanup function
 		for (size_t i = 0; i < swapchain->swapChainImages.size(); i++) {
 			vkDestroyBuffer(vulkanBase->logicalDevice->device, uniformBuffers[i], nullptr);
 			vkFreeMemory(vulkanBase->logicalDevice->device, uniformBuffersMemory[i], nullptr);
 		}
 
+		//TODO swapchain cleanup function
 		for (size_t i = 0; i < swapchain->swapChainImages.size(); i++) {
 			vkDestroyBuffer(vulkanBase->logicalDevice->device, shadingUniformBuffers[i], nullptr);
 			vkFreeMemory(vulkanBase->logicalDevice->device, shadingUniformBuffersMemory[i], nullptr);
 		}
+		 */
 
 		descriptorPool->destroy();
 	}
@@ -489,8 +494,7 @@ private:
 
 	void createSwapChain() {
 		swapchain = std::make_unique<SbSwapchain>(*vulkanBase);
-		swapchain->createSwapChain(vulkanBase->surface, window);
-		swapchain->createImageViews(vulkanBase->logicalDevice->device);	
+		swapchain->createSwapChain(vulkanBase->surface, window, kAttachment_COUNT);
 	}
 	
 	void createRenderPass() {
@@ -577,9 +581,9 @@ private:
 
 		renderPass = std::make_unique<SbRenderpass>(kSubpass_COUNT, kAttachment_COUNT);
 
-		renderPass->addAttachment(kAttachment_BACK, swapchain->swapchainAttachmentDescription);
-		renderPass->addAttachment(kAttachment_COLOR, swapchain->swapchainAttachmentSets[eSetIndex_Color].description);
-		renderPass->addAttachment(kAttachment_DEPTH, swapchain->swapchainAttachmentSets[eSetIndex_Depth].description);
+		renderPass->addAttachment(kAttachment_BACK, swapchain->getAttachmentDescription(kAttachment_BACK));
+		renderPass->addAttachment(kAttachment_COLOR, swapchain->getAttachmentDescription(kAttachment_COLOR));
+		renderPass->addAttachment(kAttachment_DEPTH, swapchain->getAttachmentDescription(kAttachment_DEPTH));
 
 		renderPass->addColorAttachmentRef(kSubpass_WRITE, kAttachment_COLOR);
 		renderPass->setDepthStencilAttachmentRef(kSubpass_WRITE, kAttachment_DEPTH);
@@ -609,7 +613,7 @@ private:
 	void createDescriptorSetLayout() {
 		//first create attachment write layout
 		{
-			attachmentWriteSubpass.descriptorSets = std::make_unique<SbDescriptorSets>(vulkanBase->logicalDevice->device, swapchain->swapChainImages.size());
+			attachmentWriteSubpass.descriptorSets = std::make_unique<SbDescriptorSets>(vulkanBase->logicalDevice->device, swapchain->getSize());
 			SbDescriptorSets & DS = *attachmentWriteSubpass.descriptorSets.get();
 			
 			//create bindings
@@ -649,14 +653,14 @@ private:
 
 		//now create attachment read layout
 		{
-			attachmentReadSubpass.descriptorSets = std::make_unique<SbDescriptorSets>(vulkanBase->logicalDevice->device, swapchain->swapChainImages.size());
+			attachmentReadSubpass.descriptorSets = std::make_unique<SbDescriptorSets>(vulkanBase->logicalDevice->device, swapchain->getSize());
 			SbDescriptorSets & DS = *attachmentReadSubpass.descriptorSets.get();
 
 			DS.addImageBinding(
 				vkinit::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, VK_SHADER_STAGE_FRAGMENT_BIT, 0),
 				{ 
 					VK_NULL_HANDLE, 
-					swapchain->swapchainAttachmentSets[eSetIndex_Color].view.data(),
+					swapchain->getAttachmentViews(kAttachment_COLOR).data(),
 					VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
 					SbDescriptorSets::eBindingMode_Separate 
 				});
@@ -664,17 +668,15 @@ private:
 				vkinit::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, VK_SHADER_STAGE_FRAGMENT_BIT, 1),
 				{
 					VK_NULL_HANDLE,
-					swapchain->swapchainAttachmentSets[eSetIndex_Depth].view.data(),
+					swapchain->getAttachmentViews(kAttachment_COLOR).data(),
 					VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, 
 					SbDescriptorSets::eBindingMode_Separate 
 				});
 			//VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
 			DS.createDSLayout();
 			DS.createPipelineLayout();
-
 			DS.allocateDescriptorSets(*descriptorPool.get());
 			DS.updateDescriptors(); 
-
 		}
 	}	
 
@@ -763,19 +765,16 @@ private:
 
 	void createAttachmentResources() {
 			//TODO USE SWAPCHAIN CREATE ATTACHMENT-----------------------------------------------------------
-		swapchain->setAttachmentCount(eSetIndex_COUNT);
-		swapchain->createAttachment(
-			eSetIndex_Color, 
-			swapchain->swapchainAttachmentDescription.format,
-			VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, 
-			VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT, 
-			VK_IMAGE_ASPECT_COLOR_BIT);
-		swapchain->createAttachment(
-			eSetIndex_Depth,
-			findDepthFormat(),
-			VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-			VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT,
-			VK_IMAGE_ASPECT_DEPTH_BIT);
+		swapchain->createAttachment(kAttachment_COLOR, swapchain->getAttachmentDescription(kAttachment_BACK).format,
+			VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
+		swapchain->createAttachment(kAttachment_DEPTH, findDepthFormat(),
+			VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT);
+
+		//TODO new renderpass
+		//createAttachment(VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, &attachments.position);	// (World space) Positions		
+		//createAttachment(VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, &attachments.normal);		// (World space) Normals		
+		//createAttachment(VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, &attachments.albedo);
+
 
 		/*
 		// Input attachments
@@ -1157,17 +1156,17 @@ private:
 			shubo->specularColor = drawables[i].SpecularColor;
 		}
 
-		shadingUniformBuffers.resize(swapchain->swapChainImages.size());
-		shadingUniformBuffersMemory.resize(swapchain->swapChainImages.size());
+		shadingUniformBuffers.resize(swapchain->getSize());
+		shadingUniformBuffersMemory.resize(swapchain->getSize());
 
 		//------------------------------
 
 		VkDeviceSize bufferSize = sizeof(UniformBufferObject);
 
-		uniformBuffers.resize(swapchain->swapChainImages.size());
-		uniformBuffersMemory.resize(swapchain->swapChainImages.size());
+		uniformBuffers.resize(swapchain->getSize());
+		uniformBuffersMemory.resize(swapchain->getSize());
 
-		for (size_t i = 0; i < swapchain->swapChainImages.size(); i++) {
+		for (size_t i = 0; i < swapchain->getSize(); i++) {
 			vulkanBase->createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
 			vulkanBase->createBuffer(dynamicBufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, shadingUniformBuffers[i], shadingUniformBuffersMemory[i]);
 		}
@@ -1186,13 +1185,12 @@ private:
 		descriptorPool = std::make_unique<SbDescriptorPool>(vulkanBase->logicalDevice->device);
 
 		std::vector<VkDescriptorPoolSize> poolSizes(4);
-		poolSizes[0] = { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, static_cast<uint32_t>(swapchain->swapChainImages.size() * 2) }; //attachment write binding counts as uniform so there are 2 uniform bindings per frame, attachment and uniform struct
-		poolSizes[1] = { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, static_cast<uint32_t>(swapchain->swapChainImages.size() * 2) };
-		poolSizes[2] = { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, static_cast<uint32_t>(swapchain->swapChainImages.size() * 2) };
-		poolSizes[3] = { VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, static_cast<uint32_t>(swapchain->swapChainImages.size() * 2) };
+		poolSizes[0] = { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, static_cast<uint32_t>(swapchain->getSize() * 2) }; //attachment write binding counts as uniform so there are 2 uniform bindings per frame, attachment and uniform struct
+		poolSizes[1] = { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, static_cast<uint32_t>(swapchain->getSize() * 2) };
+		poolSizes[2] = { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, static_cast<uint32_t>(swapchain->getSize() * 2) };
+		poolSizes[3] = { VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, static_cast<uint32_t>(swapchain->getSize() * 2) };
 
-
-		descriptorPool->createDescriptorPool(poolSizes, static_cast<uint32_t>(swapchain->swapChainImages.size()) * 2);
+		descriptorPool->createDescriptorPool(poolSizes, static_cast<uint32_t>(swapchain->getSize()) * 2);
 
 		/*{
 			std::vector<VkDescriptorPoolSize> poolSizes(4);
