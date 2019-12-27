@@ -196,6 +196,29 @@ uint32_t SbVulkanBase::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags
 	throw std::runtime_error("failed to find suitable memory type!");
 }
 
+void SbVulkanBase::submitCommandBuffers(std::vector<VkCommandBuffer> cmds, 
+	std::vector<VkSemaphore> waitSem, std::vector<VkSemaphore> signalSem, VkFence inFlightFence)
+{
+	VkSubmitInfo submitInfo = {};
+	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+
+	VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+	submitInfo.waitSemaphoreCount = waitSem.size();
+	submitInfo.pWaitSemaphores = waitSem.data();
+	submitInfo.pWaitDstStageMask = waitStages;
+
+	submitInfo.commandBufferCount = cmds.size();
+	submitInfo.pCommandBuffers = cmds.data();
+
+	submitInfo.signalSemaphoreCount = signalSem.size();
+	submitInfo.pSignalSemaphores = signalSem.data();
+
+	vkResetFences(logicalDevice->device, 1, &inFlightFence);
+	if (vkQueueSubmit(logicalDevice->graphicsQueue, 1, &submitInfo, inFlightFence) != VK_SUCCESS) {
+		throw std::runtime_error("failed to submit draw command buffer!");
+	}
+}
+
 
 void SbVulkanBase::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory) {
 	VkBufferCreateInfo bufferInfo = {};

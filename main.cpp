@@ -273,11 +273,13 @@ private:
 
 	std::vector<VkCommandBuffer> commandBuffers;
 
+	/*
 	std::vector<VkSemaphore> imageAvailableSemaphores;
 	std::vector<VkSemaphore> renderFinishedSemaphores;
 	std::vector<VkFence> inFlightFences;
 	std::vector<VkFence> imagesInFlight;
 	size_t currentFrame = 0;
+	*/
 
 	bool framebufferResized = false;
 
@@ -427,11 +429,14 @@ private:
 			vkFreeMemory(vulkanBase->logicalDevice->device, drawables[i].VertexBufferMemory, nullptr);
 		}
 
+		/*
 		for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
 			vkDestroySemaphore(vulkanBase->logicalDevice->device, renderFinishedSemaphores[i], nullptr);
 			vkDestroySemaphore(vulkanBase->logicalDevice->device, imageAvailableSemaphores[i], nullptr);
 			vkDestroyFence(vulkanBase->logicalDevice->device, inFlightFences[i], nullptr);
 		}
+		*/
+		
 
 		vkDestroyCommandPool(vulkanBase->logicalDevice->device, vulkanBase->commandPool->handle, nullptr);
 
@@ -500,85 +505,7 @@ private:
 	
 	void createRenderPass() {
 		//willems attachments demo
-		/*
-		std::array<VkAttachmentDescription, kAttachment_COUNT> attachments {};
-		attachments[kAttachment_BACK] = swapchain->swapchainAttachmentDescription;
-		attachments[kAttachment_COLOR] = swapchain->swapchainAttachmentSets[eSetIndex_Color].description;
-		attachments[kAttachment_DEPTH] = swapchain->swapchainAttachmentSets[eSetIndex_Depth].description;
-
-		std::array<VkSubpassDescription, 2> subpassDescriptions {};
-
 		
-			//First subpass
-			//Fill the color and depth attachments
-		
-		VkAttachmentReference colorReference = { kAttachment_COLOR, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL };
-		VkAttachmentReference depthReference = { kAttachment_DEPTH, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL };
-
-		subpassDescriptions[0].pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-		subpassDescriptions[0].colorAttachmentCount = 1;
-		subpassDescriptions[0].pColorAttachments = &colorReference;
-		subpassDescriptions[0].pDepthStencilAttachment = &depthReference;
-
-			//Second subpass
-			//Input attachment read and swap chain color attachment write
-
-		// Color and depth attachment written to in first sub pass will be used as input attachments to be read in the fragment shader
-		VkAttachmentReference inputReferences[2];
-		inputReferences[0] = { kAttachment_COLOR, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL };
-		inputReferences[1] = { kAttachment_DEPTH, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL };
-
-		// Color reference (target) for this sub pass is the swap chain color attachment
-		VkAttachmentReference colorReferenceSwapchain = { 0, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL };
-
-		subpassDescriptions[1].pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-		subpassDescriptions[1].colorAttachmentCount = 1;
-		subpassDescriptions[1].pColorAttachments = &colorReferenceSwapchain;
-		// Use the attachments filled in the first pass as input attachments
-		subpassDescriptions[1].inputAttachmentCount = 2;
-		subpassDescriptions[1].pInputAttachments = inputReferences;
-
-			//Subpass dependencies for layout transitions
-		std::array<VkSubpassDependency, 3> dependencies;
-
-		dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
-		dependencies[0].dstSubpass = 0;
-		dependencies[0].srcStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
-		dependencies[0].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-		dependencies[0].srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
-		dependencies[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-		dependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
-
-		// This dependency transitions the input attachment from color attachment to shader read
-		dependencies[1].srcSubpass = 0;
-		dependencies[1].dstSubpass = 1;
-		dependencies[1].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-		dependencies[1].dstStageMask = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
-		dependencies[1].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-		dependencies[1].dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-		dependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
-
-		dependencies[2].srcSubpass = 1;
-		dependencies[2].dstSubpass = VK_SUBPASS_EXTERNAL;
-		dependencies[2].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-		dependencies[2].dstStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
-		dependencies[2].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-		dependencies[2].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
-		dependencies[2].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
-
-		VkRenderPassCreateInfo renderPassInfo{};
-		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-		renderPassInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
-		renderPassInfo.pAttachments = attachments.data();
-		renderPassInfo.subpassCount = static_cast<uint32_t>(subpassDescriptions.size());
-		renderPassInfo.pSubpasses = subpassDescriptions.data();
-		renderPassInfo.dependencyCount = static_cast<uint32_t>(dependencies.size());
-		renderPassInfo.pDependencies = dependencies.data();
-
-		if (vkCreateRenderPass(vulkanBase->logicalDevice->device, &renderPassInfo, nullptr, &renderPass) != VK_SUCCESS) {
-			throw std::runtime_error("failed to create render pass!");
-		}
-		*/
 
 		renderPass = std::make_unique<SbRenderpass>(kSubpass_COUNT, kAttachment_COUNT);
 
@@ -1313,6 +1240,7 @@ private:
 	}
 
 	void createSyncObjects() {
+		/*
 		imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
 		renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
 		inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
@@ -1332,6 +1260,8 @@ private:
 				throw std::runtime_error("failed to create synchronization objects for a frame!");
 			}
 		}
+		*/
+		swapchain->createSyncObjects(MAX_FRAMES_IN_FLIGHT);
 	}	
 
 	void updateUniformBuffer(uint32_t currentImage) {
@@ -1377,140 +1307,14 @@ private:
 	}
 
 	void drawFrame() {
-		vkWaitForFences(vulkanBase->logicalDevice->device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
-
-		uint32_t imageIndex;
-		VkResult result = vkAcquireNextImageKHR(vulkanBase->logicalDevice->device, swapchain->handle, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
-
-		if (result == VK_ERROR_OUT_OF_DATE_KHR) {
-			recreateSwapChain();
-			return;
-		}
-		else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
-			throw std::runtime_error("failed to acquire swap chain image!");
-		}
-
+		uint32_t imageIndex = swapchain->acquireNextImage();		
 		updateUniformBuffer(imageIndex);
-
-		if (imagesInFlight[imageIndex] != VK_NULL_HANDLE) {
-			vkWaitForFences(vulkanBase->logicalDevice->device, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
-		}
-		imagesInFlight[imageIndex] = inFlightFences[currentFrame];
-
-		VkSubmitInfo submitInfo = {};
-		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-
-		VkSemaphore waitSemaphores[] = { imageAvailableSemaphores[currentFrame] };
-		VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
-		submitInfo.waitSemaphoreCount = 1;
-		submitInfo.pWaitSemaphores = waitSemaphores;
-		submitInfo.pWaitDstStageMask = waitStages;
-
-		submitInfo.commandBufferCount = 1;
-		submitInfo.pCommandBuffers = &commandBuffers[imageIndex];
-
-		VkSemaphore signalSemaphores[] = { renderFinishedSemaphores[currentFrame] };
-		submitInfo.signalSemaphoreCount = 1;
-		submitInfo.pSignalSemaphores = signalSemaphores;
-
-		vkResetFences(vulkanBase->logicalDevice->device, 1, &inFlightFences[currentFrame]);
-
-		if (vkQueueSubmit(vulkanBase->logicalDevice->graphicsQueue, 1, &submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS) {
-			throw std::runtime_error("failed to submit draw command buffer!");
-		}
-
-		VkPresentInfoKHR presentInfo = {};
-		presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-
-		presentInfo.waitSemaphoreCount = 1;
-		presentInfo.pWaitSemaphores = signalSemaphores;
-
-		VkSwapchainKHR swapChains[] = { swapchain->handle };
-		presentInfo.swapchainCount = 1;
-		presentInfo.pSwapchains = swapChains;
-
-		presentInfo.pImageIndices = &imageIndex;
-
-		result = vkQueuePresentKHR(vulkanBase->logicalDevice->presentQueue, &presentInfo);
-
-		if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || framebufferResized) {
-			framebufferResized = false;
-			recreateSwapChain();
-		}
-		else if (result != VK_SUCCESS) {
-			throw std::runtime_error("failed to present swap chain image!");
-		}
-
-		currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
-
-
-		/*
-		VkResult res = vkWaitForFences(vulkanBase->logicalDevice->device, 1, &inFlightFences[currentFrame], VK_TRUE, std::numeric_limits<uint64_t>::max());
-		if (res != VK_SUCCESS) {
-			throw std::runtime_error("failed to submit draw command buffer!");
-		}
-
-		uint32_t imageIndex;
-		VkResult result = vkAcquireNextImageKHR(vulkanBase->logicalDevice->device, swapchain->handle, std::numeric_limits<uint64_t>::max(), imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
-
-		if (result == VK_ERROR_OUT_OF_DATE_KHR) {
-			recreateSwapChain();
-			return;
-		}
-		else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
-			throw std::runtime_error("failed to acquire swap chain image!");
-		}
-
-		updateUniformBuffer(imageIndex);
-
-		VkSubmitInfo submitInfo = {};
-		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-
-		VkSemaphore waitSemaphores[] = { imageAvailableSemaphores[currentFrame] };
-		VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
-		submitInfo.waitSemaphoreCount = 1;
-		submitInfo.pWaitSemaphores = waitSemaphores;
-		submitInfo.pWaitDstStageMask = waitStages;
-
-		submitInfo.commandBufferCount = 1;
-		submitInfo.pCommandBuffers = &commandBuffers[imageIndex];
-
-		VkSemaphore signalSemaphores[] = { renderFinishedSemaphores[currentFrame] };
-		submitInfo.signalSemaphoreCount = 1;
-		submitInfo.pSignalSemaphores = signalSemaphores;
-
-		vkResetFences(vulkanBase->logicalDevice->device, 1, &inFlightFences[currentFrame]);
-
-		res = vkQueueSubmit(vulkanBase->logicalDevice->graphicsQueue, 1, &submitInfo, inFlightFences[currentFrame]);
-		if (res != VK_SUCCESS) {
-			throw std::runtime_error("failed to submit draw command buffer!");
-		}
-
-		VkPresentInfoKHR presentInfo = {};
-		presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-
-		presentInfo.waitSemaphoreCount = 1;
-		presentInfo.pWaitSemaphores = signalSemaphores;
-
-		VkSwapchainKHR swapChains[] = { swapchain->handle };
-		presentInfo.swapchainCount = 1;
-		presentInfo.pSwapchains = swapChains;
-
-		presentInfo.pImageIndices = &imageIndex;
-
-		result = vkQueuePresentKHR(vulkanBase->logicalDevice->presentQueue, &presentInfo);
-
-		if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || framebufferResized) {
-			framebufferResized = false;
-			recreateSwapChain();
-		}
-		else if (result != VK_SUCCESS) {
-			throw std::runtime_error("failed to present swap chain image!");
-		}
-
-		currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
-
-		*/
+		std::vector<VkCommandBuffer> cmds { commandBuffers[imageIndex] };
+		std::vector<VkSemaphore> waitSem { swapchain->getImageAvailableSemaphore() };
+		std::vector<VkSemaphore> signalSem { swapchain->getRenderFinishedSemaphore() };
+		vulkanBase->submitCommandBuffers(cmds, waitSem, signalSem, swapchain->getInFlightFence());	
+		swapchain->presentImage(imageIndex, signalSem);
+		swapchain->updateFrameInFlightCounter();
 	}
 	
 	static std::vector<char> readFile(const std::string& filename) {

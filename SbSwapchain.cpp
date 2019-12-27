@@ -230,6 +230,103 @@ void SbSwapchain::createAttachment(
 	}
 }
 
+void SbSwapchain::createSyncObjects(const uint32_t MAX_FRAMES_IN_FLIGHT) {
+	imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
+	renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
+	inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
+	imagesInFlight.resize(getSize(), VK_NULL_HANDLE);
+	this->MAX_FRAMES_IN_FLIGHT = MAX_FRAMES_IN_FLIGHT;
+
+	VkSemaphoreCreateInfo semaphoreInfo = {};
+	semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+
+	VkFenceCreateInfo fenceInfo = {};
+	fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+	fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+
+	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+		if (vkCreateSemaphore(logicalDevice.device, &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]) != VK_SUCCESS ||
+			vkCreateSemaphore(logicalDevice.device, &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS ||
+			vkCreateFence(logicalDevice.device, &fenceInfo, nullptr, &inFlightFences[i]) != VK_SUCCESS) {
+			throw std::runtime_error("failed to create synchronization objects for a frame!");
+		}
+	}
+}
+
+
+
+uint32_t SbSwapchain::acquireNextImage() {
+	vkWaitForFences(logicalDevice.device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
+
+	uint32_t imageIndex;
+	VkResult result = vkAcquireNextImageKHR(logicalDevice.device, this->handle,
+		UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
+
+	/* //TODO recreate swapchain broken
+	if (result == VK_ERROR_OUT_OF_DATE_KHR) {
+		recreateSwapchain();
+		return;
+	}
+	else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
+		throw std::runtime_error("failed to acquire swap chain image!");
+	}
+	*/
+
+	if (imagesInFlight[imageIndex] != VK_NULL_HANDLE) {
+		vkWaitForFences(logicalDevice.device, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
+	}
+	imagesInFlight[imageIndex] = inFlightFences[currentFrame];
+
+	return imageIndex;
+
+}
+
+void SbSwapchain::presentImage(uint32_t imageIndex, std::vector<VkSemaphore> waitSem) {
+	VkPresentInfoKHR presentInfo = {};
+	presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+
+	presentInfo.waitSemaphoreCount = waitSem.size();
+	presentInfo.pWaitSemaphores = waitSem.data();
+
+	presentInfo.swapchainCount = 1;
+	presentInfo.pSwapchains = &this->handle;
+
+	presentInfo.pImageIndices = &imageIndex;
+
+	VkResult result = vkQueuePresentKHR(logicalDevice.presentQueue, &presentInfo);
+
+	/* TODO HANDLE FRAME BUFFER RESIZE
+	if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || framebufferResized) {
+		framebufferResized = false;
+		recreateSwapChain();
+	}
+	else if (result != VK_SUCCESS) {
+		throw std::runtime_error("failed to present swap chain image!");
+	}
+	*/
+}
+
+void SbSwapchain::updateFrameInFlightCounter() {
+	currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
+}
+
+
+void SbSwapchain::recreateSwapchain() {
+
+}
+
+VkSemaphore SbSwapchain::getImageAvailableSemaphore() {
+	return imageAvailableSemaphores[currentFrame];
+}
+
+VkSemaphore SbSwapchain::getRenderFinishedSemaphore() {
+	return renderFinishedSemaphores[currentFrame];
+}
+
+VkFence SbSwapchain::getInFlightFence() {
+	return inFlightFences[currentFrame];
+}
+
 std::vector<VkImageView> & SbSwapchain::getAttachmentViews(uint32_t index)
 {
 	assert(index >= 0);

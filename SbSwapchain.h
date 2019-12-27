@@ -51,7 +51,9 @@ public:
 	std::vector<VkSemaphore> imageAvailableSemaphores;
 	std::vector<VkSemaphore> renderFinishedSemaphores;
 	std::vector<VkFence> inFlightFences;
+	std::vector<VkFence> imagesInFlight;
 	size_t currentFrame = 0;
+	uint32_t MAX_FRAMES_IN_FLIGHT; //TODO should really be const? will private do?
 
 	
 
@@ -79,13 +81,23 @@ public:
 
 	void createSyncObjects(const uint32_t maxFramesInFlight);
 
-	uint32_t acquireNextImage();
 	void recreateSwapchain();
+	VkSemaphore getImageAvailableSemaphore();
+	VkSemaphore getRenderFinishedSemaphore();
+	VkFence getInFlightFence();
+	uint32_t acquireNextImage();
+
+	void presentImage(uint32_t imageIndex, std::vector<VkSemaphore> waitSem);
+
+	void updateFrameInFlightCounter();
+
 
 	VkSemaphore getImageAvailableSemaphore(uint32_t index);
 
 	VkSemaphore getRenderFinishedSemaphore(uint32_t index);
 
+
+	size_t getCurrentFrame();
 
 	std::vector<VkImageView> & getAttachmentViews(uint32_t index);
 	VkAttachmentDescription getAttachmentDescription(uint32_t index);
