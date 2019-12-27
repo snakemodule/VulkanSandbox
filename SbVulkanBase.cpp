@@ -196,6 +196,7 @@ uint32_t SbVulkanBase::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags
 	throw std::runtime_error("failed to find suitable memory type!");
 }
 
+
 void SbVulkanBase::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory) {
 	VkBufferCreateInfo bufferInfo = {};
 	bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -221,3 +222,4 @@ void SbVulkanBase::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkM
 
 	vkBindBufferMemory(logicalDevice->device, buffer, bufferMemory, 0);
 }
+

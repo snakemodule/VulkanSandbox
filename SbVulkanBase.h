@@ -58,7 +58,6 @@ public:
 	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
 
-
 private:
 	bool checkValidationLayerSupport();
 

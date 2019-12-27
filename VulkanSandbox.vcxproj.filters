@@ -160,6 +160,24 @@
     <None Include="shaders\attachmentwrite.vert">
       <Filter>Resource Files\shaders</Filter>
     </None>
+    <None Include="gbuf.vert">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="gbuf.frag">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="composition.vert">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="composition.frag">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="transparent.vert">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="transparent.frag">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="tasks.txt">

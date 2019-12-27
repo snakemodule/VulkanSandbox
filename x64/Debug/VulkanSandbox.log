@@ -1,18 +1,21 @@
-﻿  SbRenderpass.cpp
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\sbrenderpass.cpp(85): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\sbrenderpass.cpp(89): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
-  SbSwapchain.cpp
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\sbswapchain.cpp(254): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
-  main.cpp
+﻿  main.cpp
 c:\users\colin\source\repos\vulkansandbox\vulkansandbox\model.h(41): warning C4267: '=': conversion from 'size_t' to 'T', possible loss of data
           with
           [
               T=glm::i32
           ]
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1102): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1107): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1286): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1341): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1344): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1103): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1108): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1287): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1343): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1346): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  SbCommandPool.cpp
+  SbRenderpass.cpp
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\sbrenderpass.cpp(85): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\sbrenderpass.cpp(89): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+  SbSwapchain.cpp
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\sbswapchain.cpp(254): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
+  SbVulkanBase.cpp
   Generating Code...
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
   VulkanSandbox.vcxproj -> C:\Users\Colin\source\repos\VulkanSandbox\x64\Debug\VulkanSandbox.exe

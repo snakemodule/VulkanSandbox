@@ -47,10 +47,11 @@ public:
 	VkSwapchainCreateInfoKHR swapchainCI;
 	VkSwapchainKHR handle;
 
-	//VkExtent2D swapChainExtent;
-
-	//VkFormat swapChainImageFormat;
-
+	
+	std::vector<VkSemaphore> imageAvailableSemaphores;
+	std::vector<VkSemaphore> renderFinishedSemaphores;
+	std::vector<VkFence> inFlightFences;
+	size_t currentFrame = 0;
 
 	
 
@@ -64,8 +65,6 @@ public:
 
 	void createImageViews();
 
-	
-
 	void createFramebuffers(VkRenderPass renderpass);
 
 	void createAttachment(
@@ -77,6 +76,15 @@ public:
 		VkAttachmentStoreOp storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
 		VkAttachmentLoadOp stencilLoad = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
 		VkAttachmentStoreOp stencilStore = VK_ATTACHMENT_STORE_OP_DONT_CARE);
+
+	void createSyncObjects(const uint32_t maxFramesInFlight);
+
+	uint32_t acquireNextImage();
+	void recreateSwapchain();
+
+	VkSemaphore getImageAvailableSemaphore(uint32_t index);
+
+	VkSemaphore getRenderFinishedSemaphore(uint32_t index);
 
 
 	std::vector<VkImageView> & getAttachmentViews(uint32_t index);
