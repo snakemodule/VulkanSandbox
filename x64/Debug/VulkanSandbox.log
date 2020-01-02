@@ -1,4 +1,14 @@
-﻿  SbSwapchain.cpp
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\sbswapchain.cpp(288): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\sbswapchain.cpp(351): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
+﻿  SbPipeline.cpp
+  main.cpp
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\model.h(41): warning C4267: '=': conversion from 'size_t' to 'T', possible loss of data
+          with
+          [
+              T=glm::i32
+          ]
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(948): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(953): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1132): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1171): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1174): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  Generating Code...
   VulkanSandbox.vcxproj -> C:\Users\Colin\source\repos\VulkanSandbox\x64\Debug\VulkanSandbox.exe

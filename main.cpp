@@ -203,25 +203,17 @@ private:
 	GLFWwindow* window;
 
 	std::unique_ptr<SbVulkanBase> vulkanBase;
-	//std::unique_ptr<SbPhysicalDevice> physicalDevice;
-	//std::unique_ptr<SbLogicalDevice> logicalDevice;
 	std::unique_ptr<SbSwapchain> swapchain;	
-
-	//VkRenderPass renderPass;
 
 	std::unique_ptr<SbRenderpass> renderPass;
 
-	struct SubpassSetup {
-		//std::unique_ptr<SbLayout> layout;
-		std::unique_ptr<SbDescriptorSets> descriptorSets;
-		//VkDescriptorSetLayout DS_Layout;
-		//std::vector<VkDescriptorSet> allocatedDSs;
-		//VkPipelineLayout Pipeline_Layout;
-		VkPipeline Pipeline;
-	};
-
-	SubpassSetup attachmentWriteSubpass;
-	SubpassSetup attachmentReadSubpass;
+	//struct SubpassSetup {
+	//	std::unique_ptr<SbDescriptorSets> descriptorSets;
+	//	VkPipeline Pipeline;
+	//};
+	//
+	//SubpassSetup attachmentWriteSubpass;
+	//SubpassSetup attachmentReadSubpass;
 
 	//VkPipeline graphicsPipeline;
 
@@ -244,13 +236,6 @@ private:
 		kSubpass_MAX = kSubpass_COUNT - 1
 	};
 
-	//enum attachmentIndex { eSetIndex_Color, eSetIndex_Depth, eSetIndex_COUNT, eSetIndex_MAX = eSetIndex_Depth };
-	
-	/*
-	//todo here or in swap?
-	enum attachmentIndex { eSetIndex_Color, eSetIndex_Depth, eSetIndex_COUNT, eSetIndex_MAX = eSetIndex_Depth};
-	*/
-
 	uint32_t mipLevels;
 	VkImage textureImage;
 	VkDeviceMemory textureImageMemory;
@@ -272,15 +257,7 @@ private:
 	std::unique_ptr<SbDescriptorPool> descriptorPool;
 
 	std::vector<VkCommandBuffer> commandBuffers;
-
-	/*
-	std::vector<VkSemaphore> imageAvailableSemaphores;
-	std::vector<VkSemaphore> renderFinishedSemaphores;
-	std::vector<VkFence> inFlightFences;
-	std::vector<VkFence> imagesInFlight;
-	size_t currentFrame = 0;
-	*/
-
+	   
 	bool framebufferResized = false;
 
 	size_t dynamicAlignment;
@@ -378,10 +355,10 @@ private:
 
 		vkFreeCommandBuffers(vulkanBase->logicalDevice->device, vulkanBase->commandPool->handle, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
 
-		vkDestroyPipeline(vulkanBase->logicalDevice->device, attachmentWriteSubpass.Pipeline, nullptr);
-		vkDestroyPipeline(vulkanBase->logicalDevice->device, attachmentReadSubpass.Pipeline, nullptr);
-		vkDestroyPipelineLayout(vulkanBase->logicalDevice->device, attachmentWriteSubpass.descriptorSets.get()->pipelineLayout, nullptr);
-		vkDestroyPipelineLayout(vulkanBase->logicalDevice->device, attachmentReadSubpass.descriptorSets.get()->pipelineLayout, nullptr);
+		//vkDestroyPipeline(vulkanBase->logicalDevice->device, attachmentWriteSubpass.Pipeline, nullptr);
+		//vkDestroyPipeline(vulkanBase->logicalDevice->device, attachmentReadSubpass.Pipeline, nullptr);
+		//vkDestroyPipelineLayout(vulkanBase->logicalDevice->device, attachmentWriteSubpass.descriptorSets.get()->pipelineLayout, nullptr);
+		//vkDestroyPipelineLayout(vulkanBase->logicalDevice->device, attachmentReadSubpass.descriptorSets.get()->pipelineLayout, nullptr);
 		vkDestroyRenderPass(vulkanBase->logicalDevice->device, renderPass->renderPass, nullptr);
 
 		/*
@@ -417,8 +394,8 @@ private:
 		vkDestroyImage(vulkanBase->logicalDevice->device, textureImage, nullptr);
 		vkFreeMemory(vulkanBase->logicalDevice->device, textureImageMemory, nullptr);
 
-		vkDestroyDescriptorSetLayout(vulkanBase->logicalDevice->device, attachmentWriteSubpass.descriptorSets.get()->DSLayout, nullptr);
-		vkDestroyDescriptorSetLayout(vulkanBase->logicalDevice->device, attachmentReadSubpass.descriptorSets.get()->DSLayout, nullptr);
+		//vkDestroyDescriptorSetLayout(vulkanBase->logicalDevice->device, attachmentWriteSubpass.descriptorSets.get()->DSLayout, nullptr);
+		//vkDestroyDescriptorSetLayout(vulkanBase->logicalDevice->device, attachmentReadSubpass.descriptorSets.get()->DSLayout, nullptr);
 
 		for (size_t i = 0; i < drawables.size(); i++)
 		{
@@ -541,8 +518,8 @@ private:
 	void createDescriptorSetLayout() {
 		//first create attachment write layout
 		{
-			attachmentWriteSubpass.descriptorSets = std::make_unique<SbDescriptorSets>(vulkanBase->logicalDevice->device, swapchain->getSize());
-			SbDescriptorSets & DS = *attachmentWriteSubpass.descriptorSets.get();
+			renderPass->subpasses[kSubpass_WRITE].descriptorSets = std::make_unique<SbDescriptorSets>(vulkanBase->logicalDevice->device, swapchain->getSize());
+			SbDescriptorSets & DS = renderPass->getSubpassDescriptorSets(kSubpass_WRITE);
 			
 			//create bindings
 			DS.addBufferBinding(
@@ -581,8 +558,8 @@ private:
 
 		//now create attachment read layout
 		{
-			attachmentReadSubpass.descriptorSets = std::make_unique<SbDescriptorSets>(vulkanBase->logicalDevice->device, swapchain->getSize());
-			SbDescriptorSets & DS = *attachmentReadSubpass.descriptorSets.get();
+			renderPass->subpasses[kSubpass_READ].descriptorSets = std::make_unique<SbDescriptorSets>(vulkanBase->logicalDevice->device, swapchain->getSize());
+			SbDescriptorSets & DS = renderPass->getSubpassDescriptorSets(kSubpass_READ);
 
 			DS.addImageBinding(
 				vkinit::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, VK_SHADER_STAGE_FRAGMENT_BIT, 0),
@@ -609,6 +586,29 @@ private:
 	}	
 
 	void createDoublePipeline() {
+		auto & subpasswrite = renderPass->subpasses[kSubpass_WRITE];
+		const auto & bind = Vertex::getBindingDescriptions();
+		const auto & attr = Vertex::getAttributeDescriptions();
+		subpasswrite.pipeline.subpassIndex(kSubpass_WRITE)
+			.layout(subpasswrite.descriptorSets->pipelineLayout)
+			.vertexBindingDescription(std::vector<VkVertexInputBindingDescription> {bind.begin(), bind.end()})
+			.vertexAttributeDescription(std::vector<VkVertexInputAttributeDescription> {attr.begin(), attr.end()})
+			.addShaderStage(vks::helper::loadShader("shaders/attachmentwrite.vert.spv", VK_SHADER_STAGE_VERTEX_BIT, vulkanBase->logicalDevice->device))
+			.addShaderStage(vks::helper::loadShader("shaders/attachmentwrite.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT, vulkanBase->logicalDevice->device))
+			.createPipeline(renderPass->renderPass, vulkanBase->logicalDevice->device);
+
+
+		auto & subpassread = renderPass->subpasses[kSubpass_READ];
+		subpassread.pipeline.subpassIndex(kSubpass_READ)
+			.layout(subpassread.descriptorSets->pipelineLayout)
+			.addShaderStage(vks::helper::loadShader("shaders/attachmentread.vert.spv", VK_SHADER_STAGE_VERTEX_BIT, vulkanBase->logicalDevice->device))
+			.addShaderStage(vks::helper::loadShader("shaders/attachmentread.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT, vulkanBase->logicalDevice->device))
+			.cullMode(VK_CULL_MODE_NONE)
+			.depthWriteEnable(VK_FALSE)
+			.createPipeline(renderPass->renderPass, vulkanBase->logicalDevice->device);
+
+		//---------------------------
+		/*
 		std::array<VkPipelineShaderStageCreateInfo, 2> shaderStages;
 
 		VkPipelineInputAssemblyStateCreateInfo inputAssemblyStateCI = vks::initializers::pipelineInputAssemblyStateCreateInfo(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, 0, VK_FALSE);
@@ -633,13 +633,11 @@ private:
 		pipelineCI.stageCount = static_cast<uint32_t>(shaderStages.size());
 		pipelineCI.pStages = shaderStages.data();
 
-		/*
-			Attachment write
-		*/
+		
+		//	Attachment write
+		
 
 		// Pipeline will be used in first sub pass
-		pipelineCI.subpass = kSubpass_WRITE;
-		pipelineCI.layout = attachmentWriteSubpass.descriptorSets->pipelineLayout;
 
 		// Binding description
 		auto vertexInputBindings = Vertex::getBindingDescriptions();
@@ -654,14 +652,16 @@ private:
 		vertexInputStateCI.pVertexAttributeDescriptions = vertexInputAttributes.data();
 
 		pipelineCI.pVertexInputState = &vertexInputStateCI;
+		pipelineCI.subpass = kSubpass_WRITE;
+		pipelineCI.layout = attachmentWriteSubpass.descriptorSets->pipelineLayout;
 
 		shaderStages[0] = vks::helper::loadShader("shaders/attachmentwrite.vert.spv", VK_SHADER_STAGE_VERTEX_BIT, vulkanBase->logicalDevice->device);
 		shaderStages[1] = vks::helper::loadShader("shaders/attachmentwrite.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT, vulkanBase->logicalDevice->device);
 		vkCreateGraphicsPipelines(vulkanBase->logicalDevice->device, VK_NULL_HANDLE, 1, &pipelineCI, nullptr, &attachmentWriteSubpass.Pipeline);
 
-		/*
-			Attachment read
-		*/
+		
+		//	Attachment read
+		
 
 		// Pipeline will be used in second sub pass
 		pipelineCI.subpass = kSubpass_READ;
@@ -678,6 +678,7 @@ private:
 		shaderStages[0] = vks::helper::loadShader("shaders/attachmentread.vert.spv", VK_SHADER_STAGE_VERTEX_BIT, vulkanBase->logicalDevice->device);
 		shaderStages[1] = vks::helper::loadShader("shaders/attachmentread.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT, vulkanBase->logicalDevice->device);
 		vkCreateGraphicsPipelines(vulkanBase->logicalDevice->device, VK_NULL_HANDLE, 1, &pipelineCI, nullptr, &attachmentReadSubpass.Pipeline);
+		*/
 		
 	}
 	
@@ -704,84 +705,7 @@ private:
 		//createAttachment(VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, &attachments.albedo);
 
 
-		/*
-		// Input attachments
-		// These will be written in the first subpass, transitioned to input attachments 
-		// and then read in the secod subpass
-
-		// Color
-		auto & colorAttachment = swapchain->swapchainAttachmentSets[eSetIndex_Color].description;
-		colorAttachment.flags = 0;
-		colorAttachment.format = swapchain->swapchainAttachmentDescription.format;
-		colorAttachment.samples = swapchain->swapchainAttachmentDescription.samples;
-		colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR; // default for attachments
-		colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE; // // default for attachments
-		colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-		colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-		colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-		colorAttachment.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 		
-		// Depth
-		auto & depthAttachment = swapchain->swapchainAttachmentSets[eSetIndex_Depth].description;
-		depthAttachment.flags = 0;
-		depthAttachment.format = findDepthFormat();
-		depthAttachment.samples = swapchain->swapchainAttachmentDescription.samples;
-		depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-		depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-		depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-		depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-		depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-		depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-
-		
-		for (size_t i = 0; i < swapchain->swapChainImages.size(); i++)
-		{
-			{
-				auto& attachment = swapchain->swapchainAttachmentSets[eSetIndex_Color];
-				auto& format = attachment.description.format;
-				auto& samples = attachment.description.samples;
-				auto& image = attachment.image[i];
-				auto& memory = attachment.mem[i];
-				auto& view = attachment.view[i];
-				format = swapchain->swapchainAttachmentDescription.format;
-				vulkanBase->createImage(swapchain->swapchainCI.imageExtent, 1, samples, format, VK_IMAGE_TILING_OPTIMAL,
-					VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT,
-					VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, image, memory);
-				view = vks::helper::createImageView(vulkanBase->logicalDevice->device, image, format, VK_IMAGE_ASPECT_COLOR_BIT, 1);
-				vulkanBase->commandPool->transitionImageLayout(image, format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, 1);
-			}
-			{
-				auto& attachment = swapchain->swapchainAttachmentSets[eSetIndex_Depth];
-				auto& format =	attachment.description.format;
-				auto& samples = attachment.description.samples;
-				auto& image =	attachment.image[i];
-				auto& memory =	attachment.mem[i];
-				auto& view =	attachment.view[i];
-				format = findDepthFormat();
-				vulkanBase->createImage(swapchain->swapchainCI.imageExtent, 1, samples, format, VK_IMAGE_TILING_OPTIMAL,
-					VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT,
-					VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, image, memory);
-				view = vks::helper::createImageView(vulkanBase->logicalDevice->device, image, format, VK_IMAGE_ASPECT_DEPTH_BIT, 1);
-				vulkanBase->commandPool->transitionImageLayout(image, format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, 1);
-			}
-		}
-		
-		colorAttachment.format = swapChainImageFormat;
-		createImage(swapChainExtent.width, swapChainExtent.height, 1, msaaSamples, colorAttachment.format, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, colorAttachment.image, colorAttachment.mem);
-		colorAttachment.view = createImageView(colorAttachment.image, colorAttachment.format, VK_IMAGE_ASPECT_COLOR_BIT, 1);
-		transitionImageLayout(colorAttachment.image, colorAttachment.format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, 1);
-
-
-		normalsAttachment.format = VK_FORMAT_R16G16B16A16_SFLOAT;
-		createImage(swapChainExtent.width, swapChainExtent.height, 1, msaaSamples, normalsAttachment.format, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, normalsAttachment.image, normalsAttachment.mem);
-		normalsAttachment.view = createImageView(normalsAttachment.image, normalsAttachment.format, VK_IMAGE_ASPECT_COLOR_BIT, 1);
-		transitionImageLayout(normalsAttachment.image, normalsAttachment.format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, 1);
-		
-		positionsAttachment.format = VK_FORMAT_R16G16B16A16_SFLOAT;
-		createImage(swapChainExtent.width, swapChainExtent.height, 1, msaaSamples, positionsAttachment.format, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, positionsAttachment.image, positionsAttachment.mem);
-		positionsAttachment.view = createImageView(positionsAttachment.image, positionsAttachment.format, VK_IMAGE_ASPECT_COLOR_BIT, 1);
-		transitionImageLayout(positionsAttachment.image, positionsAttachment.format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, 1);
-		*/
 	}
 
 	VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) {
@@ -808,12 +732,6 @@ private:
 			VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT
 		);
 	}
-
-	/* TODO why is this a function?
-	bool hasStencilComponent(VkFormat format) {
-		return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
-	}
-	*/
 
 	void createTextureImage() {
 
@@ -1207,13 +1125,13 @@ private:
 			VkRect2D scissor = vks::initializers::rect2D(swapchain->swapchainCI.imageExtent, 0, 0);
 			vkCmdSetScissor(commandBuffers[i], 0, 1, &scissor);
 
-			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, attachmentWriteSubpass.Pipeline);
+			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getSubpassPipeline(kSubpass_WRITE));
 
 			for (size_t j = 0; j < drawables.size(); j++)
 			{
 				uint32_t offset = j * static_cast<uint32_t>(dynamicAlignment);
-				vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, attachmentWriteSubpass.descriptorSets->pipelineLayout,
-					0, 1, &attachmentWriteSubpass.descriptorSets->allocatedDSs[i], 1, &offset);
+				vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getSubpassDescriptorSets(kSubpass_WRITE).pipelineLayout,
+					0, 1, &renderPass->getSubpassDescriptorSets(kSubpass_WRITE).allocatedDSs[i], 1, &offset);
 
 				VkBuffer vert[] = { drawables[j].VertexBuffer };
 				VkDeviceSize offsets[] = { 0 };
@@ -1227,8 +1145,8 @@ private:
 
 			vkCmdNextSubpass(commandBuffers[i], VK_SUBPASS_CONTENTS_INLINE);
 
-			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, attachmentReadSubpass.Pipeline);
-			vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, attachmentReadSubpass.descriptorSets->pipelineLayout, 0, 1, &attachmentReadSubpass.descriptorSets->allocatedDSs[i], 0, NULL);
+			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getSubpassPipeline(kSubpass_READ));
+			vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getSubpassDescriptorSets(kSubpass_READ).pipelineLayout, 0, 1, &renderPass->getSubpassDescriptorSets(kSubpass_READ).allocatedDSs[i], 0, NULL);
 			vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
 
 			vkCmdEndRenderPass(commandBuffers[i]);
@@ -1239,28 +1157,8 @@ private:
 		}
 	}
 
+	//todo move this
 	void createSyncObjects() {
-		/*
-		imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
-		renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
-		inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
-		imagesInFlight.resize(swapchain->getSize(), VK_NULL_HANDLE);
-
-		VkSemaphoreCreateInfo semaphoreInfo = {};
-		semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-
-		VkFenceCreateInfo fenceInfo = {};
-		fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-		fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
-
-		for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-			if (vkCreateSemaphore(vulkanBase->logicalDevice->device, &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]) != VK_SUCCESS ||
-				vkCreateSemaphore(vulkanBase->logicalDevice->device, &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS ||
-				vkCreateFence(vulkanBase->logicalDevice->device, &fenceInfo, nullptr, &inFlightFences[i]) != VK_SUCCESS) {
-				throw std::runtime_error("failed to create synchronization objects for a frame!");
-			}
-		}
-		*/
 		swapchain->createSyncObjects(MAX_FRAMES_IN_FLIGHT);
 	}	
 

@@ -32,23 +32,11 @@ public:
 		BindingMode mode;
 	};
 	
-	//public for testing
+	//public for testing todo make private?
 	std::map<const uint32_t, VkDescriptorSetLayoutBinding> bindings;
 	std::map<const uint32_t, SbImageInfo> imgInfo;
 	std::map<const uint32_t, SbBufferInfo> bufInfo;
-private:
-	/*
-	struct AllocatedDS{
-		VkDescriptorSet allocatedDS; 
-		std::vector<std::pair<const uint32_t, VkDescriptorImageInfo>> imageInfo;
-		std::vector<std::pair<const uint32_t, VkDescriptorBufferInfo>> bufferInfo;
-	};
-	*/
-	
-	
-
-	//const uint32_t DSCount;
-	
+private:	
 	std::vector<VkDescriptorSetLayoutBinding> bindingsAsVector();
 
 public:
@@ -56,8 +44,6 @@ public:
 	VkPipelineLayout pipelineLayout;
 	VkDescriptorSetLayout DSLayout;
 
-
-	//SbDescriptorSets(VkDevice device, std::vector<VkDescriptorSet> && DSs); //arg order
 	SbDescriptorSets(const VkDevice & device, const uint32_t & descriptorSetCount);
 	~SbDescriptorSets();
 

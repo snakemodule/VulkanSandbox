@@ -2,6 +2,10 @@
 
 #include <array>
 
+#include "VulkanInitializers.hpp"
+
+#include "Model.h" //TODO is this necessary, get vertex data some other way?
+
 SbRenderpass::SbRenderpass(uint32_t subpassCount, uint32_t attachmentCount)
 	: subpasses(subpassCount), attachments(attachmentCount)
 {
@@ -108,4 +112,14 @@ void SbRenderpass::createRenderpass(SbSwapchain swapchain)
 	if (vkCreateRenderPass(swapchain.logicalDevice.device, &renderPassInfo, nullptr, &renderPass) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create render pass!");
 	}
+}
+
+VkPipeline SbRenderpass::getSubpassPipeline(uint32_t subpassIndex)
+{
+	return subpasses[subpassIndex].pipeline.handle;
+}
+
+SbDescriptorSets & SbRenderpass::getSubpassDescriptorSets(uint32_t subpassIndex)
+{
+	return *subpasses[subpassIndex].descriptorSets;
 }

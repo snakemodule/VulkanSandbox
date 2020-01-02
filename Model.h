@@ -94,6 +94,20 @@ struct Vertex {
 		return attributeDescriptions;
 	}
 
+	static VkPipelineVertexInputStateCreateInfo getInputStateCI() {
+		auto bind = getBindingDescriptions();
+		auto attr = getAttributeDescriptions();
+		VkPipelineVertexInputStateCreateInfo vertexInputStateCI;
+		vertexInputStateCI.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+		vertexInputStateCI.vertexBindingDescriptionCount = static_cast<uint32_t>(bind.size());
+		vertexInputStateCI.pVertexBindingDescriptions = bind.data();
+		vertexInputStateCI.vertexAttributeDescriptionCount = static_cast<uint32_t>(attr.size());
+		vertexInputStateCI.pVertexAttributeDescriptions = attr.data();
+		return vertexInputStateCI;
+	}
+
+	
+
 	bool operator==(const Vertex& other) const {
 		return pos == other.pos && color == other.color && texCoord == other.texCoord;
 	}

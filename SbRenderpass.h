@@ -5,6 +5,10 @@
 
 #include "SbSwapchain.h"
 
+#include "SbDescriptorSets.h"
+
+#include "SbPipeline.h"
+
 class SbRenderpass
 {
 public:
@@ -17,6 +21,11 @@ public:
 		VkPipelineStageFlags pipelineMaskAsSrc;
 		VkAccessFlags accessMaskAsDst;
 		VkAccessFlags accessMaskAsSrc;
+
+		std::unique_ptr<SbDescriptorSets> descriptorSets;
+		//VkPipeline pipeline;
+		SbPipeline pipeline;
+
 	};
 
 	std::vector<Subpass> subpasses;
@@ -41,6 +50,9 @@ public:
 		VkAccessFlags accessMaskAsDst, VkAccessFlags accessMaskAsSrc);
 	void addDependency(uint32_t srcSubpassIndex, uint32_t dstSubpassIndex);
 	void createRenderpass(SbSwapchain swapchain);
+
+	VkPipeline getSubpassPipeline(uint32_t subpassIndex);
+	SbDescriptorSets & getSubpassDescriptorSets(uint32_t subpassIndex);
 
 };
 
