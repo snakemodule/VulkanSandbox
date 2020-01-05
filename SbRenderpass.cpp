@@ -6,9 +6,12 @@
 
 #include "Model.h" //TODO is this necessary, get vertex data some other way?
 
-SbRenderpass::SbRenderpass(uint32_t subpassCount, uint32_t attachmentCount)
-	: subpasses(subpassCount), attachments(attachmentCount)
+SbRenderpass::SbRenderpass(const SbVulkanBase & vkBase, uint32_t subpassCount, uint32_t attachmentCount, uint32_t swapchainSize)
+	: subpasses(subpassCount, Subpass(vkBase, swapchainSize)), attachments(attachmentCount)
 {
+	//Subpass temp(vkBase, swapchainSize);
+	//subpasses = std::vector<Subpass>();
+	//attachments = std::vector<VkAttachmentDescription>(attachmentCount);
 }
 
 SbRenderpass::~SbRenderpass()
@@ -119,7 +122,13 @@ VkPipeline SbRenderpass::getSubpassPipeline(uint32_t subpassIndex)
 	return subpasses[subpassIndex].pipeline.handle;
 }
 
-SbDescriptorSets & SbRenderpass::getSubpassDescriptorSets(uint32_t subpassIndex)
+SbPipelineLayout & SbRenderpass::getPipelineLayout(uint32_t subpassIndex)
 {
-	return *subpasses[subpassIndex].descriptorSets;
+	return subpasses[subpassIndex].pipelineLayout;
+}
+
+SbRenderpass::Subpass::Subpass(const SbVulkanBase & vkBase, const uint32_t & swapchainSize)
+	: pipelineLayout(vkBase.logicalDevice->device, swapchainSize), pipeline()
+{
+
 }

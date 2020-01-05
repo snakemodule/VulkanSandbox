@@ -5,7 +5,7 @@
 
 #include "SbSwapchain.h"
 
-#include "SbDescriptorSets.h"
+#include "SbPipelineLayout.h"
 
 #include "SbPipeline.h"
 
@@ -22,11 +22,17 @@ public:
 		VkAccessFlags accessMaskAsDst;
 		VkAccessFlags accessMaskAsSrc;
 
-		std::unique_ptr<SbDescriptorSets> descriptorSets;
+		//std::unique_ptr<SbPipelineLayout> pipelineLayout;
+		SbPipelineLayout pipelineLayout;
 		//VkPipeline pipeline;
 		SbPipeline pipeline;
 
+
+		Subpass(const SbVulkanBase & vkBase, const uint32_t & swapchainSize);
+
 	};
+
+
 
 	std::vector<Subpass> subpasses;
 	std::vector<VkAttachmentDescription> attachments;
@@ -35,7 +41,7 @@ public:
 
 	VkRenderPass renderPass;
 
-	SbRenderpass(uint32_t subpassCount, uint32_t attachmentCount);
+	SbRenderpass(const SbVulkanBase & vkBase, uint32_t subpassCount, uint32_t attachmentCount, uint32_t swapchainSize);
 	~SbRenderpass();
 	
 
@@ -52,7 +58,7 @@ public:
 	void createRenderpass(SbSwapchain swapchain);
 
 	VkPipeline getSubpassPipeline(uint32_t subpassIndex);
-	SbDescriptorSets & getSubpassDescriptorSets(uint32_t subpassIndex);
+	SbPipelineLayout & getPipelineLayout(uint32_t subpassIndex);
 
 };
 
