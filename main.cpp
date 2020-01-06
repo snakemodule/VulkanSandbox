@@ -61,6 +61,7 @@
 
 #include "SbRenderpass.h"
 
+#include "SbUniformBuffer.h"
 
 namespace vkinit = vks::initializers;
 
@@ -248,8 +249,9 @@ private:
 	std::vector<VkBuffer> uniformBuffers;
 	std::vector<VkDeviceMemory> uniformBuffersMemory;
 
-	std::vector<VkBuffer> shadingUniformBuffers;
-	std::vector<VkDeviceMemory> shadingUniformBuffersMemory;
+	//std::vector<VkBuffer> shadingUniformBuffers;
+	//std::vector<VkDeviceMemory> shadingUniformBuffersMemory;
+	std::unique_ptr<SbUniformBuffer<ShadingUBO>> shadingUniformBuffer;
 
 	std::vector<VkBuffer> transformationgUB;
 	std::vector<VkDeviceMemory> transformationUBMemory;
@@ -545,7 +547,7 @@ private:
 			DS.addBufferBinding(
 				vkinit::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, VK_SHADER_STAGE_FRAGMENT_BIT, 2), 
 				{ 
-					shadingUniformBuffers.data(),
+					shadingUniformBuffer->realbuffers.data(),//shadingUniformBuffers.data(),
 					0, 
 					static_cast<uint64_t>(dynamicAlignment), 
 					SbPipelineLayout::eBindingMode_Separate 
@@ -879,10 +881,14 @@ private:
 	}
 
 	void createUniformBuffers() {
+		shadingUniformBuffer = std::make_unique<SbUniformBuffer<ShadingUBO>>(*vulkanBase, swapchain->getSize(), drawables.size());
+		//SbUniformBuffer<ShadingUBO> buffer(*vulkanBase, swapchain->getSize(), drawables.size());
+
 		// Allocate data for the dynamic uniform buffer object
 		// We allocate this manually as the alignment of the offset differs between GPUs
 
 		// Calculate required alignment based on minimum device offset alignment
+		/*
 		VkPhysicalDeviceProperties physicalDeviceProperties;
 		vkGetPhysicalDeviceProperties(vulkanBase->physicalDevice->device, &physicalDeviceProperties);
 
@@ -897,6 +903,16 @@ private:
 		shadingUboData = (ShadingUBO*)alignedAlloc(dynamicBufferSize, dynamicAlignment);
 		assert(shadingUboData);
 
+		*/
+		//filling data
+		for (size_t i = 0; i < drawables.size(); i++)
+		{
+			ShadingUBO data = { drawables[i].AmbientColor, drawables[i].DiffuseColor, drawables[i].SpecularColor };
+			shadingUniformBuffer->writeBufferData(data, i);
+		}
+		shadingUniformBuffer->copyBufferDataToMemory(*vulkanBase);
+
+		/*
 		for (size_t i = 0; i < drawables.size(); i++)
 		{
 			ShadingUBO* shubo = (ShadingUBO*)(((uint64_t)shadingUboData + (i * dynamicAlignment)));
@@ -904,9 +920,10 @@ private:
 			shubo->diffuseColor = drawables[i].DiffuseColor;
 			shubo->specularColor = drawables[i].SpecularColor;
 		}
+		*/
 
-		shadingUniformBuffers.resize(swapchain->getSize());
-		shadingUniformBuffersMemory.resize(swapchain->getSize());
+		//shadingUniformBuffers.resize(swapchain->getSize());
+		//shadingUniformBuffersMemory.resize(swapchain->getSize());
 
 		//------------------------------
 
@@ -917,10 +934,12 @@ private:
 
 		for (size_t i = 0; i < swapchain->getSize(); i++) {
 			vulkanBase->createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
-			vulkanBase->createBuffer(dynamicBufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, shadingUniformBuffers[i], shadingUniformBuffersMemory[i]);
+			//vulkanBase->createBuffer(dynamicBufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, shadingUniformBuffers[i], shadingUniformBuffersMemory[i]);
 		}
 
-		// just 
+
+
+		/*
 		for (size_t i = 0; i < shadingUniformBuffersMemory.size(); i++)
 		{
 			void* data;
@@ -928,6 +947,7 @@ private:
 			memcpy(data, shadingUboData, dynamicBufferSize);
 			vkUnmapMemory(vulkanBase->logicalDevice->device, shadingUniformBuffersMemory[i]);
 		}
+		*/
 	}
 
 	void createDescriptorPool() {

@@ -45,9 +45,6 @@
     <ClCompile Include="SbLayout.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SbDescriptorSets.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SbPipeline.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -70,6 +67,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SbCommandPool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SbPipelineLayout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SbBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SbUniformBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -107,9 +113,6 @@
     <ClInclude Include="SbLayout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SbDescriptorSets.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SbPipeline.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -135,6 +138,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SbCommandPool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SbPipelineLayout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SbUniformBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SbBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
