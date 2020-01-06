@@ -9,14 +9,14 @@ template <class T>
 class SbUniformBuffer
 {
 	T* UBOdata = nullptr;
-	size_t dynamicAlignment = 0;
-	size_t dynamicBufferSize = 0;
 
 	std::vector<SbBuffer> buffers = {};
 
 public:
 	//TODO DELETE THIS
 	std::vector<VkBuffer> realbuffers = {};
+	size_t dynamicAlignment = 0;
+	size_t dynamicBufferSize = 0;
 
 	/*
 	SbUniformBuffer(SbVulkanBase & vkBase, size_t instanceCount, size_t bufferSize = 1);

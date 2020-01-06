@@ -23,5 +23,5 @@ layout(location = 0) out vec4 outColor;
 
 
 void main() {
-    outColor = vec4(inNormal, 1.0f);//texture(texSampler, fragTexCoord); //vec4(shading.diffuseColor.rgb, 1.0f);//
+    outColor = shading.diffuseColor;//vec4(inNormal, 1.0f);//texture(texSampler, fragTexCoord); //vec4(shading.diffuseColor.rgb, 1.0f);//
 }

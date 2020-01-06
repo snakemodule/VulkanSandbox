@@ -262,8 +262,8 @@ private:
 	   
 	bool framebufferResized = false;
 
-	size_t dynamicAlignment;
-	size_t dynamicBufferSize;
+	//size_t dynamicAlignment;
+	//size_t dynamicBufferSize;
 
 	SbCamera cam;
 
@@ -486,11 +486,8 @@ private:
 		//willems attachments demo
 		
 		//auto temp = new SbRenderpass(*vulkanBase, kSubpass_COUNT, kAttachment_COUNT, swapchain->getSize());
-		int a = 0;
-		a++;
 		renderPass = std::make_unique<SbRenderpass>(*vulkanBase, kSubpass_COUNT, kAttachment_COUNT, swapchain->getSize());
-		int b = 0;
-		b++;
+
 
 		renderPass->addAttachment(kAttachment_BACK, swapchain->getAttachmentDescription(kAttachment_BACK));
 		renderPass->addAttachment(kAttachment_COLOR, swapchain->getAttachmentDescription(kAttachment_COLOR));
@@ -549,7 +546,7 @@ private:
 				{ 
 					shadingUniformBuffer->realbuffers.data(),//shadingUniformBuffers.data(),
 					0, 
-					static_cast<uint64_t>(dynamicAlignment), 
+					static_cast<uint64_t>(shadingUniformBuffer->dynamicAlignment),
 					SbPipelineLayout::eBindingMode_Separate 
 				});
 			
@@ -1036,7 +1033,7 @@ private:
 
 			for (size_t j = 0; j < drawables.size(); j++)
 			{
-				uint32_t offset = j * static_cast<uint32_t>(dynamicAlignment);
+				uint32_t offset = j * static_cast<uint32_t>(shadingUniformBuffer->dynamicAlignment);
 				vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getPipelineLayout(kSubpass_WRITE).pipelineLayout,
 					0, 1, &renderPass->getPipelineLayout(kSubpass_WRITE).allocatedDSs[i], 1, &offset);
 
