@@ -246,8 +246,10 @@ private:
 	//custom model struct
 	Model* mymodel = nullptr;
 
-	std::vector<VkBuffer> uniformBuffers;
-	std::vector<VkDeviceMemory> uniformBuffersMemory;
+	//std::vector<VkBuffer> uniformBuffers;
+	//std::vector<VkDeviceMemory> uniformBuffersMemory;
+
+	std::unique_ptr<SbUniformBuffer<UniformBufferObject>> transformUniformBuffer;
 
 	//std::vector<VkBuffer> shadingUniformBuffers;
 	//std::vector<VkDeviceMemory> shadingUniformBuffersMemory;
@@ -528,7 +530,7 @@ private:
 			DS.addBufferBinding(
 				vkinit::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, 0), 
 				{ 
-					uniformBuffers.data(),
+					transformUniformBuffer->realbuffers.data(),
 					0, 
 					sizeof(UniformBufferObject), 
 					SbPipelineLayout::eBindingMode_Separate
@@ -879,6 +881,14 @@ private:
 
 	void createUniformBuffers() {
 		shadingUniformBuffer = std::make_unique<SbUniformBuffer<ShadingUBO>>(*vulkanBase, swapchain->getSize(), drawables.size());
+
+		for (size_t i = 0; i < drawables.size(); i++)
+		{
+			ShadingUBO data = { drawables[i].AmbientColor, drawables[i].DiffuseColor, drawables[i].SpecularColor };
+			shadingUniformBuffer->writeBufferData(data, i);
+		}
+		shadingUniformBuffer->copyBufferDataToMemory(*vulkanBase);
+
 		//SbUniformBuffer<ShadingUBO> buffer(*vulkanBase, swapchain->getSize(), drawables.size());
 
 		// Allocate data for the dynamic uniform buffer object
@@ -901,14 +911,8 @@ private:
 		assert(shadingUboData);
 
 		*/
-		//filling data
-		for (size_t i = 0; i < drawables.size(); i++)
-		{
-			ShadingUBO data = { drawables[i].AmbientColor, drawables[i].DiffuseColor, drawables[i].SpecularColor };
-			shadingUniformBuffer->writeBufferData(data, i);
-		}
-		shadingUniformBuffer->copyBufferDataToMemory(*vulkanBase);
 
+		//filling data
 		/*
 		for (size_t i = 0; i < drawables.size(); i++)
 		{
@@ -924,16 +928,13 @@ private:
 
 		//------------------------------
 
-		VkDeviceSize bufferSize = sizeof(UniformBufferObject);
+		transformUniformBuffer = std::make_unique<SbUniformBuffer<UniformBufferObject>>(*vulkanBase, swapchain->getSize()); 
+		//todo will this work? default argument 1 -> non dynamic 
 
-		uniformBuffers.resize(swapchain->getSize());
-		uniformBuffersMemory.resize(swapchain->getSize());
+		//VkDeviceSize bufferSize = sizeof(UniformBufferObject);
 
-		for (size_t i = 0; i < swapchain->getSize(); i++) {
-			vulkanBase->createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
-			//vulkanBase->createBuffer(dynamicBufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, shadingUniformBuffers[i], shadingUniformBuffersMemory[i]);
-		}
-
+		//uniformBuffers.resize(swapchain->getSize());
+		//uniformBuffersMemory.resize(swapchain->getSize());
 
 
 		/*
@@ -1101,10 +1102,16 @@ private:
 		ubo.proj = cam.getProjectionMatrix();
 		memcpy(ubo.boneTransforms, mymodel->skeleton.finalTransformation.data(), sizeof(glm::mat4)*mymodel->skeleton.finalTransformation.size());
 
+
+		transformUniformBuffer->writeBufferData(ubo);
+		transformUniformBuffer->copyBufferDataToMemory(*vulkanBase);
+
+		/*
 		void* data;
 		vkMapMemory(vulkanBase->logicalDevice->device, uniformBuffersMemory[currentImage], 0, sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(vulkanBase->logicalDevice->device, uniformBuffersMemory[currentImage]);
+		*/
 
 	}
 

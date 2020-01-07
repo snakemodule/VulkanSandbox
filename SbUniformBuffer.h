@@ -16,7 +16,9 @@ public:
 	//TODO DELETE THIS
 	std::vector<VkBuffer> realbuffers = {};
 	size_t dynamicAlignment = 0;
-	size_t dynamicBufferSize = 0;
+	size_t bufferSize = 0;
+	
+	size_t bufferLength = 0;
 
 	/*
 	SbUniformBuffer(SbVulkanBase & vkBase, size_t instanceCount, size_t bufferSize = 1);
@@ -33,40 +35,60 @@ public:
 	void alignedFree(void* data);
 	*/
 
-	SbUniformBuffer(SbVulkanBase & vkBase, size_t instanceCount, size_t bufferSize)
+	SbUniformBuffer(SbVulkanBase & vkBase, size_t instanceCount, size_t bufferLength = 1)
 	{
-
-		VkPhysicalDeviceProperties physicalDeviceProperties;
-		vkGetPhysicalDeviceProperties(vkBase.physicalDevice->device, &physicalDeviceProperties);
-
-		size_t minUboAlignment = physicalDeviceProperties.limits.minUniformBufferOffsetAlignment;
-		dynamicAlignment = sizeof(T);
-		if (minUboAlignment > 0) {
-			dynamicAlignment = (dynamicAlignment + minUboAlignment - 1) & ~(minUboAlignment - 1);
-		}
-
-		dynamicBufferSize = bufferSize * dynamicAlignment;
-
-		UBOdata = static_cast<T*>(alignedAlloc(dynamicBufferSize, dynamicAlignment));
-		assert(UBOdata);
-
 		buffers.resize(instanceCount);
 		realbuffers.resize(instanceCount);
 
+		this->bufferLength = bufferLength;
+
+		if (bufferLength > 1)
+		{
+			VkPhysicalDeviceProperties physicalDeviceProperties;
+			vkGetPhysicalDeviceProperties(vkBase.physicalDevice->device, &physicalDeviceProperties);
+
+			size_t minUboAlignment = physicalDeviceProperties.limits.minUniformBufferOffsetAlignment;
+			dynamicAlignment = sizeof(T);
+			if (minUboAlignment > 0) {
+				dynamicAlignment = (dynamicAlignment + minUboAlignment - 1) & ~(minUboAlignment - 1);
+			}
+
+			bufferSize = bufferLength * dynamicAlignment;
+
+			UBOdata = static_cast<T*>(alignedAlloc(bufferSize, dynamicAlignment));
+		}
+		else
+		{
+			UBOdata = new T();
+			bufferSize = sizeof(T);
+		}
+
+		
+		
+		assert(UBOdata);
+
+
 		for (size_t i = 0; i < instanceCount; i++) {
-			vkBase.createBuffer(dynamicBufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+			vkBase.createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
 				realbuffers[i], buffers[i].bufferMemory);
 		}
 	}
 
 	~SbUniformBuffer()
 	{
-		alignedFree(UBOdata);
+		if (bufferSize > 0)
+		{
+			alignedFree(UBOdata);
+		}
+		else
+		{
+			delete(UBOdata);
+		}
 	}
 	
-	void writeBufferData(const T & data, size_t offset)
+	void writeBufferData(const T & data, size_t offset = 0)
 	{
-		if (offset < buffers.size())
+		if (offset < bufferLength)
 		{
 			T & UBO = *(reinterpret_cast<T*>((uint64_t)UBOdata + (offset * dynamicAlignment)));
 			UBO = data;
@@ -82,8 +104,8 @@ public:
 		for (size_t i = 0; i < buffers.size(); i++)
 		{
 			void* data;
-			vkMapMemory(vkBase.logicalDevice->device, buffers[i].bufferMemory, 0, dynamicBufferSize, 0, &data);
-			memcpy(data, UBOdata, dynamicBufferSize);
+			vkMapMemory(vkBase.logicalDevice->device, buffers[i].bufferMemory, 0, bufferSize, 0, &data);
+			memcpy(data, UBOdata, bufferSize);
 			vkUnmapMemory(vkBase.logicalDevice->device, buffers[i].bufferMemory);
 		}
 	}
