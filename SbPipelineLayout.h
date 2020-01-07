@@ -6,6 +6,8 @@
 #include "SbLayout.h"
 #include "SbDescriptorPool.h"
 
+#include "SbUniformBuffer.h"
+
 /*
 This class holds a number of descriptor sets (DS) that have been allocated from a pool. 
 Each DS has a number of image/bufferinfos used to bind data to a binding in the DS
@@ -13,23 +15,24 @@ Each DS has a number of image/bufferinfos used to bind data to a binding in the 
 class SbPipelineLayout
 {	
 public:
-	enum BindingMode {
-		eBindingMode_Shared,
-		eBindingMode_Separate
+	//todo should be a property of the uniform buffer instead?
+	enum SharingMode {
+		eSharingMode_Shared,
+		eSharingMode_Separate
 	};
 
 	struct SbImageInfo {
-		VkSampler sampler;
-		VkImageView * pView; //VkImageView* pView;
-		VkImageLayout layout;
-		BindingMode mode;
+		const VkSampler sampler;
+		const VkImageView * pView; //VkImageView* pView;
+		const VkImageLayout layout;
+		const SharingMode mode;
 	};
 
 	struct SbBufferInfo {
-		VkBuffer * pBuffer; //VkBuffer* pBuffer;
-		VkDeviceSize offset; 
-		VkDeviceSize range;
-		BindingMode mode;
+		const VkBuffer * pBuffer; //VkBuffer* pBuffer;
+		const VkDeviceSize offset; 
+		const VkDeviceSize range;
+		const SharingMode mode;
 	};
 	
 	//public for testing todo make private?
@@ -50,9 +53,15 @@ public:
 	const VkDevice device;
 	
 	void addImageBinding(const VkDescriptorSetLayoutBinding & newBinding, const SbImageInfo & imageInfo);
-	void addBufferBinding(const VkDescriptorSetLayoutBinding & newBinding, const SbBufferInfo & bufferInfo);
-
-
+	
+	template <class T>
+	void addBufferBinding(const VkDescriptorSetLayoutBinding & newBinding, const SbUniformBuffer<T> & buffer) {
+		//todo how to determine sharing mode?
+		SharingMode mode = (buffer.buffers.size() == 1) ? eSharingMode_Shared : eSharingMode_Separate;
+		SbBufferInfo info = { buffer.buffers.data(), 0, sizeof(T), mode };
+		bindings.insert(std::make_pair(newBinding.binding, newBinding));
+		bufInfo.insert(std::make_pair(newBinding.binding, info));
+	}
 
 	void allocateDescriptorSets(const SbDescriptorPool & descriptorPool);
 	void updateDescriptors();

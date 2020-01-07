@@ -84,7 +84,7 @@ void SbPipelineLayout::updateDescriptors()
 			
 			VkDescriptorImageInfo imageInfo = {};
 			imageInfo.imageLayout = info.layout;// VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-			imageInfo.imageView = (info.mode == SbPipelineLayout::eBindingMode_Shared) ? info.pView[0] : info.pView[i];//textureImageView;
+			imageInfo.imageView = (info.mode == SbPipelineLayout::eSharingMode_Shared) ? info.pView[0] : info.pView[i];//textureImageView;
 			imageInfo.sampler = info.sampler;// textureSampler;
 			imageInfos[infoInsertCounter] = imageInfo;
 
@@ -104,7 +104,7 @@ void SbPipelineLayout::updateDescriptors()
 			auto binding = bindings.find(bindingIndex)->second;
 
 			VkDescriptorBufferInfo bufferInfo = {};
-			bufferInfo.buffer = (info.mode == SbPipelineLayout::eBindingMode_Shared) ? info.pBuffer[0] : info.pBuffer[i];//uniformBuffers[i];
+			bufferInfo.buffer = (info.mode == SbPipelineLayout::eSharingMode_Shared) ? info.pBuffer[0] : info.pBuffer[i];//uniformBuffers[i];
 			bufferInfo.offset = info.offset;
 			bufferInfo.range = info.range;
 			bufferInfos[infoInsertCounter] = bufferInfo;
@@ -140,11 +140,6 @@ void SbPipelineLayout::addImageBinding(const VkDescriptorSetLayoutBinding & newB
 	imgInfo.insert(std::make_pair(newBinding.binding, imageInfo));
 }
 
-void SbPipelineLayout::addBufferBinding(const VkDescriptorSetLayoutBinding & newBinding, const SbBufferInfo & bufferInfo)
-{
-	bindings.insert(std::make_pair(newBinding.binding, newBinding));
-	bufInfo.insert(std::make_pair(newBinding.binding, bufferInfo));
-}
 
 void SbPipelineLayout::allocateDescriptorSets(const SbDescriptorPool & descriptorPool)
 {
