@@ -189,6 +189,7 @@ void SbSwapchain::createAttachment(
 {
 	assert(attachmentIndex > 0);
 	--attachmentIndex;
+	assert(attachmentIndex < swapchainAttachmentSets.size());
 
 	VkImageAspectFlags aspectMask = 0;
 	VkImageLayout imageLayout;
@@ -349,5 +350,10 @@ VkAttachmentDescription SbSwapchain::getAttachmentDescription(uint32_t index) {
 uint32_t SbSwapchain::getSize()
 {
 	return swapChainImages.size();
+}
+
+uint32_t SbSwapchain::getAttachmentCount()
+{
+	return swapchainAttachmentSets.size()+1;
 }
 

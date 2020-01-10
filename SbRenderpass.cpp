@@ -23,6 +23,14 @@ void SbRenderpass::addAttachment(uint32_t attachmentIndex, VkAttachmentDescripti
 	attachments[attachmentIndex] = desc;
 }
 
+void SbRenderpass::addSwapchainAttachments(SbSwapchain & swapchain)
+{
+	for (size_t i = 0; i < swapchain.getAttachmentCount(); i++)
+	{
+		attachments[i] = swapchain.getAttachmentDescription(i);
+	}
+}
+
 void SbRenderpass::addColorAttachmentRef(uint32_t subpassIndex, uint32_t attachmentIndex) 
 {
 	VkAttachmentReference ref { attachmentIndex, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL };
@@ -54,32 +62,45 @@ void SbRenderpass::addDependency(uint32_t srcSubpassIndex, uint32_t dstSubpassIn
 	dependencies.push_back(std::pair<uint32_t, uint32_t>(srcSubpassIndex, dstSubpassIndex));
 }
 
+void SbRenderpass::addDependency(VkSubpassDependency dep)
+{
+	premadeDependencies.push_back(dep);
+}
+
 void SbRenderpass::createRenderpass(SbSwapchain swapchain)
 {
-	std::vector<VkSubpassDependency> vkDependencies(dependencies.size());
-
-	for (size_t i = 0; i < dependencies.size(); i++)
+	std::vector<VkSubpassDependency> vkDependencies;
+	if (premadeDependencies.size() != 0)
 	{
-		VkSubpassDependency dep;
-		dep.srcSubpass = dependencies[i].first;
-		dep.dstSubpass = dependencies[i].second;
-		dep.dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
-		if (dep.srcSubpass ==VK_SUBPASS_EXTERNAL)	{
-			dep.srcStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
-			dep.srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
-		} else {
-			dep.srcStageMask = subpasses[dep.srcSubpass].pipelineMaskAsSrc;
-			dep.srcAccessMask = subpasses[dep.srcSubpass].accessMaskAsSrc;
-		}
+		vkDependencies = premadeDependencies;
+	}
+	else
+	{
+		vkDependencies.resize(dependencies.size());
 
-		if (dep.dstSubpass == VK_SUBPASS_EXTERNAL) {
-			dep.dstStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
-			dep.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
-		} else {
-			dep.dstStageMask = subpasses[dep.dstSubpass].pipelineMaskAsDst;
-			dep.dstAccessMask = subpasses[dep.dstSubpass].accessMaskAsDst;
+		for (size_t i = 0; i < dependencies.size(); i++)
+		{
+			VkSubpassDependency dep;
+			dep.srcSubpass = dependencies[i].first;
+			dep.dstSubpass = dependencies[i].second;
+			dep.dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+			if (dep.srcSubpass ==VK_SUBPASS_EXTERNAL)	{
+				dep.srcStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+				dep.srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+			} else {
+				dep.srcStageMask = subpasses[dep.srcSubpass].pipelineMaskAsSrc;
+				dep.srcAccessMask = subpasses[dep.srcSubpass].accessMaskAsSrc;
+			}
+
+			if (dep.dstSubpass == VK_SUBPASS_EXTERNAL) {
+				dep.dstStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+				dep.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+			} else {
+				dep.dstStageMask = subpasses[dep.dstSubpass].pipelineMaskAsDst;
+				dep.dstAccessMask = subpasses[dep.dstSubpass].accessMaskAsDst;
+			}
+			vkDependencies[i] = dep;
 		}
-		vkDependencies[i] = dep;
 	}
 
 	std::vector<VkSubpassDescription> subpassDescriptions(subpasses.size());

@@ -37,7 +37,9 @@ public:
 	std::vector<Subpass> subpasses;
 	std::vector<VkAttachmentDescription> attachments;
 
-	std::vector<std::pair<uint32_t, uint32_t>> dependencies;
+	std::vector<std::pair<uint32_t, uint32_t>> dependencies = {};
+
+	std::vector<VkSubpassDependency> premadeDependencies = {};
 
 	VkRenderPass renderPass;
 
@@ -48,6 +50,9 @@ public:
 
 
 	void addAttachment(uint32_t attachmentIndex, VkAttachmentDescription desc);
+
+	void addSwapchainAttachments(SbSwapchain & swapchain);
+
 	void addColorAttachmentRef(uint32_t subpassIndex, uint32_t attachmentIndex);
 	void setDepthStencilAttachmentRef(uint32_t subpassIndex, uint32_t attachmentIndex);
 	void addInputAttachmentRef(uint32_t subpassIndex, uint32_t attachmentIndex);
@@ -55,6 +60,7 @@ public:
 		VkPipelineStageFlags stageMaskAsDst, VkPipelineStageFlags stageMaskAsSrc,
 		VkAccessFlags accessMaskAsDst, VkAccessFlags accessMaskAsSrc);
 	void addDependency(uint32_t srcSubpassIndex, uint32_t dstSubpassIndex);
+	void addDependency(VkSubpassDependency dep);
 	void createRenderpass(SbSwapchain swapchain);
 
 	VkPipeline getSubpassPipeline(uint32_t subpassIndex);

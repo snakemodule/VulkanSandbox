@@ -41,7 +41,24 @@ SbPipeline & SbPipeline::depthWriteEnable(const VkBool32 & enable)
 	return *this;
 }
 
+SbPipeline & SbPipeline::colorBlending(uint32_t attachmentIndex)
+{
+	if (attachmentIndex > blendAttachmentStates.size() - 1)
+	{
+		blendAttachmentStates.resize(attachmentIndex + 1);
+	}	
 
+	VkPipelineColorBlendAttachmentState blendAttachmentState = vks::initializers::pipelineColorBlendAttachmentState(
+		VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT, VK_TRUE); //todo bits better than 0xf?
+	blendAttachmentState.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+	blendAttachmentState.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+	blendAttachmentState.colorBlendOp = VK_BLEND_OP_ADD;
+	blendAttachmentState.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+	blendAttachmentState.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
+	blendAttachmentState.alphaBlendOp = VK_BLEND_OP_ADD;
+	blendAttachmentStates[attachmentIndex] = blendAttachmentState;
+	return *this;
+}
 
 SbPipeline & SbPipeline::addShaderStage(const VkPipelineShaderStageCreateInfo & shaderStage)
 {
@@ -49,13 +66,36 @@ SbPipeline & SbPipeline::addShaderStage(const VkPipelineShaderStageCreateInfo & 
 	return *this;
 }
 
+SbPipeline & SbPipeline::addBlendAttachmentState(VkPipelineColorBlendAttachmentState blend, uint32_t index)
+{
+	if (index > blendAttachmentStates.size()-1 )
+	{
+		blendAttachmentStates.resize(index + 1);
+	}
+	blendAttachmentStates[index] = blend;
+	return *this;
+}
+
+SbPipeline & SbPipeline::addBlendAttachmentStates(VkPipelineColorBlendAttachmentState blend, uint32_t startIndex, uint32_t endIndex)
+{
+	if (endIndex > blendAttachmentStates.size() - 1)
+	{
+		blendAttachmentStates.resize(endIndex + 1);
+	}
+	for (size_t i = startIndex; i <= endIndex; i++)
+	{
+		blendAttachmentStates[i] = blend;
+	}
+	return *this;
+}
+
 void SbPipeline::createPipeline(const VkRenderPass & renderPass, const VkDevice & device)
 {
-
 	pipelineCI.renderPass = renderPass;
 	pipelineCI.pInputAssemblyState = &inputAssemblyStateCI;
 	pipelineCI.pRasterizationState = &rasterizationStateCI;
-	pipelineCI.pColorBlendState = &vks::initializers::pipelineColorBlendStateCreateInfo(1, &blendAttachmentState);
+	pipelineCI.pColorBlendState = &vks::initializers::pipelineColorBlendStateCreateInfo(
+		static_cast<uint32_t>(blendAttachmentStates.size()), blendAttachmentStates.data());
 	pipelineCI.pDepthStencilState = &depthStencilStateCI;
 	pipelineCI.pViewportState = &viewportStateCI;
 	pipelineCI.pMultisampleState = &multisampleStateCI;
@@ -87,12 +127,17 @@ void SbPipeline::createPipeline(const VkRenderPass & renderPass, const VkDevice 
 }
 
 SbPipeline::SbPipeline()
-	: inputAssemblyStateCI {vks::initializers::pipelineInputAssemblyStateCreateInfo(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, 0, VK_FALSE) },
-	rasterizationStateCI {vks::initializers::pipelineRasterizationStateCreateInfo(VK_POLYGON_MODE_FILL, VK_CULL_MODE_BACK_BIT, VK_FRONT_FACE_CLOCKWISE, 0)},
-	blendAttachmentState {vks::initializers::pipelineColorBlendAttachmentState(0xf, VK_FALSE)},
-	depthStencilStateCI	{vks::initializers::pipelineDepthStencilStateCreateInfo(VK_TRUE, VK_TRUE, VK_COMPARE_OP_LESS)},
+	: inputAssemblyStateCI {vks::initializers::pipelineInputAssemblyStateCreateInfo(
+		VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, 0, VK_FALSE) },
+	rasterizationStateCI {vks::initializers::pipelineRasterizationStateCreateInfo(
+		VK_POLYGON_MODE_FILL, VK_CULL_MODE_BACK_BIT, VK_FRONT_FACE_COUNTER_CLOCKWISE, 0)},
+	blendAttachmentStates {vks::initializers::pipelineColorBlendAttachmentState(
+		0xf, VK_FALSE)},
+	depthStencilStateCI	{vks::initializers::pipelineDepthStencilStateCreateInfo(
+		VK_TRUE, VK_TRUE, VK_COMPARE_OP_LESS_OR_EQUAL)},
 	viewportStateCI	{vks::initializers::pipelineViewportStateCreateInfo(1, 1, 0)},
-	multisampleStateCI{vks::initializers::pipelineMultisampleStateCreateInfo(VK_SAMPLE_COUNT_1_BIT, 0)},
+	multisampleStateCI{vks::initializers::pipelineMultisampleStateCreateInfo(
+		VK_SAMPLE_COUNT_1_BIT, 0)},
 	dynamicStateEnables { VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR },
 	pipelineCI { vks::initializers::pipelineCreateInfo() }
 {

@@ -172,22 +172,22 @@
     <None Include="shaders\attachmentwrite.vert">
       <Filter>Resource Files\shaders</Filter>
     </None>
-    <None Include="gbuf.vert">
+    <None Include="shaders\composition.frag">
       <Filter>Resource Files\shaders</Filter>
     </None>
-    <None Include="gbuf.frag">
+    <None Include="shaders\composition.vert">
       <Filter>Resource Files\shaders</Filter>
     </None>
-    <None Include="composition.vert">
+    <None Include="shaders\gbuf.frag">
       <Filter>Resource Files\shaders</Filter>
     </None>
-    <None Include="composition.frag">
+    <None Include="shaders\gbuf.vert">
       <Filter>Resource Files\shaders</Filter>
     </None>
-    <None Include="transparent.vert">
+    <None Include="shaders\transparent.frag">
       <Filter>Resource Files\shaders</Filter>
     </None>
-    <None Include="transparent.frag">
+    <None Include="shaders\transparent.vert">
       <Filter>Resource Files\shaders</Filter>
     </None>
   </ItemGroup>
@@ -196,7 +196,7 @@
       <Filter>Resource Files</Filter>
     </Text>
     <Text Include="scraps.txt">
-      <Filter>Resource Files\shaders</Filter>
+      <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>
 </Project>

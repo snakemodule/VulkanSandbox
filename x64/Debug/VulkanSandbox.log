@@ -4,9 +4,10 @@ c:\users\colin\source\repos\vulkansandbox\vulkansandbox\model.h(41): warning C42
           [
               T=glm::i32
           ]
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(825): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(830): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(954): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(993): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(996): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1049): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1054): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1183): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1216): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1250): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1253): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   VulkanSandbox.vcxproj -> C:\Users\Colin\source\repos\VulkanSandbox\x64\Debug\VulkanSandbox.exe

@@ -211,19 +211,19 @@
     <ClInclude Include="vulkansetup.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="composition.frag" />
-    <None Include="composition.vert" />
-    <None Include="gbuf.frag" />
-    <None Include="gbuf.vert" />
     <None Include="shaders\attachmentread.frag" />
     <None Include="shaders\attachmentread.vert" />
     <None Include="shaders\attachmentwrite.frag" />
     <None Include="shaders\attachmentwrite.vert" />
     <None Include="shaders\compile.bat" />
+    <None Include="shaders\composition.frag" />
+    <None Include="shaders\composition.vert" />
+    <None Include="shaders\gbuf.frag" />
+    <None Include="shaders\gbuf.vert" />
     <None Include="shaders\shader.frag" />
     <None Include="shaders\shader.vert" />
-    <None Include="transparent.frag" />
-    <None Include="transparent.vert" />
+    <None Include="shaders\transparent.frag" />
+    <None Include="shaders\transparent.vert" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="scraps.txt" />

@@ -103,5 +103,6 @@ public:
 	VkAttachmentDescription getAttachmentDescription(uint32_t index);
 
 	uint32_t getSize();
+	uint32_t getAttachmentCount();
 };
 

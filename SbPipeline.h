@@ -10,9 +10,10 @@
 class SbPipeline
 {
 private:
+	//restore these, easier to read than in constructor
 	VkPipelineInputAssemblyStateCreateInfo inputAssemblyStateCI;// = vks::initializers::pipelineInputAssemblyStateCreateInfo(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, 0, VK_FALSE);
 	VkPipelineRasterizationStateCreateInfo rasterizationStateCI;// = vks::initializers::pipelineRasterizationStateCreateInfo(VK_POLYGON_MODE_FILL, VK_CULL_MODE_BACK_BIT, VK_FRONT_FACE_CLOCKWISE, 0);
-	VkPipelineColorBlendAttachmentState blendAttachmentState;// = vks::initializers::pipelineColorBlendAttachmentState(0xf, VK_FALSE);
+	//VkPipelineColorBlendAttachmentState defaultBlendAttachmentState;// = vks::initializers::pipelineColorBlendAttachmentState(0xf, VK_FALSE);
 	//VkPipelineColorBlendStateCreateInfo colorBlendStateCI = vks::initializers::pipelineColorBlendStateCreateInfo(1, &blendAttachmentState);
 	VkPipelineDepthStencilStateCreateInfo depthStencilStateCI;// = vks::initializers::pipelineDepthStencilStateCreateInfo(VK_TRUE, VK_TRUE, VK_COMPARE_OP_LESS);
 	VkPipelineViewportStateCreateInfo viewportStateCI;// = vks::initializers::pipelineViewportStateCreateInfo(1, 1, 0);
@@ -23,6 +24,7 @@ private:
 	std::vector<VkPipelineShaderStageCreateInfo> shaderStages;
 	std::vector<VkVertexInputAttributeDescription> vertexAttributeDescriptions;
 	std::vector<VkVertexInputBindingDescription> vertexBindingDescriptions;
+	std::vector<VkPipelineColorBlendAttachmentState> blendAttachmentStates;
 public:
 	VkPipeline handle;
 
@@ -31,6 +33,8 @@ public:
 	SbPipeline& layout(const VkPipelineLayout & pipelineLayout);
 	SbPipeline& subpassIndex(const uint32_t & subpass);
 	SbPipeline& addShaderStage(const VkPipelineShaderStageCreateInfo & shaderStage);
+	SbPipeline& addBlendAttachmentState(VkPipelineColorBlendAttachmentState blend, uint32_t index);
+	SbPipeline& addBlendAttachmentStates(VkPipelineColorBlendAttachmentState blend, uint32_t startIndex, uint32_t endIndex);
 
 
 	//optional parameters
@@ -38,6 +42,8 @@ public:
 	SbPipeline & vertexAttributeDescription(const std::vector<VkVertexInputAttributeDescription>& v);
 	SbPipeline& cullMode(const VkCullModeFlags & flags);
 	SbPipeline& depthWriteEnable(const VkBool32 & enable);
+	SbPipeline& colorBlending(uint32_t attachmentIndex);
+
 
 	void createPipeline(const VkRenderPass & renderPass, const VkDevice & device);
 

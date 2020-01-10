@@ -221,6 +221,19 @@ private:
 	//VkCommandPool commandPool;
 	//std::unique_ptr<SbCommandPool> commandPool;
 
+
+	enum
+	{
+		kAttachment_BACK,
+		kAttachment_POSITION,
+		kAttachment_NORMAL,
+		kAttachment_ALBEDO,
+		kAttachment_DEPTH,
+		kAttachment_COUNT,
+		kAttachment_MAX = kAttachment_COUNT - 1
+	};
+
+	/*
 	enum
 	{
 		kAttachment_BACK,
@@ -229,10 +242,12 @@ private:
 		kAttachment_COUNT,
 		kAttachment_MAX = kAttachment_COUNT - 1
 	};
+	*/
 	enum
 	{
-		kSubpass_WRITE,
-		kSubpass_READ,
+		kSubpass_GBUF,
+		kSubpass_COMPOSE,
+		kSubpass_TRANSPARENT,
 		kSubpass_COUNT,
 		kSubpass_MAX = kSubpass_COUNT - 1
 	};
@@ -314,7 +329,7 @@ private:
 		createDescriptorPool();
 		createDescriptorSetLayout();
 		//createGraphicsPipeline();
-		createDoublePipeline();
+		createPipelines();
 
 		createCommandBuffers();
 		createSyncObjects();
@@ -448,7 +463,7 @@ private:
 		createSwapChain();
 		//createImageViews(); moved to swapchain creation
 		createRenderPass();
-		createDoublePipeline();
+		createPipelines();
 		createAttachmentResources();
 		createFramebuffers();
 		createUniformBuffers();
@@ -470,6 +485,21 @@ private:
 	void createSwapChain() {
 		swapchain = std::make_unique<SbSwapchain>(*vulkanBase);
 		swapchain->createSwapChain(vulkanBase->surface, window, kAttachment_COUNT);
+
+		swapchain->createAttachment(kAttachment_POSITION, VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);	// (World space) Positions		
+		swapchain->createAttachment(kAttachment_NORMAL, VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);		// (World space) Normals		
+		swapchain->createAttachment(kAttachment_ALBEDO, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
+		swapchain->createAttachment(kAttachment_DEPTH, vulkanBase->findDepthFormat(), VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT);
+	}
+
+	void createAttachmentResources() {
+		//TODO USE SWAPCHAIN CREATE ATTACHMENT-----------------------------------------------------------
+		/*
+		swapchain->createAttachment(kAttachment_COLOR, swapchain->getAttachmentDescription(kAttachment_BACK).format,
+			VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
+		swapchain->createAttachment(kAttachment_DEPTH, vulkanBase->findDepthFormat(),
+			VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT);
+		*/
 	}
 	
 	void createRenderPass() {
@@ -477,17 +507,33 @@ private:
 		
 		renderPass = std::make_unique<SbRenderpass>(*vulkanBase, kSubpass_COUNT, kAttachment_COUNT, swapchain->getSize());
 
-		renderPass->addAttachment(kAttachment_BACK, swapchain->getAttachmentDescription(kAttachment_BACK));
-		renderPass->addAttachment(kAttachment_COLOR, swapchain->getAttachmentDescription(kAttachment_COLOR));
-		renderPass->addAttachment(kAttachment_DEPTH, swapchain->getAttachmentDescription(kAttachment_DEPTH));
+		//todo simplify this step
+		//renderPass->addAttachment(kAttachment_BACK, swapchain->getAttachmentDescription(kAttachment_BACK));
+		//renderPass->addAttachment(kAttachment_POSITION, swapchain->getAttachmentDescription(kAttachment_POSITION));
+		//renderPass->addAttachment(kAttachment_NORMAL, swapchain->getAttachmentDescription(kAttachment_NORMAL));
+		//renderPass->addAttachment(kAttachment_ALBEDO, swapchain->getAttachmentDescription(kAttachment_ALBEDO));
+		//renderPass->addAttachment(kAttachment_DEPTH, swapchain->getAttachmentDescription(kAttachment_DEPTH));
 
-		renderPass->addColorAttachmentRef(kSubpass_WRITE, kAttachment_COLOR);
-		renderPass->setDepthStencilAttachmentRef(kSubpass_WRITE, kAttachment_DEPTH);
+		renderPass->addSwapchainAttachments(*swapchain);
 
-		renderPass->addColorAttachmentRef(kSubpass_READ, kAttachment_BACK);
-		renderPass->addInputAttachmentRef(kSubpass_READ, kAttachment_COLOR);
-		renderPass->addInputAttachmentRef(kSubpass_READ, kAttachment_DEPTH);
+		renderPass->addColorAttachmentRef(kSubpass_GBUF, kAttachment_BACK);
+		renderPass->addColorAttachmentRef(kSubpass_GBUF, kAttachment_POSITION);
+		renderPass->addColorAttachmentRef(kSubpass_GBUF, kAttachment_NORMAL);
+		renderPass->addColorAttachmentRef(kSubpass_GBUF, kAttachment_ALBEDO);
+		renderPass->setDepthStencilAttachmentRef(kSubpass_GBUF, kAttachment_DEPTH);
 
+		renderPass->addColorAttachmentRef(kSubpass_COMPOSE, kAttachment_BACK);
+		renderPass->addInputAttachmentRef(kSubpass_COMPOSE, kAttachment_POSITION); //todo input attachment index in shader should be considered?
+		renderPass->addInputAttachmentRef(kSubpass_COMPOSE, kAttachment_NORMAL);
+		renderPass->addInputAttachmentRef(kSubpass_COMPOSE, kAttachment_ALBEDO);
+		renderPass->setDepthStencilAttachmentRef(kSubpass_COMPOSE, kAttachment_DEPTH);
+
+		renderPass->addColorAttachmentRef(kSubpass_TRANSPARENT, kAttachment_BACK);
+		renderPass->addInputAttachmentRef(kSubpass_TRANSPARENT, kAttachment_POSITION);
+		renderPass->setDepthStencilAttachmentRef(kSubpass_TRANSPARENT, kAttachment_DEPTH);
+
+
+		/*
 		renderPass->addSyncMasks(kSubpass_WRITE, 
 			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
 			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
@@ -502,14 +548,166 @@ private:
 		renderPass->addDependency(VK_SUBPASS_EXTERNAL, kSubpass_WRITE);
 		renderPass->addDependency(kSubpass_WRITE, kSubpass_READ);
 		renderPass->addDependency(kSubpass_READ, VK_SUBPASS_EXTERNAL);
+		*/
+
+		//todo does it work the syncmasks way? ^^^^
+		std::array<VkSubpassDependency, 4> dependencies;
+
+		dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
+		dependencies[0].dstSubpass = 0;
+		dependencies[0].srcStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+		dependencies[0].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+		dependencies[0].srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+		dependencies[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+		dependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+
+		// This dependency transitions the input attachment from color attachment to shader read
+		dependencies[1].srcSubpass = 0;
+		dependencies[1].dstSubpass = 1;
+		dependencies[1].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+		dependencies[1].dstStageMask = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+		dependencies[1].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+		dependencies[1].dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+		dependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+
+		dependencies[2].srcSubpass = 1;
+		dependencies[2].dstSubpass = 2;
+		dependencies[2].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+		dependencies[2].dstStageMask = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+		dependencies[2].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+		dependencies[2].dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+		dependencies[2].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+
+		dependencies[3].srcSubpass = 0;
+		dependencies[3].dstSubpass = VK_SUBPASS_EXTERNAL;
+		dependencies[3].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+		dependencies[3].dstStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+		dependencies[3].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+		dependencies[3].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+		dependencies[3].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+
+		renderPass->addDependency(dependencies[0]);
+		renderPass->addDependency(dependencies[1]);
+		renderPass->addDependency(dependencies[2]);
+		renderPass->addDependency(dependencies[3]);
 
 		renderPass->createRenderpass(*swapchain);
 	}
 
-	void createDescriptorSetLayout() {
-		//first create attachment write layout
+	void createDescriptorSetLayout() 
+	{	
+		//gbuf
 		{
-			//renderPass->subpasses[kSubpass_WRITE].pipelineLayout = std::make_unique<SbPipelineLayout>(vulkanBase->logicalDevice->device, swapchain->getSize());
+			SbPipelineLayout & DS = renderPass->getPipelineLayout(kSubpass_GBUF);
+
+			//vertex
+			{
+				DS.addBufferBinding(
+					vkinit::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, 0),
+					*transformUniformBuffer);
+			}
+			//fragment
+			{
+				DS.addImageBinding(
+					vkinit::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1),
+					{
+						textureSampler,
+						&textureImageView,
+						VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+						SbPipelineLayout::eSharingMode_Shared
+					});
+				DS.addBufferBinding(
+					vkinit::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, VK_SHADER_STAGE_FRAGMENT_BIT, 2),
+					*shadingUniformBuffer);
+			}
+			//with bindings created, create layout
+			DS.createDSLayout();
+			DS.createPipelineLayout();
+			//allocate descriptors and update them with resources
+			DS.allocateDescriptorSets(*descriptorPool.get());
+			DS.updateDescriptors();
+		}
+
+		//now create attachment read layout
+		{
+			//TODO simplify, combine with input attachments in renderpass?
+			SbPipelineLayout & DS = renderPass->getPipelineLayout(kSubpass_COMPOSE);
+			//frag
+			{
+				DS.addImageBinding(
+					vkinit::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, VK_SHADER_STAGE_FRAGMENT_BIT, 0),
+					{
+						VK_NULL_HANDLE,
+						swapchain->getAttachmentViews(kAttachment_POSITION).data(),
+						VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+						SbPipelineLayout::eSharingMode_Separate
+					});
+				DS.addImageBinding(
+					vkinit::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, VK_SHADER_STAGE_FRAGMENT_BIT, 1),
+					{
+						VK_NULL_HANDLE,
+						swapchain->getAttachmentViews(kAttachment_NORMAL).data(),
+						VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+						SbPipelineLayout::eSharingMode_Separate
+					});
+				DS.addImageBinding(
+					vkinit::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, VK_SHADER_STAGE_FRAGMENT_BIT, 2),
+					{
+						VK_NULL_HANDLE,
+						swapchain->getAttachmentViews(kAttachment_ALBEDO).data(),
+						VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+						SbPipelineLayout::eSharingMode_Separate
+					});
+			}			
+			//VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
+			DS.createDSLayout();
+			DS.createPipelineLayout();
+			DS.allocateDescriptorSets(*descriptorPool.get());
+			DS.updateDescriptors();
+		}
+
+		{
+			SbPipelineLayout & DS = renderPass->getPipelineLayout(kSubpass_TRANSPARENT);
+			//vertex
+			{
+				DS.addBufferBinding(
+					vkinit::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, 0),
+					*transformUniformBuffer);
+			}
+			//frag
+			{
+				DS.addImageBinding(
+					vkinit::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1),
+					{
+						textureSampler,
+						&textureImageView,
+						VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+						SbPipelineLayout::eSharingMode_Shared
+					});
+				DS.addBufferBinding(
+					vkinit::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, VK_SHADER_STAGE_FRAGMENT_BIT, 2),
+					*shadingUniformBuffer);
+				DS.addImageBinding(
+					vkinit::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, VK_SHADER_STAGE_FRAGMENT_BIT, 3),
+					{
+						VK_NULL_HANDLE,
+						swapchain->getAttachmentViews(kAttachment_POSITION).data(),
+						VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+						SbPipelineLayout::eSharingMode_Separate
+					});
+			}
+			//VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
+			DS.createDSLayout();
+			DS.createPipelineLayout();
+			DS.allocateDescriptorSets(*descriptorPool.get());
+			DS.updateDescriptors();
+			//todo simplify to pipelinelayout.create() +update descriptors?
+		}
+
+
+		//first create attachment write layout
+		/*
+		{
 			SbPipelineLayout & DS = renderPass->getPipelineLayout(kSubpass_WRITE);
 			
 			//create bindings
@@ -539,7 +737,6 @@ private:
 
 		//now create attachment read layout
 		{
-			//renderPass->subpasses[kSubpass_READ].pipelineLayout = std::make_unique<SbPipelineLayout>(vulkanBase->logicalDevice->device, swapchain->getSize());
 			SbPipelineLayout & DS = renderPass->getPipelineLayout(kSubpass_READ);
 
 			DS.addImageBinding(
@@ -564,9 +761,46 @@ private:
 			DS.allocateDescriptorSets(*descriptorPool.get());
 			DS.updateDescriptors(); 
 		}
+		*/
 	}	
 
-	void createDoublePipeline() {
+	void createPipelines() {
+		//TODO why use index twice?
+		auto & subpassgbuf = renderPass->subpasses[kSubpass_GBUF];
+		const auto & bind = Vertex::getBindingDescriptions();
+		const auto & attr = Vertex::getAttributeDescriptions();
+		subpassgbuf.pipeline.subpassIndex(kSubpass_GBUF)
+			.layout(subpassgbuf.pipelineLayout.pipelineLayout)
+			.addBlendAttachmentStates(vks::initializers::pipelineColorBlendAttachmentState(0xf, VK_FALSE), 0, 3)
+			.vertexBindingDescription(std::vector<VkVertexInputBindingDescription> {bind.begin(), bind.end()})
+			.vertexAttributeDescription(std::vector<VkVertexInputAttributeDescription> {attr.begin(), attr.end()})
+			.addShaderStage(vks::helper::loadShader("shaders/gbuf.vert.spv", VK_SHADER_STAGE_VERTEX_BIT, vulkanBase->logicalDevice->device))
+			.addShaderStage(vks::helper::loadShader("shaders/gbuf.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT, vulkanBase->logicalDevice->device))
+			.createPipeline(renderPass->renderPass, vulkanBase->logicalDevice->device);
+
+
+		auto & subpasscomp = renderPass->subpasses[kSubpass_COMPOSE];
+		subpasscomp.pipeline.subpassIndex(kSubpass_COMPOSE)
+			.layout(subpasscomp.pipelineLayout.pipelineLayout)
+			.addShaderStage(vks::helper::loadShader("shaders/composition.vert.spv", VK_SHADER_STAGE_VERTEX_BIT, vulkanBase->logicalDevice->device))
+			.addShaderStage(vks::helper::loadShader("shaders/composition.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT, vulkanBase->logicalDevice->device))
+			.cullMode(VK_CULL_MODE_NONE)
+			.depthWriteEnable(VK_FALSE)
+			.createPipeline(renderPass->renderPass, vulkanBase->logicalDevice->device);
+
+		auto & subpastransparent = renderPass->subpasses[kSubpass_TRANSPARENT];
+		subpastransparent.pipeline.subpassIndex(kSubpass_TRANSPARENT)
+			.layout(subpastransparent.pipelineLayout.pipelineLayout)
+			.colorBlending(0)
+			.vertexBindingDescription(std::vector<VkVertexInputBindingDescription> {bind.begin(), bind.end()})
+			.vertexAttributeDescription(std::vector<VkVertexInputAttributeDescription> {attr.begin(), attr.end()})
+			.addShaderStage(vks::helper::loadShader("shaders/transparent.vert.spv", VK_SHADER_STAGE_VERTEX_BIT, vulkanBase->logicalDevice->device))
+			.addShaderStage(vks::helper::loadShader("shaders/transparent.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT, vulkanBase->logicalDevice->device))
+			.cullMode(VK_CULL_MODE_BACK_BIT)
+			.depthWriteEnable(VK_FALSE)
+			.createPipeline(renderPass->renderPass, vulkanBase->logicalDevice->device);
+
+		/*
 		auto & subpasswrite = renderPass->subpasses[kSubpass_WRITE];
 		const auto & bind = Vertex::getBindingDescriptions();
 		const auto & attr = Vertex::getAttributeDescriptions();
@@ -587,6 +821,7 @@ private:
 			.cullMode(VK_CULL_MODE_NONE)
 			.depthWriteEnable(VK_FALSE)
 			.createPipeline(renderPass->renderPass, vulkanBase->logicalDevice->device);
+		*/
 		
 	}
 	
@@ -598,18 +833,7 @@ private:
 		vulkanBase->commandPool = std::make_unique<SbCommandPool>(*vulkanBase);
 	}
 	
-	void createAttachmentResources() {
-			//TODO USE SWAPCHAIN CREATE ATTACHMENT-----------------------------------------------------------
-		swapchain->createAttachment(kAttachment_COLOR, swapchain->getAttachmentDescription(kAttachment_BACK).format,
-			VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
-		swapchain->createAttachment(kAttachment_DEPTH, vulkanBase->findDepthFormat(),
-			VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT);
-
-		//TODO new renderpass
-		//createAttachment(VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, &attachments.position);	// (World space) Positions		
-		//createAttachment(VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, &attachments.normal);		// (World space) Normals		
-		//createAttachment(VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, &attachments.albedo);			   
-	}
+	
 
 	
 
@@ -853,8 +1077,9 @@ private:
 	}
 
 	void createUniformBuffers() {
-		transformUniformBuffer = std::make_unique<SbUniformBuffer<UniformBufferObject>>(*vulkanBase, swapchain->getSize()); 
-				
+		transformUniformBuffer = std::make_unique<SbUniformBuffer<UniformBufferObject>>(*vulkanBase, swapchain->getSize()); 		
+
+
 		shadingUniformBuffer = std::make_unique<SbUniformBuffer<ShadingUBO>>(*vulkanBase, 1, drawables.size());
 
 		for (size_t i = 0; i < drawables.size(); i++)
@@ -873,9 +1098,9 @@ private:
 		poolSizes[0] = { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, static_cast<uint32_t>(swapchain->getSize() * 2) }; //attachment write binding counts as uniform so there are 2 uniform bindings per frame, attachment and uniform struct
 		poolSizes[1] = { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, static_cast<uint32_t>(swapchain->getSize() * 2) };
 		poolSizes[2] = { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, static_cast<uint32_t>(swapchain->getSize() * 2) };
-		poolSizes[3] = { VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, static_cast<uint32_t>(swapchain->getSize() * 2) };
+		poolSizes[3] = { VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, static_cast<uint32_t>(swapchain->getSize() * 4) };
 
-		descriptorPool->createDescriptorPool(poolSizes, static_cast<uint32_t>(swapchain->getSize()) * 2);
+		descriptorPool->createDescriptorPool(poolSizes, static_cast<uint32_t>(swapchain->getSize()) * 3);
 
 		/*{
 			std::vector<VkDescriptorPoolSize> poolSizes(4);
@@ -929,47 +1154,79 @@ private:
 			//clearValues[0].color = { 0.0f, 0.0f, 0.0f, 1.0f };
 			//clearValues[1].depthStencil = { 1.0f, 0 };
 
-			VkClearValue clearValues[3];
-			clearValues[0].color = { { 0.0f, 0.0f, 0.2f, 0.0f } };
-			clearValues[1].color = { { 0.0f, 0.0f, 0.2f, 0.0f } };
-			clearValues[2].depthStencil = { 1.0f, 0 };
+			//todo clearvalues as properties of attachments, and attachments as part of renderpass
+			std::array<VkClearValue, 5> clearValues = {};
+			clearValues[0].color = { { 0.0f, 0.0f, 0.0f, 0.0f } };
+			clearValues[1].color = { { 0.0f, 0.0f, 0.0f, 0.0f } };
+			clearValues[2].color = { { 0.0f, 0.0f, 0.0f, 0.0f } };
+			clearValues[3].color = { { 0.0f, 0.0f, 0.0f, 0.0f } };
+			clearValues[4].depthStencil = { 1.0f, 0 };
 
-			renderPassInfo.clearValueCount = 3;//static_cast<uint32_t>(clearValues.size());
-			renderPassInfo.pClearValues = clearValues;
+			renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
+			renderPassInfo.pClearValues = clearValues.data();
 
 			vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
 			VkViewport viewport = vks::initializers::viewport(
-				(float)swapchain->swapchainCI.imageExtent.width, 
+				(float)swapchain->swapchainCI.imageExtent.width,
 				(float)swapchain->swapchainCI.imageExtent.height, 0.0f, 1.0f);
 			vkCmdSetViewport(commandBuffers[i], 0, 1, &viewport);
 
 			VkRect2D scissor = vks::initializers::rect2D(swapchain->swapchainCI.imageExtent, 0, 0);
 			vkCmdSetScissor(commandBuffers[i], 0, 1, &scissor);
 
-			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getSubpassPipeline(kSubpass_WRITE));
-
-			for (size_t j = 0; j < drawables.size(); j++)
 			{
-				uint32_t offset = j * static_cast<uint32_t>(shadingUniformBuffer->dynamicAlignment);
-				vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getPipelineLayout(kSubpass_WRITE).pipelineLayout,
-					0, 1, &renderPass->getPipelineLayout(kSubpass_WRITE).allocatedDSs[i], 1, &offset);
+				vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getSubpassPipeline(kSubpass_GBUF));
 
-				VkBuffer vert[] = { drawables[j].VertexBuffer };
-				VkDeviceSize offsets[] = { 0 };
-				vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vert, offsets);
+				for (size_t j = 0; j < drawables.size()-1; j++)
+				{
+					uint32_t offset = j * static_cast<uint32_t>(shadingUniformBuffer->dynamicAlignment);
+					vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getPipelineLayout(kSubpass_GBUF).pipelineLayout,
+						0, 1, &renderPass->getPipelineLayout(kSubpass_GBUF).allocatedDSs[i], 1, &offset);
 
-				//vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer[j], 0, VK_INDEX_TYPE_UINT32);
-				vkCmdBindIndexBuffer(commandBuffers[i], drawables[j].IndexBuffer, 0, VK_INDEX_TYPE_UINT32);
+					VkBuffer vert[] = { drawables[j].VertexBuffer };
+					VkDeviceSize offsets[] = { 0 };
+					vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vert, offsets);
 
-				vkCmdDrawIndexed(commandBuffers[i], drawables[j].IndexCount, 1, 0, 0, 0);
+					//vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer[j], 0, VK_INDEX_TYPE_UINT32);
+					vkCmdBindIndexBuffer(commandBuffers[i], drawables[j].IndexBuffer, 0, VK_INDEX_TYPE_UINT32);
+
+					vkCmdDrawIndexed(commandBuffers[i], drawables[j].IndexCount, 1, 0, 0, 0);
+				}
 			}
+			
 
 			vkCmdNextSubpass(commandBuffers[i], VK_SUBPASS_CONTENTS_INLINE);
+			{
 
-			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getSubpassPipeline(kSubpass_READ));
-			vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getPipelineLayout(kSubpass_READ).pipelineLayout, 0, 1, &renderPass->getPipelineLayout(kSubpass_READ).allocatedDSs[i], 0, NULL);
-			vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
+				vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getSubpassPipeline(kSubpass_COMPOSE));
+				vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getPipelineLayout(kSubpass_COMPOSE).pipelineLayout, 
+					0, 1, &renderPass->getPipelineLayout(kSubpass_COMPOSE).allocatedDSs[i], 0, NULL);
+				vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
+			}
+
+
+			vkCmdNextSubpass(commandBuffers[i], VK_SUBPASS_CONTENTS_INLINE);
+			{
+
+				vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getSubpassPipeline(kSubpass_TRANSPARENT));
+
+				for (size_t j = drawables.size()-1; j < drawables.size(); j++)
+				{
+					uint32_t offset = j * static_cast<uint32_t>(shadingUniformBuffer->dynamicAlignment);
+					vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getPipelineLayout(kSubpass_TRANSPARENT).pipelineLayout,
+						0, 1, &renderPass->getPipelineLayout(kSubpass_TRANSPARENT).allocatedDSs[i], 1, &offset);
+
+					VkBuffer vert[] = { drawables[j].VertexBuffer };
+					VkDeviceSize offsets[] = { 0 };
+					vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vert, offsets);
+
+					//vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer[j], 0, VK_INDEX_TYPE_UINT32);
+					vkCmdBindIndexBuffer(commandBuffers[i], drawables[j].IndexBuffer, 0, VK_INDEX_TYPE_UINT32);
+
+					vkCmdDrawIndexed(commandBuffers[i], drawables[j].IndexCount, 1, 0, 0, 0);
+				}
+			}
 
 			vkCmdEndRenderPass(commandBuffers[i]);
 
