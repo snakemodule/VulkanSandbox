@@ -4,6 +4,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/quaternion.hpp>
 
+
+
 unsigned int AnimationStuff::FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim)
 {
 	for (unsigned int i = 0; i < pNodeAnim->mNumPositionKeys - 1; i++) {
@@ -20,7 +22,6 @@ unsigned int AnimationStuff::FindPosition(float AnimationTime, const aiNodeAnim*
 unsigned int AnimationStuff::FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim)
 {
 	assert(pNodeAnim->mNumRotationKeys > 0);
-
 	for (unsigned int i = 0; i < pNodeAnim->mNumRotationKeys - 1; i++) {
 		if (AnimationTime < (float)pNodeAnim->mRotationKeys[i + 1].mTime) {
 			return i;
@@ -63,7 +64,7 @@ void AnimationStuff::CalcInterpolatedPosition(aiVector3D& Out, float AnimationTi
 	const aiVector3D& Start = pNodeAnim->mPositionKeys[PositionIndex].mValue;
 	const aiVector3D& End = pNodeAnim->mPositionKeys[NextPositionIndex].mValue;
 	aiVector3D Delta = End - Start;
-	Out = Start + Factor * Delta;
+	Out = Start;// +Factor * Delta;
 }
 
 void AnimationStuff::CalcInterpolatedRotation(aiQuaternion& Out, float AnimationTime, const aiNodeAnim* pNodeAnim)
@@ -118,7 +119,14 @@ aiBone* AnimationStuff::isInMeshBones(aiString name, const aiScene* modelScene) 
 	return nullptr;
 }
 
-glm::mat4 AnimationStuff::makeAnimationMatrix(aiNodeAnim* channel, float AnimationTime) {
+void AnimationStuff::finalizeFlatten(Skeleton & s)
+{
+	s.hierarchy.shrink_to_fit();
+	s.offsetMatrix.shrink_to_fit();
+	s.jointCount = s.offsetMatrix.size();
+}
+
+std::pair<aiQuaternion, aiVector3D> AnimationStuff::makeAnimationMatrix(aiNodeAnim* channel, float AnimationTime) {
 
 	// Interpolate scaling and generate scaling transformation matrix
 	aiVector3D Scaling;
@@ -136,7 +144,8 @@ glm::mat4 AnimationStuff::makeAnimationMatrix(aiNodeAnim* channel, float Animati
 	glm::mat4 TranslationM = glm::translate(glm::mat4(1.0f), glm::vec3(Translation.x, Translation.y, Translation.z));
 
 	// Combine the above transformations
-	return TranslationM * RotationM;// *ScalingM;
+	//return TranslationM * RotationM;// *ScalingM;
+	return std::make_pair(RotationQ, Translation);
 }
 
 aiNode* AnimationStuff::findRootJoint(aiNode* node, const aiScene* scene) {
@@ -169,6 +178,38 @@ aiNodeAnim* AnimationStuff::boneIsInAnimation(aiString name, const aiScene* mode
 	return nullptr;
 }
 
+int AnimationStuff::makeFlatSkeleton(aiNode* node, Skeleton& skeleton, std::map<std::string, uint64_t>& jointIndex, int insertIndex, int parentIndex, const aiScene* scene)
+{
+	int createdEntry = 0;
+	aiBone* boneExists = isInMeshBones(node->mName, scene);
+	if (boneExists)
+	{
+		skeleton.hierarchy.emplace_back(parentIndex);
+
+		aiNodeAnim* animChannelOfBone = boneIsInAnimation(node->mName, scene);
+		if (animChannelOfBone) {
+			skeleton.assimpAnimChannel.emplace_back(animChannelOfBone);
+		}
+
+		skeleton.offsetMatrix.emplace_back(glmMatFromAiMat(boneExists->mOffsetMatrix));
+
+		jointIndex.insert(std::pair<std::string, size_t>(node->mName.C_Str(), insertIndex));
+		createdEntry = 1;
+		parentIndex = insertIndex;
+	}
+
+
+	// then do the same for each of its children
+	int childCounter = 0;
+	for (unsigned int i = 0; (i < node->mNumChildren); i++)
+	{
+		childCounter += makeFlatSkeleton(node->mChildren[i], skeleton, jointIndex, insertIndex + createdEntry + childCounter, parentIndex, scene);
+	}
+
+	return childCounter + createdEntry; //return number of entries created
+}
+
+/*
 int AnimationStuff::flattenJointHierarchy(aiNode* node, Model& model, int insertIndex, int parentIndex, const aiScene* scene)
 {
 	int createdEntry = 0;
@@ -183,12 +224,7 @@ int AnimationStuff::flattenJointHierarchy(aiNode* node, Model& model, int insert
 		}
 
 		model.skeleton.localTransform.emplace_back(glmMatFromAiMat(node->mTransformation));
-
 		model.skeleton.offsetMatrix.emplace_back(glmMatFromAiMat(boneExists->mOffsetMatrix));
-
-		aiQuaternion q;
-		aiVector3D v;
-		boneExists->mOffsetMatrix.DecomposeNoScaling(q, v);
 
 		model.jointIndex.insert(std::pair<std::string, size_t>(node->mName.C_Str(), insertIndex)); //plan: use this map to set boneindex of vertex
 		createdEntry = 1;
@@ -206,6 +242,7 @@ int AnimationStuff::flattenJointHierarchy(aiNode* node, Model& model, int insert
 	return childCounter + createdEntry; //return number of entries created
 }
 
+*/
 //put in utils?
 glm::mat4 AnimationStuff::glmMatFromAiMat(aiMatrix4x4 t) {
 	glm::mat4 glmmat;
@@ -216,6 +253,7 @@ glm::mat4 AnimationStuff::glmMatFromAiMat(aiMatrix4x4 t) {
 	return glmmat;
 }
 
+/*
 void AnimationStuff::prepareInverseBindPose(Skeleton& s)
 {
 	s.hierarchy.shrink_to_fit();
@@ -239,6 +277,8 @@ void AnimationStuff::prepareInverseBindPose(Skeleton& s)
 		s.inverseBindPose[i] = glm::inverse(s.globalTransform[i]);
 	}
 }
+*/
+
 
 
 AnimationStuff::AnimationStuff()

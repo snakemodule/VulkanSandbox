@@ -37,7 +37,9 @@ void main()
 		 //BoneTransform += ubo.boneTransforms[int(boneIndex[2])] * weight[2];
 		 //BoneTransform += ubo.boneTransforms[int(boneIndex[3])] * weight[3];
 
-	gl_Position = ubo.proj * ubo.view * ubo.model * BoneTransform * inPos;
+	vec4 WorldPos = ubo.model * BoneTransform * inPos;
+
+	gl_Position = ubo.proj * ubo.view * WorldPos;
 	
 	// Currently just vertex color
 	outColor = inColor;
@@ -47,7 +49,7 @@ void main()
 	outNormal = mNormal * normalize(inNormal);	
 
 	// Vertex position in world space
-	outWorldPos = vec3(ubo.model * BoneTransform * inPos);
+	outWorldPos = vec3(WorldPos.xyz);
 	// GL to Vulkan coord space
 	outWorldPos.y = -outWorldPos.y;
 	

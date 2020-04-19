@@ -8,7 +8,7 @@
 template <class T>
 class SbUniformBuffer
 {
-	T* UBOdata = nullptr;
+	T* pUBOdata = nullptr;
 
 public:
 	std::vector<VkBuffer> buffers = {};
@@ -39,14 +39,14 @@ public:
 
 			bufferSize = bufferLength * dynamicAlignment;
 
-			UBOdata = static_cast<T*>(alignedAlloc(bufferSize, dynamicAlignment));
+			pUBOdata = static_cast<T*>(alignedAlloc(bufferSize, dynamicAlignment));
 		}
 		else
 		{
-			UBOdata = new T();
+			pUBOdata = new T();
 			bufferSize = sizeof(T);
 		}		
-		assert(UBOdata);
+		assert(pUBOdata);
 		for (size_t i = 0; i < instanceCount; i++) {
 			vkBase.createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
 				buffers[i], bufferMemory[i]);
@@ -57,20 +57,23 @@ public:
 	{
 		if (bufferSize > 0)
 		{
-			alignedFree(UBOdata);
+			alignedFree(pUBOdata);
 		}
 		else
 		{
-			delete(UBOdata);
+			delete(pUBOdata);
 		}
 	}
 	
-	void writeBufferData(const T & data, size_t offset = 0)
+	void writeBufferData(const T & data, size_t offset = 0, size_t count = 1)
 	{
 		if (offset < bufferLength)
 		{
-			T & UBO = *(reinterpret_cast<T*>((uint64_t)UBOdata + (offset * dynamicAlignment)));
-			UBO = data;
+			for (size_t i = 0; i < count; i++)
+			{
+				T & item = *(reinterpret_cast<T*>((uint64_t)pUBOdata + (i* offset * dynamicAlignment)));
+				item = data;
+			}
 		}
 		else
 		{
@@ -78,15 +81,13 @@ public:
 		}
 	}
 	
-	void copyBufferDataToMemory(SbVulkanBase & vkBase)
+	void copyDataToBufferMemory(SbVulkanBase & vkBase, uint32_t instance = 0)
 	{
-		for (size_t i = 0; i < buffers.size(); i++)
-		{
-			void* data;
-			vkMapMemory(vkBase.logicalDevice->device, bufferMemory[i], 0, bufferSize, 0, &data);
-			memcpy(data, UBOdata, bufferSize);
-			vkUnmapMemory(vkBase.logicalDevice->device, bufferMemory[i]);
-		}
+		void* data;
+		vkMapMemory(vkBase.logicalDevice->device, bufferMemory[instance], 0, bufferSize, 0, &data);
+		memcpy(data, pUBOdata, bufferSize);
+		vkUnmapMemory(vkBase.logicalDevice->device, bufferMemory[instance]);
+		
 	}
 
 	void* alignedAlloc(size_t size, size_t alignment)

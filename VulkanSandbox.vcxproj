@@ -1,6 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="AnimationFormatDebug|Win32">
+      <Configuration>AnimationFormatDebug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="AnimationFormatDebug|x64">
+      <Configuration>AnimationFormatDebug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
@@ -52,6 +60,12 @@
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='AnimationFormatDebug|Win32'">
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='AnimationFormatDebug|x64'">
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -108,7 +122,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Program Files\Assimp\include;D:\Other\boost_1_70_0\;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\tinyobjloader;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\stb-master;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\glfw-3.3.bin.WIN64\include;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\glm;C:\VulkanSDK\1.1.106.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Other\boost_1_72_0;C:\Program Files\Assimp\include;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\tinyobjloader;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\stb-master;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\glfw-3.3.bin.WIN64\include;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\glm;C:\VulkanSDK\1.1.106.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -165,6 +179,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Entities.cpp" />
+    <ClCompile Include="SkeletalAnimationComponent.cpp" />
+    <ClCompile Include="SkeletonAnimation.cpp" />
+    <ClCompile Include="AnimationKeys.cpp" />
     <ClCompile Include="AnimationStuff.cpp" />
     <ClCompile Include="fbxsdkstuff.cpp" />
     <ClCompile Include="glfwsetup.cpp" />
@@ -183,10 +201,22 @@
     <ClCompile Include="SbSwapchain.cpp" />
     <ClCompile Include="SbUniformBuffer.cpp" />
     <ClCompile Include="SbVulkanBase.cpp" />
+    <ClCompile Include="SkeletonAnimationSystem.cpp" />
+    <ClCompile Include="spline.cpp" />
+    <ClCompile Include="UncompressedAnimation.cpp" />
+    <ClCompile Include="UncompressedAnimationKeys.cpp" />
     <ClCompile Include="vulkansetup.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="algo.hpp" />
+    <ClInclude Include="Entities.h" />
+    <ClInclude Include="Skeleton.h" />
+    <ClInclude Include="UncompressedAnimation.h" />
+    <ClInclude Include="UncompressedAnimationKeys.h" />
+    <ClInclude Include="Util.h" />
+    <ClInclude Include="SkeletalAnimationComponent.h" />
+    <ClInclude Include="SkeletonAnimation.h" />
+    <ClInclude Include="AnimationKeys.h" />
     <ClInclude Include="AnimationStuff.h" />
     <ClInclude Include="fbxsdkstuff.h" />
     <ClInclude Include="glfwsetup.h" />
@@ -195,6 +225,9 @@
     <ClInclude Include="SbCommandPool.h" />
     <ClInclude Include="SbUniformBuffer.h" />
     <ClInclude Include="SbVulkanBase.h" />
+    <ClInclude Include="SkeletonAnimationSystem.h" />
+    <ClInclude Include="spline.h" />
+    <ClInclude Include="Vertex.h" />
     <ClInclude Include="VulkanHelperFunctions.hpp" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="SbLogicalDevice.h" />

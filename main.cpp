@@ -37,6 +37,8 @@
 #include <assimp/postprocess.h> // Post processing flags
 
 #include "AnimationStuff.h"
+
+#include "SkeletalAnimationComponent.h"
 #include "Model.h"
 
 #include "Header.h"
@@ -49,7 +51,9 @@
 
 //#include "SbVulkanBase.h"
 
-
+#include "AnimationKeys.h"
+#include "UncompressedAnimationKeys.h"
+#include "UncompressedAnimation.h"
 
 #include "SbCommandPool.h"
 
@@ -63,6 +67,8 @@
 
 #include "SbUniformBuffer.h"
 
+
+
 namespace vkinit = vks::initializers;
 
 const int WIDTH = 800;
@@ -72,6 +78,7 @@ const std::string MODEL_PATH = "models/chalet.obj";
 const std::string TEXTURE_PATH = "textures/chalet.jpg";
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
+
 
 
 // Wrapper functions for aligned memory allocation
@@ -119,6 +126,13 @@ struct UniformBufferObject {
 	alignas(16) glm::mat4 proj;
 	alignas(16) glm::mat4 boneTransforms[52];
 };
+
+
+//struct DefaultSkeletonTransformUBO {
+//	alignas(16) glm::mat4 boneTransforms[52]; 
+//	//this is only the size of the skeleton, the animation system does not output whole skeletons contigously
+//};
+
 
 struct ShadingUBO {
 	/*alignas(16) glm::vec3 lightPosition;
@@ -222,6 +236,8 @@ private:
 	//std::unique_ptr<SbCommandPool> commandPool;
 
 
+
+
 	enum
 	{
 		kAttachment_BACK,
@@ -269,6 +285,8 @@ private:
 	//std::vector<VkBuffer> shadingUniformBuffers;
 	//std::vector<VkDeviceMemory> shadingUniformBuffersMemory;
 	std::unique_ptr<SbUniformBuffer<ShadingUBO>> shadingUniformBuffer;
+	
+	std::unique_ptr <SbUniformBuffer<glm::mat4>> skeletonUniformBuffer;
 
 	std::vector<VkBuffer> transformationgUB;
 	std::vector<VkDeviceMemory> transformationUBMemory;
@@ -315,7 +333,6 @@ private:
 		createCommandPool();
 
 		createSwapChain();
-		createAttachmentResources();
 
 		createRenderPass();
 		createFramebuffers();
@@ -335,8 +352,13 @@ private:
 		createSyncObjects();
 	}
 
+	std::chrono::high_resolution_clock::time_point frameTime = std::chrono::high_resolution_clock::now();
+	float deltaTime = 0;
+
 	void mainLoop() {
 		while (!glfwWindowShouldClose(window)) {
+			deltaTime = std::chrono::duration<float, std::chrono::seconds::period>(std::chrono::high_resolution_clock::now() - frameTime).count();
+			frameTime = std::chrono::high_resolution_clock::now();
 			glfwPollEvents();
 			drawFrame();
 		}
@@ -348,7 +370,6 @@ private:
 
 		for (size_t i = 0; i < swapchain->getSize(); i++)
 		{
-			//todo
 			/*
 			vkDestroyImageView(logicalDevice->device, attachmentSets[eSetIndex_Color].view[i], nullptr);
 			vkDestroyImageView(logicalDevice->device, attachmentSets[eSetIndex_Depth].view[i], nullptr);
@@ -380,20 +401,17 @@ private:
 		vkDestroyRenderPass(vulkanBase->logicalDevice->device, renderPass->renderPass, nullptr);
 
 		/*
-		//TODO swapchain cleanup function
 		for (auto imageView : swapchain->swapChainImageViews) {
 			vkDestroyImageView(vulkanBase->logicalDevice->device, imageView, nullptr);
 		}
 
 		vkDestroySwapchainKHR(vulkanBase->logicalDevice->device, swapchain->handle, nullptr);
 
-		//TODO swapchain cleanup function
 		for (size_t i = 0; i < swapchain->swapChainImages.size(); i++) {
 			vkDestroyBuffer(vulkanBase->logicalDevice->device, uniformBuffers[i], nullptr);
 			vkFreeMemory(vulkanBase->logicalDevice->device, uniformBuffersMemory[i], nullptr);
 		}
 
-		//TODO swapchain cleanup function
 		for (size_t i = 0; i < swapchain->swapChainImages.size(); i++) {
 			vkDestroyBuffer(vulkanBase->logicalDevice->device, shadingUniformBuffers[i], nullptr);
 			vkFreeMemory(vulkanBase->logicalDevice->device, shadingUniformBuffersMemory[i], nullptr);
@@ -464,7 +482,7 @@ private:
 		//createImageViews(); moved to swapchain creation
 		createRenderPass();
 		createPipelines();
-		createAttachmentResources();
+		//createAttachmentResources();
 		createFramebuffers();
 		createUniformBuffers();
 		createDescriptorPool();
@@ -486,33 +504,15 @@ private:
 		swapchain = std::make_unique<SbSwapchain>(*vulkanBase);
 		swapchain->createSwapChain(vulkanBase->surface, window, kAttachment_COUNT);
 
+		//createAttachmentResources()
 		swapchain->createAttachment(kAttachment_POSITION, VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);	// (World space) Positions		
 		swapchain->createAttachment(kAttachment_NORMAL, VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);		// (World space) Normals		
 		swapchain->createAttachment(kAttachment_ALBEDO, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
 		swapchain->createAttachment(kAttachment_DEPTH, vulkanBase->findDepthFormat(), VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT);
 	}
-
-	void createAttachmentResources() {
-		//TODO USE SWAPCHAIN CREATE ATTACHMENT-----------------------------------------------------------
-		/*
-		swapchain->createAttachment(kAttachment_COLOR, swapchain->getAttachmentDescription(kAttachment_BACK).format,
-			VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
-		swapchain->createAttachment(kAttachment_DEPTH, vulkanBase->findDepthFormat(),
-			VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT);
-		*/
-	}
 	
 	void createRenderPass() {
-		//willems attachments demo
-		
 		renderPass = std::make_unique<SbRenderpass>(*vulkanBase, kSubpass_COUNT, kAttachment_COUNT, swapchain->getSize());
-
-		//todo simplify this step
-		//renderPass->addAttachment(kAttachment_BACK, swapchain->getAttachmentDescription(kAttachment_BACK));
-		//renderPass->addAttachment(kAttachment_POSITION, swapchain->getAttachmentDescription(kAttachment_POSITION));
-		//renderPass->addAttachment(kAttachment_NORMAL, swapchain->getAttachmentDescription(kAttachment_NORMAL));
-		//renderPass->addAttachment(kAttachment_ALBEDO, swapchain->getAttachmentDescription(kAttachment_ALBEDO));
-		//renderPass->addAttachment(kAttachment_DEPTH, swapchain->getAttachmentDescription(kAttachment_DEPTH));
 
 		renderPass->addSwapchainAttachments(*swapchain);
 
@@ -523,7 +523,7 @@ private:
 		renderPass->setDepthStencilAttachmentRef(kSubpass_GBUF, kAttachment_DEPTH);
 
 		renderPass->addColorAttachmentRef(kSubpass_COMPOSE, kAttachment_BACK);
-		renderPass->addInputAttachmentRef(kSubpass_COMPOSE, kAttachment_POSITION); //todo input attachment index in shader should be considered?
+		renderPass->addInputAttachmentRef(kSubpass_COMPOSE, kAttachment_POSITION); 
 		renderPass->addInputAttachmentRef(kSubpass_COMPOSE, kAttachment_NORMAL);
 		renderPass->addInputAttachmentRef(kSubpass_COMPOSE, kAttachment_ALBEDO);
 		renderPass->setDepthStencilAttachmentRef(kSubpass_COMPOSE, kAttachment_DEPTH);
@@ -550,7 +550,7 @@ private:
 		renderPass->addDependency(kSubpass_READ, VK_SUBPASS_EXTERNAL);
 		*/
 
-		//todo does it work the syncmasks way? ^^^^
+		//todo test doable with above functions? ^^^^
 		std::array<VkSubpassDependency, 4> dependencies;
 
 		dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
@@ -592,6 +592,10 @@ private:
 		renderPass->addDependency(dependencies[3]);
 
 		renderPass->createRenderpass(*swapchain);
+	}
+
+	void createFramebuffers() {
+		swapchain->createFramebuffers(renderPass->renderPass);
 	}
 
 	void createDescriptorSetLayout() 
@@ -705,63 +709,7 @@ private:
 		}
 
 
-		//first create attachment write layout
-		/*
-		{
-			SbPipelineLayout & DS = renderPass->getPipelineLayout(kSubpass_WRITE);
-			
-			//create bindings
-			DS.addBufferBinding(
-				vkinit::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, 0), 
-				*transformUniformBuffer);
-			DS.addImageBinding(
-				vkinit::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1), 
-				{ 
-					textureSampler, 
-					&textureImageView, 
-					VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-					SbPipelineLayout::eSharingMode_Shared 
-				});
-			DS.addBufferBinding(
-				vkinit::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, VK_SHADER_STAGE_FRAGMENT_BIT, 2), 
-				*shadingUniformBuffer);
-			
-			//with bindings created, create layout
-			DS.createDSLayout();
-			DS.createPipelineLayout();
-
-			//allocate descriptors and update them with resources
-			DS.allocateDescriptorSets(*descriptorPool.get());
-			DS.updateDescriptors();
-		}
-
-		//now create attachment read layout
-		{
-			SbPipelineLayout & DS = renderPass->getPipelineLayout(kSubpass_READ);
-
-			DS.addImageBinding(
-				vkinit::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, VK_SHADER_STAGE_FRAGMENT_BIT, 0),
-				{ 
-					VK_NULL_HANDLE, 
-					swapchain->getAttachmentViews(kAttachment_COLOR).data(),
-					VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-					SbPipelineLayout::eSharingMode_Separate 
-				});
-			DS.addImageBinding(
-				vkinit::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, VK_SHADER_STAGE_FRAGMENT_BIT, 1),
-				{
-					VK_NULL_HANDLE,
-					swapchain->getAttachmentViews(kAttachment_COLOR).data(),
-					VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, 
-					SbPipelineLayout::eSharingMode_Separate 
-				});
-			//VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
-			DS.createDSLayout();
-			DS.createPipelineLayout();
-			DS.allocateDescriptorSets(*descriptorPool.get());
-			DS.updateDescriptors(); 
-		}
-		*/
+		
 	}	
 
 	void createPipelines() {
@@ -799,35 +747,10 @@ private:
 			.cullMode(VK_CULL_MODE_BACK_BIT)
 			.depthWriteEnable(VK_FALSE)
 			.createPipeline(renderPass->renderPass, vulkanBase->logicalDevice->device);
-
-		/*
-		auto & subpasswrite = renderPass->subpasses[kSubpass_WRITE];
-		const auto & bind = Vertex::getBindingDescriptions();
-		const auto & attr = Vertex::getAttributeDescriptions();
-		subpasswrite.pipeline.subpassIndex(kSubpass_WRITE)
-			.layout(subpasswrite.pipelineLayout.pipelineLayout)
-			.vertexBindingDescription(std::vector<VkVertexInputBindingDescription> {bind.begin(), bind.end()})
-			.vertexAttributeDescription(std::vector<VkVertexInputAttributeDescription> {attr.begin(), attr.end()})
-			.addShaderStage(vks::helper::loadShader("shaders/attachmentwrite.vert.spv", VK_SHADER_STAGE_VERTEX_BIT, vulkanBase->logicalDevice->device))
-			.addShaderStage(vks::helper::loadShader("shaders/attachmentwrite.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT, vulkanBase->logicalDevice->device))
-			.createPipeline(renderPass->renderPass, vulkanBase->logicalDevice->device);
-
-
-		auto & subpassread = renderPass->subpasses[kSubpass_READ];
-		subpassread.pipeline.subpassIndex(kSubpass_READ)
-			.layout(subpassread.pipelineLayout.pipelineLayout)
-			.addShaderStage(vks::helper::loadShader("shaders/attachmentread.vert.spv", VK_SHADER_STAGE_VERTEX_BIT, vulkanBase->logicalDevice->device))
-			.addShaderStage(vks::helper::loadShader("shaders/attachmentread.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT, vulkanBase->logicalDevice->device))
-			.cullMode(VK_CULL_MODE_NONE)
-			.depthWriteEnable(VK_FALSE)
-			.createPipeline(renderPass->renderPass, vulkanBase->logicalDevice->device);
-		*/
 		
 	}
 	
-	void createFramebuffers() {
-		swapchain->createFramebuffers(renderPass->renderPass);
-	}
+
 		
 	void createCommandPool() {
 		vulkanBase->commandPool = std::make_unique<SbCommandPool>(*vulkanBase);
@@ -901,9 +824,17 @@ private:
 	
 	Assimp::Importer modelImporter;
 	const aiScene* modelScene;
+	AnimationKeys k;
+	UncompressedAnimationKeys uk;
+	//SkeletonAnimation sa()
+
+
 
 	void loadModel() {
 
+		k.loadAnimationData("jump.chs");
+		uk.loadAnimationData("uncompressed.chs");
+		
 		modelScene = modelImporter.ReadFile("jump.fbx",
 			aiProcess_CalcTangentSpace |
 			aiProcess_Triangulate |
@@ -911,99 +842,97 @@ private:
 			aiProcess_SortByPType |
 			aiProcess_ValidateDataStructure);
 
-		//PrintNode(modelScene->mRootNode, modelScene, 0);
-
-		mymodel = new Model;
-
-		//todo maybe use this with alignas(256)?
-		//shadingUboData = new ShadingUBO[2];
-
+		std::map<std::string, uint64_t> jointLayout;
 		auto rootJoint = AnimationStuff::findRootJoint(modelScene->mRootNode, modelScene);
-		auto totalNumberOfBones = mymodel->jointIndex.size();
+		mymodel = new Model();
+		AnimationStuff::makeFlatSkeleton(rootJoint, mymodel->skeleton, jointLayout, 0, -1, modelScene);
+		AnimationStuff::finalizeFlatten(mymodel->skeleton);
+		
+		SkeletonAnimation jumpAnimation(mymodel->skeleton.jointCount, k);
+		UncompressedAnimation uncompAnimation(mymodel->skeleton.jointCount, uk);
+		//jumpAnimation.plot(mymodel->skeleton);
+		//uncompAnimation.plot(mymodel->skeleton);
+		
+		AnimationLayer<SkeletonAnimation> baseLayer;
+		baseLayer.blendAnimations.emplace_back(mymodel->skeleton.jointCount, k);// todo interface
 
-		AnimationStuff::flattenJointHierarchy(rootJoint, *mymodel, 0, -1, modelScene);
+		mymodel->skeletalAnimationComponent.init(&mymodel->skeleton, 
+			std::vector<AnimationLayer<SkeletonAnimation>>{ baseLayer });
+		mymodel->meshes.resize(modelScene->mNumMeshes);
+		for (unsigned int i = 0; i < modelScene->mNumMeshes; i++) {
+			const aiMesh* currentMesh = modelScene->mMeshes[i];
 
-		AnimationStuff::prepareInverseBindPose(mymodel->skeleton);
+			//read vertex data
+			for (size_t j = 0; j < currentMesh->mNumVertices; j++)
+			{
+				glm::vec3 pos = {
+						currentMesh->mVertices[j].x,
+						currentMesh->mVertices[j].y,
+						currentMesh->mVertices[j].z
+				};
 
-		if (modelScene->HasMeshes())
-		{
-			mymodel->meshes.resize(modelScene->mNumMeshes);
-			for (unsigned int i = 0; i < modelScene->mNumMeshes; i++) {
-				const aiMesh* currentMesh = modelScene->mMeshes[i];
-
-				//read vertex data
-				for (size_t j = 0; j < currentMesh->mNumVertices; j++)
+				glm::vec2 texCoords = { 0.0f, 0.0f };
+				if (currentMesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
 				{
-					glm::vec3 pos = {
-							currentMesh->mVertices[j].x,
-							currentMesh->mVertices[j].y,
-							currentMesh->mVertices[j].z
-					};
-
-
-					glm::vec2 texCoords = { 0.0f, 0.0f };
-					if (currentMesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
-					{
-						texCoords.x = currentMesh->mTextureCoords[0][j].x;
-						texCoords.y = currentMesh->mTextureCoords[0][j].y;
-					}
-
-					glm::vec3 color = { 1.0f, 1.0f, 1.0f };
-
-					glm::vec3 normal = { 0.0f, 0.0f, 0.0f };
-					normal.x = currentMesh->mNormals[j].x;
-					normal.y = currentMesh->mNormals[j].y;
-					normal.z = currentMesh->mNormals[j].z;
-
-
-					mymodel->meshes[i].vertexBuffer.emplace_back(
-						pos,
-						color,
-						texCoords,
-						normal
-					);
+					texCoords.x = currentMesh->mTextureCoords[0][j].x;
+					texCoords.y = currentMesh->mTextureCoords[0][j].y;
 				}
 
-				//get vertex indices
-				for (size_t j = 0; j < modelScene->mMeshes[i]->mNumFaces; j++)
-				{
-					for (size_t k = 0; k < modelScene->mMeshes[i]->mFaces[j].mNumIndices; k++)
-					{
-						mymodel->meshes[i].indexBuffer.push_back(modelScene->mMeshes[i]->mFaces[j].mIndices[k]);
-					}
-				}
+				glm::vec3 color = { 1.0f, 1.0f, 1.0f };
+
+				glm::vec3 normal = { 0.0f, 0.0f, 0.0f };
+				normal.x = currentMesh->mNormals[j].x;
+				normal.y = currentMesh->mNormals[j].y;
+				normal.z = currentMesh->mNormals[j].z;
 				
-				//add weights and bone indices to vertices
-				for (size_t j = 0; j < currentMesh->mNumBones; j++)
+				mymodel->meshes[i].vertexBuffer.emplace_back(
+					pos,
+					color,
+					texCoords,
+					normal
+				);
+			}
+
+			//get vertex indices
+			for (size_t j = 0; j < modelScene->mMeshes[i]->mNumFaces; j++)
+			{
+				for (size_t k = 0; k < modelScene->mMeshes[i]->mFaces[j].mNumIndices; k++)
 				{
-					size_t boneHierarchyIndex = mymodel->jointIndex[currentMesh->mBones[j]->mName.C_Str()];
-					for (size_t k = 0; k < currentMesh->mBones[j]->mNumWeights; k++) {
-						size_t meshVertexID = currentMesh->mBones[j]->mWeights[k].mVertexId;
-						float Weight = currentMesh->mBones[j]->mWeights[k].mWeight;
-						mymodel->meshes[i].vertexBuffer[meshVertexID].AddBoneData(boneHierarchyIndex, Weight);
-					}
-				}
-
-				if (modelScene->HasMaterials())
-				{
-					auto material = modelScene->mMaterials[currentMesh->mMaterialIndex];
-
-					aiColor4D specular;
-					aiColor4D diffuse;
-					aiColor4D ambient;
-					float shine;
-
-					aiGetMaterialColor(material, AI_MATKEY_COLOR_SPECULAR, &specular);
-					aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &diffuse);
-					aiGetMaterialColor(material, AI_MATKEY_COLOR_AMBIENT, &ambient);
-					aiGetMaterialFloat(material, AI_MATKEY_SHININESS, &shine);
-
-					mymodel->meshes[i].material.diffuseColor = { diffuse.r, diffuse.g, diffuse.b, diffuse.a };
-					mymodel->meshes[i].material.ambientColor = { ambient.r, ambient.g , ambient.b ,ambient.a };
-					mymodel->meshes[i].material.specularColor = { specular.r, specular.g, specular.b, specular.a};
+					mymodel->meshes[i].indexBuffer.push_back(modelScene->mMeshes[i]->mFaces[j].mIndices[k]);
 				}
 			}
+			
+			//add weights and bone indices to vertices
+			for (size_t j = 0; j < currentMesh->mNumBones; j++)
+			{
+				size_t boneHierarchyIndex = jointLayout[currentMesh->mBones[j]->mName.C_Str()];
+				for (size_t k = 0; k < currentMesh->mBones[j]->mNumWeights; k++) {
+					size_t meshVertexID = currentMesh->mBones[j]->mWeights[k].mVertexId;
+					float weight = currentMesh->mBones[j]->mWeights[k].mWeight;
+					mymodel->meshes[i].vertexBuffer[meshVertexID].addBoneData(boneHierarchyIndex, weight);
+				}
+			}
+
+			if (modelScene->HasMaterials())
+			{
+				auto material = modelScene->mMaterials[currentMesh->mMaterialIndex];
+
+				aiColor4D specular;
+				aiColor4D diffuse;
+				aiColor4D ambient;
+				float shine;
+
+				aiGetMaterialColor(material, AI_MATKEY_COLOR_SPECULAR, &specular);
+				aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &diffuse);
+				aiGetMaterialColor(material, AI_MATKEY_COLOR_AMBIENT, &ambient);
+				aiGetMaterialFloat(material, AI_MATKEY_SHININESS, &shine);
+
+				mymodel->meshes[i].material.diffuseColor = { diffuse.r, diffuse.g, diffuse.b, diffuse.a };
+				mymodel->meshes[i].material.ambientColor = { ambient.r, ambient.g , ambient.b ,ambient.a };
+				mymodel->meshes[i].material.specularColor = { specular.r, specular.g, specular.b, specular.a};
+			}
 		}
+		
 
 	}
 		
@@ -1077,8 +1006,11 @@ private:
 	}
 
 	void createUniformBuffers() {
-		transformUniformBuffer = std::make_unique<SbUniformBuffer<UniformBufferObject>>(*vulkanBase, swapchain->getSize()); 		
+		transformUniformBuffer = std::make_unique<SbUniformBuffer<UniformBufferObject>>(*vulkanBase, 
+			swapchain->getSize()); 		
 
+		skeletonUniformBuffer = std::make_unique<SbUniformBuffer<glm::mat4>>(
+			*vulkanBase, swapchain->getSize(), 52*5); //room for 5 skeletons in buffer
 
 		shadingUniformBuffer = std::make_unique<SbUniformBuffer<ShadingUBO>>(*vulkanBase, 1, drawables.size());
 
@@ -1087,7 +1019,7 @@ private:
 			ShadingUBO data = { drawables[i].AmbientColor, drawables[i].DiffuseColor, drawables[i].SpecularColor };
 			shadingUniformBuffer->writeBufferData(data, i);
 		}
-		shadingUniformBuffer->copyBufferDataToMemory(*vulkanBase);
+		shadingUniformBuffer->copyDataToBufferMemory(*vulkanBase);
 	}
 
 	void createDescriptorPool() {
@@ -1178,6 +1110,8 @@ private:
 			{
 				vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getSubpassPipeline(kSubpass_GBUF));
 
+
+
 				for (size_t j = 0; j < drawables.size()-1; j++)
 				{
 					uint32_t offset = j * static_cast<uint32_t>(shadingUniformBuffer->dynamicAlignment);
@@ -1252,12 +1186,13 @@ private:
 		float TimeInTicks = time * TicksPerSecond;
 		float AnimationTime = fmod(TimeInTicks, modelScene->mAnimations[0]->mDuration);
 
+		/*
 		Skeleton& s = mymodel->skeleton;
 
 		// the root has no parent
 		s.localTransform[0] = AnimationStuff::makeAnimationMatrix(s.animationChannel[0], AnimationTime); //local animation transformation
 		s.globalTransform[0] = s.localTransform[0];					//for root node local=global
-		s.finalTransformation[0] = s.inverseBindPose[0] * s.globalTransform[0] * s.offsetMatrix[0];
+		s.finalTransformation[0] = s.globalTransform[0] * s.offsetMatrix[0];
 
 
 		for (unsigned int i = 1; i < mymodel->jointIndex.size(); ++i)
@@ -1265,8 +1200,11 @@ private:
 			const uint16_t parentJointIndex = s.hierarchy[i];
 			s.localTransform[i] = AnimationStuff::makeAnimationMatrix(s.animationChannel[i], AnimationTime); //local animation transformation
 			s.globalTransform[i] = s.globalTransform[parentJointIndex] * s.localTransform[i]; //animation transform in space of the parent
-			s.finalTransformation[i] = s.inverseBindPose[1] * s.globalTransform[i] * s.offsetMatrix[i];
+			s.finalTransformation[i] = s.globalTransform[i] * s.offsetMatrix[i];
 		}
+		*/
+
+		mymodel->skeletalAnimationComponent.evaluate(deltaTime, std::vector<float> (0.0, 1));
 
 		UniformBufferObject ubo = {};
 		ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f)) 
@@ -1274,11 +1212,10 @@ private:
 			* glm::scale(glm::mat4(1.0f), { 0.01f,0.01f ,0.01f });//* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f))
 		ubo.view = cam.getViewMatrix();
 		ubo.proj = cam.getProjectionMatrix();
-		memcpy(ubo.boneTransforms, mymodel->skeleton.finalTransformation.data(), sizeof(glm::mat4)*mymodel->skeleton.finalTransformation.size());
-
-
+		memcpy(ubo.boneTransforms, mymodel->skeletalAnimationComponent.transformations.data(), 
+				sizeof(glm::mat4)*mymodel->skeletalAnimationComponent.transformations.size());
 		transformUniformBuffer->writeBufferData(ubo);
-		transformUniformBuffer->copyBufferDataToMemory(*vulkanBase);
+		transformUniformBuffer->copyDataToBufferMemory(*vulkanBase, currentImage);
 
 		/*
 		void* data;

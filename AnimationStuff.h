@@ -3,7 +3,9 @@
 #include <assimp/scene.h> // Output data structure
 #include <glm/glm.hpp>
 
-#include "Model.h"
+#include <map>
+
+#include "Skeleton.h"
 
 /*
 This class should be functions in a namespace instead of class?
@@ -27,17 +29,23 @@ class AnimationStuff
 
 	static aiNodeAnim* boneIsInAnimation(aiString name, const aiScene* scene);
 
+
 	static glm::mat4 glmMatFromAiMat(aiMatrix4x4 t);
 
 public:
+	static int makeFlatSkeleton(aiNode * node, Skeleton & skeleton, std::map<std::string, uint64_t>& jointIndex, int insertIndex, int parentIndex, const aiScene * scene);
 
-	static void prepareInverseBindPose(Skeleton& s);
+	//static void prepareInverseBindPose(Skeleton& s);
 
-	static glm::mat4 makeAnimationMatrix(aiNodeAnim* channel, float AnimationTime);
+	static void finalizeFlatten(Skeleton& s);
+
+	//static 	aiQuaternion makeAnimationMatrix(aiNodeAnim* channel, float AnimationTime);
+
+	static 	std::pair<aiQuaternion, aiVector3D> makeAnimationMatrix(aiNodeAnim* channel, float AnimationTime);
 
 	static aiNode* findRootJoint(aiNode* node, const aiScene* scene);
 
-	static int flattenJointHierarchy(aiNode* node, Model& model, int insertIndex, int parentIndex, const aiScene*);
+	//static int flattenJointHierarchy(aiNode* node, Model& model, int insertIndex, int parentIndex, const aiScene*);
 
 
 
