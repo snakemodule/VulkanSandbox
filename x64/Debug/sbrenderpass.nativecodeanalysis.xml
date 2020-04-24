@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>sbswapchain.h</FILENAME>
+      <LINE>23</LINE>
+      <COLUMN>2</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'SbSwapchain::SwapchainAttachment::description' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SbSwapchain::SwapchainAttachment::{ctor}</FUNCTION>
+    <DECORATED>??0SwapchainAttachment@SbSwapchain@@QEAA@_K@Z</DECORATED>
+    <FUNCLINE>23</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\assimp\include\assimp</FILEPATH>
+      <FILENAME>mesh.h</FILENAME>
+      <LINE>152</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'aiFace::mNumIndices' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>aiFace::{ctor}</FUNCTION>
+    <DECORATED>??0aiFace@@QEAA@AEBU0@@Z</DECORATED>
+    <FUNCLINE>152</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\assimp\include\assimp</FILEPATH>
+      <FILENAME>mesh.h</FILENAME>
+      <LINE>284</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'aiBone::mWeights' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>aiBone::{ctor}</FUNCTION>
+    <DECORATED>??0aiBone@@QEAA@AEBU0@@Z</DECORATED>
+    <FUNCLINE>284</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\assimp\include\assimp</FILEPATH>
+      <FILENAME>mesh.h</FILENAME>
+      <LINE>450</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'aiAnimMesh::mColors' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>aiAnimMesh::{ctor}</FUNCTION>
+    <DECORATED>??0aiAnimMesh@@QEAA@XZ</DECORATED>
+    <FUNCLINE>450</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\assimp\include\assimp</FILEPATH>
+      <FILENAME>mesh.h</FILENAME>
+      <LINE>450</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'aiAnimMesh::mTextureCoords' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>aiAnimMesh::{ctor}</FUNCTION>
+    <DECORATED>??0aiAnimMesh@@QEAA@XZ</DECORATED>
+    <FUNCLINE>450</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\assimp\include\assimp</FILEPATH>
+      <FILENAME>mesh.h</FILENAME>
+      <LINE>709</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'aiMesh::mColors' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>aiMesh::{ctor}</FUNCTION>
+    <DECORATED>??0aiMesh@@QEAA@XZ</DECORATED>
+    <FUNCLINE>709</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\assimp\include\assimp</FILEPATH>
+      <FILENAME>mesh.h</FILENAME>
+      <LINE>709</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'aiMesh::mNumUVComponents' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>aiMesh::{ctor}</FUNCTION>
+    <DECORATED>??0aiMesh@@QEAA@XZ</DECORATED>
+    <FUNCLINE>709</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\assimp\include\assimp</FILEPATH>
+      <FILENAME>mesh.h</FILENAME>
+      <LINE>709</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'aiMesh::mTextureCoords' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>aiMesh::{ctor}</FUNCTION>
+    <DECORATED>??0aiMesh@@QEAA@XZ</DECORATED>
+    <FUNCLINE>709</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>model.h</FILENAME>
+      <LINE>30</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'Mesh::material' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>Mesh::{ctor}</FUNCTION>
+    <DECORATED>??0Mesh@@QEAA@XZ</DECORATED>
+    <FUNCLINE>30</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>sbrenderpass.cpp</FILENAME>
+      <LINE>9</LINE>
+      <COLUMN>14</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'SbRenderpass::renderPass' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SbRenderpass::{ctor}</FUNCTION>
+    <DECORATED>??0SbRenderpass@@QEAA@AEBVSbVulkanBase@@III@Z</DECORATED>
+    <FUNCLINE>9</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>sbrenderpass.cpp</FILENAME>
+      <LINE>151</LINE>
+      <COLUMN>23</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'SbRenderpass::Subpass::pipelineMaskAsDst' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SbRenderpass::Subpass::{ctor}</FUNCTION>
+    <DECORATED>??0Subpass@SbRenderpass@@QEAA@AEBVSbVulkanBase@@AEBI@Z</DECORATED>
+    <FUNCLINE>151</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>sbrenderpass.cpp</FILENAME>
+      <LINE>151</LINE>
+      <COLUMN>23</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'SbRenderpass::Subpass::pipelineMaskAsSrc' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SbRenderpass::Subpass::{ctor}</FUNCTION>
+    <DECORATED>??0Subpass@SbRenderpass@@QEAA@AEBVSbVulkanBase@@AEBI@Z</DECORATED>
+    <FUNCLINE>151</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>sbrenderpass.cpp</FILENAME>
+      <LINE>151</LINE>
+      <COLUMN>23</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'SbRenderpass::Subpass::accessMaskAsDst' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SbRenderpass::Subpass::{ctor}</FUNCTION>
+    <DECORATED>??0Subpass@SbRenderpass@@QEAA@AEBVSbVulkanBase@@AEBI@Z</DECORATED>
+    <FUNCLINE>151</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>sbrenderpass.cpp</FILENAME>
+      <LINE>151</LINE>
+      <COLUMN>23</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'SbRenderpass::Subpass::accessMaskAsSrc' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SbRenderpass::Subpass::{ctor}</FUNCTION>
+    <DECORATED>??0Subpass@SbRenderpass@@QEAA@AEBVSbVulkanBase@@AEBI@Z</DECORATED>
+    <FUNCLINE>151</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+</DEFECTS>

@@ -7,17 +7,16 @@
 //#include "Util.h"
 #include "SkeletonAnimation.h"
 
-template <class _anim>
+
 struct AnimationLayer
 {
-	std::vector<_anim> blendAnimations;
+	std::vector<SkeletonAnimation> blendAnimations;
 	std::vector<float> jointOpacity = std::vector<float>(0);
 	glm::quat* blendedRotation = nullptr;
 	glm::vec3* blendedPosition = nullptr;
 };
 
 
-template <class _anim>
 class SkeletalAnimationComponent
 {
 	struct plotV {
@@ -50,15 +49,13 @@ class SkeletalAnimationComponent
 
 public:
 	//[layer][blending animations]
-	std::vector<AnimationLayer<_anim>> layers;
+	std::vector<AnimationLayer> layers;
 	Skeleton * skeleton = nullptr;
 	uint8_t jointCount = 0;
 
-	double timeCounter = 0;
-
 	//std::vector<uint8_t> parentIndex;
 	
-	void init(Skeleton * skeleton, std::vector<AnimationLayer<_anim>>&& layers)
+	void init(Skeleton * skeleton, std::vector<AnimationLayer>&& layers)
 	{
 		this->skeleton = skeleton;
 		this->jointCount = (uint8_t)skeleton->offsetMatrix.size();
@@ -67,17 +64,60 @@ public:
 	}
 
 	void evaluate(float deltaTime, std::vector<float> blendFactors) {
-		timeCounter += deltaTime;
 
 		auto layerCount = layers.size();
 		for (size_t i = 0; i < layerCount; i++)
 		{
-			for (size_t j = 0; j < layers[i].blendAnimations.size(); j++)
+			auto & layer = layers[i];
+			auto  highestAnimationIndex = layers[i].blendAnimations.size() - 1;
+			float playbackSpeed = 1.0f;
+			if (layers[i].blendAnimations.size() > 1)
 			{
-				layers[i].blendAnimations[j].updateEvaluators(deltaTime);//todo animations should be advanced elsewhere, in batches
-			}
-		}
+				//find index of two animations to interpolate between
+				float span = 1.0f / highestAnimationIndex;
+				int index;
+				double factor = blendFactors[i];
+				if (factor < 1.0f)
+					index = std::floor(factor / span);
+				else
+					index = highestAnimationIndex - 1;
+				auto & blendAnim0 = layer.blendAnimations[index];
+				auto & blendAnim1 = layer.blendAnimations[index + 1];
+				
 
+				//advance animation time depending on duration of the interpolated animations todo(???)
+				auto dur0 = blendAnim0.getAnimationDuration();
+				auto dur1 = blendAnim1.getAnimationDuration();
+				float targetDuration = glm::lerp(dur0, dur1, factor);
+				for (size_t j = 0; j < layer.blendAnimations.size(); j++) {
+					playbackSpeed = layer.blendAnimations[j].getAnimationDuration() / targetDuration;
+					layer.blendAnimations[j].updateEvaluators(deltaTime, playbackSpeed);
+				}
+				//evaluate and interpolate
+				blendAnim0.evaluate();
+				blendAnim1.evaluate();
+				float a = std::fmod(factor, span) / span;
+				for (size_t j = 0; j < jointCount; j++) {
+					blendAnim0.localRotation[j] = glm::slerp(blendAnim0.localRotation[j],
+							blendAnim1.localRotation[j], a);
+				}
+				for (size_t j = 0; j < jointCount; j++) {
+					blendAnim0.localPosition[j] = glm::lerp(blendAnim0.localPosition[j],
+							blendAnim1.localPosition[j], a);
+				}
+				layer.blendedRotation = blendAnim0.localRotation.data();
+				layer.blendedPosition = blendAnim0.localPosition.data();
+			}
+			else
+			{
+				layer.blendAnimations[0].updateEvaluators(deltaTime);
+				layer.blendAnimations[0].evaluate();
+				layer.blendedRotation = layer.blendAnimations[0].localRotation.data();
+				layer.blendedPosition = layer.blendAnimations[0].localPosition.data();
+			}
+			
+		}
+		/*
 		for (size_t i = 0; i < layerCount; i++)
 		{
 			auto & layer = layers[i];
@@ -95,8 +135,8 @@ public:
 
 				auto & blendAnim0 = layer.blendAnimations[index];
 				auto & blendAnim1 = layer.blendAnimations[index + 1];
-				blendAnim0.evaluate(*skeleton, timeCounter);
-				blendAnim1.evaluate(*skeleton, timeCounter);
+				blendAnim0.evaluate(blendAnim1.getAnimationDuration());
+				blendAnim1.evaluate(blendAnim1.getAnimationDuration());
 				auto & lr0 = blendAnim0.localRotation;
 				auto & lr1 = blendAnim1.localRotation;
 				auto & lp0 = blendAnim0.localPosition;
@@ -110,12 +150,14 @@ public:
 			}
 			else
 			{
-				layer.blendAnimations[0].evaluate( *skeleton, timeCounter);
+				layer.blendAnimations[0].evaluate();
 				layer.blendedRotation = layer.blendAnimations[0].localRotation.data();
 				layer.blendedPosition = layer.blendAnimations[0].localPosition.data();
 			}
 
 		}
+
+		*/
 		//blend all layers into base layer
 		auto & accumulatorRotations = layers[0].blendedRotation;
 		auto & accumulatorPositions = layers[0].blendedPosition;
@@ -126,8 +168,7 @@ public:
 			}
 
 		for (size_t i = 1; i < layerCount; i++)
-			for (size_t joint = 0; joint < jointCount; joint++)
-			{
+			for (size_t joint = 0; joint < jointCount; joint++)	{
 				auto & currentLayerPositions = layers[i].blendedPosition;
 				accumulatorPositions[joint] = glm::lerp(accumulatorPositions[joint], currentLayerPositions[joint], layers[i].jointOpacity[joint]);
 			}

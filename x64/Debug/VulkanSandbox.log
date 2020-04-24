@@ -1,12 +1,22 @@
-﻿  SkeletonAnimation.cpp
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\skeletonanimation.cpp(75): warning C4305: '+=': truncation from 'double' to 'float'
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\skeletonanimation.cpp(81): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\skeletonanimation.cpp(84): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\skeletonanimation.cpp(147): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\skeletonanimation.cpp(148): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\skeletonanimation.cpp(228): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\skeletonanimation.cpp(261): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\skeletonanimation.cpp(386): warning C4267: 'argument': conversion from 'size_t' to 'uint8_t', possible loss of data
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\skeletonanimation.cpp(387): warning C4267: 'argument': conversion from 'size_t' to 'uint8_t', possible loss of data
-c:\users\colin\source\repos\vulkansandbox\vulkansandbox\skeletonanimation.cpp(400): warning C4267: 'argument': conversion from 'size_t' to 'uint8_t', possible loss of data
+﻿  main.cpp
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(81): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(83): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(91): warning C4244: 'initializing': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=double
+          ]
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(93): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(99): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\vertex.h(26): warning C4267: '=': conversion from 'size_t' to 'T', possible loss of data
+          with
+          [
+              T=glm::i32
+          ]
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(985): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(990): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1124): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1157): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1191): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\colin\source\repos\vulkansandbox\vulkansandbox\main.cpp(1194): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   VulkanSandbox.vcxproj -> C:\Users\Colin\source\repos\VulkanSandbox\x64\Debug\VulkanSandbox.exe

@@ -82,7 +82,7 @@ void SkeletonAnimation::plot(Skeleton s)
 
 
 		updateEvaluators(0.01);
-		evaluate(s, t);
+		evaluate();
 		for (size_t i = 0; i < s.jointCount; i++)
 		{
 			
@@ -140,72 +140,9 @@ void SkeletonAnimation::plot(Skeleton s)
 	}
 }
 
-void SkeletonAnimation::evaluate(Skeleton s, double t)
+
+void SkeletonAnimation::evaluate()
 {
-
-	float TicksPerSecond = 30.0f;
-	float TimeInTicks = t * TicksPerSecond;
-	float AnimationTime = fmod(TimeInTicks, animationData.animationDuration * TicksPerSecond);
-
-	for (size_t i = 0; i < rotInterpolators.size(); i++)
-	{
-		//44
-		auto q = AnimationStuff::makeAnimationMatrix(s.assimpAnimChannel[i], AnimationTime).first; //local animation transformation
-		if (q.w < 0) { q = { -q.w, -q.x, -q.y, -q.z }; }
-
-		localRotation[i] = rotInterpolators[i].eval(animationTime);
-		auto lr = localRotation[i];
-		/*
-		if (i == 48)
-		{
-			livePlot.update(lr.w, lr.x, lr.y, lr.z);
-			liveSamp.update(q.w, q.x, q.y, q.z);
-			L++;
-			/*
-			double p = q.w * lr.w
-				+ q.x * lr.x
-				+ q.y * lr.y
-				+ q.z * lr.z;
-			if (std::abs(std::fmod(p, 1.0f)) < 0.0010) { p = std::round(p); }
-			double d_theta = std::acos(2 * p*p - 1);
-			assert(d_theta == d_theta); //NaN check
-			assert(d_theta < 0.5);
-			
-		
-		}
-		*/
-
-		//localRotation[i] = glm::quat(q.w, q.x, q.y, q.z);
-		
-
-
-		//assert(d_theta < 0.5);
-		//localRotation[i] = rotInterpolators[i].eval(animationTime); //todo 0-1
-		//localRotation[i] = glm::quat(lt.first.w, lt.first.x, lt.first.y, lt.first.z);
-
-	}
-
-	for (size_t i = 0; i < posInterpolators.size(); i++)
-	{
-		localPosition[i] = posInterpolators[i].eval(animationTime);
-		auto lt = localPosition[i];
-		auto v = AnimationStuff::makeAnimationMatrix(s.assimpAnimChannel[i], AnimationTime).second; //local animation transformation
-		//localPosition[i] = glm::vec3(lt.second.x, lt.second.y, lt.second.z);
-
-		if (v.x != lt.x)
-		{
-			localPosition[i] = posInterpolators[i].eval(animationTime);
-		}
-
-		if (i == 1)
-		{
-			livePlot.update(lt.x, lt.y, lt.z);
-			liveSamp.update(v.x, v.y, v.z);
-			L++;
-		}
-	}
-
-	/*
 	for (size_t i = 0; i < rotInterpolators.size(); i++)
 	{
 		localRotation[i] = rotInterpolators[i].eval(animationTime); //todo 0-1
@@ -213,11 +150,9 @@ void SkeletonAnimation::evaluate(Skeleton s, double t)
 
 	for (size_t i = 0; i < posInterpolators.size(); i++)
 	{
-		localPosition[i] = posInterpolators[i].eval(animationTime);			
+		localPosition[i] = posInterpolators[i].eval(animationTime);
 	}
-	*/
 }
-
 
 SkeletonAnimation::quatKey SkeletonAnimation::bitsToKey(AnimationKeys::qbits bits)
 {
@@ -256,18 +191,13 @@ SkeletonAnimation::quatKey SkeletonAnimation::bitsToKey(AnimationKeys::qbits bit
 	return key;
 }
 
-float SkeletonAnimation::dequantizeTime20bits(unsigned int time)
-{
-	return (static_cast<float>(time) / 0xFFFFF) * animationData.animationDuration;
-}
-
 SkeletonAnimation::vecKey SkeletonAnimation::bitsToKey(AnimationKeys::vbits bits)
 {
 	vecKey key;
 	glm::vec3& v = key.pos;
 	float & t = key.time;
 
-	t = dequantizeTime20bits(bits.time);
+	t = (static_cast<float>(bits.time) / 0xFFFFF) * animationData.animationDuration;
 	
 	float component_range = 300.0f;
 	auto dequantize21bcomponent = [](uint32_t comp, float component_range)->float {
@@ -311,18 +241,17 @@ AnimationKeys::vbits SkeletonAnimation::getNextPosData()
 }
 
 
-void SkeletonAnimation::updateEvaluators(float deltaTime)
+void SkeletonAnimation::updateEvaluators(float deltaTime, float playbackMultiplier)
 {
+	deltaTime *= playbackMultiplier;
 	if (animationTime + deltaTime >= (float)animationData.animationDuration)
 	{
 		initiateEvaluators();
-
 	}
 	animationTime = std::fmod((animationTime + deltaTime), (float)animationData.animationDuration);
 	   	 			
 	auto channel = latestPosData.channel;
-	while (posKeys[channel][posKeyRingIndex[channel] + 2].time < animationTime && posDataIndex < animationData.posKeyCount) {
-		
+	while (posKeys[channel][posKeyRingIndex[channel] + 2].time < animationTime && posDataIndex < animationData.posKeyCount) {		
 		// insert new key
 		posKeys[channel][posKeyRingIndex[channel] + 0] = bitsToKey(latestPosData);
 		++posDataIndex;
@@ -344,14 +273,10 @@ void SkeletonAnimation::updateEvaluators(float deltaTime)
 	}
 
 	channel = latestRotData.channel;
-	//auto & rotKeys[channel] = rotKeys[channel];
-	//ring = rotKeyRingIndex[channel];
 	
 	while (rotKeys[channel][rotKeyRingIndex[channel] + 2].time < animationTime && rotDataIndex < animationData.rotKeyCount) {
-		// insert new key
-	
+		// insert new key	
 		rotKeys[channel][rotKeyRingIndex[channel] + 0] = bitsToKey(latestRotData);
-		rotKeys[channel][rotKeyRingIndex[channel] + 0].rotKeyID = rotDataIndex;
 		++rotDataIndex;
 		++rotKeyRingIndex[channel];
 
@@ -384,7 +309,6 @@ void SkeletonAnimation::initiateEvaluators()
 		for (size_t j = 0; j < 4; j++)
 		{	
 			rk[ring + j] = bitsToKey(getRotData());
-			rk[ring + j].rotKeyID = 0;
 			rotDataIndex++;
 		}
 		rotInterpolators[i] = QuaternionInterpolation(rk[ring + 0].rot,
@@ -432,4 +356,9 @@ SkeletonAnimation::SkeletonAnimation(int jointCount, AnimationKeys& animationDat
 
 SkeletonAnimation::~SkeletonAnimation()
 {
+}
+
+double SkeletonAnimation::getAnimationDuration()
+{
+	return animationData.animationDuration;
 }

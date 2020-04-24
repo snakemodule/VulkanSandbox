@@ -2536,7 +2536,7 @@
       <COLUMN>4</COLUMN>
     </SFA>
     <DEFECTCODE>26495</DEFECTCODE>
-    <DESCRIPTION>Variable 'aiAnimMesh::mTextureCoords' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <DESCRIPTION>Variable 'aiAnimMesh::mColors' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
     <FUNCTION>aiAnimMesh::{ctor}</FUNCTION>
     <DECORATED>??0aiAnimMesh@@QEAA@XZ</DECORATED>
     <FUNCLINE>450</FUNCLINE>
@@ -2550,7 +2550,7 @@
       <COLUMN>4</COLUMN>
     </SFA>
     <DEFECTCODE>26495</DEFECTCODE>
-    <DESCRIPTION>Variable 'aiAnimMesh::mColors' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <DESCRIPTION>Variable 'aiAnimMesh::mTextureCoords' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
     <FUNCTION>aiAnimMesh::{ctor}</FUNCTION>
     <DECORATED>??0aiAnimMesh@@QEAA@XZ</DECORATED>
     <FUNCLINE>450</FUNCLINE>
@@ -2564,7 +2564,7 @@
       <COLUMN>4</COLUMN>
     </SFA>
     <DEFECTCODE>26495</DEFECTCODE>
-    <DESCRIPTION>Variable 'aiMesh::mColors' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <DESCRIPTION>Variable 'aiMesh::mTextureCoords' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
     <FUNCTION>aiMesh::{ctor}</FUNCTION>
     <DECORATED>??0aiMesh@@QEAA@XZ</DECORATED>
     <FUNCLINE>709</FUNCLINE>
@@ -2592,7 +2592,7 @@
       <COLUMN>4</COLUMN>
     </SFA>
     <DEFECTCODE>26495</DEFECTCODE>
-    <DESCRIPTION>Variable 'aiMesh::mTextureCoords' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <DESCRIPTION>Variable 'aiMesh::mColors' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
     <FUNCTION>aiMesh::{ctor}</FUNCTION>
     <DECORATED>??0aiMesh@@QEAA@XZ</DECORATED>
     <FUNCLINE>709</FUNCLINE>
@@ -2602,210 +2602,210 @@
     <SFA>
       <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
       <FILENAME>model.h</FILENAME>
-      <LINE>126</LINE>
+      <LINE>30</LINE>
       <COLUMN>1</COLUMN>
     </SFA>
     <DEFECTCODE>26495</DEFECTCODE>
     <DESCRIPTION>Variable 'Mesh::material' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
     <FUNCTION>Mesh::{ctor}</FUNCTION>
     <DECORATED>??0Mesh@@QEAA@XZ</DECORATED>
-    <FUNCLINE>126</FUNCLINE>
+    <FUNCLINE>30</FUNCLINE>
     <PATH></PATH>
   </DEFECT>
   <DEFECT>
     <SFA>
       <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
       <FILENAME>sbswapchain.h</FILENAME>
-      <LINE>45</LINE>
+      <LINE>23</LINE>
       <COLUMN>2</COLUMN>
     </SFA>
     <DEFECTCODE>26495</DEFECTCODE>
     <DESCRIPTION>Variable 'SbSwapchain::SwapchainAttachment::description' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
     <FUNCTION>SbSwapchain::SwapchainAttachment::{ctor}</FUNCTION>
     <DECORATED>??0SwapchainAttachment@SbSwapchain@@QEAA@_K@Z</DECORATED>
-    <FUNCLINE>45</FUNCLINE>
+    <FUNCLINE>23</FUNCLINE>
     <PATH></PATH>
   </DEFECT>
   <DEFECT>
     <SFA>
       <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
       <FILENAME>main.cpp</FILENAME>
-      <LINE>179</LINE>
+      <LINE>196</LINE>
       <COLUMN>1</COLUMN>
     </SFA>
     <DEFECTCODE>26495</DEFECTCODE>
     <DESCRIPTION>Variable 'HelloTriangleApplication::window' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
     <FUNCTION>HelloTriangleApplication::{ctor}</FUNCTION>
     <DECORATED>??0HelloTriangleApplication@@QEAA@XZ</DECORATED>
-    <FUNCLINE>179</FUNCLINE>
+    <FUNCLINE>196</FUNCLINE>
     <PATH></PATH>
   </DEFECT>
   <DEFECT>
     <SFA>
       <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
       <FILENAME>main.cpp</FILENAME>
-      <LINE>179</LINE>
-      <COLUMN>1</COLUMN>
-    </SFA>
-    <DEFECTCODE>26495</DEFECTCODE>
-    <DESCRIPTION>Variable 'HelloTriangleApplication::renderPass' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
-    <FUNCTION>HelloTriangleApplication::{ctor}</FUNCTION>
-    <DECORATED>??0HelloTriangleApplication@@QEAA@XZ</DECORATED>
-    <FUNCLINE>179</FUNCLINE>
-    <PATH></PATH>
-  </DEFECT>
-  <DEFECT>
-    <SFA>
-      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
-      <FILENAME>main.cpp</FILENAME>
-      <LINE>179</LINE>
+      <LINE>196</LINE>
       <COLUMN>1</COLUMN>
     </SFA>
     <DEFECTCODE>26495</DEFECTCODE>
     <DESCRIPTION>Variable 'HelloTriangleApplication::mipLevels' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
     <FUNCTION>HelloTriangleApplication::{ctor}</FUNCTION>
     <DECORATED>??0HelloTriangleApplication@@QEAA@XZ</DECORATED>
-    <FUNCLINE>179</FUNCLINE>
+    <FUNCLINE>196</FUNCLINE>
     <PATH></PATH>
   </DEFECT>
   <DEFECT>
     <SFA>
       <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
       <FILENAME>main.cpp</FILENAME>
-      <LINE>179</LINE>
+      <LINE>196</LINE>
       <COLUMN>1</COLUMN>
     </SFA>
     <DEFECTCODE>26495</DEFECTCODE>
     <DESCRIPTION>Variable 'HelloTriangleApplication::textureImage' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
     <FUNCTION>HelloTriangleApplication::{ctor}</FUNCTION>
     <DECORATED>??0HelloTriangleApplication@@QEAA@XZ</DECORATED>
-    <FUNCLINE>179</FUNCLINE>
+    <FUNCLINE>196</FUNCLINE>
     <PATH></PATH>
   </DEFECT>
   <DEFECT>
     <SFA>
       <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
       <FILENAME>main.cpp</FILENAME>
-      <LINE>179</LINE>
+      <LINE>196</LINE>
       <COLUMN>1</COLUMN>
     </SFA>
     <DEFECTCODE>26495</DEFECTCODE>
     <DESCRIPTION>Variable 'HelloTriangleApplication::textureImageMemory' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
     <FUNCTION>HelloTriangleApplication::{ctor}</FUNCTION>
     <DECORATED>??0HelloTriangleApplication@@QEAA@XZ</DECORATED>
-    <FUNCLINE>179</FUNCLINE>
+    <FUNCLINE>196</FUNCLINE>
     <PATH></PATH>
   </DEFECT>
   <DEFECT>
     <SFA>
       <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
       <FILENAME>main.cpp</FILENAME>
-      <LINE>179</LINE>
+      <LINE>196</LINE>
       <COLUMN>1</COLUMN>
     </SFA>
     <DEFECTCODE>26495</DEFECTCODE>
     <DESCRIPTION>Variable 'HelloTriangleApplication::textureImageView' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
     <FUNCTION>HelloTriangleApplication::{ctor}</FUNCTION>
     <DECORATED>??0HelloTriangleApplication@@QEAA@XZ</DECORATED>
-    <FUNCLINE>179</FUNCLINE>
+    <FUNCLINE>196</FUNCLINE>
     <PATH></PATH>
   </DEFECT>
   <DEFECT>
     <SFA>
       <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
       <FILENAME>main.cpp</FILENAME>
-      <LINE>179</LINE>
+      <LINE>196</LINE>
       <COLUMN>1</COLUMN>
     </SFA>
     <DEFECTCODE>26495</DEFECTCODE>
     <DESCRIPTION>Variable 'HelloTriangleApplication::textureSampler' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
     <FUNCTION>HelloTriangleApplication::{ctor}</FUNCTION>
     <DECORATED>??0HelloTriangleApplication@@QEAA@XZ</DECORATED>
-    <FUNCLINE>179</FUNCLINE>
+    <FUNCLINE>196</FUNCLINE>
     <PATH></PATH>
   </DEFECT>
   <DEFECT>
     <SFA>
       <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
       <FILENAME>main.cpp</FILENAME>
-      <LINE>179</LINE>
-      <COLUMN>1</COLUMN>
-    </SFA>
-    <DEFECTCODE>26495</DEFECTCODE>
-    <DESCRIPTION>Variable 'HelloTriangleApplication::dynamicAlignment' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
-    <FUNCTION>HelloTriangleApplication::{ctor}</FUNCTION>
-    <DECORATED>??0HelloTriangleApplication@@QEAA@XZ</DECORATED>
-    <FUNCLINE>179</FUNCLINE>
-    <PATH></PATH>
-  </DEFECT>
-  <DEFECT>
-    <SFA>
-      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
-      <FILENAME>main.cpp</FILENAME>
-      <LINE>179</LINE>
-      <COLUMN>1</COLUMN>
-    </SFA>
-    <DEFECTCODE>26495</DEFECTCODE>
-    <DESCRIPTION>Variable 'HelloTriangleApplication::dynamicBufferSize' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
-    <FUNCTION>HelloTriangleApplication::{ctor}</FUNCTION>
-    <DECORATED>??0HelloTriangleApplication@@QEAA@XZ</DECORATED>
-    <FUNCLINE>179</FUNCLINE>
-    <PATH></PATH>
-  </DEFECT>
-  <DEFECT>
-    <SFA>
-      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
-      <FILENAME>main.cpp</FILENAME>
-      <LINE>179</LINE>
+      <LINE>196</LINE>
       <COLUMN>1</COLUMN>
     </SFA>
     <DEFECTCODE>26495</DEFECTCODE>
     <DESCRIPTION>Variable 'HelloTriangleApplication::modelScene' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
     <FUNCTION>HelloTriangleApplication::{ctor}</FUNCTION>
     <DECORATED>??0HelloTriangleApplication@@QEAA@XZ</DECORATED>
-    <FUNCLINE>179</FUNCLINE>
+    <FUNCLINE>196</FUNCLINE>
     <PATH></PATH>
   </DEFECT>
   <DEFECT>
     <SFA>
       <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
       <FILENAME>main.cpp</FILENAME>
-      <LINE>882</LINE>
+      <LINE>768</LINE>
       <COLUMN>48</COLUMN>
     </SFA>
     <DEFECTCODE>26451</DEFECTCODE>
     <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
     <FUNCTION>HelloTriangleApplication::createTextureImage</FUNCTION>
     <DECORATED>?createTextureImage@HelloTriangleApplication@@AEAAXXZ</DECORATED>
-    <FUNCLINE>877</FUNCLINE>
+    <FUNCLINE>763</FUNCLINE>
     <PATH></PATH>
   </DEFECT>
   <DEFECT>
     <SFA>
       <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
       <FILENAME>main.cpp</FILENAME>
-      <LINE>882</LINE>
+      <LINE>768</LINE>
       <COLUMN>36</COLUMN>
     </SFA>
     <DEFECTCODE>26451</DEFECTCODE>
     <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
     <FUNCTION>HelloTriangleApplication::createTextureImage</FUNCTION>
     <DECORATED>?createTextureImage@HelloTriangleApplication@@AEAAXXZ</DECORATED>
-    <FUNCLINE>877</FUNCLINE>
+    <FUNCLINE>763</FUNCLINE>
     <PATH></PATH>
   </DEFECT>
   <DEFECT>
     <SFA>
       <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
-      <FILENAME>main.cpp</FILENAME>
-      <LINE>217</LINE>
-      <COLUMN>1</COLUMN>
+      <FILENAME>skeletalanimationcomponent.h</FILENAME>
+      <LINE>48</LINE>
+      <COLUMN>0</COLUMN>
     </SFA>
     <DEFECTCODE>26495</DEFECTCODE>
-    <DESCRIPTION>Variable 'HelloTriangleApplication::SubpassSetup::Pipeline' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
-    <FUNCTION>HelloTriangleApplication::SubpassSetup::{ctor}</FUNCTION>
-    <DECORATED>??0SubpassSetup@HelloTriangleApplication@@QEAA@XZ</DECORATED>
-    <FUNCLINE>217</FUNCLINE>
+    <DESCRIPTION>Variable 'SkeletalAnimationComponent&lt;SkeletonAnimation&gt;::plotV::p_x' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SkeletalAnimationComponent&lt;SkeletonAnimation&gt;::plotV::{ctor}</FUNCTION>
+    <DECORATED>??0plotV@?$SkeletalAnimationComponent@VSkeletonAnimation@@@@QEAA@XZ</DECORATED>
+    <FUNCLINE>48</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>skeletalanimationcomponent.h</FILENAME>
+      <LINE>48</LINE>
+      <COLUMN>0</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'SkeletalAnimationComponent&lt;SkeletonAnimation&gt;::plotV::p_y' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SkeletalAnimationComponent&lt;SkeletonAnimation&gt;::plotV::{ctor}</FUNCTION>
+    <DECORATED>??0plotV@?$SkeletalAnimationComponent@VSkeletonAnimation@@@@QEAA@XZ</DECORATED>
+    <FUNCLINE>48</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>skeletalanimationcomponent.h</FILENAME>
+      <LINE>48</LINE>
+      <COLUMN>0</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'SkeletalAnimationComponent&lt;SkeletonAnimation&gt;::plotV::p_z' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SkeletalAnimationComponent&lt;SkeletonAnimation&gt;::plotV::{ctor}</FUNCTION>
+    <DECORATED>??0plotV@?$SkeletalAnimationComponent@VSkeletonAnimation@@@@QEAA@XZ</DECORATED>
+    <FUNCLINE>48</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>skeletalanimationcomponent.h</FILENAME>
+      <LINE>97</LINE>
+      <COLUMN>52</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>SkeletalAnimationComponent&lt;SkeletonAnimation&gt;::evaluate</FUNCTION>
+    <DECORATED>?evaluate@?$SkeletalAnimationComponent@VSkeletonAnimation@@@@QEAAXMV?$vector@MV?$allocator@M@std@@@std@@@Z</DECORATED>
+    <FUNCLINE>69</FUNCLINE>
     <PATH></PATH>
   </DEFECT>
   <DEFECT>

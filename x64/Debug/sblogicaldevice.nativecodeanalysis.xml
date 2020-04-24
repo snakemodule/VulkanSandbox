@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>sblogicaldevice.cpp</FILENAME>
+      <LINE>9</LINE>
+      <COLUMN>17</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'SbLogicalDevice::graphicsQueue' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SbLogicalDevice::{ctor}</FUNCTION>
+    <DECORATED>??0SbLogicalDevice@@QEAA@AEAVSbPhysicalDevice@@@Z</DECORATED>
+    <FUNCLINE>9</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>sblogicaldevice.cpp</FILENAME>
+      <LINE>9</LINE>
+      <COLUMN>17</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'SbLogicalDevice::presentQueue' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SbLogicalDevice::{ctor}</FUNCTION>
+    <DECORATED>??0SbLogicalDevice@@QEAA@AEAVSbPhysicalDevice@@@Z</DECORATED>
+    <FUNCLINE>9</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>sblogicaldevice.cpp</FILENAME>
+      <LINE>9</LINE>
+      <COLUMN>17</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'SbLogicalDevice::device' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SbLogicalDevice::{ctor}</FUNCTION>
+    <DECORATED>??0SbLogicalDevice@@QEAA@AEAVSbPhysicalDevice@@@Z</DECORATED>
+    <FUNCLINE>9</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+</DEFECTS>

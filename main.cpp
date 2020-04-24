@@ -32,6 +32,8 @@
 #include <string>
 #include <memory>
 
+#include <cmath>
+
 #include <assimp/Importer.hpp> // C++ importer interface
 #include <assimp/scene.h> // Output data structure
 #include <assimp/postprocess.h> // Post processing flags
@@ -824,16 +826,18 @@ private:
 	
 	Assimp::Importer modelImporter;
 	const aiScene* modelScene;
-	AnimationKeys k;
-	UncompressedAnimationKeys uk;
+	AnimationKeys running;
+	AnimationKeys walking;
+	//UncompressedAnimationKeys uk;
 	//SkeletonAnimation sa()
 
 
 
 	void loadModel() {
 
-		k.loadAnimationData("jump.chs");
-		uk.loadAnimationData("uncompressed.chs");
+		running.loadAnimationData("running.chs");
+		walking.loadAnimationData("walking.chs");
+		//uk.loadAnimationData("uncompressed.chs");
 		
 		modelScene = modelImporter.ReadFile("jump.fbx",
 			aiProcess_CalcTangentSpace |
@@ -848,16 +852,19 @@ private:
 		AnimationStuff::makeFlatSkeleton(rootJoint, mymodel->skeleton, jointLayout, 0, -1, modelScene);
 		AnimationStuff::finalizeFlatten(mymodel->skeleton);
 		
-		SkeletonAnimation jumpAnimation(mymodel->skeleton.jointCount, k);
-		UncompressedAnimation uncompAnimation(mymodel->skeleton.jointCount, uk);
+		//SkeletonAnimation runningAnimation(mymodel->skeleton.jointCount, running); //todo get joint count from animation data instead?
+		//SkeletonAnimation walkingAnimation(mymodel->skeleton.jointCount, walking); //todo get joint count from animation data instead?
+
+		//UncompressedAnimation uncompAnimation(mymodel->skeleton.jointCount, uk);
 		//jumpAnimation.plot(mymodel->skeleton);
 		//uncompAnimation.plot(mymodel->skeleton);
 		
-		AnimationLayer<SkeletonAnimation> baseLayer;
-		baseLayer.blendAnimations.emplace_back(mymodel->skeleton.jointCount, k);// todo interface
+		AnimationLayer baseLayer;
+		baseLayer.blendAnimations.emplace_back(mymodel->skeleton.jointCount, walking);
+		baseLayer.blendAnimations.emplace_back(mymodel->skeleton.jointCount, running);// todo interface
 
 		mymodel->skeletalAnimationComponent.init(&mymodel->skeleton, 
-			std::vector<AnimationLayer<SkeletonAnimation>>{ baseLayer });
+			std::vector<AnimationLayer>{ baseLayer });
 		mymodel->meshes.resize(modelScene->mNumMeshes);
 		for (unsigned int i = 0; i < modelScene->mNumMeshes; i++) {
 			const aiMesh* currentMesh = modelScene->mMeshes[i];
@@ -1204,7 +1211,8 @@ private:
 		}
 		*/
 
-		mymodel->skeletalAnimationComponent.evaluate(deltaTime, std::vector<float> (0.0, 1));
+		float s = 0.5f * std::sinf(time/(3.14f)) + 0.5f;
+		mymodel->skeletalAnimationComponent.evaluate(deltaTime, std::vector<float> { s });
 
 		UniformBufferObject ubo = {};
 		ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f)) 

@@ -46,7 +46,6 @@ private:
 	struct quatKey {
 		glm::quat rot;
 		float time;
-		int rotKeyID = 0;
 		int channel;
 
 	};
@@ -99,20 +98,20 @@ public:
 
 	void plot(Skeleton s);
 
-	void evaluate(Skeleton s, double t);
 
 	void evaluate();
 	
-	void updateEvaluators(float animationTime);
+	void updateEvaluators(float animationTime, float playbackMultiplier = 1);
 
 	void initiateEvaluators();
 
 	SkeletonAnimation(int jointCount, AnimationKeys& animationData);
 	~SkeletonAnimation();
 
-	float animationTime = 0;
+	double animationTime = 0;
 	
-	
+	double getAnimationDuration();
+
 	std::vector<glm::quat> localRotation;
 	std::vector<glm::vec3> localPosition;
 

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>sbpipelinelayout.cpp</FILENAME>
+      <LINE>127</LINE>
+      <COLUMN>18</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'SbPipelineLayout::pipelineLayout' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SbPipelineLayout::{ctor}</FUNCTION>
+    <DECORATED>??0SbPipelineLayout@@QEAA@AEBQEAUVkDevice_T@@AEBI@Z</DECORATED>
+    <FUNCLINE>127</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>sbpipelinelayout.cpp</FILENAME>
+      <LINE>127</LINE>
+      <COLUMN>18</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'SbPipelineLayout::DSLayout' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SbPipelineLayout::{ctor}</FUNCTION>
+    <DECORATED>??0SbPipelineLayout@@QEAA@AEBQEAUVkDevice_T@@AEBI@Z</DECORATED>
+    <FUNCLINE>127</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+</DEFECTS>

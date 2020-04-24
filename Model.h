@@ -34,5 +34,5 @@ struct Mesh {
 struct Model {
 	std::vector<Mesh> meshes;
 	Skeleton skeleton;
-	SkeletalAnimationComponent<SkeletonAnimation> skeletalAnimationComponent;
+	SkeletalAnimationComponent skeletalAnimationComponent;
 };

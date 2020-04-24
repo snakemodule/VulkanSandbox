@@ -17,6 +17,7 @@ void AnimationKeys::loadAnimationData(std::string filename)
 
 		file.read(reinterpret_cast<char*>(rotData.data()), sizeof(qbits) * rotData.size());
 		file.read(reinterpret_cast<char*>(posData.data()), sizeof(vbits) * posData.size());
+		file.close();
 	}
 }
 

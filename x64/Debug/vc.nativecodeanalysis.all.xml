@@ -1,5 +1,941 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><DEFECTS><DEFECT>
     <SFA>
+      <FILEPATH>c:\program files\assimp\include\assimp</FILEPATH>
+      <FILENAME>mesh.h</FILENAME>
+      <LINE>152</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'aiFace::mNumIndices' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>aiFace::{ctor}</FUNCTION>
+    <DECORATED>??0aiFace@@QEAA@AEBU0@@Z</DECORATED>
+    <FUNCLINE>152</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\assimp\include\assimp</FILEPATH>
+      <FILENAME>mesh.h</FILENAME>
+      <LINE>284</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'aiBone::mWeights' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>aiBone::{ctor}</FUNCTION>
+    <DECORATED>??0aiBone@@QEAA@AEBU0@@Z</DECORATED>
+    <FUNCLINE>284</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\assimp\include\assimp</FILEPATH>
+      <FILENAME>mesh.h</FILENAME>
+      <LINE>450</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'aiAnimMesh::mColors' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>aiAnimMesh::{ctor}</FUNCTION>
+    <DECORATED>??0aiAnimMesh@@QEAA@XZ</DECORATED>
+    <FUNCLINE>450</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\assimp\include\assimp</FILEPATH>
+      <FILENAME>mesh.h</FILENAME>
+      <LINE>709</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'aiMesh::mColors' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>aiMesh::{ctor}</FUNCTION>
+    <DECORATED>??0aiMesh@@QEAA@XZ</DECORATED>
+    <FUNCLINE>709</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>skeletonanimation.h</FILENAME>
+      <LINE>52</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'SkeletonAnimation::quatKey::rot' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SkeletonAnimation::quatKey::{ctor}</FUNCTION>
+    <DECORATED>??0quatKey@SkeletonAnimation@@QEAA@XZ</DECORATED>
+    <FUNCLINE>52</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>skeletonanimation.cpp</FILENAME>
+      <LINE>403</LINE>
+      <COLUMN>19</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'SkeletonAnimation::latestRotData' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SkeletonAnimation::{ctor}</FUNCTION>
+    <DECORATED>??0SkeletonAnimation@@QEAA@HAEAVAnimationKeys@@@Z</DECORATED>
+    <FUNCLINE>403</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>skeletonanimation.h</FILENAME>
+      <LINE>42</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'SkeletonAnimation::plotV::p_x' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SkeletonAnimation::plotV::{ctor}</FUNCTION>
+    <DECORATED>??0plotV@SkeletonAnimation@@QEAA@XZ</DECORATED>
+    <FUNCLINE>42</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>skeletonanimation.cpp</FILENAME>
+      <LINE>64</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'SkeletonAnimation::plot::plotV::p_y' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SkeletonAnimation::plot::plotV::{ctor}</FUNCTION>
+    <DECORATED>??0plotV@?1??plot@SkeletonAnimation@@QEAAXUSkeleton@@@Z@QEAA@XZ</DECORATED>
+    <FUNCLINE>64</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>skeletonanimation.cpp</FILENAME>
+      <LINE>37</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'SkeletonAnimation::plot::plotQ::p_z' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SkeletonAnimation::plot::plotQ::{ctor}</FUNCTION>
+    <DECORATED>??0plotQ@?1??plot@SkeletonAnimation@@QEAAXUSkeleton@@@Z@QEAA@XZ</DECORATED>
+    <FUNCLINE>37</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>animationkeys.cpp</FILENAME>
+      <LINE>23</LINE>
+      <COLUMN>15</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'AnimationKeys::rotKeyCount' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>AnimationKeys::{ctor}</FUNCTION>
+    <DECORATED>??0AnimationKeys@@QEAA@XZ</DECORATED>
+    <FUNCLINE>23</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\core\arch</FILEPATH>
+      <FILENAME>fbxalloc.h</FILENAME>
+      <LINE>283</LINE>
+      <COLUMN>2</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::RefCount::count' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::RefCount::{ctor}</FUNCTION>
+    <DECORATED>??0RefCount@fbxsdk@@QEAA@XZ</DECORATED>
+    <FUNCLINE>283</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\core\base</FILEPATH>
+      <FILENAME>fbxstring.h</FILENAME>
+      <LINE>498</LINE>
+      <COLUMN>56</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxRemoveChar</FUNCTION>
+    <DECORATED>?FbxRemoveChar@fbxsdk@@YAXAEAVFbxString@1@D@Z</DECORATED>
+    <FUNCLINE>493</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\core</FILEPATH>
+      <FILENAME>fbxpropertypage.h</FILENAME>
+      <LINE>181</LINE>
+      <COLUMN>2</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxPropertyInfo::mMinMaxValue' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxPropertyInfo::{ctor}</FUNCTION>
+    <DECORATED>??0FbxPropertyInfo@fbxsdk@@AEAA@PEBDPEAVFbxPropertyPage@1@@Z</DECORATED>
+    <FUNCLINE>181</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\core</FILEPATH>
+      <FILENAME>fbxpropertypage.h</FILENAME>
+      <LINE>195</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxPropertyInfo::mMinMaxValue' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxPropertyInfo::{ctor}</FUNCTION>
+    <DECORATED>??0FbxPropertyInfo@fbxsdk@@AEAA@VFbxStringSymbol@1@PEAVFbxPropertyPage@1@@Z</DECORATED>
+    <FUNCLINE>195</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\core</FILEPATH>
+      <FILENAME>fbxpropertypage.h</FILENAME>
+      <LINE>209</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxPropertyInfo::mMinMaxValue' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxPropertyInfo::{ctor}</FUNCTION>
+    <DECORATED>??0FbxPropertyInfo@fbxsdk@@AEAA@PEBDW4EFbxType@1@@Z</DECORATED>
+    <FUNCLINE>209</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\fileio</FILEPATH>
+      <FILENAME>fbxiosettings.h</FILENAME>
+      <LINE>209</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxIOSettings::UILanguage' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxIOSettings::{ctor}</FUNCTION>
+    <DECORATED>??0FbxIOSettings@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>209</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\utils</FILEPATH>
+      <FILENAME>fbxrenamingstrategy.h</FILENAME>
+      <LINE>285</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxSceneRenamer::mNodeRenamingStrategy' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxSceneRenamer::{ctor}</FUNCTION>
+    <DECORATED>??0FbxSceneRenamer@fbxsdk@@QEAA@PEAVFbxScene@1@@Z</DECORATED>
+    <FUNCLINE>285</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\fileio</FILEPATH>
+      <FILENAME>fbxexporter.h</FILENAME>
+      <LINE>91</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxExporter::mWriter' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxExporter::{ctor}</FUNCTION>
+    <DECORATED>??0FbxExporter@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>91</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\fileio</FILEPATH>
+      <FILENAME>fbxgobo.h</FILENAME>
+      <LINE>29</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxGobo::mDrawGroundProjection' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxGobo::{ctor}</FUNCTION>
+    <DECORATED>??0FbxGobo@fbxsdk@@QEAA@PEAD@Z</DECORATED>
+    <FUNCLINE>29</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\fileio</FILEPATH>
+      <FILENAME>fbximporter.h</FILENAME>
+      <LINE>92</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxImporter::mImportThread' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxImporter::{ctor}</FUNCTION>
+    <DECORATED>??0FbxImporter@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>92</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene</FILEPATH>
+      <FILENAME>fbxmediaclip.h</FILENAME>
+      <LINE>27</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxMediaClip::mOriginalFormat' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxMediaClip::{ctor}</FUNCTION>
+    <DECORATED>??0FbxMediaClip@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>27</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene</FILEPATH>
+      <FILENAME>fbxcontainertemplate.h</FILENAME>
+      <LINE>34</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxContainerTemplate::mData' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxContainerTemplate::{ctor}</FUNCTION>
+    <DECORATED>??0FbxContainerTemplate@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>34</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene</FILEPATH>
+      <FILENAME>fbxcontainer.h</FILENAME>
+      <LINE>28</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxContainer::mContainerTemplate' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxContainer::{ctor}</FUNCTION>
+    <DECORATED>??0FbxContainer@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>28</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene</FILEPATH>
+      <FILENAME>fbxdocument.h</FILENAME>
+      <LINE>48</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxDocument::mPeripheral' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxDocument::{ctor}</FUNCTION>
+    <DECORATED>??0FbxDocument@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>48</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene</FILEPATH>
+      <FILENAME>fbxlibrary.h</FILENAME>
+      <LINE>32</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxLibrary::mLocalizationManager' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxLibrary::{ctor}</FUNCTION>
+    <DECORATED>??0FbxLibrary@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>32</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene</FILEPATH>
+      <FILENAME>fbxpose.h</FILENAME>
+      <LINE>98</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxPose::mType' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxPose::{ctor}</FUNCTION>
+    <DECORATED>??0FbxPose@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>98</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\geometry</FILEPATH>
+      <FILENAME>fbxnode.h</FILENAME>
+      <LINE>74</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxNode::mCullingType' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxNode::{ctor}</FUNCTION>
+    <DECORATED>??0FbxNode@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>74</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\geometry</FILEPATH>
+      <FILENAME>fbxnode.h</FILENAME>
+      <LINE>1936</LINE>
+      <COLUMN>2</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxNode::Pivot::mRotationOrder' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxNode::Pivot::{ctor}</FUNCTION>
+    <DECORATED>??0Pivot@FbxNode@fbxsdk@@QEAA@XZ</DECORATED>
+    <FUNCLINE>1936</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\geometry</FILEPATH>
+      <FILENAME>fbxnode.h</FILENAME>
+      <LINE>2149</LINE>
+      <COLUMN>2</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxNode::Pivots::mPivot' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxNode::Pivots::{ctor}</FUNCTION>
+    <DECORATED>??0Pivots@FbxNode@fbxsdk@@QEAA@XZ</DECORATED>
+    <FUNCLINE>2149</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\animation</FILEPATH>
+      <FILENAME>fbxanimevaluator.h</FILENAME>
+      <LINE>63</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxAnimEvaluator::mEvalState' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxAnimEvaluator::{ctor}</FUNCTION>
+    <DECORATED>??0FbxAnimEvaluator@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>63</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\shading</FILEPATH>
+      <FILENAME>fbxtexture.h</FILENAME>
+      <LINE>28</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxTexture::mCropping' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxTexture::{ctor}</FUNCTION>
+    <DECORATED>??0FbxTexture@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>28</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\geometry</FILEPATH>
+      <FILENAME>fbxlayer.h</FILENAME>
+      <LINE>247</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxLayerElement::mType' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxLayerElement::{ctor}</FUNCTION>
+    <DECORATED>??0FbxLayerElement@fbxsdk@@IEAA@XZ</DECORATED>
+    <FUNCLINE>247</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\fileio</FILEPATH>
+      <FILENAME>fbxglobalsettings.h</FILENAME>
+      <LINE>29</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxGlobalSettings::mNbTimeMarkers' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxGlobalSettings::{ctor}</FUNCTION>
+    <DECORATED>??0FbxGlobalSettings@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>29</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene</FILEPATH>
+      <FILENAME>fbxscene.h</FILENAME>
+      <LINE>63</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxScene::mGlobalCameraSettings' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxScene::{ctor}</FUNCTION>
+    <DECORATED>??0FbxScene@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>63</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene</FILEPATH>
+      <FILENAME>fbxselectionnode.h</FILENAME>
+      <LINE>29</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxSelectionNode::mIsTheNodeInSet' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxSelectionNode::{ctor}</FUNCTION>
+    <DECORATED>??0FbxSelectionNode@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>29</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene</FILEPATH>
+      <FILENAME>fbxthumbnail.h</FILENAME>
+      <LINE>29</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxThumbnail::mMembers' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxThumbnail::{ctor}</FUNCTION>
+    <DECORATED>??0FbxThumbnail@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>29</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene</FILEPATH>
+      <FILENAME>fbxvideo.h</FILENAME>
+      <LINE>27</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxVideo::mUseMipMap' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxVideo::{ctor}</FUNCTION>
+    <DECORATED>??0FbxVideo@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>27</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\animation</FILEPATH>
+      <FILENAME>fbxanimcurvebase.h</FILENAME>
+      <LINE>72</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxAnimCurveBase::mPostExtrapolationCount' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxAnimCurveBase::{ctor}</FUNCTION>
+    <DECORATED>??0FbxAnimCurveBase@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>72</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\animation</FILEPATH>
+      <FILENAME>fbxanimcurvenode.h</FILENAME>
+      <LINE>57</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxAnimCurveNode::mOwnedKFCurve' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxAnimCurveNode::{ctor}</FUNCTION>
+    <DECORATED>??0FbxAnimCurveNode@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>57</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\animation</FILEPATH>
+      <FILENAME>fbxanimevalclassic.h</FILENAME>
+      <LINE>34</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxAnimEvalClassic::mPropertyValues' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxAnimEvalClassic::{ctor}</FUNCTION>
+    <DECORATED>??0FbxAnimEvalClassic@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>34</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\constraint</FILEPATH>
+      <FILENAME>fbxcharacter.h</FILENAME>
+      <LINE>93</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxCharacter::mCharacterVersion' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxCharacter::{ctor}</FUNCTION>
+    <DECORATED>??0FbxCharacter@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>93</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\constraint</FILEPATH>
+      <FILENAME>fbxcharacterpose.h</FILENAME>
+      <LINE>50</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxCharacterPose::mPoseScene' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxCharacterPose::{ctor}</FUNCTION>
+    <DECORATED>??0FbxCharacterPose@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>50</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\geometry</FILEPATH>
+      <FILENAME>fbxdeformer.h</FILENAME>
+      <LINE>40</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxDeformer::mMultiLayer' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxDeformer::{ctor}</FUNCTION>
+    <DECORATED>??0FbxDeformer@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>40</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\geometry</FILEPATH>
+      <FILENAME>fbxsubdeformer.h</FILENAME>
+      <LINE>57</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxSubDeformer::mMultiLayer' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxSubDeformer::{ctor}</FUNCTION>
+    <DECORATED>??0FbxSubDeformer@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>57</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\geometry</FILEPATH>
+      <FILENAME>fbxcache.h</FILENAME>
+      <LINE>35</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxCache::mConvertBuffer' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxCache::{ctor}</FUNCTION>
+    <DECORATED>??0FbxCache@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>35</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\geometry</FILEPATH>
+      <FILENAME>fbxcluster.h</FILENAME>
+      <LINE>49</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxCluster::mIsTransformParentSet' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxCluster::{ctor}</FUNCTION>
+    <DECORATED>??0FbxCluster@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>49</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\geometry</FILEPATH>
+      <FILENAME>fbxgeometry.h</FILENAME>
+      <LINE>47</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxGeometry::mPivot' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxGeometry::{ctor}</FUNCTION>
+    <DECORATED>??0FbxGeometry@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>47</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\geometry</FILEPATH>
+      <FILENAME>fbxgeometryweightedmap.h</FILENAME>
+      <LINE>42</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxGeometryWeightedMap::mWeightedMapping' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxGeometryWeightedMap::{ctor}</FUNCTION>
+    <DECORATED>??0FbxGeometryWeightedMap@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>42</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\geometry</FILEPATH>
+      <FILENAME>fbxlodgroup.h</FILENAME>
+      <LINE>87</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxLODGroup::mNbDisplayLevels' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxLODGroup::{ctor}</FUNCTION>
+    <DECORATED>??0FbxLODGroup@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>87</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\geometry</FILEPATH>
+      <FILENAME>fbxmarker.h</FILENAME>
+      <LINE>28</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxMarker::mType' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxMarker::{ctor}</FUNCTION>
+    <DECORATED>??0FbxMarker@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>28</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\geometry</FILEPATH>
+      <FILENAME>fbxmesh.h</FILENAME>
+      <LINE>34</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxMesh::mPreserveBorders' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxMesh::{ctor}</FUNCTION>
+    <DECORATED>??0FbxMesh@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>34</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\geometry</FILEPATH>
+      <FILENAME>fbxmesh.h</FILENAME>
+      <LINE>808</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxMesh::V2PVMap::mValid' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxMesh::V2PVMap::{ctor}</FUNCTION>
+    <DECORATED>??0V2PVMap@FbxMesh@fbxsdk@@QEAA@XZ</DECORATED>
+    <FUNCLINE>808</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\geometry</FILEPATH>
+      <FILENAME>fbxmesh.h</FILENAME>
+      <LINE>810</LINE>
+      <COLUMN>61</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxMesh::EdgeLookupDef::mValid' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxMesh::EdgeLookupDef::{ctor}</FUNCTION>
+    <DECORATED>??0EdgeLookupDef@FbxMesh@fbxsdk@@QEAA@XZ</DECORATED>
+    <FUNCLINE>810</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\geometry</FILEPATH>
+      <FILENAME>fbxnurbs.h</FILENAME>
+      <LINE>33</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxNurbs::mApplyFlipUV' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxNurbs::{ctor}</FUNCTION>
+    <DECORATED>??0FbxNurbs@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>33</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\geometry</FILEPATH>
+      <FILENAME>fbxnurbscurve.h</FILENAME>
+      <LINE>62</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxNurbsCurve::mOrder' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxNurbsCurve::{ctor}</FUNCTION>
+    <DECORATED>??0FbxNurbsCurve@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>62</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\geometry</FILEPATH>
+      <FILENAME>fbxnurbssurface.h</FILENAME>
+      <LINE>35</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxNurbsSurface::mSurfaceMode' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxNurbsSurface::{ctor}</FUNCTION>
+    <DECORATED>??0FbxNurbsSurface@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>35</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\geometry</FILEPATH>
+      <FILENAME>fbxpatch.h</FILENAME>
+      <LINE>28</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxPatch::mVCappedTop' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxPatch::{ctor}</FUNCTION>
+    <DECORATED>??0FbxPatch@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>28</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\geometry</FILEPATH>
+      <FILENAME>fbxskeleton.h</FILENAME>
+      <LINE>36</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxSkeleton::mSkeletonTypeIsSet' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxSkeleton::{ctor}</FUNCTION>
+    <DECORATED>??0FbxSkeleton@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>36</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\geometry</FILEPATH>
+      <FILENAME>fbxskin.h</FILENAME>
+      <LINE>39</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxSkin::mSkinningType' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxSkin::{ctor}</FUNCTION>
+    <DECORATED>??0FbxSkin@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>39</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\geometry</FILEPATH>
+      <FILENAME>fbxsubdiv.h</FILENAME>
+      <LINE>32</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxSubDiv::mPattern' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxSubDiv::{ctor}</FUNCTION>
+    <DECORATED>??0FbxSubDiv@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>32</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\geometry</FILEPATH>
+      <FILENAME>fbxtrimnurbssurface.h</FILENAME>
+      <LINE>111</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxTrimNurbsSurface::mNewRegion' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxTrimNurbsSurface::{ctor}</FUNCTION>
+    <DECORATED>??0FbxTrimNurbsSurface@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>111</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\shading</FILEPATH>
+      <FILENAME>fbxbindingoperator.h</FILENAME>
+      <LINE>51</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxBindingOperator::mFunction' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxBindingOperator::{ctor}</FUNCTION>
+    <DECORATED>??0FbxBindingOperator@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>51</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\utils</FILEPATH>
+      <FILENAME>fbxprocessorxref.h</FILENAME>
+      <LINE>28</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxProcessorXRefCopy::MissingUrlHandler' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxProcessorXRefCopy::{ctor}</FUNCTION>
+    <DECORATED>??0FbxProcessorXRefCopy@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>28</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\utils</FILEPATH>
+      <FILENAME>fbxprocessorshaderdependency.h</FILENAME>
+      <LINE>29</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxProcessorShaderDependency::mSystemIndex' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxProcessorShaderDependency::{ctor}</FUNCTION>
+    <DECORATED>??0FbxProcessorShaderDependency@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>29</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\utils</FILEPATH>
+      <FILENAME>fbxmanipulators.h</FILENAME>
+      <LINE>32</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxCameraManipulator::mBeginFlipped' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxCameraManipulator::{ctor}</FUNCTION>
+    <DECORATED>??0FbxCameraManipulator@fbxsdk@@IEAA@AEAVFbxManager@1@PEBD@Z</DECORATED>
+    <FUNCLINE>32</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\core\base</FILEPATH>
+      <FILENAME>fbxarray.h</FILENAME>
+      <LINE>202</LINE>
+      <COLUMN>40</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxArray&lt;fbxsdk::FbxMesh::PolygonDef&gt;::Reserve</FUNCTION>
+    <DECORATED>?Reserve@?$FbxArray@UPolygonDef@FbxMesh@fbxsdk@@@fbxsdk@@QEAA_NH@Z</DECORATED>
+    <FUNCLINE>191</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\core\base</FILEPATH>
+      <FILENAME>fbxarray.h</FILENAME>
+      <LINE>244</LINE>
+      <COLUMN>65</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxArray&lt;fbxsdk::FbxPropertyPage *&gt;::RemoveAt</FUNCTION>
+    <DECORATED>?RemoveAt@?$FbxArray@PEAVFbxPropertyPage@fbxsdk@@@fbxsdk@@QEAAPEAVFbxPropertyPage@2@H@Z</DECORATED>
+    <FUNCLINE>239</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\core\base</FILEPATH>
+      <FILENAME>fbxarray.h</FILENAME>
+      <LINE>244</LINE>
+      <COLUMN>56</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxArray&lt;fbxsdk::FbxPropertyPage *&gt;::RemoveAt</FUNCTION>
+    <DECORATED>?RemoveAt@?$FbxArray@PEAVFbxPropertyPage@fbxsdk@@@fbxsdk@@QEAAPEAVFbxPropertyPage@2@H@Z</DECORATED>
+    <FUNCLINE>239</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\core\base</FILEPATH>
+      <FILENAME>fbxarray.h</FILENAME>
+      <LINE>319</LINE>
+      <COLUMN>36</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxArray&lt;fbxsdk::FbxString *&gt;::Resize</FUNCTION>
+    <DECORATED>?Resize@?$FbxArray@PEAVFbxString@fbxsdk@@@fbxsdk@@QEAA_NH@Z</DECORATED>
+    <FUNCLINE>299</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\core\base</FILEPATH>
+      <FILENAME>fbxarray.h</FILENAME>
+      <LINE>71</LINE>
+      <COLUMN>56</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxArray&lt;int&gt;::InsertAt</FUNCTION>
+    <DECORATED>?InsertAt@?$FbxArray@H@fbxsdk@@QEAAHHAEBH_N@Z</DECORATED>
+    <FUNCLINE>48</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\core\arch</FILEPATH>
+      <FILENAME>fbxtypes.h</FILENAME>
+      <LINE>220</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxVectorTemplate3&lt;double&gt;::mData' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxVectorTemplate3&lt;double&gt;::{ctor}</FUNCTION>
+    <DECORATED>??0?$FbxVectorTemplate3@N@fbxsdk@@QEAA@XZ</DECORATED>
+    <FUNCLINE>220</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\program files\autodesk\fbx\fbx sdk\2019.0\include\fbxsdk\scene\geometry</FILEPATH>
+      <FILENAME>fbxlayer.h</FILENAME>
+      <LINE>865</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'fbxsdk::FbxLayerElementArrayTemplate&lt;fbxsdk::FbxTexture *&gt;::dummy' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>fbxsdk::FbxLayerElementArrayTemplate&lt;fbxsdk::FbxTexture *&gt;::{ctor}</FUNCTION>
+    <DECORATED>??0?$FbxLayerElementArrayTemplate@PEAVFbxTexture@fbxsdk@@@fbxsdk@@QEAA@W4EFbxType@1@@Z</DECORATED>
+    <FUNCLINE>865</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
       <FILEPATH>c:\users\colin\documents\visual studio 2017\libraries\stb-master</FILEPATH>
       <FILENAME>stb_image.h</FILENAME>
       <LINE>952</LINE>
@@ -1998,133 +2934,94 @@
     <PATH></PATH>
   </DEFECT><DEFECT>
     <SFA>
-      <FILEPATH>c:\program files\assimp\include\assimp</FILEPATH>
-      <FILENAME>mesh.h</FILENAME>
-      <LINE>152</LINE>
-      <COLUMN>4</COLUMN>
-    </SFA>
-    <DEFECTCODE>26495</DEFECTCODE>
-    <DESCRIPTION>Variable 'aiFace::mNumIndices' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
-    <FUNCTION>aiFace::{ctor}</FUNCTION>
-    <DECORATED>??0aiFace@@QEAA@AEBU0@@Z</DECORATED>
-    <FUNCLINE>152</FUNCLINE>
-    <PATH></PATH>
-  </DEFECT><DEFECT>
-    <SFA>
-      <FILEPATH>c:\program files\assimp\include\assimp</FILEPATH>
-      <FILENAME>mesh.h</FILENAME>
-      <LINE>284</LINE>
-      <COLUMN>4</COLUMN>
-    </SFA>
-    <DEFECTCODE>26495</DEFECTCODE>
-    <DESCRIPTION>Variable 'aiBone::mWeights' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
-    <FUNCTION>aiBone::{ctor}</FUNCTION>
-    <DECORATED>??0aiBone@@QEAA@AEBU0@@Z</DECORATED>
-    <FUNCLINE>284</FUNCLINE>
-    <PATH></PATH>
-  </DEFECT><DEFECT>
-    <SFA>
-      <FILEPATH>c:\program files\assimp\include\assimp</FILEPATH>
-      <FILENAME>mesh.h</FILENAME>
-      <LINE>450</LINE>
-      <COLUMN>4</COLUMN>
-    </SFA>
-    <DEFECTCODE>26495</DEFECTCODE>
-    <DESCRIPTION>Variable 'aiAnimMesh::mTextureCoords' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
-    <FUNCTION>aiAnimMesh::{ctor}</FUNCTION>
-    <DECORATED>??0aiAnimMesh@@QEAA@XZ</DECORATED>
-    <FUNCLINE>450</FUNCLINE>
-    <PATH></PATH>
-  </DEFECT><DEFECT>
-    <SFA>
-      <FILEPATH>c:\program files\assimp\include\assimp</FILEPATH>
-      <FILENAME>mesh.h</FILENAME>
-      <LINE>709</LINE>
-      <COLUMN>4</COLUMN>
-    </SFA>
-    <DEFECTCODE>26495</DEFECTCODE>
-    <DESCRIPTION>Variable 'aiMesh::mColors' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
-    <FUNCTION>aiMesh::{ctor}</FUNCTION>
-    <DECORATED>??0aiMesh@@QEAA@XZ</DECORATED>
-    <FUNCLINE>709</FUNCLINE>
-    <PATH></PATH>
-  </DEFECT><DEFECT>
-    <SFA>
       <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
       <FILENAME>model.h</FILENAME>
-      <LINE>126</LINE>
+      <LINE>30</LINE>
       <COLUMN>1</COLUMN>
     </SFA>
     <DEFECTCODE>26495</DEFECTCODE>
     <DESCRIPTION>Variable 'Mesh::material' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
     <FUNCTION>Mesh::{ctor}</FUNCTION>
     <DECORATED>??0Mesh@@QEAA@XZ</DECORATED>
-    <FUNCLINE>126</FUNCLINE>
+    <FUNCLINE>30</FUNCLINE>
     <PATH></PATH>
   </DEFECT><DEFECT>
     <SFA>
       <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
       <FILENAME>sbswapchain.h</FILENAME>
-      <LINE>45</LINE>
+      <LINE>23</LINE>
       <COLUMN>2</COLUMN>
     </SFA>
     <DEFECTCODE>26495</DEFECTCODE>
     <DESCRIPTION>Variable 'SbSwapchain::SwapchainAttachment::description' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
     <FUNCTION>SbSwapchain::SwapchainAttachment::{ctor}</FUNCTION>
     <DECORATED>??0SwapchainAttachment@SbSwapchain@@QEAA@_K@Z</DECORATED>
-    <FUNCLINE>45</FUNCLINE>
+    <FUNCLINE>23</FUNCLINE>
     <PATH></PATH>
   </DEFECT><DEFECT>
     <SFA>
       <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
       <FILENAME>main.cpp</FILENAME>
-      <LINE>179</LINE>
+      <LINE>196</LINE>
       <COLUMN>1</COLUMN>
     </SFA>
     <DEFECTCODE>26495</DEFECTCODE>
     <DESCRIPTION>Variable 'HelloTriangleApplication::window' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
     <FUNCTION>HelloTriangleApplication::{ctor}</FUNCTION>
     <DECORATED>??0HelloTriangleApplication@@QEAA@XZ</DECORATED>
-    <FUNCLINE>179</FUNCLINE>
+    <FUNCLINE>196</FUNCLINE>
     <PATH></PATH>
   </DEFECT><DEFECT>
     <SFA>
       <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
       <FILENAME>main.cpp</FILENAME>
-      <LINE>882</LINE>
+      <LINE>768</LINE>
       <COLUMN>48</COLUMN>
     </SFA>
     <DEFECTCODE>26451</DEFECTCODE>
     <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
     <FUNCTION>HelloTriangleApplication::createTextureImage</FUNCTION>
     <DECORATED>?createTextureImage@HelloTriangleApplication@@AEAAXXZ</DECORATED>
-    <FUNCLINE>877</FUNCLINE>
+    <FUNCLINE>763</FUNCLINE>
     <PATH></PATH>
   </DEFECT><DEFECT>
     <SFA>
       <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
       <FILENAME>main.cpp</FILENAME>
-      <LINE>882</LINE>
+      <LINE>768</LINE>
       <COLUMN>36</COLUMN>
     </SFA>
     <DEFECTCODE>26451</DEFECTCODE>
     <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
     <FUNCTION>HelloTriangleApplication::createTextureImage</FUNCTION>
     <DECORATED>?createTextureImage@HelloTriangleApplication@@AEAAXXZ</DECORATED>
-    <FUNCLINE>877</FUNCLINE>
+    <FUNCLINE>763</FUNCLINE>
     <PATH></PATH>
   </DEFECT><DEFECT>
     <SFA>
       <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
-      <FILENAME>main.cpp</FILENAME>
-      <LINE>217</LINE>
-      <COLUMN>1</COLUMN>
+      <FILENAME>skeletalanimationcomponent.h</FILENAME>
+      <LINE>48</LINE>
+      <COLUMN>0</COLUMN>
     </SFA>
     <DEFECTCODE>26495</DEFECTCODE>
-    <DESCRIPTION>Variable 'HelloTriangleApplication::SubpassSetup::Pipeline' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
-    <FUNCTION>HelloTriangleApplication::SubpassSetup::{ctor}</FUNCTION>
-    <DECORATED>??0SubpassSetup@HelloTriangleApplication@@QEAA@XZ</DECORATED>
-    <FUNCLINE>217</FUNCLINE>
+    <DESCRIPTION>Variable 'SkeletalAnimationComponent&lt;SkeletonAnimation&gt;::plotV::p_x' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SkeletalAnimationComponent&lt;SkeletonAnimation&gt;::plotV::{ctor}</FUNCTION>
+    <DECORATED>??0plotV@?$SkeletalAnimationComponent@VSkeletonAnimation@@@@QEAA@XZ</DECORATED>
+    <FUNCLINE>48</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>skeletalanimationcomponent.h</FILENAME>
+      <LINE>97</LINE>
+      <COLUMN>52</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>SkeletalAnimationComponent&lt;SkeletonAnimation&gt;::evaluate</FUNCTION>
+    <DECORATED>?evaluate@?$SkeletalAnimationComponent@VSkeletonAnimation@@@@QEAAXMV?$vector@MV?$allocator@M@std@@@std@@@Z</DECORATED>
+    <FUNCLINE>69</FUNCLINE>
     <PATH></PATH>
   </DEFECT><DEFECT>
     <SFA>
@@ -2138,5 +3035,507 @@
     <FUNCTION>DrawableMesh::{ctor}</FUNCTION>
     <DECORATED>??0DrawableMesh@@QEAA@XZ</DECORATED>
     <FUNCLINE>20</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>sbbuffer.cpp</FILENAME>
+      <LINE>5</LINE>
+      <COLUMN>10</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'SbBuffer::bufferMemory' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SbBuffer::{ctor}</FUNCTION>
+    <DECORATED>??0SbBuffer@@QEAA@XZ</DECORATED>
+    <FUNCLINE>5</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>sblogicaldevice.cpp</FILENAME>
+      <LINE>9</LINE>
+      <COLUMN>17</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'SbLogicalDevice::graphicsQueue' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SbLogicalDevice::{ctor}</FUNCTION>
+    <DECORATED>??0SbLogicalDevice@@QEAA@AEAVSbPhysicalDevice@@@Z</DECORATED>
+    <FUNCLINE>9</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>sbphysicaldevice.h</FILENAME>
+      <LINE>15</LINE>
+      <COLUMN>0</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'SwapChainSupportDetails::capabilities' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SwapChainSupportDetails::{ctor}</FUNCTION>
+    <DECORATED>??0SwapChainSupportDetails@@QEAA@XZ</DECORATED>
+    <FUNCLINE>15</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>sbrenderpassattachment.cpp</FILENAME>
+      <LINE>5</LINE>
+      <COLUMN>24</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'SbRenderpassAttachment::format' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SbRenderpassAttachment::{ctor}</FUNCTION>
+    <DECORATED>??0SbRenderpassAttachment@@QEAA@_K@Z</DECORATED>
+    <FUNCLINE>5</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>sbdescriptorpool.cpp</FILENAME>
+      <LINE>7</LINE>
+      <COLUMN>18</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'SbDescriptorPool::pool' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SbDescriptorPool::{ctor}</FUNCTION>
+    <DECORATED>??0SbDescriptorPool@@QEAA@PEAUVkDevice_T@@@Z</DECORATED>
+    <FUNCLINE>7</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>sbpipelinelayout.cpp</FILENAME>
+      <LINE>127</LINE>
+      <COLUMN>18</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'SbPipelineLayout::pipelineLayout' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SbPipelineLayout::{ctor}</FUNCTION>
+    <DECORATED>??0SbPipelineLayout@@QEAA@AEBQEAUVkDevice_T@@AEBI@Z</DECORATED>
+    <FUNCLINE>127</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>sbpipeline.cpp</FILENAME>
+      <LINE>48</LINE>
+      <COLUMN>47</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>SbPipeline::colorBlending</FUNCTION>
+    <DECORATED>?colorBlending@SbPipeline@@QEAAAEAV1@I@Z</DECORATED>
+    <FUNCLINE>44</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>sbpipeline.cpp</FILENAME>
+      <LINE>73</LINE>
+      <COLUMN>37</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>SbPipeline::addBlendAttachmentState</FUNCTION>
+    <DECORATED>?addBlendAttachmentState@SbPipeline@@QEAAAEAV1@UVkPipelineColorBlendAttachmentState@@I@Z</DECORATED>
+    <FUNCLINE>69</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>sbpipeline.cpp</FILENAME>
+      <LINE>83</LINE>
+      <COLUMN>40</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>SbPipeline::addBlendAttachmentStates</FUNCTION>
+    <DECORATED>?addBlendAttachmentStates@SbPipeline@@QEAAAEAV1@UVkPipelineColorBlendAttachmentState@@II@Z</DECORATED>
+    <FUNCLINE>79</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>sbpipeline.cpp</FILENAME>
+      <LINE>129</LINE>
+      <COLUMN>12</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'SbPipeline::handle' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SbPipeline::{ctor}</FUNCTION>
+    <DECORATED>??0SbPipeline@@QEAA@XZ</DECORATED>
+    <FUNCLINE>129</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>sbrenderpass.cpp</FILENAME>
+      <LINE>9</LINE>
+      <COLUMN>14</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'SbRenderpass::renderPass' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SbRenderpass::{ctor}</FUNCTION>
+    <DECORATED>??0SbRenderpass@@QEAA@AEBVSbVulkanBase@@III@Z</DECORATED>
+    <FUNCLINE>9</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>sbrenderpass.cpp</FILENAME>
+      <LINE>151</LINE>
+      <COLUMN>23</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'SbRenderpass::Subpass::pipelineMaskAsDst' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SbRenderpass::Subpass::{ctor}</FUNCTION>
+    <DECORATED>??0Subpass@SbRenderpass@@QEAA@AEBVSbVulkanBase@@AEBI@Z</DECORATED>
+    <FUNCLINE>151</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>sbswapchain.cpp</FILENAME>
+      <LINE>9</LINE>
+      <COLUMN>13</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'SbSwapchain::swapchainAttachmentDescription' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SbSwapchain::{ctor}</FUNCTION>
+    <DECORATED>??0SbSwapchain@@QEAA@AEAVSbVulkanBase@@@Z</DECORATED>
+    <FUNCLINE>9</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>sbswapchain.cpp</FILENAME>
+      <LINE>218</LINE>
+      <COLUMN>29</COLUMN>
+    </SFA>
+    <DEFECTCODE>6001</DEFECTCODE>
+    <DESCRIPTION>Using uninitialized memory 'imageLayout'.</DESCRIPTION>
+    <FUNCTION>SbSwapchain::createAttachment</FUNCTION>
+    <DECORATED>?createAttachment@SbSwapchain@@QEAAXIW4VkFormat@@IIW4VkAttachmentLoadOp@@W4VkAttachmentStoreOp@@12@Z</DECORATED>
+    <FUNCLINE>180</FUNCLINE>
+    <PROBABILITY>1</PROBABILITY>
+    <RANK>3</RANK>
+    <CATEGORY>
+      <RULECATEGORY>mspft</RULECATEGORY>
+    </CATEGORY>
+    <PATH>
+      <SFA>
+        <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+        <FILENAME>sbswapchain.cpp</FILENAME>
+        <LINE>190</LINE>
+        <COLUMN>1</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+        <FILENAME>sbswapchain.cpp</FILENAME>
+        <LINE>191</LINE>
+        <COLUMN>1</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+        <FILENAME>sbswapchain.cpp</FILENAME>
+        <LINE>192</LINE>
+        <COLUMN>1</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+        <FILENAME>sbswapchain.cpp</FILENAME>
+        <LINE>194</LINE>
+        <COLUMN>20</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+        <FILENAME>sbswapchain.cpp</FILENAME>
+        <LINE>195</LINE>
+        <COLUMN>15</COLUMN>
+        <KEYEVENT>
+          <ID>1</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'imageLayout' is not initialized</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+        <FILENAME>sbswapchain.cpp</FILENAME>
+        <LINE>196</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+        <FILENAME>sbswapchain.cpp</FILENAME>
+        <LINE>198</LINE>
+        <COLUMN>15</COLUMN>
+        <KEYEVENT>
+          <ID>2</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Skip this branch, (assume 'usageMask' is false)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+        <FILENAME>sbswapchain.cpp</FILENAME>
+        <LINE>203</LINE>
+        <COLUMN>20</COLUMN>
+        <KEYEVENT>
+          <ID>3</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Skip this branch, (assume 'usageMask' is false)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+        <FILENAME>sbswapchain.cpp</FILENAME>
+        <LINE>209</LINE>
+        <COLUMN>6</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+        <FILENAME>sbswapchain.cpp</FILENAME>
+        <LINE>210</LINE>
+        <COLUMN>23</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+        <FILENAME>sbswapchain.cpp</FILENAME>
+        <LINE>211</LINE>
+        <COLUMN>24</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+        <FILENAME>sbswapchain.cpp</FILENAME>
+        <LINE>212</LINE>
+        <COLUMN>25</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+        <FILENAME>sbswapchain.cpp</FILENAME>
+        <LINE>213</LINE>
+        <COLUMN>24</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+        <FILENAME>sbswapchain.cpp</FILENAME>
+        <LINE>214</LINE>
+        <COLUMN>25</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+        <FILENAME>sbswapchain.cpp</FILENAME>
+        <LINE>215</LINE>
+        <COLUMN>31</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+        <FILENAME>sbswapchain.cpp</FILENAME>
+        <LINE>216</LINE>
+        <COLUMN>32</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+        <FILENAME>sbswapchain.cpp</FILENAME>
+        <LINE>217</LINE>
+        <COLUMN>31</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+        <FILENAME>sbswapchain.cpp</FILENAME>
+        <LINE>218</LINE>
+        <COLUMN>29</COLUMN>
+        <KEYEVENT>
+          <ID>4</ID>
+          <KIND>usage</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'imageLayout' is used, but may not have been initialized</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+    </PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>sbvulkanbase.cpp</FILENAME>
+      <LINE>7</LINE>
+      <COLUMN>14</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'SbVulkanBase::instance' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>SbVulkanBase::{ctor}</FUNCTION>
+    <DECORATED>??0SbVulkanBase@@QEAA@XZ</DECORATED>
+    <FUNCLINE>7</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>spline.cpp</FILENAME>
+      <LINE>66</LINE>
+      <COLUMN>22</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'Vector3Interpolation::t1' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>Vector3Interpolation::{ctor}</FUNCTION>
+    <DECORATED>??0Vector3Interpolation@@QEAA@XZ</DECORATED>
+    <FUNCLINE>66</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>uncompressedanimation.cpp</FILENAME>
+      <LINE>98</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>UncompressedAnimation::plot</FUNCTION>
+    <DECORATED>?plot@UncompressedAnimation@@QEAAXUSkeleton@@@Z</DECORATED>
+    <FUNCLINE>5</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>uncompressedanimation.cpp</FILENAME>
+      <LINE>97</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>UncompressedAnimation::plot</FUNCTION>
+    <DECORATED>?plot@UncompressedAnimation@@QEAAXUSkeleton@@@Z</DECORATED>
+    <FUNCLINE>5</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>uncompressedanimation.cpp</FILENAME>
+      <LINE>96</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>UncompressedAnimation::plot</FUNCTION>
+    <DECORATED>?plot@UncompressedAnimation@@QEAAXUSkeleton@@@Z</DECORATED>
+    <FUNCLINE>5</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>uncompressedanimation.cpp</FILENAME>
+      <LINE>95</LINE>
+      <COLUMN>27</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>UncompressedAnimation::plot</FUNCTION>
+    <DECORATED>?plot@UncompressedAnimation@@QEAAXUSkeleton@@@Z</DECORATED>
+    <FUNCLINE>5</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>uncompressedanimation.cpp</FILENAME>
+      <LINE>148</LINE>
+      <COLUMN>3</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>UncompressedAnimation::evaluate</FUNCTION>
+    <DECORATED>?evaluate@UncompressedAnimation@@QEAAXUSkeleton@@N@Z</DECORATED>
+    <FUNCLINE>130</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>uncompressedanimation.cpp</FILENAME>
+      <LINE>147</LINE>
+      <COLUMN>3</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>UncompressedAnimation::evaluate</FUNCTION>
+    <DECORATED>?evaluate@UncompressedAnimation@@QEAAXUSkeleton@@N@Z</DECORATED>
+    <FUNCLINE>130</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>uncompressedanimation.cpp</FILENAME>
+      <LINE>146</LINE>
+      <COLUMN>3</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>UncompressedAnimation::evaluate</FUNCTION>
+    <DECORATED>?evaluate@UncompressedAnimation@@QEAAXUSkeleton@@N@Z</DECORATED>
+    <FUNCLINE>130</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>uncompressedanimation.cpp</FILENAME>
+      <LINE>145</LINE>
+      <COLUMN>26</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>UncompressedAnimation::evaluate</FUNCTION>
+    <DECORATED>?evaluate@UncompressedAnimation@@QEAAXUSkeleton@@N@Z</DECORATED>
+    <FUNCLINE>130</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>uncompressedanimation.cpp</FILENAME>
+      <LINE>262</LINE>
+      <COLUMN>23</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'UncompressedAnimation::latestRotData' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>UncompressedAnimation::{ctor}</FUNCTION>
+    <DECORATED>??0UncompressedAnimation@@QEAA@HAEAVUncompressedAnimationKeys@@@Z</DECORATED>
+    <FUNCLINE>262</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>uncompressedanimation.cpp</FILENAME>
+      <LINE>64</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'UncompressedAnimation::plot::plotV::p_z' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>UncompressedAnimation::plot::plotV::{ctor}</FUNCTION>
+    <DECORATED>??0plotV@?1??plot@UncompressedAnimation@@QEAAXUSkeleton@@@Z@QEAA@XZ</DECORATED>
+    <FUNCLINE>64</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>uncompressedanimation.cpp</FILENAME>
+      <LINE>37</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'UncompressedAnimation::plot::plotQ::p_w' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>UncompressedAnimation::plot::plotQ::{ctor}</FUNCTION>
+    <DECORATED>??0plotQ@?1??plot@UncompressedAnimation@@QEAAXUSkeleton@@@Z@QEAA@XZ</DECORATED>
+    <FUNCLINE>37</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\colin\source\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>uncompressedanimationkeys.cpp</FILENAME>
+      <LINE>23</LINE>
+      <COLUMN>27</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'UncompressedAnimationKeys::animationDuration' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>UncompressedAnimationKeys::{ctor}</FUNCTION>
+    <DECORATED>??0UncompressedAnimationKeys@@QEAA@XZ</DECORATED>
+    <FUNCLINE>23</FUNCLINE>
     <PATH></PATH>
   </DEFECT></DEFECTS>
