@@ -1,6 +1,7 @@
 #pragma once
 
 #include "vulkan/vulkan.h"
+#include "vulkan/vulkan.hpp"
 
 #include <vector>
 #include <iostream>
@@ -29,9 +30,11 @@ const bool enableValidationLayers = true;
 class SbVulkanBase
 {
 public:
-	VkInstance instance;
-	VkDebugUtilsMessengerEXT debugMessenger;
-	VkSurfaceKHR surface;
+	vk::Instance instance;	
+	//VkDebugUtilsMessengerEXT debugMessenger;
+	vk::DebugUtilsMessengerEXT debugMessenger;
+
+	vk::SurfaceKHR surface;
 
 	std::unique_ptr<SbPhysicalDevice> physicalDevice;
 	std::unique_ptr<SbLogicalDevice> logicalDevice;
@@ -71,7 +74,7 @@ private:
 	static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT * pCallbackData, void * pUserData);
 
 
-	VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT * pCreateInfo, const VkAllocationCallbacks * pAllocator, VkDebugUtilsMessengerEXT * pDebugMessenger);
+	//VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT * pCreateInfo, const VkAllocationCallbacks * pAllocator, VkDebugUtilsMessengerEXT * pDebugMessenger);
 
 
 

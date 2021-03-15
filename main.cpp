@@ -69,6 +69,7 @@
 
 #include "SbUniformBuffer.h"
 
+#include "vulkan/vulkan.hpp"
 
 
 namespace vkinit = vks::initializers;
@@ -818,6 +819,16 @@ private:
 		samplerInfo.minLod = 0;
 		samplerInfo.maxLod = static_cast<float>(mipLevels);
 		samplerInfo.mipLodBias = 0;
+
+		//auto samplerInfo = vk::SamplerCreateInfo(vk::SamplerCreateFlags(),
+		//	vk::Filter::eLinear, vk::Filter::eLinear, vk::SamplerMipmapMode::eLinear, 
+		//	vk::SamplerAddressMode::eRepeat, vk::SamplerAddressMode::eRepeat, vk::SamplerAddressMode::eRepeat,
+		//	0, VK_TRUE, 16, 
+		//	VK_FALSE, vk::CompareOp::eAlways,
+		//	0, static_cast<float>(mipLevels),
+		//	vk::BorderColor::eIntOpaqueBlack,VK_FALSE);
+		//
+		//vk::create
 
 		if (vkCreateSampler(vulkanBase->logicalDevice->device, &samplerInfo, nullptr, &textureSampler) != VK_SUCCESS) {
 			throw std::runtime_error("failed to create texture sampler!");

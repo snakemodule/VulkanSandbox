@@ -1,9 +1,5 @@
 #include "SbVulkanBase.h"
 
-
-
-
-
 SbVulkanBase::SbVulkanBase()
 {
 }
@@ -48,9 +44,11 @@ void SbVulkanBase::createInstance(bool validation) {
 		createInfo.pNext = nullptr;
 	}
 
-	if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS) {
+	VkInstance instanceHandle;
+	if (vkCreateInstance(&createInfo, nullptr, &instanceHandle) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create instance!");
 	}
+	instance = vk::Instance(instanceHandle);	
 }
 
 bool SbVulkanBase::checkValidationLayerSupport() {
@@ -107,30 +105,38 @@ VKAPI_ATTR VkBool32 VKAPI_CALL SbVulkanBase::debugCallback(VkDebugUtilsMessageSe
 }
 
 void SbVulkanBase::setupDebugMessenger(bool validation) {
-	if (validation) return;
+	if (!validation) return; //todo wtf is this
 
 	VkDebugUtilsMessengerCreateInfoEXT createInfo;
 	populateDebugMessengerCreateInfo(createInfo);
 
-	if (CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger) != VK_SUCCESS) {
-		throw std::runtime_error("failed to set up debug messenger!");
-	}
+	vk::DispatchLoaderDynamic dldy;
+	dldy.init(instance);
+
+
+	//if (CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger) != VK_SUCCESS) {
+	//	throw std::runtime_error("failed to set up debug messenger!");
+	//}
+	debugMessenger = instance.createDebugUtilsMessengerEXT(vk::DebugUtilsMessengerCreateInfoEXT(createInfo), nullptr, dldy);
 }
 
-VkResult SbVulkanBase::CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) {
-	auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
-	if (func != nullptr) {
-		return func(instance, pCreateInfo, pAllocator, pDebugMessenger);
-	}
-	else {
-		return VK_ERROR_EXTENSION_NOT_PRESENT;
-	}
-}
+//VkResult SbVulkanBase::CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) {
+//	auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
+//	if (func != nullptr) {
+//		return func(instance, pCreateInfo, pAllocator, pDebugMessenger);
+//	}
+//	else {
+//		return VK_ERROR_EXTENSION_NOT_PRESENT;
+//	}
+//}
 
-void SbVulkanBase::createSurface(GLFWwindow* window) {
-	if (glfwCreateWindowSurface(instance, window, nullptr, &surface) != VK_SUCCESS) {
+void SbVulkanBase::createSurface(GLFWwindow* window) 
+{	
+	VkSurfaceKHR surfaceHandle;
+	if (glfwCreateWindowSurface(instance, window, nullptr, &surfaceHandle) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create window surface!");
 	}
+	surface = vk::SurfaceKHR(surfaceHandle);
 }
 
 void SbVulkanBase::pickPhysicalDevice()
