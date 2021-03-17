@@ -68,6 +68,8 @@
 #include "SbRenderpass.h"
 
 #include "SbUniformBuffer.h"
+#include "SbImage.h"
+#include "SbTextureImage.h"
 
 #include "vulkan/vulkan.hpp"
 
@@ -271,11 +273,13 @@ private:
 		kSubpass_MAX = kSubpass_COUNT - 1
 	};
 
-	uint32_t mipLevels;
-	VkImage textureImage;
-	VkDeviceMemory textureImageMemory;
-	VkImageView textureImageView;
-	VkSampler textureSampler;
+	//uint32_t mipLevels;
+	//VkImage textureImage;
+	//VkDeviceMemory textureImageMemory;
+	//VkImageView textureImageView;
+	std::unique_ptr<SbTextureImage> texture;
+
+	vk::Sampler textureSampler;
 
 	//custom model struct
 	Model* mymodel = nullptr;
@@ -427,11 +431,11 @@ private:
 	void cleanup() {
 		cleanupSwapChain();
 
-		vkDestroySampler(vulkanBase->logicalDevice->device, textureSampler, nullptr);
-		vkDestroyImageView(vulkanBase->logicalDevice->device, textureImageView, nullptr);
+		//vkDestroySampler(vulkanBase->logicalDevice->device, textureSampler, nullptr);
+		//vkDestroyImageView(vulkanBase->logicalDevice->device, textureImageView, nullptr);
 
-		vkDestroyImage(vulkanBase->logicalDevice->device, textureImage, nullptr);
-		vkFreeMemory(vulkanBase->logicalDevice->device, textureImageMemory, nullptr);
+		//vkDestroyImage(vulkanBase->logicalDevice->device, textureImage, nullptr);
+		//vkFreeMemory(vulkanBase->logicalDevice->device, textureImageMemory, nullptr);
 
 		//vkDestroyDescriptorSetLayout(vulkanBase->logicalDevice->device, attachmentWriteSubpass.descriptorSets.get()->DSLayout, nullptr);
 		//vkDestroyDescriptorSetLayout(vulkanBase->logicalDevice->device, attachmentReadSubpass.descriptorSets.get()->DSLayout, nullptr);
@@ -615,11 +619,12 @@ private:
 			}
 			//fragment
 			{
+				VkImageView  v = texture->textureImageView;
 				DS.addImageBinding(
 					vkinit::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1),
 					{
 						textureSampler,
-						&textureImageView,
+						&v,//&textureImageView,
 						VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
 						SbPipelineLayout::eSharingMode_Shared
 					});
@@ -683,11 +688,12 @@ private:
 			}
 			//frag
 			{
+				VkImageView v = texture->textureImageView;
 				DS.addImageBinding(
 					vkinit::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1),
 					{
 						textureSampler,
-						&textureImageView,
+						&v,
 						VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
 						SbPipelineLayout::eSharingMode_Shared
 					});
@@ -764,75 +770,21 @@ private:
 	
 
 	void createTextureImage() {
-
 		//TODO move loading to model loading. get model with textures
-		int texWidth, texHeight, texChannels;
-		stbi_uc* pixels = stbi_load(TEXTURE_PATH.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
-		VkDeviceSize imageSize = texWidth * texHeight * 4;
-		mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
-
-		if (!pixels) {
-			throw std::runtime_error("failed to load texture image!");
-		}
-
-		VkBuffer stagingBuffer;
-		VkDeviceMemory stagingBufferMemory;
-		vulkanBase->createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
-
-		void* data;
-		vkMapMemory(vulkanBase->logicalDevice->device, stagingBufferMemory, 0, imageSize, 0, &data);
-		memcpy(data, pixels, static_cast<size_t>(imageSize));
-		vkUnmapMemory(vulkanBase->logicalDevice->device, stagingBufferMemory);
-
-		stbi_image_free(pixels);
-
-		vulkanBase->createImage(texWidth, texHeight, mipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, textureImage, textureImageMemory);
-
-		vulkanBase->commandPool->transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mipLevels);
-		vulkanBase->commandPool->copyBufferToImage(stagingBuffer, textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
-		//transitioned to VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL while generating mipmaps
-
-		vkDestroyBuffer(vulkanBase->logicalDevice->device, stagingBuffer, nullptr);
-		vkFreeMemory(vulkanBase->logicalDevice->device, stagingBufferMemory, nullptr);
-
-		vulkanBase->commandPool->generateMipmaps(textureImage, VK_FORMAT_R8G8B8A8_UNORM, texWidth, texHeight, mipLevels);
-
-		//createtextureimageview
-		textureImageView = vks::helper::createImageView(vulkanBase->logicalDevice->device, textureImage, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_ASPECT_COLOR_BIT, mipLevels);
+		texture = std::make_unique<SbTextureImage>(*vulkanBase, TEXTURE_PATH);
 	}
 
 	void createTextureSampler() {
-		VkSamplerCreateInfo samplerInfo = {};
-		samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-		samplerInfo.magFilter = VK_FILTER_LINEAR;
-		samplerInfo.minFilter = VK_FILTER_LINEAR;
-		samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-		samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-		samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-		samplerInfo.anisotropyEnable = VK_TRUE;
-		samplerInfo.maxAnisotropy = 16;
-		samplerInfo.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
-		samplerInfo.unnormalizedCoordinates = VK_FALSE;
-		samplerInfo.compareEnable = VK_FALSE;
-		samplerInfo.compareOp = VK_COMPARE_OP_ALWAYS;
-		samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
-		samplerInfo.minLod = 0;
-		samplerInfo.maxLod = static_cast<float>(mipLevels);
-		samplerInfo.mipLodBias = 0;
 
-		//auto samplerInfo = vk::SamplerCreateInfo(vk::SamplerCreateFlags(),
-		//	vk::Filter::eLinear, vk::Filter::eLinear, vk::SamplerMipmapMode::eLinear, 
-		//	vk::SamplerAddressMode::eRepeat, vk::SamplerAddressMode::eRepeat, vk::SamplerAddressMode::eRepeat,
-		//	0, VK_TRUE, 16, 
-		//	VK_FALSE, vk::CompareOp::eAlways,
-		//	0, static_cast<float>(mipLevels),
-		//	vk::BorderColor::eIntOpaqueBlack,VK_FALSE);
-		//
-		//vk::create
+		auto samplerInfo = vk::SamplerCreateInfo(vk::SamplerCreateFlags(),
+			vk::Filter::eLinear, vk::Filter::eLinear, vk::SamplerMipmapMode::eLinear, 
+			vk::SamplerAddressMode::eRepeat, vk::SamplerAddressMode::eRepeat, vk::SamplerAddressMode::eRepeat,
+			0, VK_TRUE, 16, 
+			VK_FALSE, vk::CompareOp::eAlways,
+			0, texture->mipLevels, //todo this sampler is hardcoded to use the miplevels of the one and only texture
+			vk::BorderColor::eIntOpaqueBlack,VK_FALSE);
 
-		if (vkCreateSampler(vulkanBase->logicalDevice->device, &samplerInfo, nullptr, &textureSampler) != VK_SUCCESS) {
-			throw std::runtime_error("failed to create texture sampler!");
-		}
+		textureSampler = vulkanBase->getDevice().createSampler(samplerInfo);
 	}
 	
 	Assimp::Importer modelImporter;
@@ -957,68 +909,48 @@ private:
 	//TODO make function take model argument?
 	void createVertexBuffer() {
 
+		using BufferUsage = vk::BufferUsageFlagBits;
+		using MemoryProperty = vk::MemoryPropertyFlagBits;
+
 		for (size_t i = 0; i < mymodel->meshes.size(); i++)
 		{
-			VkDeviceSize bufferSize = sizeof(Vertex) * mymodel->meshes[i].vertexBuffer.size();
-			VkDeviceSize indexBufferSize = sizeof(unsigned int) * mymodel->meshes[i].indexBuffer.size();
+			vk::DeviceSize bufferSize = sizeof(Vertex) * mymodel->meshes[i].vertexBuffer.size();
+			vk::DeviceSize indexBufferSize = sizeof(unsigned int) * mymodel->meshes[i].indexBuffer.size();
 
 			//------
-			VkBuffer stagingBuffer;
-			VkDeviceMemory stagingBufferMemory;
-			vulkanBase->createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
-
-			VkBuffer stagingIndexBuffer;
-			VkDeviceMemory stagingIndexBufferMemory;
-			vulkanBase->createBuffer(indexBufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingIndexBuffer, stagingIndexBufferMemory);
-
+			SbBuffer stagingBuffer = SbBuffer(*vulkanBase ,bufferSize, BufferUsage::eTransferSrc,
+				MemoryProperty::eHostVisible | MemoryProperty::eHostCoherent);
+			SbBuffer stagingIndexBuffer = SbBuffer(*vulkanBase, indexBufferSize, vk::BufferUsageFlagBits::eTransferSrc,
+				MemoryProperty::eHostVisible | MemoryProperty::eHostCoherent);
 			//------
-			void* data;
-			vkMapMemory(vulkanBase->logicalDevice->device, stagingBufferMemory, 0, bufferSize, 0, &data);
-			memcpy(data, mymodel->meshes[i].vertexBuffer.data(), (size_t)bufferSize);
-			vkUnmapMemory(vulkanBase->logicalDevice->device, stagingBufferMemory);
-
-
-			void* indexdata;
-			vkMapMemory(vulkanBase->logicalDevice->device, stagingIndexBufferMemory, 0, indexBufferSize, 0, &indexdata);
-			memcpy(indexdata, mymodel->meshes[i].indexBuffer.data(), (size_t)indexBufferSize);
-			vkUnmapMemory(vulkanBase->logicalDevice->device, stagingIndexBufferMemory);
+			stagingBuffer.MapAndFill(vulkanBase->getDevice(), mymodel->meshes[i].vertexBuffer.data(), bufferSize);
+			stagingIndexBuffer.MapAndFill(vulkanBase->getDevice(), mymodel->meshes[i].indexBuffer.data(), indexBufferSize);
 			//-----
-			VkBuffer newVertexBuffer;
-			VkDeviceMemory newVertexBufferMemory;
-			vulkanBase->createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, newVertexBuffer, newVertexBufferMemory);
-
-			VkBuffer newIndexBuffer;
-			VkDeviceMemory newIndexBufferMemory;
-			vulkanBase->createBuffer(indexBufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, newIndexBuffer, newIndexBufferMemory);
-			
-			//----
+			SbBuffer newVertexBuffer = SbBuffer(*vulkanBase, bufferSize,
+				BufferUsage::eTransferDst | BufferUsage::eVertexBuffer, MemoryProperty::eDeviceLocal);
+			SbBuffer newIndexBuffer = SbBuffer(*vulkanBase, indexBufferSize,
+				BufferUsage::eTransferDst | BufferUsage::eIndexBuffer, MemoryProperty::eDeviceLocal);
+			//---- todo what should happen when new buffers go out of scope?
 			drawables.emplace_back();
 			drawables.back().id = drawables.size() - 1;
-			drawables.back().VertexBuffer = newVertexBuffer;
-			drawables.back().IndexBuffer = newIndexBuffer;
-			drawables.back().VertexBufferMemory = newVertexBufferMemory;
-			drawables.back().IndexBufferMemory = newIndexBufferMemory;
+			drawables.back().VertexBuffer = newVertexBuffer.buffer;
+			drawables.back().IndexBuffer = newIndexBuffer.buffer;
+			drawables.back().VertexBufferMemory = newVertexBuffer.memory;
+			drawables.back().IndexBufferMemory = newIndexBuffer.memory;
 			drawables.back().IndexCount = mymodel->meshes[i].indexBuffer.size();
 			drawables.back().AmbientColor = mymodel->meshes[i].material.ambientColor;
 			drawables.back().DiffuseColor = mymodel->meshes[i].material.diffuseColor;
 			drawables.back().SpecularColor = mymodel->meshes[i].material.specularColor;
-
-
 			//vertexBuffers.push_back(newVertexBuffer);
-			//vertexBufferMemory.push_back(newVertexBufferMemory);
-			
+			//vertexBufferMemory.push_back(newVertexBufferMemory);			
 			//indexBuffer.push_back(newIndexBuffer);
 			//indexBufferMemory.push_back(newIndexBufferMemory);
 			//-----
-
-			vulkanBase->commandPool->copyBuffer(stagingBuffer, drawables.back().VertexBuffer, bufferSize);
-			vulkanBase->commandPool->copyBuffer(stagingIndexBuffer, drawables.back().IndexBuffer, indexBufferSize);
-			//----
-			vkDestroyBuffer(vulkanBase->logicalDevice->device, stagingBuffer, nullptr);
-			vkFreeMemory(vulkanBase->logicalDevice->device, stagingBufferMemory, nullptr);
-
-			vkDestroyBuffer(vulkanBase->logicalDevice->device, stagingIndexBuffer, nullptr);
-			vkFreeMemory(vulkanBase->logicalDevice->device, stagingIndexBufferMemory, nullptr);
+			stagingBuffer.CopyBuffer(*vulkanBase, newVertexBuffer);
+			stagingIndexBuffer.CopyBuffer(*vulkanBase, newIndexBuffer);
+			
+			stagingBuffer.Destroy(vulkanBase->getDevice());
+			stagingIndexBuffer.Destroy(vulkanBase->getDevice());			
 		}
 		
 	}

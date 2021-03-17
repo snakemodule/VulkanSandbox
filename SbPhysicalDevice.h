@@ -1,6 +1,7 @@
 #pragma once
 
 #include "vulkan/vulkan.h"
+#include "vulkan/vulkan.hpp"
 #include <vector>
 #include <optional>
 
@@ -26,7 +27,7 @@ struct QueueFamilyIndices {
 class SbPhysicalDevice
 {
 public:
-	VkPhysicalDevice device = VK_NULL_HANDLE;
+	vk::PhysicalDevice device;
 	VkSampleCountFlagBits msaaSamples = VK_SAMPLE_COUNT_1_BIT;
 
 	SbPhysicalDevice(VkInstance instance, VkSurfaceKHR );

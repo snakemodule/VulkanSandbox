@@ -180,6 +180,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Entities.cpp" />
+    <ClCompile Include="SbImage.cpp" />
+    <ClCompile Include="SbTextureImage.cpp" />
     <ClCompile Include="SkeletalAnimationComponent.cpp" />
     <ClCompile Include="SkeletonAnimation.cpp" />
     <ClCompile Include="AnimationKeys.cpp" />
@@ -210,6 +212,8 @@
   <ItemGroup>
     <ClInclude Include="algo.hpp" />
     <ClInclude Include="Entities.h" />
+    <ClInclude Include="SbImage.h" />
+    <ClInclude Include="SbTextureImage.h" />
     <ClInclude Include="Skeleton.h" />
     <ClInclude Include="UncompressedAnimation.h" />
     <ClInclude Include="UncompressedAnimationKeys.h" />

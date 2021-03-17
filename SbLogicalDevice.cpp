@@ -54,10 +54,14 @@ void SbLogicalDevice::createLogicalDevice(VkSurfaceKHR surface, bool validation,
 		createInfo.enabledLayerCount = 0;
 	}
 
-	if (vkCreateDevice(physDevice.device, &createInfo, nullptr, &device) != VK_SUCCESS) {
-		throw std::runtime_error("failed to create logical device!");
-	}
+	//todo cleanup
+	//if (vkCreateDevice(physDevice.device, &createInfo, nullptr, &device) != VK_SUCCESS) {
+	//	throw std::runtime_error("failed to create logical device!");
+	//}
 
-	vkGetDeviceQueue(device, indices.graphicsFamily.value(), 0, &graphicsQueue);
-	vkGetDeviceQueue(device, indices.presentFamily.value(), 0, &presentQueue);
+	device = physDevice.device.createDevice(vk::DeviceCreateInfo(createInfo));
+	//vkGetDeviceQueue(device, indices.graphicsFamily.value(), 0, &graphicsQueue);
+	//vkGetDeviceQueue(device, indices.presentFamily.value(), 0, &presentQueue);
+	graphicsQueue = device.getQueue(indices.graphicsFamily.value(), 0);
+	presentQueue = device.getQueue(indices.presentFamily.value(), 0);
 }

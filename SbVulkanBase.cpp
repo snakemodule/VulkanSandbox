@@ -1,5 +1,7 @@
 #include "SbVulkanBase.h"
 
+#include "SbBuffer.h"
+
 SbVulkanBase::SbVulkanBase()
 {
 }
@@ -226,6 +228,12 @@ void SbVulkanBase::submitCommandBuffers(std::vector<VkCommandBuffer> cmds,
 }
 
 
+SbBuffer SbVulkanBase::createBufferObject(vk::DeviceSize size, vk::BufferUsageFlags usage,
+	vk::MemoryPropertyFlags properties) 
+{
+	return SbBuffer(*this, size, usage, properties);
+}
+
 void SbVulkanBase::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory) {
 	VkBufferCreateInfo bufferInfo = {};
 	bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -251,6 +259,9 @@ void SbVulkanBase::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkM
 
 	vkBindBufferMemory(logicalDevice->device, buffer, bufferMemory, 0);
 }
+/*
+*/
+
 
 VkFormat SbVulkanBase::findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) {
 	for (VkFormat format : candidates) {
