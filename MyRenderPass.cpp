@@ -64,3 +64,8 @@ void MyRenderPass::setUpRenderpass(SbSwapchain& swapchain)
 	createRenderpass(swapchain);
 }
 
+void MyRenderPass::createAttachmentFor(SbSwapchain& swapchain, int attachmentIndex)
+{
+	swapchain.createAttachment(attachmentIndex, attachmentFormatTable[attachmentIndex].first, attachmentFormatTable[attachmentIndex].second);
+}
+

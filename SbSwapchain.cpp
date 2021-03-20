@@ -16,7 +16,7 @@ SbSwapchain::~SbSwapchain()
 {
 }
 
-void SbSwapchain::createSwapChain(VkSurfaceKHR surface, GLFWwindow* window, uint32_t attachmentCount)
+void SbSwapchain::createSwapChain(VkSurfaceKHR surface, GLFWwindow* window)
 {
 	SwapChainSupportDetails swapChainSupport = physicalDevice.querySwapChainSupport(physicalDevice.device, surface);
 
@@ -63,13 +63,14 @@ void SbSwapchain::createSwapChain(VkSurfaceKHR surface, GLFWwindow* window, uint
 		throw std::runtime_error("failed to create swap chain!");
 	}
 
-	createImageViews();
-	
-	const SbSwapchain::SwapchainAttachment as(swapChainImages.size());
-	swapchainAttachmentSets = std::vector<SbSwapchain::SwapchainAttachment>(attachmentCount-1, as);
-
+	createImageViews(); // here we set the size of the swapchain
+		
 }
 
+void SbSwapchain::prepareAttachmentSets(int attachmentCount)
+{
+	swapchainAttachmentSets = std::vector<SbSwapchain::SwapchainAttachment>(attachmentCount - 1, SbSwapchain::SwapchainAttachment(swapChainImages.size()));
+}
 
 VkSurfaceFormatKHR SbSwapchain::chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) {
 	for (const auto& availableFormat : availableFormats) {

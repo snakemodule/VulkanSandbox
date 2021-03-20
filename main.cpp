@@ -342,10 +342,23 @@ private:
 		//createLogicalDevice();
 		createCommandPool();
 
-		createSwapChain();
+		
 
-		createRenderPass();
-		createFramebuffers();
+		swapchain = std::make_unique<SbSwapchain>(*vulkanBase);
+		swapchain->createSwapChain(vulkanBase->surface, window);
+
+		//createAttachmentResources()
+		//swapchain->createAttachment(kAttachment_POSITION, VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);	// (World space) Positions		
+		//swapchain->createAttachment(kAttachment_NORMAL, VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);		// (World space) Normals		
+		//swapchain->createAttachment(kAttachment_ALBEDO, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
+		//swapchain->createAttachment(kAttachment_DEPTH, vulkanBase->findDepthFormat(), VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT);
+
+		MyRenderPass* pass = new MyRenderPass(*vulkanBase, *swapchain);
+		renderPass = std::unique_ptr<MyRenderPass>(pass);
+
+		swapchain->createFramebuffers(renderPass->renderPass);
+
+		
 
 		createTextureImage();
 		createTextureSampler();
@@ -487,12 +500,12 @@ private:
 
 		cleanupSwapChain();
 
-		createSwapChain();
+		//createSwapChain();
 		//createImageViews(); moved to swapchain creation
-		createRenderPass();
+		//createRenderPass();
 		createPipelines();
 		//createAttachmentResources();
-		createFramebuffers();
+		//createFramebuffers();
 		createUniformBuffers();
 		createDescriptorPool();
 		//createDescriptorSets();
@@ -509,27 +522,8 @@ private:
 		vulkanBase->createLogicalDevice();
 	}
 
-	void createSwapChain() {
-		swapchain = std::make_unique<SbSwapchain>(*vulkanBase);
-		swapchain->createSwapChain(vulkanBase->surface, window, kAttachment_COUNT);
-
-		//createAttachmentResources()
-		swapchain->createAttachment(kAttachment_POSITION, VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);	// (World space) Positions		
-		swapchain->createAttachment(kAttachment_NORMAL, VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);		// (World space) Normals		
-		swapchain->createAttachment(kAttachment_ALBEDO, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
-		swapchain->createAttachment(kAttachment_DEPTH, vulkanBase->findDepthFormat(), VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT);
-	}
 	
-	void createRenderPass() {
-
-		MyRenderPass* pass = new MyRenderPass(*vulkanBase, *swapchain);
-		renderPass = std::unique_ptr<MyRenderPass>(pass);
-				
-	}
-
-	void createFramebuffers() {
-		swapchain->createFramebuffers(renderPass->renderPass);
-	}
+		
 
 	void createDescriptorSetLayout() 
 	{	

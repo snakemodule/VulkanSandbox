@@ -36,7 +36,8 @@ public:
 	SbSwapchain(SbVulkanBase & base);
 	~SbSwapchain();
 
-	void createSwapChain(VkSurfaceKHR surface, GLFWwindow * window, uint32_t attachmentCount);
+	void createSwapChain(VkSurfaceKHR surface, GLFWwindow * window);
+	void prepareAttachmentSets(int attachmentCount);
 
 
 	SbVulkanBase & vulkanBase;
