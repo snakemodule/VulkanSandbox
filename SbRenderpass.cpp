@@ -18,10 +18,10 @@ SbRenderpass::~SbRenderpass()
 {
 }
 
-void SbRenderpass::addAttachment(uint32_t attachmentIndex, VkAttachmentDescription desc)
-{
-	attachments[attachmentIndex] = desc;
-}
+//void SbRenderpass::addAttachment(uint32_t attachmentIndex, VkAttachmentDescription desc)
+//{
+//	attachments[attachmentIndex] = desc;
+//}
 
 void SbRenderpass::addSwapchainAttachments(SbSwapchain & swapchain)
 {
@@ -49,25 +49,25 @@ void SbRenderpass::addInputAttachmentRef(uint32_t subpassIndex, uint32_t attachm
 	subpasses[subpassIndex].inputAttachments.push_back(ref);
 }
 
-void SbRenderpass::addSyncMasks(uint32_t subpassIndex, VkPipelineStageFlags pipelineMaskAsDst, VkPipelineStageFlags pipelineMaskAsSrc, VkAccessFlags accessMaskAsDst, VkAccessFlags accessMaskAsSrc)
-{
-	subpasses[subpassIndex].pipelineMaskAsDst = pipelineMaskAsDst;
-	subpasses[subpassIndex].pipelineMaskAsSrc = pipelineMaskAsSrc;
-	subpasses[subpassIndex].accessMaskAsDst = accessMaskAsDst;
-	subpasses[subpassIndex].accessMaskAsSrc = accessMaskAsSrc;
-}
+//void SbRenderpass::addSyncMasks(uint32_t subpassIndex, VkPipelineStageFlags pipelineMaskAsDst, VkPipelineStageFlags pipelineMaskAsSrc, VkAccessFlags accessMaskAsDst, VkAccessFlags accessMaskAsSrc)
+//{
+//	subpasses[subpassIndex].pipelineMaskAsDst = pipelineMaskAsDst;
+//	subpasses[subpassIndex].pipelineMaskAsSrc = pipelineMaskAsSrc;
+//	subpasses[subpassIndex].accessMaskAsDst = accessMaskAsDst;
+//	subpasses[subpassIndex].accessMaskAsSrc = accessMaskAsSrc;
+//}
 
-void SbRenderpass::addDependency(uint32_t srcSubpassIndex, uint32_t dstSubpassIndex)
-{
-	dependencies.push_back(std::pair<uint32_t, uint32_t>(srcSubpassIndex, dstSubpassIndex));
-}
+//void SbRenderpass::addDependency(uint32_t srcSubpassIndex, uint32_t dstSubpassIndex)
+//{
+//	dependencies.push_back(std::pair<uint32_t, uint32_t>(srcSubpassIndex, dstSubpassIndex));
+//}
 
 void SbRenderpass::addDependency(VkSubpassDependency dep)
 {
 	premadeDependencies.push_back(dep);
 }
 
-void SbRenderpass::createRenderpass(SbSwapchain swapchain)
+void SbRenderpass::createRenderpass(SbSwapchain& swapchain)
 {
 	std::vector<VkSubpassDependency> vkDependencies;
 	if (premadeDependencies.size() != 0)

@@ -1,9 +1,7 @@
 #pragma once
 
 #include "vulkan/vulkan.h"
-
 #include <vector>
-
 #include "VulkanInitializers.hpp"
 
 //encapsulates pipeline creation using named parameter idiom.
@@ -28,14 +26,12 @@ private:
 public:
 	VkPipeline handle;
 
-
 	//obligatory
 	SbPipeline& layout(const VkPipelineLayout & pipelineLayout);
 	SbPipeline& subpassIndex(const uint32_t & subpass);
 	SbPipeline& addShaderStage(const VkPipelineShaderStageCreateInfo & shaderStage);
 	SbPipeline& addBlendAttachmentState(VkPipelineColorBlendAttachmentState blend, uint32_t index);
 	SbPipeline& addBlendAttachmentStates(VkPipelineColorBlendAttachmentState blend, uint32_t startIndex, uint32_t endIndex);
-
 
 	//optional parameters
 	SbPipeline & vertexBindingDescription(const std::vector<VkVertexInputBindingDescription>& v);

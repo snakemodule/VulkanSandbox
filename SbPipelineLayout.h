@@ -70,9 +70,6 @@ public:
 	void createDSLayout();
 	void createPipelineLayout(); //creates pipelinelayout using only this descriptor set
 
-
-
-
 };
 
 

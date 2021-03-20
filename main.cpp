@@ -66,12 +66,17 @@
 //#include "SbSwapchain.h"
 
 #include "SbRenderpass.h"
+#include "MyRenderPass.h"
 
 #include "SbUniformBuffer.h"
 #include "SbImage.h"
 #include "SbTextureImage.h"
 
 #include "vulkan/vulkan.hpp"
+
+
+#include "spirv-cross/spirv_reflect.hpp"
+#include "spirvloader.h"
 
 
 namespace vkinit = vks::initializers;
@@ -83,8 +88,6 @@ const std::string MODEL_PATH = "models/chalet.obj";
 const std::string TEXTURE_PATH = "textures/chalet.jpg";
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
-
-
 
 // Wrapper functions for aligned memory allocation
 // There is currently no standard for this in C++ that works across all platforms and vendors, so we abstract this
@@ -427,7 +430,6 @@ private:
 
 		descriptorPool->destroy();
 	}
-
 	void cleanup() {
 		cleanupSwapChain();
 
@@ -519,86 +521,10 @@ private:
 	}
 	
 	void createRenderPass() {
-		renderPass = std::make_unique<SbRenderpass>(*vulkanBase, kSubpass_COUNT, kAttachment_COUNT, swapchain->getSize());
 
-		renderPass->addSwapchainAttachments(*swapchain);
-
-		renderPass->addColorAttachmentRef(kSubpass_GBUF, kAttachment_BACK);
-		renderPass->addColorAttachmentRef(kSubpass_GBUF, kAttachment_POSITION);
-		renderPass->addColorAttachmentRef(kSubpass_GBUF, kAttachment_NORMAL);
-		renderPass->addColorAttachmentRef(kSubpass_GBUF, kAttachment_ALBEDO);
-		renderPass->setDepthStencilAttachmentRef(kSubpass_GBUF, kAttachment_DEPTH);
-
-		renderPass->addColorAttachmentRef(kSubpass_COMPOSE, kAttachment_BACK);
-		renderPass->addInputAttachmentRef(kSubpass_COMPOSE, kAttachment_POSITION); 
-		renderPass->addInputAttachmentRef(kSubpass_COMPOSE, kAttachment_NORMAL);
-		renderPass->addInputAttachmentRef(kSubpass_COMPOSE, kAttachment_ALBEDO);
-		renderPass->setDepthStencilAttachmentRef(kSubpass_COMPOSE, kAttachment_DEPTH);
-
-		renderPass->addColorAttachmentRef(kSubpass_TRANSPARENT, kAttachment_BACK);
-		renderPass->addInputAttachmentRef(kSubpass_TRANSPARENT, kAttachment_POSITION);
-		renderPass->setDepthStencilAttachmentRef(kSubpass_TRANSPARENT, kAttachment_DEPTH);
-
-
-		/*
-		renderPass->addSyncMasks(kSubpass_WRITE, 
-			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-			VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
-			VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT);
-		renderPass->addSyncMasks(kSubpass_READ,
-			VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
-			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-			VK_ACCESS_SHADER_READ_BIT,
-			VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT);
-
-		renderPass->addDependency(VK_SUBPASS_EXTERNAL, kSubpass_WRITE);
-		renderPass->addDependency(kSubpass_WRITE, kSubpass_READ);
-		renderPass->addDependency(kSubpass_READ, VK_SUBPASS_EXTERNAL);
-		*/
-
-		//todo test doable with above functions? ^^^^
-		std::array<VkSubpassDependency, 4> dependencies;
-
-		dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
-		dependencies[0].dstSubpass = 0;
-		dependencies[0].srcStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
-		dependencies[0].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-		dependencies[0].srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
-		dependencies[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-		dependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
-
-		// This dependency transitions the input attachment from color attachment to shader read
-		dependencies[1].srcSubpass = 0;
-		dependencies[1].dstSubpass = 1;
-		dependencies[1].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-		dependencies[1].dstStageMask = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
-		dependencies[1].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-		dependencies[1].dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-		dependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
-
-		dependencies[2].srcSubpass = 1;
-		dependencies[2].dstSubpass = 2;
-		dependencies[2].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-		dependencies[2].dstStageMask = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
-		dependencies[2].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-		dependencies[2].dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-		dependencies[2].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
-
-		dependencies[3].srcSubpass = 0;
-		dependencies[3].dstSubpass = VK_SUBPASS_EXTERNAL;
-		dependencies[3].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-		dependencies[3].dstStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
-		dependencies[3].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-		dependencies[3].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
-		dependencies[3].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
-
-		renderPass->addDependency(dependencies[0]);
-		renderPass->addDependency(dependencies[1]);
-		renderPass->addDependency(dependencies[2]);
-		renderPass->addDependency(dependencies[3]);
-
-		renderPass->createRenderpass(*swapchain);
+		MyRenderPass* pass = new MyRenderPass(*vulkanBase, *swapchain);
+		renderPass = std::unique_ptr<MyRenderPass>(pass);
+				
 	}
 
 	void createFramebuffers() {
@@ -793,8 +719,6 @@ private:
 	AnimationKeys walking;
 	//UncompressedAnimationKeys uk;
 	//SkeletonAnimation sa()
-
-
 
 	void loadModel() {
 

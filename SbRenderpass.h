@@ -22,11 +22,8 @@ public:
 		VkAccessFlags accessMaskAsDst;
 		VkAccessFlags accessMaskAsSrc;
 
-		//std::unique_ptr<SbPipelineLayout> pipelineLayout;
 		SbPipelineLayout pipelineLayout;
-		//VkPipeline pipeline;
 		SbPipeline pipeline;
-
 
 		Subpass(const SbVulkanBase & vkBase, const uint32_t & swapchainSize);
 
@@ -45,23 +42,24 @@ public:
 
 	SbRenderpass(const SbVulkanBase & vkBase, uint32_t subpassCount, uint32_t attachmentCount, uint32_t swapchainSize);
 	~SbRenderpass();
+
 	
-
-
-
-	void addAttachment(uint32_t attachmentIndex, VkAttachmentDescription desc);
+	virtual void setUpRenderpass(SbSwapchain& swapchain) = 0;
 
 	void addSwapchainAttachments(SbSwapchain & swapchain);
-
 	void addColorAttachmentRef(uint32_t subpassIndex, uint32_t attachmentIndex);
-	void setDepthStencilAttachmentRef(uint32_t subpassIndex, uint32_t attachmentIndex);
 	void addInputAttachmentRef(uint32_t subpassIndex, uint32_t attachmentIndex);
-	void addSyncMasks(uint32_t subpassIndex,
-		VkPipelineStageFlags stageMaskAsDst, VkPipelineStageFlags stageMaskAsSrc,
-		VkAccessFlags accessMaskAsDst, VkAccessFlags accessMaskAsSrc);
-	void addDependency(uint32_t srcSubpassIndex, uint32_t dstSubpassIndex);
+	void setDepthStencilAttachmentRef(uint32_t subpassIndex, uint32_t attachmentIndex);
 	void addDependency(VkSubpassDependency dep);
-	void createRenderpass(SbSwapchain swapchain);
+	//void addAttachment(uint32_t attachmentIndex, VkAttachmentDescription desc);
+	//void addSyncMasks(uint32_t subpassIndex,
+	//	VkPipelineStageFlags stageMaskAsDst, VkPipelineStageFlags stageMaskAsSrc,
+	//	VkAccessFlags accessMaskAsDst, VkAccessFlags accessMaskAsSrc);
+	//void addDependency(uint32_t srcSubpassIndex, uint32_t dstSubpassIndex);
+
+
+
+	void createRenderpass(SbSwapchain& swapchain);
 
 	VkPipeline getSubpassPipeline(uint32_t subpassIndex);
 	SbPipelineLayout & getPipelineLayout(uint32_t subpassIndex);

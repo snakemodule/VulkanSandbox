@@ -5,6 +5,9 @@
 
 #include "VulkanInitializers.hpp"
 
+//#include "spirv_reflect.hpp"
+//#include <utility>
+
 SbPipeline & SbPipeline::vertexBindingDescription(const std::vector<VkVertexInputBindingDescription> & v)
 {
 	vertexBindingDescriptions = v;
@@ -62,6 +65,11 @@ SbPipeline & SbPipeline::colorBlending(uint32_t attachmentIndex)
 
 SbPipeline & SbPipeline::addShaderStage(const VkPipelineShaderStageCreateInfo & shaderStage)
 {
+	//reflect
+	//uniform buffers
+	//sampled images (texture samplers)
+	//subpass inputs (image attachment)s
+
 	shaderStages.push_back(shaderStage);
 	return *this;
 }
