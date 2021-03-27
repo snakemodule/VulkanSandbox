@@ -87,7 +87,8 @@ void HelloTriangleApplication::framebufferResizeCallback(GLFWwindow* window, int
 
 void HelloTriangleApplication::initVulkan() {
 	createInstance();
-	createCommandPool();
+
+	vulkanBase->commandPool = std::make_unique<SbCommandPool>(*vulkanBase);
 
 	swapchain = std::make_unique<SbSwapchain>(*vulkanBase);
 	swapchain->createSwapChain(vulkanBase->surface, window);
@@ -96,10 +97,9 @@ void HelloTriangleApplication::initVulkan() {
 	renderPass = std::unique_ptr<MyRenderPass>(pass);
 
 	swapchain->createFramebuffersForRenderpass(renderPass->renderPass);
+		
+	texture = std::make_unique<SbTextureImage>(*vulkanBase, TEXTURE_PATH);
 
-
-
-	createTextureImage();
 	createTextureSampler();
 	loadModel();
 	createVertexBuffer();
@@ -107,8 +107,6 @@ void HelloTriangleApplication::initVulkan() {
 	createUniformBuffers();
 	createDescriptorPool();
 
-
-	//createGraphicsPipeline();
 	createPipelines();
 	createDescriptorSets();
 
@@ -267,8 +265,7 @@ void HelloTriangleApplication::createPipelines() {
 	auto& subpassgbuf = renderPass->subpasses[kSubpass_GBUF];
 	const auto& bind = Vertex::getBindingDescriptions();
 	const auto& attr = Vertex::getAttributeDescriptions();
-	subpassgbuf.pipeline.subpassIndex(kSubpass_GBUF)
-		.shaderLayouts(vulkanBase->getDevice(), "shaders/gbuf.vert.spv", "shaders/gbuf.frag.spv")
+	subpassgbuf.pipeline.shaderLayouts(vulkanBase->getDevice(), "shaders/gbuf.vert.spv", "shaders/gbuf.frag.spv")
 		.addBlendAttachmentStates(vks::initializers::pipelineColorBlendAttachmentState(0xf, VK_FALSE), 0, 3)
 		.vertexBindingDescription(std::vector<VkVertexInputBindingDescription> {bind.begin(), bind.end()})
 		.vertexAttributeDescription(std::vector<VkVertexInputAttributeDescription> {attr.begin(), attr.end()})
@@ -278,7 +275,7 @@ void HelloTriangleApplication::createPipelines() {
 
 
 	auto& subpasscomp = renderPass->subpasses[kSubpass_COMPOSE];
-	subpasscomp.pipeline.subpassIndex(kSubpass_COMPOSE)
+	subpasscomp.pipeline
 		//.layout(subpasscomp.pipelineLayout.pipelineLayout)
 		.shaderLayouts(vulkanBase->getDevice(), "shaders/composition.vert.spv", "shaders/composition.frag.spv")
 		//.addShaderStage(vks::helper::loadShader("shaders/composition.vert.spv", VK_SHADER_STAGE_VERTEX_BIT, vulkanBase->logicalDevice->device))
@@ -288,7 +285,7 @@ void HelloTriangleApplication::createPipelines() {
 		.createPipeline(renderPass->renderPass, vulkanBase->logicalDevice->device);
 
 	auto& subpastransparent = renderPass->subpasses[kSubpass_TRANSPARENT];
-	subpastransparent.pipeline.subpassIndex(kSubpass_TRANSPARENT)
+	subpastransparent.pipeline
 		//.layout(subpastransparent.pipelineLayout.pipelineLayout)
 		.shaderLayouts(vulkanBase->getDevice(), "shaders/transparent.vert.spv", "shaders/transparent.frag.spv")
 		.colorBlending(0)
@@ -335,14 +332,6 @@ void HelloTriangleApplication::createDescriptorSets()
 	transDesc->updateDescriptors();
 }
 
-void HelloTriangleApplication::createCommandPool() {
-	vulkanBase->commandPool = std::make_unique<SbCommandPool>(*vulkanBase);
-}
-
-void HelloTriangleApplication::createTextureImage() {
-	//TODO move loading to model loading. get model with textures
-	texture = std::make_unique<SbTextureImage>(*vulkanBase, TEXTURE_PATH);
-}
 
 void HelloTriangleApplication::createTextureSampler() {
 

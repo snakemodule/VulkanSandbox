@@ -237,9 +237,7 @@ private:
 
 	void createDescriptorSets();
 
-	void createCommandPool();
 
-	void createTextureImage();
 
 	void createTextureSampler();
 

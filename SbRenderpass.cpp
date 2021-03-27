@@ -9,6 +9,9 @@
 SbRenderpass::SbRenderpass(const SbVulkanBase & vkBase, uint32_t subpassCount, uint32_t attachmentCount, uint32_t swapchainSize)
 	: subpasses(subpassCount, Subpass(vkBase, swapchainSize)), attachments(attachmentCount)
 {
+	for (size_t i = 0; i < subpasses.size(); i++)
+		subpasses[i].pipeline.subpassIndex(i);
+
 	//Subpass temp(vkBase, swapchainSize);
 	//subpasses = std::vector<Subpass>();
 	//attachments = std::vector<VkAttachmentDescription>(attachmentCount);
