@@ -7,9 +7,7 @@ layout (location = 2) in vec3 inWorldPos;
 layout (location = 3) in vec2 fragTexCoord;
 layout (location = 4) in vec3 vertexColor;
 
-layout(binding = 1) uniform sampler2D texSampler;
-
-layout(binding = 2) uniform ShadingBufferObject {
+layout(binding = 1) uniform ShadingBufferObject {
 	vec4 specularColor;
 	vec4 diffuseColor;
 	vec4 ambientColor;

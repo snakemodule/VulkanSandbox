@@ -111,7 +111,7 @@ void HelloTriangleApplication::initVulkan() {
 	createDescriptorSets();
 
 	createCommandBuffers();
-	createSyncObjects();
+	swapchain->createSyncObjects(MAX_FRAMES_IN_FLIGHT);
 }
 
 void HelloTriangleApplication::mainLoop() {
@@ -209,7 +209,6 @@ void HelloTriangleApplication::cleanup() {
 	}
 	*/
 
-
 	vkDestroyCommandPool(vulkanBase->logicalDevice->device, vulkanBase->commandPool->handle, nullptr);
 
 	vkDestroyDevice(vulkanBase->logicalDevice->device, nullptr);
@@ -268,31 +267,20 @@ void HelloTriangleApplication::createPipelines() {
 	subpassgbuf.pipeline.shaderLayouts(vulkanBase->getDevice(), "shaders/gbuf.vert.spv", "shaders/gbuf.frag.spv")
 		.addBlendAttachmentStates(vks::initializers::pipelineColorBlendAttachmentState(0xf, VK_FALSE), 0, 3)
 		.vertexBindingDescription(std::vector<VkVertexInputBindingDescription> {bind.begin(), bind.end()})
-		.vertexAttributeDescription(std::vector<VkVertexInputAttributeDescription> {attr.begin(), attr.end()})
-		//.addShaderStage(vks::helper::loadShader("shaders/gbuf.vert.spv", VK_SHADER_STAGE_VERTEX_BIT, vulkanBase->logicalDevice->device))
-		//.addShaderStage(vks::helper::loadShader("shaders/gbuf.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT, vulkanBase->logicalDevice->device))
+		.vertexAttributeDescription(std::vector<VkVertexInputAttributeDescription> {attr.begin(), attr.end()})		
 		.createPipeline(renderPass->renderPass, vulkanBase->logicalDevice->device);
 
-
 	auto& subpasscomp = renderPass->subpasses[kSubpass_COMPOSE];
-	subpasscomp.pipeline
-		//.layout(subpasscomp.pipelineLayout.pipelineLayout)
-		.shaderLayouts(vulkanBase->getDevice(), "shaders/composition.vert.spv", "shaders/composition.frag.spv")
-		//.addShaderStage(vks::helper::loadShader("shaders/composition.vert.spv", VK_SHADER_STAGE_VERTEX_BIT, vulkanBase->logicalDevice->device))
-		//.addShaderStage(vks::helper::loadShader("shaders/composition.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT, vulkanBase->logicalDevice->device))
+	subpasscomp.pipeline.shaderLayouts(vulkanBase->getDevice(), "shaders/composition.vert.spv", "shaders/composition.frag.spv")
 		.cullMode(VK_CULL_MODE_NONE)
 		.depthWriteEnable(VK_FALSE)
 		.createPipeline(renderPass->renderPass, vulkanBase->logicalDevice->device);
 
 	auto& subpastransparent = renderPass->subpasses[kSubpass_TRANSPARENT];
-	subpastransparent.pipeline
-		//.layout(subpastransparent.pipelineLayout.pipelineLayout)
-		.shaderLayouts(vulkanBase->getDevice(), "shaders/transparent.vert.spv", "shaders/transparent.frag.spv")
+	subpastransparent.pipeline.shaderLayouts(vulkanBase->getDevice(), "shaders/transparent.vert.spv", "shaders/transparent.frag.spv")
 		.colorBlending(0)
 		.vertexBindingDescription(std::vector<VkVertexInputBindingDescription> {bind.begin(), bind.end()})
 		.vertexAttributeDescription(std::vector<VkVertexInputAttributeDescription> {attr.begin(), attr.end()})
-		//.addShaderStage(vks::helper::loadShader("shaders/transparent.vert.spv", VK_SHADER_STAGE_VERTEX_BIT, vulkanBase->logicalDevice->device))
-		//.addShaderStage(vks::helper::loadShader("shaders/transparent.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT, vulkanBase->logicalDevice->device))
 		.cullMode(VK_CULL_MODE_BACK_BIT)
 		.depthWriteEnable(VK_FALSE)
 		.createPipeline(renderPass->renderPass, vulkanBase->logicalDevice->device);
@@ -305,11 +293,10 @@ void HelloTriangleApplication::createDescriptorSets()
 
 	gbufDesc = std::unique_ptr<SbDescriptorSet>(
 		new SbDescriptorSet(vulkanBase->getDevice(), *swapchain, renderPass->subpasses[kSubpass_GBUF], 0));
-
 	gbufDesc->addBufferBinding(0, *transformUniformBuffer);
-	VkImageView  v = texture->textureImageView;
-	gbufDesc->addImageBinding(1, textureSampler, &v);
-	gbufDesc->addBufferBinding(2, *shadingUniformBuffer);
+	//VkImageView  v = texture->textureImageView;
+	//gbufDesc->addImageBinding(1, textureSampler, &v);
+	gbufDesc->addBufferBinding(1, *shadingUniformBuffer);
 	gbufDesc->allocate(*descriptorPool.get());
 	gbufDesc->updateDescriptors();
 
@@ -324,10 +311,10 @@ void HelloTriangleApplication::createDescriptorSets()
 	transDesc = std::unique_ptr<SbDescriptorSet>(
 		new SbDescriptorSet(vulkanBase->getDevice(), *swapchain, renderPass->subpasses[kSubpass_TRANSPARENT], 0));
 	transDesc->addBufferBinding(0, *transformUniformBuffer);
-	v = texture->textureImageView;
-	transDesc->addImageBinding(1, textureSampler, &v);
-	transDesc->addBufferBinding(2, *shadingUniformBuffer);
-	transDesc->addInputAttachmentBinding(3, MyRenderPass::kAttachment_POSITION);
+	//v = texture->textureImageView;
+	//transDesc->addImageBinding(1, textureSampler, &v);
+	transDesc->addBufferBinding(1, *shadingUniformBuffer);
+	transDesc->addInputAttachmentBinding(2, MyRenderPass::kAttachment_POSITION);
 	transDesc->allocate(*descriptorPool.get());
 	transDesc->updateDescriptors();
 }
@@ -657,9 +644,7 @@ void HelloTriangleApplication::createCommandBuffers() {
 
 //todo move this
 
-void HelloTriangleApplication::createSyncObjects() {
-	swapchain->createSyncObjects(MAX_FRAMES_IN_FLIGHT);
-}
+
 
 void HelloTriangleApplication::updateUniformBuffer(uint32_t currentImage) {
 
@@ -671,25 +656,7 @@ void HelloTriangleApplication::updateUniformBuffer(uint32_t currentImage) {
 		modelScene->mAnimations[0]->mTicksPerSecond : 25.0f;
 	float TimeInTicks = time * TicksPerSecond;
 	float AnimationTime = fmod(TimeInTicks, modelScene->mAnimations[0]->mDuration);
-
-	/*
-	Skeleton& s = mymodel->skeleton;
-
-	// the root has no parent
-	s.localTransform[0] = AnimationStuff::makeAnimationMatrix(s.animationChannel[0], AnimationTime); //local animation transformation
-	s.globalTransform[0] = s.localTransform[0];					//for root node local=global
-	s.finalTransformation[0] = s.globalTransform[0] * s.offsetMatrix[0];
-
-
-	for (unsigned int i = 1; i < mymodel->jointIndex.size(); ++i)
-	{
-	const uint16_t parentJointIndex = s.hierarchy[i];
-	s.localTransform[i] = AnimationStuff::makeAnimationMatrix(s.animationChannel[i], AnimationTime); //local animation transformation
-	s.globalTransform[i] = s.globalTransform[parentJointIndex] * s.localTransform[i]; //animation transform in space of the parent
-	s.finalTransformation[i] = s.globalTransform[i] * s.offsetMatrix[i];
-	}
-	*/
-
+	
 	float s = 0.5f * std::sinf(time / (3.14f)) + 0.5f;
 	mymodel->skeletalAnimationComponent.evaluate(deltaTime, std::vector<float> { s });
 
@@ -703,13 +670,6 @@ void HelloTriangleApplication::updateUniformBuffer(uint32_t currentImage) {
 		sizeof(glm::mat4) * mymodel->skeletalAnimationComponent.transformations.size());
 	transformUniformBuffer->writeBufferData(ubo);
 	transformUniformBuffer->copyDataToBufferMemory(*vulkanBase, currentImage);
-
-	/*
-	void* data;
-	vkMapMemory(vulkanBase->logicalDevice->device, uniformBuffersMemory[currentImage], 0, sizeof(ubo), 0, &data);
-	memcpy(data, &ubo, sizeof(ubo));
-	vkUnmapMemory(vulkanBase->logicalDevice->device, uniformBuffersMemory[currentImage]);
-	*/
 
 }
 
