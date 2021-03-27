@@ -5,8 +5,6 @@
 
 #include "SbSwapchain.h"
 
-#include "SbPipelineLayout.h"
-
 #include "SbPipeline.h"
 
 class SbRenderpass
@@ -22,7 +20,6 @@ public:
 		VkAccessFlags accessMaskAsDst;
 		VkAccessFlags accessMaskAsSrc;
 
-		SbPipelineLayout pipelineLayout;
 		SbPipeline pipeline;
 
 		Subpass(const SbVulkanBase & vkBase, const uint32_t & swapchainSize);
@@ -62,7 +59,8 @@ public:
 	void createRenderpass(SbSwapchain& swapchain);
 
 	VkPipeline getSubpassPipeline(uint32_t subpassIndex);
-	SbPipelineLayout & getPipelineLayout(uint32_t subpassIndex);
+
+	VkPipelineLayout getSubpassPipelineLayout(uint32_t subpassIndex);;
 
 };
 

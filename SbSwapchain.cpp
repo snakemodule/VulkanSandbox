@@ -146,7 +146,7 @@ void SbSwapchain::createImageViews() {
 	
 }
 
-void SbSwapchain::createFramebuffers(VkRenderPass renderpass) {
+void SbSwapchain::createFramebuffersForRenderpass(VkRenderPass renderpass) {
 	swapChainFramebuffers.resize(swapChainImageViews.size());
 
 

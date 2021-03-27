@@ -5,8 +5,11 @@
 #include "VulkanHelperFunctions.hpp"
 #include "SbVulkanBase.h"
 
-//#define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
+//#define STB_IMAGE_IMPLEMENTATION
+//#include <stb_image.h>
+
 
 
 SbTextureImage::SbTextureImage(SbVulkanBase& base, std::string path)

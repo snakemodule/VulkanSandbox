@@ -5,6 +5,9 @@
 #include "VulkanInitializers.hpp"
 
 //encapsulates pipeline creation using named parameter idiom.
+
+#include "SbShaderLayout.h"
+
 class SbPipeline
 {
 private:
@@ -25,6 +28,11 @@ private:
 	std::vector<VkPipelineColorBlendAttachmentState> blendAttachmentStates;
 public:
 	VkPipeline handle;
+
+	SbShaderLayout shaderLayout;
+
+	SbPipeline& shaderLayouts(vk::Device device, std::string vert, std::string frag);
+	//VkDescriptorSetLayout getSetLayout(int set);
 
 	//obligatory
 	SbPipeline& layout(const VkPipelineLayout & pipelineLayout);

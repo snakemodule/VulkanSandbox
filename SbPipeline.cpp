@@ -20,6 +20,17 @@ SbPipeline & SbPipeline::vertexAttributeDescription(const std::vector<VkVertexIn
 	return *this;
 }
 
+SbPipeline& SbPipeline::shaderLayouts(vk::Device device, std::string vert, std::string frag)
+{	
+	pipelineCI.layout = shaderLayout.reflect(device, vert, frag, shaderStages);
+	return *this;
+}
+
+//VkDescriptorSetLayout SbPipeline::getSetLayout(int set)
+//{
+//	return shaderLayout.setLayouts[set];
+//}
+
 SbPipeline & SbPipeline::layout(const VkPipelineLayout & pipelineLayout)
 {
 	pipelineCI.layout = pipelineLayout;
@@ -63,14 +74,14 @@ SbPipeline & SbPipeline::colorBlending(uint32_t attachmentIndex)
 	return *this;
 }
 
-SbPipeline & SbPipeline::addShaderStage(const VkPipelineShaderStageCreateInfo & shaderStage)
+SbPipeline & SbPipeline::addShaderStage(const VkPipelineShaderStageCreateInfo & shaderStageCI)
 {
 	//reflect
 	//uniform buffers
 	//sampled images (texture samplers)
 	//subpass inputs (image attachment)s
 
-	shaderStages.push_back(shaderStage);
+	shaderStages.push_back(shaderStageCI);
 	return *this;
 }
 

@@ -68,7 +68,7 @@ public:
 
 	void createImageViews();
 
-	void createFramebuffers(VkRenderPass renderpass);
+	void createFramebuffersForRenderpass(VkRenderPass renderpass);
 
 	void createAttachment(
 		uint32_t attachmentIndex, 

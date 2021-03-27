@@ -1,0 +1,5 @@
+a pipeline (?) has multiple descriptor sets
+
+a descriptor set has multiple bindings
+
+a binding has a type and a index

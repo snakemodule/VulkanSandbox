@@ -1,34 +1,18 @@
 #pragma once
 
-#include <vulkan/vulkan_core.h>
-#include <vector>
+//#include <vulkan/vulkan_core.h>
+//#include <vector>
 
-using std::vector;
+//struct key_event {
+//	int key;
+//	int scancode;
+//	int action;
+//	int mods;
+//};
 
-struct DrawableMesh {
-	int id;
-	VkBuffer VertexBuffer;
-	VkDeviceMemory VertexBufferMemory;
-	VkBuffer IndexBuffer;
-	VkDeviceMemory IndexBufferMemory;
-	uint32_t IndexCount = 0;
-	uint32_t DynamicBufferOffset = 0;
-	glm::vec4 AmbientColor;
-	glm::vec4 DiffuseColor;
-	glm::vec4 SpecularColor;
-	float Shininess;
-};
+//vector<key_event> unconsumed_key_events;
 
 
-struct key_event {
-	int key;
-	int scancode;
-	int action;
-	int mods;
-};
 
-vector<key_event> unconsumed_key_events;
-
-std::vector<DrawableMesh> drawables;
 
 
