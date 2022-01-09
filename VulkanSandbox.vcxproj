@@ -105,14 +105,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\tinyobjloader;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\stb-master;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\glfw-3.3.bin.WIN64\include;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\glm;C:\VulkanSDK\1.1.106.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Other\libraries\includes;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\tinyobjloader;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\stb-master;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\glfw-3.3.bin.WIN64\include;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\glm;C:\VulkanSDK\1.1.106.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\debug;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\glfw-3.3.bin.WIN64\lib-vc2017;C:\VulkanSDK\1.1.106.0\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>vulkan-1.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\Other\libraries\libs;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\debug;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\glfw-3.3.bin.WIN64\lib-vc2017;C:\VulkanSDK\1.1.106.0\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>vulkan-1.lib;glfw3.lib;spirv-cross-reflect.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -122,13 +122,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\Other\boost_1_72_0;C:\Program Files\Assimp\include;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\tinyobjloader;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\stb-master;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\glfw-3.3.bin.WIN64\include;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\glm;C:\VulkanSDK\1.1.106.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Other\libraries\includes\gli;D:\Other\boost_1_72_0;C:\Program Files\Assimp\include;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\tinyobjloader;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\stb-master;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\glfw-3.3.bin.WIN64\include;D:\Other\libraries\includes\glm;C:\VulkanSDK\1.1.106.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>C:\Program Files\Assimp\lib\x64;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x64\debug;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\glfw-3.3.bin.WIN64\lib-vc2017;C:\VulkanSDK\1.1.106.0\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\Other\libraries\libs;C:\Program Files\Assimp\lib\x64;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x64\debug;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\glfw-3.3.bin.WIN64\lib-vc2017;C:\VulkanSDK\1.1.106.0\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>vulkan-1.lib;glfw3.lib;glfw3dll.lib;libfbxsdk-md.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
@@ -179,8 +179,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Asset.cpp" />
     <ClCompile Include="Entities.cpp" />
+    <ClCompile Include="HelloTriangleApplication.cpp" />
+    <ClCompile Include="Model.cpp" />
+    <ClCompile Include="MyRenderPass.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="SbDescriptorSet.cpp" />
     <ClCompile Include="SbImage.cpp" />
+    <ClCompile Include="SbShaderLayout.cpp" />
     <ClCompile Include="SbTextureImage.cpp" />
     <ClCompile Include="SkeletalAnimationComponent.cpp" />
     <ClCompile Include="SkeletonAnimation.cpp" />
@@ -196,25 +203,63 @@
     <ClCompile Include="SbRenderpassAttachment.cpp" />
     <ClCompile Include="SbCamera.cpp" />
     <ClCompile Include="SbDescriptorPool.cpp" />
-    <ClCompile Include="SbPipelineLayout.cpp" />
-    <ClCompile Include="SbLayout.cpp" />
     <ClCompile Include="SbPipeline.cpp" />
     <ClCompile Include="SbRenderpass.cpp" />
     <ClCompile Include="SbSwapchain.cpp" />
     <ClCompile Include="SbUniformBuffer.cpp" />
     <ClCompile Include="SbVulkanBase.cpp" />
     <ClCompile Include="SkeletonAnimationSystem.cpp" />
+    <ClCompile Include="spirv-cross\spirv_cfg.cpp" />
+    <ClCompile Include="spirv-cross\spirv_cpp.cpp" />
+    <ClCompile Include="spirv-cross\spirv_cross.cpp" />
+    <ClCompile Include="spirv-cross\spirv_cross_c.cpp" />
+    <ClCompile Include="spirv-cross\spirv_cross_parsed_ir.cpp" />
+    <ClCompile Include="spirv-cross\spirv_cross_util.cpp" />
+    <ClCompile Include="spirv-cross\spirv_glsl.cpp" />
+    <ClCompile Include="spirv-cross\spirv_hlsl.cpp" />
+    <ClCompile Include="spirv-cross\spirv_msl.cpp" />
+    <ClCompile Include="spirv-cross\spirv_parser.cpp" />
+    <ClCompile Include="spirv-cross\spirv_reflect.cpp" />
     <ClCompile Include="spline.cpp" />
+    <ClCompile Include="Sponza.cpp" />
     <ClCompile Include="UncompressedAnimation.cpp" />
     <ClCompile Include="UncompressedAnimationKeys.cpp" />
     <ClCompile Include="vulkansetup.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="algo.hpp" />
+    <ClInclude Include="Asset.h" />
+    <ClInclude Include="assimp_print.hpp" />
     <ClInclude Include="Entities.h" />
+    <ClInclude Include="HelloTriangleApplication.h" />
+    <ClInclude Include="Mutant.hpp" />
+    <ClInclude Include="MyRenderPass.h" />
+    <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="SbDescriptorSet.h" />
     <ClInclude Include="SbImage.h" />
+    <ClInclude Include="SbShaderLayout.h" />
     <ClInclude Include="SbTextureImage.h" />
+    <ClInclude Include="SceneStuff.h" />
     <ClInclude Include="Skeleton.h" />
+    <ClInclude Include="spirv-cross\GLSL.std.450.h" />
+    <ClInclude Include="spirv-cross\spirv.h" />
+    <ClInclude Include="spirv-cross\spirv.hpp" />
+    <ClInclude Include="spirv-cross\spirv_cfg.hpp" />
+    <ClInclude Include="spirv-cross\spirv_common.hpp" />
+    <ClInclude Include="spirv-cross\spirv_cpp.hpp" />
+    <ClInclude Include="spirv-cross\spirv_cross.hpp" />
+    <ClInclude Include="spirv-cross\spirv_cross_c.h" />
+    <ClInclude Include="spirv-cross\spirv_cross_containers.hpp" />
+    <ClInclude Include="spirv-cross\spirv_cross_error_handling.hpp" />
+    <ClInclude Include="spirv-cross\spirv_cross_parsed_ir.hpp" />
+    <ClInclude Include="spirv-cross\spirv_cross_util.hpp" />
+    <ClInclude Include="spirv-cross\spirv_glsl.hpp" />
+    <ClInclude Include="spirv-cross\spirv_hlsl.hpp" />
+    <ClInclude Include="spirv-cross\spirv_msl.hpp" />
+    <ClInclude Include="spirv-cross\spirv_parser.hpp" />
+    <ClInclude Include="spirv-cross\spirv_reflect.hpp" />
+    <ClInclude Include="spirvloader.h" />
+    <ClInclude Include="Sponza.h" />
     <ClInclude Include="UncompressedAnimation.h" />
     <ClInclude Include="UncompressedAnimationKeys.h" />
     <ClInclude Include="Util.h" />
@@ -231,6 +276,7 @@
     <ClInclude Include="SbVulkanBase.h" />
     <ClInclude Include="SkeletonAnimationSystem.h" />
     <ClInclude Include="spline.h" />
+    <ClInclude Include="AnimatedVertex.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="VulkanHelperFunctions.hpp" />
     <ClInclude Include="Model.h" />
@@ -239,8 +285,6 @@
     <ClInclude Include="SbRenderpassAttachment.h" />
     <ClInclude Include="SbCamera.h" />
     <ClInclude Include="SbDescriptorPool.h" />
-    <ClInclude Include="SbPipelineLayout.h" />
-    <ClInclude Include="SbLayout.h" />
     <ClInclude Include="SbPipeline.h" />
     <ClInclude Include="SbRenderpass.h" />
     <ClInclude Include="SbSwapchain.h" />
@@ -263,6 +307,7 @@
     <None Include="shaders\transparent.vert" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="notes.txt" />
     <Text Include="scraps.txt" />
     <Text Include="tasks.txt" />
   </ItemGroup>

@@ -21,8 +21,9 @@ void AnimationKeys::loadAnimationData(std::string filename)
 	}
 }
 
-AnimationKeys::AnimationKeys()
+AnimationKeys::AnimationKeys(std::string filename)
 {
+	loadAnimationData(filename);
 }
 
 

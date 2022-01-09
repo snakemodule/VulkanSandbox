@@ -4,6 +4,8 @@
 
 void SkeletonAnimation::plot(Skeleton s)
 {
+	
+	/*
 	struct plotQ {
 		std::vector<float> w;
 		std::vector<float> x;
@@ -68,17 +70,18 @@ void SkeletonAnimation::plot(Skeleton s)
 
 	std::vector<plotQ> qplots2 = std::vector<plotQ>(s.jointCount);
 	std::vector<plotV> vplots2 = std::vector<plotV>(s.jointCount);
+	*/
 
 
 
 	int L = 0;
-	for (float t = 0; t  < animationData.animationDuration; t += 0.01)
+	for (float t = 0; t  < animationData->animationDuration; t += 0.01)
 	{
 		L++;
 
 		float TicksPerSecond = 30.0f;
 		float TimeInTicks = t * TicksPerSecond;
-		float AnimationTime = fmod(TimeInTicks, animationData.animationDuration * TicksPerSecond);
+		float AnimationTime = fmod(TimeInTicks, animationData->animationDuration * TicksPerSecond);
 
 
 		updateEvaluators(0.01);
@@ -86,8 +89,8 @@ void SkeletonAnimation::plot(Skeleton s)
 		for (size_t i = 0; i < s.jointCount; i++)
 		{
 			
-			qplots1[i].update(localRotation[i].w, localRotation[i].x,
-				localRotation[i].y, localRotation[i].z);
+			//qplots1[i].update(localRotation[i].w, localRotation[i].x,
+			//	localRotation[i].y, localRotation[i].z);
 			//vplots1[i].update(localPosition[i].x,
 			//	localPosition[i].y, localPosition[i].z);
 
@@ -106,15 +109,15 @@ void SkeletonAnimation::plot(Skeleton s)
 			assert(d_theta == d_theta); //NaN check
 			*/
 
-			if (i == 44)
-			{
-				qplots2[i].update(q.w, q.x, q.y, q.z);
-
-			}
-			else
-			{
-				qplots2[i].update(q.w, q.x, q.y, q.z);
-			}
+			//if (i == 44)
+			//{
+			//	qplots2[i].update(q.w, q.x, q.y, q.z);
+			//
+			//}
+			//else
+			//{
+			//	qplots2[i].update(q.w, q.x, q.y, q.z);
+			//}
 			//vplots2[i].update(lt.second.x, lt.second.y, lt.second.z);
 
 
@@ -160,7 +163,7 @@ SkeletonAnimation::quatKey SkeletonAnimation::bitsToKey(AnimationKeys::qbits bit
 	glm::quat & q = key.rot;
 	float & t = key.time;
 
-	t = (static_cast<float>(bits.time) / 0xFFFFF) * animationData.animationDuration;
+	t = (static_cast<float>(bits.time) / 0xFFFFF) * animationData->animationDuration;
 
 	float component_range = 1 / std::sqrt(2.0f);
 	auto dequantize20bcomponent = [](uint32_t comp, float component_range)->float {
@@ -197,7 +200,7 @@ SkeletonAnimation::vecKey SkeletonAnimation::bitsToKey(AnimationKeys::vbits bits
 	glm::vec3& v = key.pos;
 	float & t = key.time;
 
-	t = (static_cast<float>(bits.time) / 0xFFFFF) * animationData.animationDuration;
+	t = (static_cast<float>(bits.time) / 0xFFFFF) * animationData->animationDuration;
 	
 	float component_range = 300.0f;
 	auto dequantize21bcomponent = [](uint32_t comp, float component_range)->float {
@@ -218,7 +221,7 @@ SkeletonAnimation::vecKey SkeletonAnimation::bitsToKey(AnimationKeys::vbits bits
 
 AnimationKeys::qbits SkeletonAnimation::getRotData()
 {
-	latestRotData = animationData.rotData[rotDataIndex];
+	latestRotData = animationData->rotData[rotDataIndex];
 	return latestRotData;
 }
 
@@ -230,7 +233,7 @@ AnimationKeys::qbits SkeletonAnimation::getNextRotData()
 
 AnimationKeys::vbits SkeletonAnimation::getPosData()
 {
-	latestPosData = animationData.posData[posDataIndex];
+	latestPosData = animationData->posData[posDataIndex];
 	return latestPosData;
 }
 
@@ -244,14 +247,14 @@ AnimationKeys::vbits SkeletonAnimation::getNextPosData()
 void SkeletonAnimation::updateEvaluators(float deltaTime, float playbackMultiplier)
 {
 	deltaTime *= playbackMultiplier;
-	if (animationTime + deltaTime >= (float)animationData.animationDuration)
+	if (animationTime + deltaTime >= (float)animationData->animationDuration)
 	{
 		initiateEvaluators();
 	}
-	animationTime = std::fmod((animationTime + deltaTime), (float)animationData.animationDuration);
+	animationTime = std::fmod((animationTime + deltaTime), (float)animationData->animationDuration);
 	   	 			
 	auto channel = latestPosData.channel;
-	while (posKeys[channel][posKeyRingIndex[channel] + 2].time < animationTime && posDataIndex < animationData.posKeyCount) {		
+	while (posKeys[channel][posKeyRingIndex[channel] + 2].time < animationTime && posDataIndex < animationData->posKeyCount) {		
 		// insert new key
 		posKeys[channel][posKeyRingIndex[channel] + 0] = bitsToKey(latestPosData);
 		++posDataIndex;
@@ -266,7 +269,7 @@ void SkeletonAnimation::updateEvaluators(float deltaTime, float playbackMultipli
 				posKeys[channel][posKeyRingIndex[channel] + 2].time);
 
 		//get next key if available
-		if (posDataIndex < animationData.posKeyCount) {
+		if (posDataIndex < animationData->posKeyCount) {
 			getPosData();
 			channel = latestPosData.channel;
 		}
@@ -274,7 +277,7 @@ void SkeletonAnimation::updateEvaluators(float deltaTime, float playbackMultipli
 
 	channel = latestRotData.channel;
 	
-	while (rotKeys[channel][rotKeyRingIndex[channel] + 2].time < animationTime && rotDataIndex < animationData.rotKeyCount) {
+	while (rotKeys[channel][rotKeyRingIndex[channel] + 2].time < animationTime && rotDataIndex < animationData->rotKeyCount) {
 		// insert new key	
 		rotKeys[channel][rotKeyRingIndex[channel] + 0] = bitsToKey(latestRotData);
 		++rotDataIndex;
@@ -289,7 +292,7 @@ void SkeletonAnimation::updateEvaluators(float deltaTime, float playbackMultipli
 				rotKeys[channel][rotKeyRingIndex[channel] + 2].time);
 
 		//get next key if available
-		if (rotDataIndex < animationData.rotKeyCount) {
+		if (rotDataIndex < animationData->rotKeyCount) {
 			getRotData();
 			channel = latestRotData.channel;
 		}
@@ -328,17 +331,17 @@ void SkeletonAnimation::initiateEvaluators()
 			pk[ring + 1].pos, pk[ring + 2].pos, pk[ring + 3].pos,
 			pk[ring + 1].time, pk[ring + 2].time);
 	}
-	if (posDataIndex < animationData.posData.size())
+	if (posDataIndex < animationData->posData.size())
 	{
 		getPosData();
 	}
-	if (rotDataIndex < animationData.rotData.size())
+	if (rotDataIndex < animationData->rotData.size())
 	{
 		getRotData();
 	}
 }
 
-SkeletonAnimation::SkeletonAnimation(int jointCount, AnimationKeys& animationData)
+SkeletonAnimation::SkeletonAnimation(int jointCount, std::shared_ptr<AnimationKeys> animationData)
 	: animationData(animationData),
 	rotKeyRingIndex(jointCount),
 	posKeyRingIndex(jointCount),
@@ -360,5 +363,5 @@ SkeletonAnimation::~SkeletonAnimation()
 
 double SkeletonAnimation::getAnimationDuration()
 {
-	return animationData.animationDuration;
+	return animationData->animationDuration;
 }

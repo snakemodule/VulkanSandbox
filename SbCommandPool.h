@@ -24,7 +24,7 @@ public:
 	void endSingleTimeCommands(VkCommandBuffer commandBuffer);
 
 	//todo temporary place for these functions
-	void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
+	void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, uint32_t mipLevel = 0, uint32_t bufferOffset = 0);
 
 	void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
 

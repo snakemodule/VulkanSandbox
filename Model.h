@@ -6,12 +6,11 @@
 #include <string>
 #include <assimp/scene.h>
 
-#include "Vertex.h"
+#include "AnimatedVertex.h"
 
 #include "Skeleton.h"
 #include "SkeletalAnimationComponent.h"
 
-#include "UncompressedAnimation.h"
 
 const int MAXIMUM_BONES = 80;
 
@@ -19,20 +18,51 @@ struct Material {
 	glm::vec4 ambientColor;
 	glm::vec4 diffuseColor;
 	glm::vec4 specularColor;
+	//array of texures?
+	//diffuse(color)
+	//normal(bump)
+	//displacement(height)
+	//specularity(reflection)
 };
 
-struct Mesh {
-	std::vector<Vertex> vertexBuffer;
+struct MeshData
+{
+	std::vector<AnimatedVertex> vertexBuffer;
+	std::vector<unsigned int> indexBuffer;
+};
+
+struct AnimatedMesh {
+	std::vector<AnimatedVertex> vertexBuffer;
 	std::vector<unsigned int> indexBuffer;
 
 	Material material;
 
-	Mesh() : vertexBuffer(), indexBuffer() { }
+	AnimatedMesh() : vertexBuffer(), indexBuffer() { }
 
 };
 
-struct Model {
-	std::vector<Mesh> meshes;
+struct StaticMesh
+{
+	std::vector<AnimatedVertex> vertexBuffer;
+	std::vector<unsigned int> indexBuffer;
+
+	//Material material;
+
+	StaticMesh() : vertexBuffer(), indexBuffer() 
+	{
+
+	}
+
+};
+
+struct AnimatedModel {
+	std::vector<AnimatedMesh> meshes;
 	Skeleton skeleton;
 	SkeletalAnimationComponent skeletalAnimationComponent;
+
+	AnimatedModel(std::string modelFile);
+
+
 };
+
+

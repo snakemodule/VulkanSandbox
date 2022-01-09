@@ -15,12 +15,18 @@ public:
 	vk::Buffer buffer;
 	vk::DeviceMemory memory;
 
+	SbBuffer();
+
+	SbBuffer(SbVulkanBase& base, void* data, uint32_t dataSize, vk::BufferUsageFlags usage);
+		
 	SbBuffer(SbVulkanBase& base, vk::DeviceSize size, vk::BufferUsageFlags usage,
 		vk::MemoryPropertyFlags properties);;
 
 	void MapAndFill(vk::Device device, void* dataSrc, size_t bytes);
 
-	void CopyBuffer(SbVulkanBase& base, SbBuffer dst);
+	void CopyBuffer(SbVulkanBase& base, SbBuffer& dst);
+
+	void CopyBuffer(VkCommandBuffer cmd, SbBuffer& dst);
 	
 	void Destroy(vk::Device device);
 	

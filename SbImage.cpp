@@ -7,7 +7,6 @@ SbImage::SbImage(SbVulkanBase& base, uint32_t width, uint32_t height, uint32_t m
 	VkMemoryPropertyFlags properties)
 	: width(width), height(height), mipLevels(mipLevels)
 {
-	VkImageCreateInfo imageInfo = {};
 	imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 	imageInfo.imageType = VK_IMAGE_TYPE_2D;
 	imageInfo.extent.width = width;

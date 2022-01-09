@@ -54,15 +54,17 @@ void SbCommandPool::endSingleTimeCommands(VkCommandBuffer commandBuffer) {
 }
 
 
-void SbCommandPool::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height) {
+void SbCommandPool::copyBufferToImage(VkBuffer buffer, VkImage image, 
+	uint32_t width, uint32_t height, uint32_t mipLevel, uint32_t bufferOffset)
+{
 	VkCommandBuffer commandBuffer = beginSingleTimeCommands();
 
 	VkBufferImageCopy region = {};
-	region.bufferOffset = 0;
+	region.bufferOffset = bufferOffset;
 	region.bufferRowLength = 0;
 	region.bufferImageHeight = 0;
 	region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-	region.imageSubresource.mipLevel = 0;
+	region.imageSubresource.mipLevel = mipLevel;
 	region.imageSubresource.baseArrayLayer = 0;
 	region.imageSubresource.layerCount = 1;
 	region.imageOffset = { 0, 0, 0 };

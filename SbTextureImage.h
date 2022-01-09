@@ -16,13 +16,13 @@ public:
 	int texWidth, texHeight, texChannels;
 	vk::DeviceSize imageSize;
 	uint32_t mipLevels;
+	//VkImageLayout layout;
 
+	
 	SbTextureImage(SbVulkanBase& base, std::string path);
-
 
 	void Destroy(vk::Device device);
 
 	~SbTextureImage();
-
 };
 

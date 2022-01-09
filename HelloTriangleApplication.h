@@ -34,9 +34,9 @@
 
 #include <cmath>
 
-#include <assimp/Importer.hpp> // C++ importer interface
-#include <assimp/scene.h> // Output data structure
-#include <assimp/postprocess.h> // Post processing flags
+//#include <assimp/Importer.hpp> // C++ importer interface
+//#include <assimp/scene.h> // Output data structure
+//#include <assimp/postprocess.h> // Post processing flags
 
 #include "AnimationStuff.h"
 
@@ -47,7 +47,10 @@
 
 #include "SbCamera.h"
 
-#include "AnimationKeys.h"
+//#include "AnimationKeys.h"
+
+
+
 #include "UncompressedAnimationKeys.h"
 #include "UncompressedAnimation.h"
 
@@ -93,8 +96,8 @@ const int MAX_FRAMES_IN_FLIGHT = 2;
  
 
 namespace std {
-	template<> struct hash<Vertex> {
-		size_t operator()(Vertex const& vertex) const {
+	template<> struct hash<AnimatedVertex> {
+		size_t operator()(AnimatedVertex const& vertex) const {
 			return ((hash<glm::vec3>()(vertex.pos) ^ (hash<glm::vec3>()(vertex.color) << 1)) >> 1) ^ (hash<glm::vec2>()(vertex.texCoord) << 1);
 		}
 	};
@@ -118,7 +121,6 @@ class HelloTriangleApplication {
 public:
 
 	struct DrawableMesh {
-		int id;
 		VkBuffer VertexBuffer;
 		VkDeviceMemory VertexBufferMemory;
 		VkBuffer IndexBuffer;
@@ -170,22 +172,13 @@ private:
 	std::unique_ptr<SbSwapchain> swapchain;
 	std::unique_ptr<SbRenderpass> renderPass;
 
-	enum
-	{
-		kSubpass_GBUF,
-		kSubpass_COMPOSE,
-		kSubpass_TRANSPARENT,
-		kSubpass_COUNT,
-		kSubpass_MAX = kSubpass_COUNT - 1
-	};
-
 
 	std::unique_ptr<SbTextureImage> texture;
 
 	vk::Sampler textureSampler;
 
 	//custom model struct
-	Model* mymodel = nullptr;
+	AnimatedModel* mymodel = nullptr;
 
 
 	std::unique_ptr<SbUniformBuffer<UniformBufferObject>> transformUniformBuffer;
@@ -241,14 +234,12 @@ private:
 
 	void createTextureSampler();
 
-	Assimp::Importer modelImporter;
-	const aiScene* modelScene;
-	AnimationKeys running;
-	AnimationKeys walking;
+	
+	
+	//AnimationKeys running;
+	//AnimationKeys walking;
 	//UncompressedAnimationKeys uk;
 	//SkeletonAnimation sa()
-
-	void loadModel();
 
 	//TODO make function take model argument?
 	void createVertexBuffer();

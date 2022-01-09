@@ -84,8 +84,6 @@ void SbShaderLayout::parse(std::vector<uint32_t>& spirv_binary, VkShaderStageFla
 {
 	spirv_cross::CompilerGLSL glsl(std::move(spirv_binary));
 
-
-
 	// The SPIR-V is now parsed, and we can perform reflection on it.
 	spirv_cross::ShaderResources resources = glsl.get_shader_resources();
 
@@ -103,10 +101,10 @@ void SbShaderLayout::parse(std::vector<uint32_t>& spirv_binary, VkShaderStageFla
 		if (it != setImageSamplers.end())
 			it->second.stageFlags |= shaderStage;
 		else
-			setImageSamplers[binding] = { (uint64_t)shaderStage };
-
-
+			setImageSamplers[binding] = { resource.name, (uint64_t)shaderStage };
+	
 		printf("Image %s at set = %u, binding = %u\n", resource.name.c_str(), set, binding);
+		
 	}
 
 	for (auto& resource : resources.subpass_inputs) //attachments, use here or put early in renderpass construction
@@ -123,7 +121,7 @@ void SbShaderLayout::parse(std::vector<uint32_t>& spirv_binary, VkShaderStageFla
 		if (it != setSubpassInputs.end())
 			it->second.stageFlags |= shaderStage;
 		else
-			setSubpassInputs[binding] = { (uint64_t)shaderStage, attachment_index };
+			setSubpassInputs[binding] = { resource.name, (uint64_t)shaderStage, attachment_index };
 
 		printf("subpass input %s at set = %u, binding = %u\n", resource.name.c_str(), set, binding);
 	}
@@ -143,7 +141,7 @@ void SbShaderLayout::parse(std::vector<uint32_t>& spirv_binary, VkShaderStageFla
 		if (it != setUniforms.end())
 			it->second.stageFlags |= shaderStage;
 		else
-			setUniforms[binding] = { (uint64_t)shaderStage, (unsigned)size };
+			setUniforms[binding] = { resource.name, (uint64_t)shaderStage, (unsigned)size };
 	}
 
 	for (set& s : sets)

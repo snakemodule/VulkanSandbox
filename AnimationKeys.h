@@ -55,7 +55,7 @@ public:
 
 	
 
-	AnimationKeys();
+	AnimationKeys(std::string filename);
 	~AnimationKeys();
 };
 

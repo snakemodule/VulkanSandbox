@@ -8,6 +8,9 @@
 #include "MyRenderPass.h"
 #include "SbTextureImage.h"
 
+#include "ResourceManager.h"
+
+#include "Sponza.h"
 
 // Wrapper functions for aligned memory allocation
 // There is currently no standard for this in C++ that works across all platforms and vendors, so we abstract this
@@ -43,9 +46,7 @@ void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT
 
 HelloTriangleApplication::HelloTriangleApplication()
 	:cam(WIDTH, HEIGHT)
-{
-
-}
+{	}
 
 void HelloTriangleApplication::run() {
 	initWindow();
@@ -87,8 +88,12 @@ void HelloTriangleApplication::framebufferResizeCallback(GLFWwindow* window, int
 
 void HelloTriangleApplication::initVulkan() {
 	createInstance();
-
 	vulkanBase->commandPool = std::make_unique<SbCommandPool>(*vulkanBase);
+
+	ResourceManager::getInstance().vkBase = vulkanBase.get(); //todo ugly bad
+	Sponza::load();
+
+
 
 	swapchain = std::make_unique<SbSwapchain>(*vulkanBase);
 	swapchain->createSwapChain(vulkanBase->surface, window);
@@ -100,8 +105,8 @@ void HelloTriangleApplication::initVulkan() {
 		
 	texture = std::make_unique<SbTextureImage>(*vulkanBase, TEXTURE_PATH);
 
-	createTextureSampler();
-	loadModel();
+	createTextureSampler();	
+	mymodel = new AnimatedModel("jump.fbx");
 	createVertexBuffer();
 
 	createUniformBuffers();
@@ -260,24 +265,24 @@ void HelloTriangleApplication::createInstance() {
 
 
 void HelloTriangleApplication::createPipelines() {
-	//TODO why use index twice?
-	auto& subpassgbuf = renderPass->subpasses[kSubpass_GBUF];
-	const auto& bind = Vertex::getBindingDescriptions();
-	const auto& attr = Vertex::getAttributeDescriptions();
+
+	auto& subpassgbuf = renderPass->subpasses[MyRenderPass::kSubpass_GBUF];
+	const auto& bind = AnimatedVertex::getBindingDescriptions();
+	const auto& attr = AnimatedVertex::getAttributeDescriptions();
 	subpassgbuf.pipeline.shaderLayouts(vulkanBase->getDevice(), "shaders/gbuf.vert.spv", "shaders/gbuf.frag.spv")
 		.addBlendAttachmentStates(vks::initializers::pipelineColorBlendAttachmentState(0xf, VK_FALSE), 0, 3)
 		.vertexBindingDescription(std::vector<VkVertexInputBindingDescription> {bind.begin(), bind.end()})
 		.vertexAttributeDescription(std::vector<VkVertexInputAttributeDescription> {attr.begin(), attr.end()})		
 		.createPipeline(renderPass->renderPass, vulkanBase->logicalDevice->device);
 
-	auto& subpasscomp = renderPass->subpasses[kSubpass_COMPOSE];
+	auto& subpasscomp = renderPass->subpasses[MyRenderPass::kSubpass_COMPOSE];
 	subpasscomp.pipeline.shaderLayouts(vulkanBase->getDevice(), "shaders/composition.vert.spv", "shaders/composition.frag.spv")
 		.cullMode(VK_CULL_MODE_NONE)
 		.depthWriteEnable(VK_FALSE)
 		.createPipeline(renderPass->renderPass, vulkanBase->logicalDevice->device);
 
-	auto& subpastransparent = renderPass->subpasses[kSubpass_TRANSPARENT];
-	subpastransparent.pipeline.shaderLayouts(vulkanBase->getDevice(), "shaders/transparent.vert.spv", "shaders/transparent.frag.spv")
+	auto& subpasstransparent = renderPass->subpasses[MyRenderPass::kSubpass_TRANSPARENT];
+	subpasstransparent.pipeline.shaderLayouts(vulkanBase->getDevice(), "shaders/transparent.vert.spv", "shaders/transparent.frag.spv")
 		.colorBlending(0)
 		.vertexBindingDescription(std::vector<VkVertexInputBindingDescription> {bind.begin(), bind.end()})
 		.vertexAttributeDescription(std::vector<VkVertexInputAttributeDescription> {attr.begin(), attr.end()})
@@ -289,19 +294,15 @@ void HelloTriangleApplication::createPipelines() {
 
 void HelloTriangleApplication::createDescriptorSets()
 {
-
-
 	gbufDesc = std::unique_ptr<SbDescriptorSet>(
-		new SbDescriptorSet(vulkanBase->getDevice(), *swapchain, renderPass->subpasses[kSubpass_GBUF], 0));
+		new SbDescriptorSet(vulkanBase->getDevice(), *swapchain, renderPass->subpasses[MyRenderPass::kSubpass_GBUF], 0));
 	gbufDesc->addBufferBinding(0, *transformUniformBuffer);
-	//VkImageView  v = texture->textureImageView;
-	//gbufDesc->addImageBinding(1, textureSampler, &v);
 	gbufDesc->addBufferBinding(1, *shadingUniformBuffer);
 	gbufDesc->allocate(*descriptorPool.get());
 	gbufDesc->updateDescriptors();
 
 	compDesc = std::unique_ptr<SbDescriptorSet>(
-		new SbDescriptorSet(vulkanBase->getDevice(), *swapchain, renderPass->subpasses[kSubpass_COMPOSE], 0));
+		new SbDescriptorSet(vulkanBase->getDevice(), *swapchain, renderPass->subpasses[MyRenderPass::kSubpass_COMPOSE], 0));
 	compDesc->addInputAttachmentBinding(0, MyRenderPass::kAttachment_POSITION);
 	compDesc->addInputAttachmentBinding(1, MyRenderPass::kAttachment_NORMAL);
 	compDesc->addInputAttachmentBinding(2, MyRenderPass::kAttachment_ALBEDO);
@@ -309,10 +310,8 @@ void HelloTriangleApplication::createDescriptorSets()
 	compDesc->updateDescriptors();
 
 	transDesc = std::unique_ptr<SbDescriptorSet>(
-		new SbDescriptorSet(vulkanBase->getDevice(), *swapchain, renderPass->subpasses[kSubpass_TRANSPARENT], 0));
+		new SbDescriptorSet(vulkanBase->getDevice(), *swapchain, renderPass->subpasses[MyRenderPass::kSubpass_TRANSPARENT], 0));
 	transDesc->addBufferBinding(0, *transformUniformBuffer);
-	//v = texture->textureImageView;
-	//transDesc->addImageBinding(1, textureSampler, &v);
 	transDesc->addBufferBinding(1, *shadingUniformBuffer);
 	transDesc->addInputAttachmentBinding(2, MyRenderPass::kAttachment_POSITION);
 	transDesc->allocate(*descriptorPool.get());
@@ -333,118 +332,7 @@ void HelloTriangleApplication::createTextureSampler() {
 	textureSampler = vulkanBase->getDevice().createSampler(samplerInfo);
 }
 
-void HelloTriangleApplication::loadModel() {
-
-	running.loadAnimationData("running.chs");
-	walking.loadAnimationData("walking.chs");
-	//uk.loadAnimationData("uncompressed.chs");
-
-	modelScene = modelImporter.ReadFile("jump.fbx",
-		aiProcess_CalcTangentSpace |
-		aiProcess_Triangulate |
-		aiProcess_JoinIdenticalVertices |
-		aiProcess_SortByPType |
-		aiProcess_ValidateDataStructure);
-
-	std::map<std::string, uint64_t> jointLayout;
-	auto rootJoint = AnimationStuff::findRootJoint(modelScene->mRootNode, modelScene);
-	mymodel = new Model();
-	AnimationStuff::makeFlatSkeleton(rootJoint, mymodel->skeleton, jointLayout, 0, -1, modelScene);
-	AnimationStuff::finalizeFlatten(mymodel->skeleton);
-
-	//SkeletonAnimation runningAnimation(mymodel->skeleton.jointCount, running); //todo get joint count from animation data instead?
-	//SkeletonAnimation walkingAnimation(mymodel->skeleton.jointCount, walking); //todo get joint count from animation data instead?
-
-	//UncompressedAnimation uncompAnimation(mymodel->skeleton.jointCount, uk);
-	//jumpAnimation.plot(mymodel->skeleton);
-	//uncompAnimation.plot(mymodel->skeleton);
-
-	AnimationLayer baseLayer;
-	baseLayer.blendAnimations.emplace_back(mymodel->skeleton.jointCount, walking);
-	baseLayer.blendAnimations.emplace_back(mymodel->skeleton.jointCount, running);// todo interface
-
-	mymodel->skeletalAnimationComponent.init(&mymodel->skeleton,
-		std::vector<AnimationLayer>{ baseLayer });
-	mymodel->meshes.resize(modelScene->mNumMeshes);
-	for (unsigned int i = 0; i < modelScene->mNumMeshes; i++) {
-		const aiMesh* currentMesh = modelScene->mMeshes[i];
-
-		//read vertex data
-		for (size_t j = 0; j < currentMesh->mNumVertices; j++)
-		{
-			glm::vec3 pos = {
-				currentMesh->mVertices[j].x,
-				currentMesh->mVertices[j].y,
-				currentMesh->mVertices[j].z
-			};
-
-			glm::vec2 texCoords = { 0.0f, 0.0f };
-			if (currentMesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
-			{
-				texCoords.x = currentMesh->mTextureCoords[0][j].x;
-				texCoords.y = currentMesh->mTextureCoords[0][j].y;
-			}
-
-			glm::vec3 color = { 1.0f, 1.0f, 1.0f };
-
-			glm::vec3 normal = { 0.0f, 0.0f, 0.0f };
-			normal.x = currentMesh->mNormals[j].x;
-			normal.y = currentMesh->mNormals[j].y;
-			normal.z = currentMesh->mNormals[j].z;
-
-			mymodel->meshes[i].vertexBuffer.emplace_back(
-				pos,
-				color,
-				texCoords,
-				normal
-			);
-		}
-
-		//get vertex indices
-		for (size_t j = 0; j < modelScene->mMeshes[i]->mNumFaces; j++)
-		{
-			for (size_t k = 0; k < modelScene->mMeshes[i]->mFaces[j].mNumIndices; k++)
-			{
-				mymodel->meshes[i].indexBuffer.push_back(modelScene->mMeshes[i]->mFaces[j].mIndices[k]);
-			}
-		}
-
-		//add weights and bone indices to vertices
-		for (size_t j = 0; j < currentMesh->mNumBones; j++)
-		{
-			size_t boneHierarchyIndex = jointLayout[currentMesh->mBones[j]->mName.C_Str()];
-			for (size_t k = 0; k < currentMesh->mBones[j]->mNumWeights; k++) {
-				size_t meshVertexID = currentMesh->mBones[j]->mWeights[k].mVertexId;
-				float weight = currentMesh->mBones[j]->mWeights[k].mWeight;
-				mymodel->meshes[i].vertexBuffer[meshVertexID].addBoneData(boneHierarchyIndex, weight);
-			}
-		}
-
-		if (modelScene->HasMaterials())
-		{
-			auto material = modelScene->mMaterials[currentMesh->mMaterialIndex];
-
-			aiColor4D specular;
-			aiColor4D diffuse;
-			aiColor4D ambient;
-			float shine;
-
-			aiGetMaterialColor(material, AI_MATKEY_COLOR_SPECULAR, &specular);
-			aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &diffuse);
-			aiGetMaterialColor(material, AI_MATKEY_COLOR_AMBIENT, &ambient);
-			aiGetMaterialFloat(material, AI_MATKEY_SHININESS, &shine);
-
-			mymodel->meshes[i].material.diffuseColor = { diffuse.r, diffuse.g, diffuse.b, diffuse.a };
-			mymodel->meshes[i].material.ambientColor = { ambient.r, ambient.g , ambient.b ,ambient.a };
-			mymodel->meshes[i].material.specularColor = { specular.r, specular.g, specular.b, specular.a };
-		}
-	}
-
-
-}
-
 //TODO make function take model argument?
-
 void HelloTriangleApplication::createVertexBuffer() {
 
 	using BufferUsage = vk::BufferUsageFlagBits;
@@ -452,7 +340,7 @@ void HelloTriangleApplication::createVertexBuffer() {
 
 	for (size_t i = 0; i < mymodel->meshes.size(); i++)
 	{
-		vk::DeviceSize bufferSize = sizeof(Vertex) * mymodel->meshes[i].vertexBuffer.size();
+		vk::DeviceSize bufferSize = sizeof(AnimatedVertex) * mymodel->meshes[i].vertexBuffer.size();
 		vk::DeviceSize indexBufferSize = sizeof(unsigned int) * mymodel->meshes[i].indexBuffer.size();
 
 		//------
@@ -470,7 +358,6 @@ void HelloTriangleApplication::createVertexBuffer() {
 			BufferUsage::eTransferDst | BufferUsage::eIndexBuffer, MemoryProperty::eDeviceLocal);
 		//---- todo what should happen when new buffers go out of scope?
 		drawables.emplace_back();
-		drawables.back().id = drawables.size() - 1;
 		drawables.back().VertexBuffer = newVertexBuffer.buffer;
 		drawables.back().IndexBuffer = newIndexBuffer.buffer;
 		drawables.back().VertexBufferMemory = newVertexBuffer.memory;
@@ -579,15 +466,12 @@ void HelloTriangleApplication::createCommandBuffers() {
 		vkCmdSetScissor(commandBuffers[i], 0, 1, &scissor);
 
 		{
-			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getSubpassPipeline(kSubpass_GBUF));
-
-
+			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getSubpassPipeline(MyRenderPass::kSubpass_GBUF));
 
 			for (size_t j = 0; j < drawables.size() - 1; j++)
 			{
 				uint32_t offset = j * static_cast<uint32_t>(shadingUniformBuffer->dynamicAlignment);
-				vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, 
-					renderPass->getSubpassPipelineLayout(kSubpass_GBUF),
+				vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getSubpassPipelineLayout(MyRenderPass::kSubpass_GBUF),
 					0, 1, &gbufDesc->allocatedDSs[i], 0, &offset); //todo dynamic offset count should be what?
 
 				VkBuffer vert[] = { drawables[j].VertexBuffer };
@@ -605,8 +489,8 @@ void HelloTriangleApplication::createCommandBuffers() {
 		vkCmdNextSubpass(commandBuffers[i], VK_SUBPASS_CONTENTS_INLINE);
 		{
 
-			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getSubpassPipeline(kSubpass_COMPOSE));
-			vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getSubpassPipelineLayout(kSubpass_COMPOSE), //TODO GET LAYOUT FROM "shaderlayout"
+			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getSubpassPipeline(MyRenderPass::kSubpass_COMPOSE));
+			vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getSubpassPipelineLayout(MyRenderPass::kSubpass_COMPOSE), 
 				0, 1, &compDesc->allocatedDSs[i], 0, NULL);
 			vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
 		}
@@ -615,12 +499,12 @@ void HelloTriangleApplication::createCommandBuffers() {
 		vkCmdNextSubpass(commandBuffers[i], VK_SUBPASS_CONTENTS_INLINE);
 		{
 
-			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getSubpassPipeline(kSubpass_TRANSPARENT));
+			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getSubpassPipeline(MyRenderPass::kSubpass_TRANSPARENT));
 
 			for (size_t j = drawables.size() - 1; j < drawables.size(); j++)
 			{
 				uint32_t offset = j * static_cast<uint32_t>(shadingUniformBuffer->dynamicAlignment);
-				vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getSubpassPipelineLayout(kSubpass_TRANSPARENT),
+				vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getSubpassPipelineLayout(MyRenderPass::kSubpass_TRANSPARENT),
 					0, 1, &transDesc->allocatedDSs[i], 0, &offset);
 
 				VkBuffer vert[] = { drawables[j].VertexBuffer };
@@ -642,28 +526,23 @@ void HelloTriangleApplication::createCommandBuffers() {
 	}
 }
 
-//todo move this
-
-
-
 void HelloTriangleApplication::updateUniformBuffer(uint32_t currentImage) {
 
 	static auto startTime = std::chrono::high_resolution_clock::now();
 
 	auto currentTime = std::chrono::high_resolution_clock::now();
 	float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
-	float TicksPerSecond = modelScene->mAnimations[0]->mTicksPerSecond != 0 ?
-		modelScene->mAnimations[0]->mTicksPerSecond : 25.0f;
-	float TimeInTicks = time * TicksPerSecond;
-	float AnimationTime = fmod(TimeInTicks, modelScene->mAnimations[0]->mDuration);
+	//float TicksPerSecond = modelScene->mAnimations[0]->mTicksPerSecond != 0 ?
+	//	modelScene->mAnimations[0]->mTicksPerSecond : 25.0f;
+	//float TimeInTicks = time * TicksPerSecond;
+	//float AnimationTime = fmod(TimeInTicks, modelScene->mAnimations[0]->mDuration);
 	
 	float s = 0.5f * std::sinf(time / (3.14f)) + 0.5f;
 	mymodel->skeletalAnimationComponent.evaluate(deltaTime, std::vector<float> { s });
 
 	UniformBufferObject ubo = {};
 	ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f))
-		//* glm::translate(glm::mat4(1.0f), { 0.0f,-1.0f,0.0f })
-		* glm::scale(glm::mat4(1.0f), { 0.01f,0.01f ,0.01f });//* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f))
+		* glm::scale(glm::mat4(1.0f), { 0.01f,0.01f ,0.01f });
 	ubo.view = cam.getViewMatrix();
 	ubo.proj = cam.getProjectionMatrix();
 	memcpy(ubo.boneTransforms, mymodel->skeletalAnimationComponent.transformations.data(),

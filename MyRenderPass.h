@@ -48,7 +48,6 @@ public:
 	MyRenderPass(SbVulkanBase& base, SbSwapchain& swapchain)
 		: SbRenderpass(base, kSubpass_COUNT, kAttachment_COUNT, swapchain.getSize())
 	{
-
 		attachmentFormatTable[kAttachment_DEPTH] = 
 			{ base.findDepthFormat(), VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT };
 

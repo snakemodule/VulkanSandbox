@@ -1,8 +1,10 @@
 
 #include "HelloTriangleApplication.h"
 
+#include "Sponza.h"
 
 int main() {
+
 	HelloTriangleApplication app;
 
 	try {

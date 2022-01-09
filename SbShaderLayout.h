@@ -11,18 +11,21 @@ public:
 
 	struct SubpassInput
 	{
+		std::string name;
 		uint64_t stageFlags = 0;
 		unsigned input_attachment_index = 0;
 	};
 
 	struct UniformBuffer
 	{
+		std::string name;
 		uint64_t stageFlags = 0;
 		unsigned size = 0;
 	};
 
 	struct SampledImage
 	{
+		std::string name;
 		uint64_t stageFlags = 0;
 	};
 

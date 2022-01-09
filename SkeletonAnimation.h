@@ -11,6 +11,8 @@
 
 #include "Skeleton.h"
 
+#include <memory>
+
 class SkeletonAnimation
 {
 private:
@@ -90,7 +92,7 @@ private:
 	AnimationKeys::vbits latestPosData;
 	uint32_t rotDataIndex = 0;
 	uint32_t posDataIndex = 0;
-	AnimationKeys & animationData;
+	std::shared_ptr<AnimationKeys> animationData;
 
 
 public:
@@ -105,7 +107,7 @@ public:
 
 	void initiateEvaluators();
 
-	SkeletonAnimation(int jointCount, AnimationKeys& animationData);
+	SkeletonAnimation(int jointCount, std::shared_ptr<AnimationKeys> animationData);
 	~SkeletonAnimation();
 
 	double animationTime = 0;

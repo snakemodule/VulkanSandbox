@@ -29,10 +29,10 @@ layout(location = 1) out vec2 fragTexCoord;
 
 
 void main() {
-	mat4 BoneTransform  = ubo.boneTransforms[int(boneIndex[0])] * weight[0];
 		 //BoneTransform += ubo.boneTransforms[int(boneIndex[1])] * weight[1];
 		 //BoneTransform += ubo.boneTransforms[int(boneIndex[2])] * weight[2];
 		 //BoneTransform += ubo.boneTransforms[int(boneIndex[3])] * weight[3];
+	mat4 BoneTransform  = ubo.boneTransforms[int(boneIndex[0])] * weight[0];
 
     gl_Position = ubo.proj * ubo.view * ubo.model * BoneTransform * vec4(inPosition, 1.0);
     fragColor = inColor;
