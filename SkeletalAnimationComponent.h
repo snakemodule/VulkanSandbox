@@ -117,47 +117,7 @@ public:
 			}
 			
 		}
-		/*
-		for (size_t i = 0; i < layerCount; i++)
-		{
-			auto & layer = layers[i];
-			auto  animationCount = layers[i].blendAnimations.size();
-			if (animationCount > 1)
-			{
-				float span = 1.0f / (animationCount - 1);
-				int index;
-				auto & factor = blendFactors[i];
-				if (factor < 1.0f)
-					index = std::floor(factor / span);
-				else
-					index = (animationCount - 1);
-				float remainder = std::fmod(factor, span);
-
-				auto & blendAnim0 = layer.blendAnimations[index];
-				auto & blendAnim1 = layer.blendAnimations[index + 1];
-				blendAnim0.evaluate(blendAnim1.getAnimationDuration());
-				blendAnim1.evaluate(blendAnim1.getAnimationDuration());
-				auto & lr0 = blendAnim0.localRotation;
-				auto & lr1 = blendAnim1.localRotation;
-				auto & lp0 = blendAnim0.localPosition;
-				auto & lp1 = blendAnim1.localPosition;
-				for (size_t j = 0; j < jointCount; j++)
-					lr0[j] = glm::slerp(lr0[j], lr1[j], remainder / span);
-				for (size_t j = 0; j < jointCount; j++)
-					lp0[j] = glm::lerp(lp0[j], lp1[j], remainder / span);
-				layer.blendedRotation = lr0.data();
-				layer.blendedPosition = lp0.data();
-			}
-			else
-			{
-				layer.blendAnimations[0].evaluate();
-				layer.blendedRotation = layer.blendAnimations[0].localRotation.data();
-				layer.blendedPosition = layer.blendAnimations[0].localPosition.data();
-			}
-
-		}
-
-		*/
+		
 		//blend all layers into base layer
 		auto & accumulatorRotations = layers[0].blendedRotation;
 		auto & accumulatorPositions = layers[0].blendedPosition;
