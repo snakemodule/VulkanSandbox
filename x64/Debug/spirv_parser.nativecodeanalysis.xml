@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>g:\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>predefined c++ types (compiler internal)</FILENAME>
+      <LINE>33</LINE>
+      <COLUMN>22</COLUMN>
+    </SFA>
+    <DEFECTCODE>28285</DEFECTCODE>
+    <DESCRIPTION>For function 'new' 'return' syntax error in 'SAL_writableTo(byteCount(__formal(0,_Size)))' near 'byteCount(__formal(0'.</DESCRIPTION>
+    <FUNCTION></FUNCTION>
+    <DECORATED></DECORATED>
+    <FUNCLINE>0</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>g:\repos\vulkansandbox\vulkansandbox\spirv-cross</FILEPATH>
+      <FILENAME>spirv_common.hpp</FILENAME>
+      <LINE>1635</LINE>
+      <COLUMN>3</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'spirv_cross::Meta::Decoration::Extended::values' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>spirv_cross::Meta::Decoration::Extended::{ctor}</FUNCTION>
+    <DECORATED>??0Extended@Decoration@Meta@spirv_cross@@QEAA@XZ</DECORATED>
+    <FUNCLINE>1635</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>g:\repos\vulkansandbox\vulkansandbox\spirv-cross</FILEPATH>
+      <FILENAME>spirv_parser.cpp</FILENAME>
+      <LINE>155</LINE>
+      <COLUMN>18</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>spirv_cross::Parser::stream</FUNCTION>
+    <DECORATED>?stream@Parser@spirv_cross@@AEBAPEBIAEBUInstruction@2@@Z</DECORATED>
+    <FUNCLINE>147</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>g:\repos\vulkansandbox\vulkansandbox\spirv-cross</FILEPATH>
+      <FILENAME>spirv_cross_containers.hpp</FILENAME>
+      <LINE>619</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'spirv_cross::StringStream&lt;4096,4096&gt;::stack_buffer' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>spirv_cross::StringStream&lt;4096,4096&gt;::{ctor}</FUNCTION>
+    <DECORATED>??0?$StringStream@$0BAAA@$0BAAA@@spirv_cross@@QEAA@XZ</DECORATED>
+    <FUNCLINE>619</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>g:\repos\vulkansandbox\vulkansandbox\spirv-cross</FILEPATH>
+      <FILENAME>spirv_common.hpp</FILENAME>
+      <LINE>582</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'spirv_cross::SPIRType::ImageType::depth' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>spirv_cross::SPIRType::ImageType::{ctor}</FUNCTION>
+    <DECORATED>??0ImageType@SPIRType@spirv_cross@@QEAA@XZ</DECORATED>
+    <FUNCLINE>582</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>g:\repos\vulkansandbox\vulkansandbox\spirv-cross</FILEPATH>
+      <FILENAME>spirv_common.hpp</FILENAME>
+      <LINE>582</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'spirv_cross::SPIRType::ImageType::dim' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>spirv_cross::SPIRType::ImageType::{ctor}</FUNCTION>
+    <DECORATED>??0ImageType@SPIRType@spirv_cross@@QEAA@XZ</DECORATED>
+    <FUNCLINE>582</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>g:\repos\vulkansandbox\vulkansandbox\spirv-cross</FILEPATH>
+      <FILENAME>spirv_common.hpp</FILENAME>
+      <LINE>582</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'spirv_cross::SPIRType::ImageType::arrayed' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>spirv_cross::SPIRType::ImageType::{ctor}</FUNCTION>
+    <DECORATED>??0ImageType@SPIRType@spirv_cross@@QEAA@XZ</DECORATED>
+    <FUNCLINE>582</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>g:\repos\vulkansandbox\vulkansandbox\spirv-cross</FILEPATH>
+      <FILENAME>spirv_common.hpp</FILENAME>
+      <LINE>582</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'spirv_cross::SPIRType::ImageType::ms' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>spirv_cross::SPIRType::ImageType::{ctor}</FUNCTION>
+    <DECORATED>??0ImageType@SPIRType@spirv_cross@@QEAA@XZ</DECORATED>
+    <FUNCLINE>582</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>g:\repos\vulkansandbox\vulkansandbox\spirv-cross</FILEPATH>
+      <FILENAME>spirv_common.hpp</FILENAME>
+      <LINE>582</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'spirv_cross::SPIRType::ImageType::sampled' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>spirv_cross::SPIRType::ImageType::{ctor}</FUNCTION>
+    <DECORATED>??0ImageType@SPIRType@spirv_cross@@QEAA@XZ</DECORATED>
+    <FUNCLINE>582</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>g:\repos\vulkansandbox\vulkansandbox\spirv-cross</FILEPATH>
+      <FILENAME>spirv_common.hpp</FILENAME>
+      <LINE>582</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'spirv_cross::SPIRType::ImageType::format' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>spirv_cross::SPIRType::ImageType::{ctor}</FUNCTION>
+    <DECORATED>??0ImageType@SPIRType@spirv_cross@@QEAA@XZ</DECORATED>
+    <FUNCLINE>582</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>g:\repos\vulkansandbox\vulkansandbox\spirv-cross</FILEPATH>
+      <FILENAME>spirv_common.hpp</FILENAME>
+      <LINE>582</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'spirv_cross::SPIRType::ImageType::access' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>spirv_cross::SPIRType::ImageType::{ctor}</FUNCTION>
+    <DECORATED>??0ImageType@SPIRType@spirv_cross@@QEAA@XZ</DECORATED>
+    <FUNCLINE>582</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+</DEFECTS>

@@ -27,8 +27,8 @@ AnimatedModel::AnimatedModel(std::string modelFile)
 	AnimationStuff::finalizeFlatten(skeleton);
 
 	//hardcoded animation load
-	auto running = ResourceManager::getInstance().loadAnimation("running.chs");//running.loadAnimationData("running.chs");
-	auto walking = ResourceManager::getInstance().loadAnimation("walking.chs");//walking.loadAnimationData("walking.chs");
+	auto running = ResourceManager::getInstance().loadAnimation("running.chs");;// = loadAnimationData("running.chs"); 
+	auto walking = ResourceManager::getInstance().loadAnimation("walking.chs");;// = loadAnimationData("walking.chs"); //ResourceManager::getInstance().loadAnimation("walking.chs");
 	AnimationLayer baseLayer;
 	baseLayer.blendAnimations.emplace_back(skeleton.jointCount, walking);
 	baseLayer.blendAnimations.emplace_back(skeleton.jointCount, running);

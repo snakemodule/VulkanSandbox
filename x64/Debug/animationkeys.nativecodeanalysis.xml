@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>g:\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>animationkeys.cpp</FILENAME>
+      <LINE>24</LINE>
+      <COLUMN>15</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'AnimationKeys::posKeyCount' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>AnimationKeys::{ctor}</FUNCTION>
+    <DECORATED>??0AnimationKeys@@QEAA@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z</DECORATED>
+    <FUNCLINE>24</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>g:\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>animationkeys.cpp</FILENAME>
+      <LINE>24</LINE>
+      <COLUMN>15</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'AnimationKeys::rotKeyCount' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>AnimationKeys::{ctor}</FUNCTION>
+    <DECORATED>??0AnimationKeys@@QEAA@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z</DECORATED>
+    <FUNCLINE>24</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>g:\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>animationkeys.cpp</FILENAME>
+      <LINE>24</LINE>
+      <COLUMN>15</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'AnimationKeys::animationDuration' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>AnimationKeys::{ctor}</FUNCTION>
+    <DECORATED>??0AnimationKeys@@QEAA@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z</DECORATED>
+    <FUNCLINE>24</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+</DEFECTS>

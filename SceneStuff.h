@@ -12,56 +12,59 @@
 
 #include "Vertex.h"
 #include "SbBuffer.h"
+#include "SbVulkanBase.h"
+
+#include "VulkanInitializers.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 
 
-std::string errorString(VkResult errorCode)
-{
-	switch (errorCode)
-	{
-#define STR(r) case VK_ ##r: return #r
-		STR(NOT_READY);
-		STR(TIMEOUT);
-		STR(EVENT_SET);
-		STR(EVENT_RESET);
-		STR(INCOMPLETE);
-		STR(ERROR_OUT_OF_HOST_MEMORY);
-		STR(ERROR_OUT_OF_DEVICE_MEMORY);
-		STR(ERROR_INITIALIZATION_FAILED);
-		STR(ERROR_DEVICE_LOST);
-		STR(ERROR_MEMORY_MAP_FAILED);
-		STR(ERROR_LAYER_NOT_PRESENT);
-		STR(ERROR_EXTENSION_NOT_PRESENT);
-		STR(ERROR_FEATURE_NOT_PRESENT);
-		STR(ERROR_INCOMPATIBLE_DRIVER);
-		STR(ERROR_TOO_MANY_OBJECTS);
-		STR(ERROR_FORMAT_NOT_SUPPORTED);
-		STR(ERROR_SURFACE_LOST_KHR);
-		STR(ERROR_NATIVE_WINDOW_IN_USE_KHR);
-		STR(SUBOPTIMAL_KHR);
-		STR(ERROR_OUT_OF_DATE_KHR);
-		STR(ERROR_INCOMPATIBLE_DISPLAY_KHR);
-		STR(ERROR_VALIDATION_FAILED_EXT);
-		STR(ERROR_INVALID_SHADER_NV);
-#undef STR
-	default:
-		return "UNKNOWN_ERROR";
-	}
-}
+//std::string errorString(VkResult errorCode)
+//{
+//	switch (errorCode)
+//	{
+//#define STR(r) case VK_ ##r: return #r
+//		STR(NOT_READY);
+//		STR(TIMEOUT);
+//		STR(EVENT_SET);
+//		STR(EVENT_RESET);
+//		STR(INCOMPLETE);
+//		STR(ERROR_OUT_OF_HOST_MEMORY);
+//		STR(ERROR_OUT_OF_DEVICE_MEMORY);
+//		STR(ERROR_INITIALIZATION_FAILED);
+//		STR(ERROR_DEVICE_LOST);
+//		STR(ERROR_MEMORY_MAP_FAILED);
+//		STR(ERROR_LAYER_NOT_PRESENT);
+//		STR(ERROR_EXTENSION_NOT_PRESENT);
+//		STR(ERROR_FEATURE_NOT_PRESENT);
+//		STR(ERROR_INCOMPATIBLE_DRIVER);
+//		STR(ERROR_TOO_MANY_OBJECTS);
+//		STR(ERROR_FORMAT_NOT_SUPPORTED);
+//		STR(ERROR_SURFACE_LOST_KHR);
+//		STR(ERROR_NATIVE_WINDOW_IN_USE_KHR);
+//		STR(SUBOPTIMAL_KHR);
+//		STR(ERROR_OUT_OF_DATE_KHR);
+//		STR(ERROR_INCOMPATIBLE_DISPLAY_KHR);
+//		STR(ERROR_VALIDATION_FAILED_EXT);
+//		STR(ERROR_INVALID_SHADER_NV);
+//#undef STR
+//	default:
+//		return "UNKNOWN_ERROR";
+//	}
+//}
 
 // Macro to check and display Vulkan return results
-#define VK_CHECK_RESULT(f)																				\
-{																										\
-	VkResult res = (f);																					\
-	if (res != VK_SUCCESS)																				\
-	{																									\
-		std::cout << "Fatal : VkResult is \"" << errorString(res) << "\" in " << __FILE__ << " at line " << __LINE__ << std::endl; \
-		assert(res == VK_SUCCESS);																		\
-	}																									\
-}	
+//#define VK_CHECK_RESULT(f)																				\
+//{																										\
+//	VkResult res = (f);																					\
+//	if (res != VK_SUCCESS)																				\
+//	{																									\
+//		std::cout << "Fatal : VkResult is \"" << errorString(res) << "\" in " << __FILE__ << " at line " << __LINE__ << std::endl; \
+//		assert(res == VK_SUCCESS);																		\
+//	}																									\
+//}	
 
 //a material ready to be used in a scene
 struct SceneMaterial
@@ -104,7 +107,7 @@ public:
 	std::vector<SceneMaterial> materials;
 	std::vector<SceneMesh> meshes;
 
-	SbVulkanBase* base;
+	//SbVulkanBase* base;
 	
 	SbBuffer vertexBuffer;
 	SbBuffer indexBuffer;	
@@ -212,7 +215,7 @@ public:
 		}
 	}
 
-	void loadMeshes(const aiScene* aScene)
+	void loadMeshes(const aiScene* aScene, SbVulkanBase* base)
 	{		
 		std::vector<Vertex> gVertices;
 		std::vector<uint32_t> gIndices;
@@ -279,7 +282,7 @@ public:
 			// Create buffers
 			// todo : staging
 			// todo : only one memory allocation
-
+			/*
 			uint32_t vertexDataSize = vertices.size() * sizeof(Vertex);
 			uint32_t indexDataSize = indices.size() * sizeof(uint32_t);
 
@@ -303,12 +306,14 @@ public:
 
 
 
-			vk::BufferUsageFlagBits::eVertexBuffer
-				| vk::BufferUsageFlagBits::eTransferDst
+			//vk::BufferUsageFlagBits::eVertexBuffer
+				//| vk::BufferUsageFlagBits::eTransferDst
 
 
 			// Generate vertex buffer
 			VkBufferCreateInfo vBufferInfo;
+
+			
 
 			// Staging buffer
 			vBufferInfo = vks::initializers::bufferCreateInfo(VK_BUFFER_USAGE_TRANSFER_SRC_BIT, vertexDataSize);
@@ -394,6 +399,8 @@ public:
 			vkFreeMemory(device, staging.vBuffer.memory, nullptr);
 			vkDestroyBuffer(device, staging.iBuffer.buffer, nullptr);
 			vkFreeMemory(device, staging.iBuffer.memory, nullptr);
+
+			*/
 		}
 
 
@@ -428,7 +435,7 @@ public:
 		iBuffer.CopyBuffer(copyCmd, indexBuffer);
 		base->commandPool->endSingleTimeCommands(copyCmd);
 
-		vBuffer.Destroy(device);// this is ugly, kinda looks like destroying the device
+		vBuffer.Destroy(device);// todo: this is ugly, kinda looks like destroying the device
 		iBuffer.Destroy(device);
 
 		// Generate descriptor sets for all meshes
@@ -451,6 +458,6 @@ public:
 
 		loadMaterials(modelScene);
 
-		loadMeshes();
+		loadMeshes(modelScene, base);
 	}
 };

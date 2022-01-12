@@ -91,7 +91,7 @@ void HelloTriangleApplication::initVulkan() {
 	vulkanBase->commandPool = std::make_unique<SbCommandPool>(*vulkanBase);
 
 	ResourceManager::getInstance().vkBase = vulkanBase.get(); //todo ugly bad
-	Sponza::load();
+	Sponza::load(vulkanBase.get());
 
 
 
@@ -103,9 +103,12 @@ void HelloTriangleApplication::initVulkan() {
 
 	swapchain->createFramebuffersForRenderpass(renderPass->renderPass);
 		
-	texture = std::make_unique<SbTextureImage>(*vulkanBase, TEXTURE_PATH);
+	//todo why is this here and why does it fail?
+	//texture = std::make_unique<SbTextureImage>(*vulkanBase, TEXTURE_PATH); 
 
-	createTextureSampler();	
+	//todo why does this still exist?
+	//createTextureSampler();	
+
 	mymodel = new AnimatedModel("jump.fbx");
 	createVertexBuffer();
 
@@ -319,18 +322,18 @@ void HelloTriangleApplication::createDescriptorSets()
 }
 
 
-void HelloTriangleApplication::createTextureSampler() {
+//void HelloTriangleApplication::createTextureSampler() {
 
-	auto samplerInfo = vk::SamplerCreateInfo(vk::SamplerCreateFlags(),
-		vk::Filter::eLinear, vk::Filter::eLinear, vk::SamplerMipmapMode::eLinear,
-		vk::SamplerAddressMode::eRepeat, vk::SamplerAddressMode::eRepeat, vk::SamplerAddressMode::eRepeat,
-		0, VK_TRUE, 16,
-		VK_FALSE, vk::CompareOp::eAlways,
-		0, texture->mipLevels, //todo this sampler is hardcoded to use the miplevels of the one and only texture
-		vk::BorderColor::eIntOpaqueBlack, VK_FALSE);
-
-	textureSampler = vulkanBase->getDevice().createSampler(samplerInfo);
-}
+	//auto samplerInfo = vk::SamplerCreateInfo(vk::SamplerCreateFlags(),
+	//	vk::Filter::eLinear, vk::Filter::eLinear, vk::SamplerMipmapMode::eLinear,
+	//	vk::SamplerAddressMode::eRepeat, vk::SamplerAddressMode::eRepeat, vk::SamplerAddressMode::eRepeat,
+	//	0, VK_TRUE, 16,
+	//	VK_FALSE, vk::CompareOp::eAlways,
+	//	0, texture->mipLevels, //todo this sampler is hardcoded to use the miplevels of the one and only texture
+	//	vk::BorderColor::eIntOpaqueBlack, VK_FALSE);
+	//
+	//textureSampler = vulkanBase->getDevice().createSampler(samplerInfo);
+//}
 
 //TODO make function take model argument?
 void HelloTriangleApplication::createVertexBuffer() {

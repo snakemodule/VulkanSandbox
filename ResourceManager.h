@@ -30,12 +30,12 @@ public:
     std::map<std::string, std::shared_ptr<SbTextureImage>> textures;
     std::map<std::string, std::shared_ptr<StaticMesh>> staticMeshes;
 
-    std::shared_ptr<StaticMesh> loadStaticMesh(std::string path) //todo name
-    {
-        auto ptr = std::make_shared<StaticMesh>(path);
-        staticMeshes[path] = ptr;
-        return ptr;
-    }
+    //std::shared_ptr<StaticMesh> loadStaticMesh(std::string path) //todo name
+    //{
+    //    auto ptr = std::make_shared<StaticMesh>(path);
+    //    staticMeshes[path] = ptr;
+    //    return ptr;
+    //}
 
     std::shared_ptr<AnimationKeys> loadAnimation(std::string path) //todo name
     {

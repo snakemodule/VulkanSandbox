@@ -173,7 +173,7 @@ private:
 	std::unique_ptr<SbRenderpass> renderPass;
 
 
-	std::unique_ptr<SbTextureImage> texture;
+	//std::unique_ptr<SbTextureImage> texture;
 
 	vk::Sampler textureSampler;
 
@@ -232,7 +232,7 @@ private:
 
 
 
-	void createTextureSampler();
+	//void createTextureSampler();
 
 	
 	

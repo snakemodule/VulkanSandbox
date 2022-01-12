@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>g:\repos\vulkansandbox\vulkansandbox</FILEPATH>
+      <FILENAME>predefined c++ types (compiler internal)</FILENAME>
+      <LINE>33</LINE>
+      <COLUMN>22</COLUMN>
+    </SFA>
+    <DEFECTCODE>28285</DEFECTCODE>
+    <DESCRIPTION>For function 'new' 'return' syntax error in 'SAL_writableTo(byteCount(__formal(0,_Size)))' near 'byteCount(__formal(0'.</DESCRIPTION>
+    <FUNCTION></FUNCTION>
+    <DECORATED></DECORATED>
+    <FUNCLINE>0</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>g:\repos\vulkansandbox\vulkansandbox\spirv-cross</FILEPATH>
+      <FILENAME>spirv_common.hpp</FILENAME>
+      <LINE>1635</LINE>
+      <COLUMN>3</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'spirv_cross::Meta::Decoration::Extended::values' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>spirv_cross::Meta::Decoration::Extended::{ctor}</FUNCTION>
+    <DECORATED>??0Extended@Decoration@Meta@spirv_cross@@QEAA@XZ</DECORATED>
+    <FUNCLINE>1635</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>g:\repos\vulkansandbox\vulkansandbox\spirv-cross</FILEPATH>
+      <FILENAME>spirv_cross_parsed_ir.cpp</FILENAME>
+      <LINE>997</LINE>
+      <COLUMN>20</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'spirv_cross::ParsedIR::LoopLock::lock' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>spirv_cross::ParsedIR::LoopLock::{ctor}</FUNCTION>
+    <DECORATED>??0LoopLock@ParsedIR@spirv_cross@@QEAA@$$QEAV012@@Z</DECORATED>
+    <FUNCLINE>997</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>g:\repos\vulkansandbox\vulkansandbox\spirv-cross</FILEPATH>
+      <FILENAME>spirv_cross_containers.hpp</FILENAME>
+      <LINE>619</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'spirv_cross::StringStream&lt;4096,4096&gt;::stack_buffer' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>spirv_cross::StringStream&lt;4096,4096&gt;::{ctor}</FUNCTION>
+    <DECORATED>??0?$StringStream@$0BAAA@$0BAAA@@spirv_cross@@QEAA@XZ</DECORATED>
+    <FUNCLINE>619</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+</DEFECTS>

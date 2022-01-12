@@ -12,7 +12,7 @@ class Sponza
 public:
 	
 
-	static void load() {
+	static void load(SbVulkanBase * base) {
 
 		Assimp::Importer modelImporter;
 		const aiScene* modelScene;
@@ -26,7 +26,7 @@ public:
 
 		Scene scene = Scene();
 
-		scene.load("models/Willems/sponza.dae");
+		scene.load("models/Willems/sponza.dae", base);
 
 	}
 

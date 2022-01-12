@@ -32,6 +32,9 @@ void setImageLayout(
 	imageMemoryBarrier.image = image;
 	imageMemoryBarrier.subresourceRange = subresourceRange;
 
+
+	VkPipelineStageFlags srcStageFlags = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+	VkPipelineStageFlags destStageFlags = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
 	// Source layouts (old)
 	// Source access mask controls actions that have to be finished on the old layout
 	// before it will be transitioned to the new layout
@@ -49,30 +52,36 @@ void setImageLayout(
 		// Only valid as initial layout for linear images, preserves memory contents
 		// Make sure host writes have been finished
 		imageMemoryBarrier.srcAccessMask = VK_ACCESS_HOST_WRITE_BIT;
+		//todo: set stageflags
 		break;
 
 	case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:
 		// Image is a color attachment
 		// Make sure any writes to the color buffer have been finished
 		imageMemoryBarrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+		//todo: set stageflags
 		break;
 
 	case VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL:
 		// Image is a depth/stencil attachment
 		// Make sure any writes to the depth/stencil buffer have been finished
 		imageMemoryBarrier.srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+		//todo: set stageflags
 		break;
 
 	case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:
 		// Image is a transfer source 
 		// Make sure any reads from the image have been finished
 		imageMemoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+		srcStageFlags = VK_PIPELINE_STAGE_TRANSFER_BIT;
+		//todo: set stageflags
 		break;
 
 	case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:
 		// Image is a transfer destination
 		// Make sure any writes to the image have been finished
 		imageMemoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+		srcStageFlags = VK_PIPELINE_STAGE_TRANSFER_BIT;
 		break;
 
 	case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:
@@ -90,6 +99,8 @@ void setImageLayout(
 		// Image will be used as a transfer destination
 		// Make sure any writes to the image have been finished
 		imageMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+		
+		destStageFlags = VK_PIPELINE_STAGE_TRANSFER_BIT;
 		break;
 
 	case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:
@@ -97,6 +108,8 @@ void setImageLayout(
 		// Make sure any reads from and writes to the image have been finished
 		imageMemoryBarrier.srcAccessMask = imageMemoryBarrier.srcAccessMask | VK_ACCESS_TRANSFER_READ_BIT;
 		imageMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+
+		//todo: set stageflags
 		break;
 
 	case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:
@@ -104,12 +117,15 @@ void setImageLayout(
 		// Make sure any writes to the color buffer have been finished
 		imageMemoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
 		imageMemoryBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
+		//todo: set stageflags
 		break;
 
 	case VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL:
 		// Image layout will be used as a depth/stencil attachment
 		// Make sure any writes to depth/stencil buffer have been finished
 		imageMemoryBarrier.dstAccessMask = imageMemoryBarrier.dstAccessMask | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+		//todo: set stageflags
 		break;
 
 	case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:
@@ -120,12 +136,12 @@ void setImageLayout(
 			imageMemoryBarrier.srcAccessMask = VK_ACCESS_HOST_WRITE_BIT | VK_ACCESS_TRANSFER_WRITE_BIT;
 		}
 		imageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+
+		destStageFlags = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
 		break;
 	}
-
-	// Put barrier on top
-	VkPipelineStageFlags srcStageFlags = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-	VkPipelineStageFlags destStageFlags = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+		
+	
 
 	// Put barrier inside setup command buffer
 	vkCmdPipelineBarrier(
