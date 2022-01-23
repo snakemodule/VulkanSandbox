@@ -9,7 +9,7 @@ std::vector<uint32_t> loadSpirvBinary(std::string path)
 	std::vector<uint32_t> binary;
 	std::ifstream fileStream = std::ifstream(path, std::ios::binary);
 		
-	while (!fileStream.eof())
+	while (!fileStream.eof() && fileStream.is_open())
 	{
 		uint32_t word;
 		fileStream.read(reinterpret_cast<char*>(&word), sizeof(word));

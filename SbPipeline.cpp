@@ -1,7 +1,7 @@
 #include "SbPipeline.h"
 
 #include <array>
-#include "VulkanHelperFunctions.hpp"
+#include "VulkanHelperFunctions.h"
 
 #include "VulkanInitializers.hpp"
 
@@ -21,8 +21,14 @@ SbPipeline & SbPipeline::vertexAttributeDescription(const std::vector<VkVertexIn
 }
 
 SbPipeline& SbPipeline::shaderLayouts(vk::Device device, std::string vert, std::string frag)
-{	
+{
 	pipelineCI.layout = shaderLayout.reflect(device, vert, frag, shaderStages);
+	return *this;
+}
+
+SbPipeline& SbPipeline::shaderStageSpecialization(size_t stage, const VkSpecializationInfo* specializationInfo)
+{
+	shaderStages[stage].pSpecializationInfo = specializationInfo;
 	return *this;
 }
 
@@ -108,7 +114,7 @@ SbPipeline & SbPipeline::addBlendAttachmentStates(VkPipelineColorBlendAttachment
 	return *this;
 }
 
-void SbPipeline::createPipeline(const VkRenderPass & renderPass, const VkDevice & device)
+void SbPipeline::createPipeline(const VkRenderPass & renderPass, const VkDevice & device, uint32_t subpass)
 {
 	pipelineCI.renderPass = renderPass;
 	pipelineCI.pInputAssemblyState = &inputAssemblyStateCI;
@@ -121,6 +127,9 @@ void SbPipeline::createPipeline(const VkRenderPass & renderPass, const VkDevice 
 	pipelineCI.pDynamicState = &vks::initializers::pipelineDynamicStateCreateInfo(dynamicStateEnables); //&dynamicStateCI;
 	pipelineCI.stageCount = static_cast<uint32_t>(shaderStages.size());
 	pipelineCI.pStages = shaderStages.data();
+	pipelineCI.subpass = subpass;
+
+	
 
 
 	auto & bind = vertexBindingDescriptions;

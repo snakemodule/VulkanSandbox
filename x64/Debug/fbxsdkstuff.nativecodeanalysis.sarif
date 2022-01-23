@@ -147,7 +147,7 @@
         {
           "ruleId": "26495",
           "message": {
-            "text": "Variable 'fbxsdk::FbxExporter::mWriter' is uninitialized. Always initialize a member variable (type.6)."
+            "text": "Variable 'fbxsdk::FbxExporter::mFileFormat' is uninitialized. Always initialize a member variable (type.6)."
           },
           "locations": [
             {
@@ -167,7 +167,7 @@
         {
           "ruleId": "26495",
           "message": {
-            "text": "Variable 'fbxsdk::FbxExporter::mFileFormat' is uninitialized. Always initialize a member variable (type.6)."
+            "text": "Variable 'fbxsdk::FbxExporter::mWriter' is uninitialized. Always initialize a member variable (type.6)."
           },
           "locations": [
             {
@@ -927,7 +927,7 @@
         {
           "ruleId": "26495",
           "message": {
-            "text": "Variable 'fbxsdk::FbxDocument::mPeripheral' is uninitialized. Always initialize a member variable (type.6)."
+            "text": "Variable 'fbxsdk::FbxDocument::mDocumentInfo' is uninitialized. Always initialize a member variable (type.6)."
           },
           "locations": [
             {
@@ -947,7 +947,7 @@
         {
           "ruleId": "26495",
           "message": {
-            "text": "Variable 'fbxsdk::FbxDocument::mDocumentInfo' is uninitialized. Always initialize a member variable (type.6)."
+            "text": "Variable 'fbxsdk::FbxDocument::mPeripheral' is uninitialized. Always initialize a member variable (type.6)."
           },
           "locations": [
             {
@@ -1387,7 +1387,7 @@
         {
           "ruleId": "26495",
           "message": {
-            "text": "Variable 'fbxsdk::FbxScene::mRootNode' is uninitialized. Always initialize a member variable (type.6)."
+            "text": "Variable 'fbxsdk::FbxScene::mGlobalLightSettings' is uninitialized. Always initialize a member variable (type.6)."
           },
           "locations": [
             {
@@ -1407,7 +1407,7 @@
         {
           "ruleId": "26495",
           "message": {
-            "text": "Variable 'fbxsdk::FbxScene::mGlobalLightSettings' is uninitialized. Always initialize a member variable (type.6)."
+            "text": "Variable 'fbxsdk::FbxScene::mRootNode' is uninitialized. Always initialize a member variable (type.6)."
           },
           "locations": [
             {
@@ -1587,26 +1587,6 @@
         {
           "ruleId": "26495",
           "message": {
-            "text": "Variable 'fbxsdk::FbxAnimCurveBase::mPreExtrapolationCount' is uninitialized. Always initialize a member variable (type.6)."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "fileLocation": {
-                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/animation/fbxanimcurvebase.h"
-                },
-                "region": {
-                  "startLine": 72,
-                  "startColumn": 4
-                }
-              },
-              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxAnimCurveBase::FbxAnimCurveBase(class fbxsdk::FbxManager &,char const *)"
-            }
-          ]
-        },
-        {
-          "ruleId": "26495",
-          "message": {
             "text": "Variable 'fbxsdk::FbxAnimCurveBase::mPostExtrapolation' is uninitialized. Always initialize a member variable (type.6)."
           },
           "locations": [
@@ -1627,7 +1607,27 @@
         {
           "ruleId": "26495",
           "message": {
-            "text": "Variable 'fbxsdk::FbxAnimCurveNode::mOwnedKFCurve' is uninitialized. Always initialize a member variable (type.6)."
+            "text": "Variable 'fbxsdk::FbxAnimCurveBase::mPreExtrapolationCount' is uninitialized. Always initialize a member variable (type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "fileLocation": {
+                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/animation/fbxanimcurvebase.h"
+                },
+                "region": {
+                  "startLine": 72,
+                  "startColumn": 4
+                }
+              },
+              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxAnimCurveBase::FbxAnimCurveBase(class fbxsdk::FbxManager &,char const *)"
+            }
+          ]
+        },
+        {
+          "ruleId": "26495",
+          "message": {
+            "text": "Variable 'fbxsdk::FbxAnimCurveNode::mDirectIndexes' is uninitialized. Always initialize a member variable (type.6)."
           },
           "locations": [
             {
@@ -1647,7 +1647,7 @@
         {
           "ruleId": "26495",
           "message": {
-            "text": "Variable 'fbxsdk::FbxAnimCurveNode::mDirectIndexes' is uninitialized. Always initialize a member variable (type.6)."
+            "text": "Variable 'fbxsdk::FbxAnimCurveNode::mOwnedKFCurve' is uninitialized. Always initialize a member variable (type.6)."
           },
           "locations": [
             {
@@ -1967,26 +1967,6 @@
         {
           "ruleId": "26495",
           "message": {
-            "text": "Variable 'fbxsdk::FbxCache::mReadBuffer' is uninitialized. Always initialize a member variable (type.6)."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "fileLocation": {
-                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxcache.h"
-                },
-                "region": {
-                  "startLine": 35,
-                  "startColumn": 1
-                }
-              },
-              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxCache::FbxCache(class fbxsdk::FbxManager &,char const *)"
-            }
-          ]
-        },
-        {
-          "ruleId": "26495",
-          "message": {
             "text": "Variable 'fbxsdk::FbxCache::mReadTypeLength' is uninitialized. Always initialize a member variable (type.6)."
           },
           "locations": [
@@ -2007,27 +1987,7 @@
         {
           "ruleId": "26495",
           "message": {
-            "text": "Variable 'fbxsdk::FbxCache::mReadBufferLength' is uninitialized. Always initialize a member variable (type.6)."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "fileLocation": {
-                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxcache.h"
-                },
-                "region": {
-                  "startLine": 35,
-                  "startColumn": 1
-                }
-              },
-              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxCache::FbxCache(class fbxsdk::FbxManager &,char const *)"
-            }
-          ]
-        },
-        {
-          "ruleId": "26495",
-          "message": {
-            "text": "Variable 'fbxsdk::FbxCache::mConvertBuffer' is uninitialized. Always initialize a member variable (type.6)."
+            "text": "Variable 'fbxsdk::FbxCache::mReadBuffer' is uninitialized. Always initialize a member variable (type.6)."
           },
           "locations": [
             {
@@ -2068,6 +2028,46 @@
           "ruleId": "26495",
           "message": {
             "text": "Variable 'fbxsdk::FbxCache::mReadBufferSize' is uninitialized. Always initialize a member variable (type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "fileLocation": {
+                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxcache.h"
+                },
+                "region": {
+                  "startLine": 35,
+                  "startColumn": 1
+                }
+              },
+              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxCache::FbxCache(class fbxsdk::FbxManager &,char const *)"
+            }
+          ]
+        },
+        {
+          "ruleId": "26495",
+          "message": {
+            "text": "Variable 'fbxsdk::FbxCache::mConvertBuffer' is uninitialized. Always initialize a member variable (type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "fileLocation": {
+                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxcache.h"
+                },
+                "region": {
+                  "startLine": 35,
+                  "startColumn": 1
+                }
+              },
+              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxCache::FbxCache(class fbxsdk::FbxManager &,char const *)"
+            }
+          ]
+        },
+        {
+          "ruleId": "26495",
+          "message": {
+            "text": "Variable 'fbxsdk::FbxCache::mReadBufferLength' is uninitialized. Always initialize a member variable (type.6)."
           },
           "locations": [
             {
@@ -2207,7 +2207,7 @@
         {
           "ruleId": "26495",
           "message": {
-            "text": "Variable 'fbxsdk::FbxLODGroup::mNbDisplayLevels' is uninitialized. Always initialize a member variable (type.6)."
+            "text": "Variable 'fbxsdk::FbxLODGroup::mNbThresholds' is uninitialized. Always initialize a member variable (type.6)."
           },
           "locations": [
             {
@@ -2227,7 +2227,7 @@
         {
           "ruleId": "26495",
           "message": {
-            "text": "Variable 'fbxsdk::FbxLODGroup::mNbThresholds' is uninitialized. Always initialize a member variable (type.6)."
+            "text": "Variable 'fbxsdk::FbxLODGroup::mNbDisplayLevels' is uninitialized. Always initialize a member variable (type.6)."
           },
           "locations": [
             {
@@ -2587,207 +2587,7 @@
         {
           "ruleId": "26495",
           "message": {
-            "text": "Variable 'fbxsdk::FbxNurbs::mVStep' is uninitialized. Always initialize a member variable (type.6)."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "fileLocation": {
-                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbs.h"
-                },
-                "region": {
-                  "startLine": 33,
-                  "startColumn": 4
-                }
-              },
-              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxNurbs::FbxNurbs(class fbxsdk::FbxManager &,char const *)"
-            }
-          ]
-        },
-        {
-          "ruleId": "26495",
-          "message": {
-            "text": "Variable 'fbxsdk::FbxNurbs::mUType' is uninitialized. Always initialize a member variable (type.6)."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "fileLocation": {
-                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbs.h"
-                },
-                "region": {
-                  "startLine": 33,
-                  "startColumn": 4
-                }
-              },
-              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxNurbs::FbxNurbs(class fbxsdk::FbxManager &,char const *)"
-            }
-          ]
-        },
-        {
-          "ruleId": "26495",
-          "message": {
-            "text": "Variable 'fbxsdk::FbxNurbs::mVKnotVector' is uninitialized. Always initialize a member variable (type.6)."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "fileLocation": {
-                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbs.h"
-                },
-                "region": {
-                  "startLine": 33,
-                  "startColumn": 4
-                }
-              },
-              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxNurbs::FbxNurbs(class fbxsdk::FbxManager &,char const *)"
-            }
-          ]
-        },
-        {
-          "ruleId": "26495",
-          "message": {
-            "text": "Variable 'fbxsdk::FbxNurbs::mUKnotVector' is uninitialized. Always initialize a member variable (type.6)."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "fileLocation": {
-                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbs.h"
-                },
-                "region": {
-                  "startLine": 33,
-                  "startColumn": 4
-                }
-              },
-              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxNurbs::FbxNurbs(class fbxsdk::FbxManager &,char const *)"
-            }
-          ]
-        },
-        {
-          "ruleId": "26495",
-          "message": {
-            "text": "Variable 'fbxsdk::FbxNurbs::mVMultiplicityVector' is uninitialized. Always initialize a member variable (type.6)."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "fileLocation": {
-                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbs.h"
-                },
-                "region": {
-                  "startLine": 33,
-                  "startColumn": 4
-                }
-              },
-              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxNurbs::FbxNurbs(class fbxsdk::FbxManager &,char const *)"
-            }
-          ]
-        },
-        {
-          "ruleId": "26495",
-          "message": {
-            "text": "Variable 'fbxsdk::FbxNurbs::mVCount' is uninitialized. Always initialize a member variable (type.6)."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "fileLocation": {
-                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbs.h"
-                },
-                "region": {
-                  "startLine": 33,
-                  "startColumn": 4
-                }
-              },
-              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxNurbs::FbxNurbs(class fbxsdk::FbxManager &,char const *)"
-            }
-          ]
-        },
-        {
-          "ruleId": "26495",
-          "message": {
-            "text": "Variable 'fbxsdk::FbxNurbs::mUMultiplicityVector' is uninitialized. Always initialize a member variable (type.6)."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "fileLocation": {
-                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbs.h"
-                },
-                "region": {
-                  "startLine": 33,
-                  "startColumn": 4
-                }
-              },
-              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxNurbs::FbxNurbs(class fbxsdk::FbxManager &,char const *)"
-            }
-          ]
-        },
-        {
-          "ruleId": "26495",
-          "message": {
-            "text": "Variable 'fbxsdk::FbxNurbs::mSurfaceMode' is uninitialized. Always initialize a member variable (type.6)."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "fileLocation": {
-                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbs.h"
-                },
-                "region": {
-                  "startLine": 33,
-                  "startColumn": 4
-                }
-              },
-              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxNurbs::FbxNurbs(class fbxsdk::FbxManager &,char const *)"
-            }
-          ]
-        },
-        {
-          "ruleId": "26495",
-          "message": {
-            "text": "Variable 'fbxsdk::FbxNurbs::mUOrder' is uninitialized. Always initialize a member variable (type.6)."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "fileLocation": {
-                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbs.h"
-                },
-                "region": {
-                  "startLine": 33,
-                  "startColumn": 4
-                }
-              },
-              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxNurbs::FbxNurbs(class fbxsdk::FbxManager &,char const *)"
-            }
-          ]
-        },
-        {
-          "ruleId": "26495",
-          "message": {
-            "text": "Variable 'fbxsdk::FbxNurbs::mUStep' is uninitialized. Always initialize a member variable (type.6)."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "fileLocation": {
-                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbs.h"
-                },
-                "region": {
-                  "startLine": 33,
-                  "startColumn": 4
-                }
-              },
-              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxNurbs::FbxNurbs(class fbxsdk::FbxManager &,char const *)"
-            }
-          ]
-        },
-        {
-          "ruleId": "26495",
-          "message": {
-            "text": "Variable 'fbxsdk::FbxNurbs::mVType' is uninitialized. Always initialize a member variable (type.6)."
+            "text": "Variable 'fbxsdk::FbxNurbs::mApplyFlipUV' is uninitialized. Always initialize a member variable (type.6)."
           },
           "locations": [
             {
@@ -2827,46 +2627,6 @@
         {
           "ruleId": "26495",
           "message": {
-            "text": "Variable 'fbxsdk::FbxNurbs::mVOrder' is uninitialized. Always initialize a member variable (type.6)."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "fileLocation": {
-                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbs.h"
-                },
-                "region": {
-                  "startLine": 33,
-                  "startColumn": 4
-                }
-              },
-              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxNurbs::FbxNurbs(class fbxsdk::FbxManager &,char const *)"
-            }
-          ]
-        },
-        {
-          "ruleId": "26495",
-          "message": {
-            "text": "Variable 'fbxsdk::FbxNurbs::mApplyFlipUV' is uninitialized. Always initialize a member variable (type.6)."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "fileLocation": {
-                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbs.h"
-                },
-                "region": {
-                  "startLine": 33,
-                  "startColumn": 4
-                }
-              },
-              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxNurbs::FbxNurbs(class fbxsdk::FbxManager &,char const *)"
-            }
-          ]
-        },
-        {
-          "ruleId": "26495",
-          "message": {
             "text": "Variable 'fbxsdk::FbxNurbs::mApplyFlipLinks' is uninitialized. Always initialize a member variable (type.6)."
           },
           "locations": [
@@ -2887,40 +2647,240 @@
         {
           "ruleId": "26495",
           "message": {
-            "text": "Variable 'fbxsdk::FbxNurbsCurve::mNurbsType' is uninitialized. Always initialize a member variable (type.6)."
+            "text": "Variable 'fbxsdk::FbxNurbs::mVCount' is uninitialized. Always initialize a member variable (type.6)."
           },
           "locations": [
             {
               "physicalLocation": {
                 "fileLocation": {
-                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbscurve.h"
+                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbs.h"
                 },
                 "region": {
-                  "startLine": 62,
-                  "startColumn": 1
+                  "startLine": 33,
+                  "startColumn": 4
                 }
               },
-              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxNurbsCurve::FbxNurbsCurve(class fbxsdk::FbxManager &,char const *)"
+              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxNurbs::FbxNurbs(class fbxsdk::FbxManager &,char const *)"
             }
           ]
         },
         {
           "ruleId": "26495",
           "message": {
-            "text": "Variable 'fbxsdk::FbxNurbsCurve::mStep' is uninitialized. Always initialize a member variable (type.6)."
+            "text": "Variable 'fbxsdk::FbxNurbs::mVOrder' is uninitialized. Always initialize a member variable (type.6)."
           },
           "locations": [
             {
               "physicalLocation": {
                 "fileLocation": {
-                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbscurve.h"
+                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbs.h"
                 },
                 "region": {
-                  "startLine": 62,
-                  "startColumn": 1
+                  "startLine": 33,
+                  "startColumn": 4
                 }
               },
-              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxNurbsCurve::FbxNurbsCurve(class fbxsdk::FbxManager &,char const *)"
+              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxNurbs::FbxNurbs(class fbxsdk::FbxManager &,char const *)"
+            }
+          ]
+        },
+        {
+          "ruleId": "26495",
+          "message": {
+            "text": "Variable 'fbxsdk::FbxNurbs::mVType' is uninitialized. Always initialize a member variable (type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "fileLocation": {
+                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbs.h"
+                },
+                "region": {
+                  "startLine": 33,
+                  "startColumn": 4
+                }
+              },
+              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxNurbs::FbxNurbs(class fbxsdk::FbxManager &,char const *)"
+            }
+          ]
+        },
+        {
+          "ruleId": "26495",
+          "message": {
+            "text": "Variable 'fbxsdk::FbxNurbs::mUStep' is uninitialized. Always initialize a member variable (type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "fileLocation": {
+                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbs.h"
+                },
+                "region": {
+                  "startLine": 33,
+                  "startColumn": 4
+                }
+              },
+              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxNurbs::FbxNurbs(class fbxsdk::FbxManager &,char const *)"
+            }
+          ]
+        },
+        {
+          "ruleId": "26495",
+          "message": {
+            "text": "Variable 'fbxsdk::FbxNurbs::mUOrder' is uninitialized. Always initialize a member variable (type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "fileLocation": {
+                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbs.h"
+                },
+                "region": {
+                  "startLine": 33,
+                  "startColumn": 4
+                }
+              },
+              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxNurbs::FbxNurbs(class fbxsdk::FbxManager &,char const *)"
+            }
+          ]
+        },
+        {
+          "ruleId": "26495",
+          "message": {
+            "text": "Variable 'fbxsdk::FbxNurbs::mSurfaceMode' is uninitialized. Always initialize a member variable (type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "fileLocation": {
+                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbs.h"
+                },
+                "region": {
+                  "startLine": 33,
+                  "startColumn": 4
+                }
+              },
+              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxNurbs::FbxNurbs(class fbxsdk::FbxManager &,char const *)"
+            }
+          ]
+        },
+        {
+          "ruleId": "26495",
+          "message": {
+            "text": "Variable 'fbxsdk::FbxNurbs::mUKnotVector' is uninitialized. Always initialize a member variable (type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "fileLocation": {
+                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbs.h"
+                },
+                "region": {
+                  "startLine": 33,
+                  "startColumn": 4
+                }
+              },
+              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxNurbs::FbxNurbs(class fbxsdk::FbxManager &,char const *)"
+            }
+          ]
+        },
+        {
+          "ruleId": "26495",
+          "message": {
+            "text": "Variable 'fbxsdk::FbxNurbs::mUMultiplicityVector' is uninitialized. Always initialize a member variable (type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "fileLocation": {
+                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbs.h"
+                },
+                "region": {
+                  "startLine": 33,
+                  "startColumn": 4
+                }
+              },
+              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxNurbs::FbxNurbs(class fbxsdk::FbxManager &,char const *)"
+            }
+          ]
+        },
+        {
+          "ruleId": "26495",
+          "message": {
+            "text": "Variable 'fbxsdk::FbxNurbs::mVKnotVector' is uninitialized. Always initialize a member variable (type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "fileLocation": {
+                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbs.h"
+                },
+                "region": {
+                  "startLine": 33,
+                  "startColumn": 4
+                }
+              },
+              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxNurbs::FbxNurbs(class fbxsdk::FbxManager &,char const *)"
+            }
+          ]
+        },
+        {
+          "ruleId": "26495",
+          "message": {
+            "text": "Variable 'fbxsdk::FbxNurbs::mVStep' is uninitialized. Always initialize a member variable (type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "fileLocation": {
+                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbs.h"
+                },
+                "region": {
+                  "startLine": 33,
+                  "startColumn": 4
+                }
+              },
+              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxNurbs::FbxNurbs(class fbxsdk::FbxManager &,char const *)"
+            }
+          ]
+        },
+        {
+          "ruleId": "26495",
+          "message": {
+            "text": "Variable 'fbxsdk::FbxNurbs::mVMultiplicityVector' is uninitialized. Always initialize a member variable (type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "fileLocation": {
+                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbs.h"
+                },
+                "region": {
+                  "startLine": 33,
+                  "startColumn": 4
+                }
+              },
+              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxNurbs::FbxNurbs(class fbxsdk::FbxManager &,char const *)"
+            }
+          ]
+        },
+        {
+          "ruleId": "26495",
+          "message": {
+            "text": "Variable 'fbxsdk::FbxNurbs::mUType' is uninitialized. Always initialize a member variable (type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "fileLocation": {
+                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbs.h"
+                },
+                "region": {
+                  "startLine": 33,
+                  "startColumn": 4
+                }
+              },
+              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxNurbs::FbxNurbs(class fbxsdk::FbxManager &,char const *)"
             }
           ]
         },
@@ -2928,26 +2888,6 @@
           "ruleId": "26495",
           "message": {
             "text": "Variable 'fbxsdk::FbxNurbsCurve::mKnotVector' is uninitialized. Always initialize a member variable (type.6)."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "fileLocation": {
-                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbscurve.h"
-                },
-                "region": {
-                  "startLine": 62,
-                  "startColumn": 1
-                }
-              },
-              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxNurbsCurve::FbxNurbsCurve(class fbxsdk::FbxManager &,char const *)"
-            }
-          ]
-        },
-        {
-          "ruleId": "26495",
-          "message": {
-            "text": "Variable 'fbxsdk::FbxNurbsCurve::mDimension' is uninitialized. Always initialize a member variable (type.6)."
           },
           "locations": [
             {
@@ -2987,7 +2927,67 @@
         {
           "ruleId": "26495",
           "message": {
+            "text": "Variable 'fbxsdk::FbxNurbsCurve::mDimension' is uninitialized. Always initialize a member variable (type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "fileLocation": {
+                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbscurve.h"
+                },
+                "region": {
+                  "startLine": 62,
+                  "startColumn": 1
+                }
+              },
+              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxNurbsCurve::FbxNurbsCurve(class fbxsdk::FbxManager &,char const *)"
+            }
+          ]
+        },
+        {
+          "ruleId": "26495",
+          "message": {
+            "text": "Variable 'fbxsdk::FbxNurbsCurve::mNurbsType' is uninitialized. Always initialize a member variable (type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "fileLocation": {
+                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbscurve.h"
+                },
+                "region": {
+                  "startLine": 62,
+                  "startColumn": 1
+                }
+              },
+              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxNurbsCurve::FbxNurbsCurve(class fbxsdk::FbxManager &,char const *)"
+            }
+          ]
+        },
+        {
+          "ruleId": "26495",
+          "message": {
             "text": "Variable 'fbxsdk::FbxNurbsCurve::mIsRational' is uninitialized. Always initialize a member variable (type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "fileLocation": {
+                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbscurve.h"
+                },
+                "region": {
+                  "startLine": 62,
+                  "startColumn": 1
+                }
+              },
+              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxNurbsCurve::FbxNurbsCurve(class fbxsdk::FbxManager &,char const *)"
+            }
+          ]
+        },
+        {
+          "ruleId": "26495",
+          "message": {
+            "text": "Variable 'fbxsdk::FbxNurbsCurve::mStep' is uninitialized. Always initialize a member variable (type.6)."
           },
           "locations": [
             {
@@ -3687,6 +3687,26 @@
         {
           "ruleId": "26495",
           "message": {
+            "text": "Variable 'fbxsdk::FbxSubDiv::mFinestMesh' is uninitialized. Always initialize a member variable (type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "fileLocation": {
+                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxsubdiv.h"
+                },
+                "region": {
+                  "startLine": 32,
+                  "startColumn": 4
+                }
+              },
+              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxSubDiv::FbxSubDiv(class fbxsdk::FbxManager &,char const *)"
+            }
+          ]
+        },
+        {
+          "ruleId": "26495",
+          "message": {
             "text": "Variable 'fbxsdk::FbxSubDiv::mBaseMesh' is uninitialized. Always initialize a member variable (type.6)."
           },
           "locations": [
@@ -3727,7 +3747,7 @@
         {
           "ruleId": "26495",
           "message": {
-            "text": "Variable 'fbxsdk::FbxSubDiv::mFinestMesh' is uninitialized. Always initialize a member variable (type.6)."
+            "text": "Variable 'fbxsdk::FbxSubDiv::mLevelCount' is uninitialized. Always initialize a member variable (type.6)."
           },
           "locations": [
             {
@@ -3748,26 +3768,6 @@
           "ruleId": "26495",
           "message": {
             "text": "Variable 'fbxsdk::FbxSubDiv::mScheme' is uninitialized. Always initialize a member variable (type.6)."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "fileLocation": {
-                  "uri": "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxsubdiv.h"
-                },
-                "region": {
-                  "startLine": 32,
-                  "startColumn": 4
-                }
-              },
-              "fullyQualifiedLogicalName": "protected: __cdecl fbxsdk::FbxSubDiv::FbxSubDiv(class fbxsdk::FbxManager &,char const *)"
-            }
-          ]
-        },
-        {
-          "ruleId": "26495",
-          "message": {
-            "text": "Variable 'fbxsdk::FbxSubDiv::mLevelCount' is uninitialized. Always initialize a member variable (type.6)."
           },
           "locations": [
             {
@@ -4453,47 +4453,77 @@
       },
       "invocations": [
         {
-          "commandLine": "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Tools\\MSVC\\14.16.27023\\bin\\HostX86\\x64\\c1xx.dll\" -ACf{1F7B090C-16DB-4822-966A-A93D26ED4681} -ACpmspft140.dll -Alint -D_PREFAST_ -D_AST_FE_ -Analyze -zm0x008E2080 -il C:\\Users\\Colin\\AppData\\Local\\Temp\\_CL_d6d6c98east -typedil -f fbxsdkstuff.cpp -Ze -D_MSC_EXTENSIONS -Zp16 -ZB64 -D_INTEGRAL_MAX_BITS=64 -pc \\:/ -D_MSC_VER=1916 -D_MSC_FULL_VER=191627045 -D_MSC_BUILD=0 -D_M_AMD64=100 -ZILP448 -D_M_X64=100 -D_WIN64 -D_WIN32 -GR -D_CPPRTTI -I D:\\Other\\libraries\\includes\\gli -I D:\\Other\\boost_1_72_0 -I C:\\Program Files\\Assimp\\include -I C:\\Program Files\\Autodesk\\FBX\\FBX SDK\\2019.0\\include -I C:\\Users\\Colin\\Documents\\Visual Studio 2017\\Libraries\\tinyobjloader -I C:\\Users\\Colin\\Documents\\Visual Studio 2017\\Libraries\\stb-master -I C:\\Users\\Colin\\Documents\\Visual Studio 2017\\Libraries\\glfw-3.3.bin.WIN64\\include -I D:\\Other\\libraries\\includes\\glm -I C:\\VulkanSDK\\1.1.106.0\\Include -nologo -W 3 -diagnostics:column- -diagnostics:caret- -D_GUARDOVERFLOW_CRT_ALLOCATORS=1 -Ot -DCODE_ANALYSIS -D_DEBUG -D_CONSOLE -D_UNICODE -DUNICODE -EHs -D_CPPUNWIND -EHc -D__MSVC_RUNTIME_CHECKS -RTCs -RTCu -D_DEBUG -D_MT -D_DLL -GS -D_M_FP_PRECISE -permissive- -Zc:wchar_t -Zc:forScope -std:c++17 -Fox64\\Debug\\fbxsdkstuff.obj -Fdx64\\Debug\\vc141.pdb -Gd -analyze:quiet -analyze:ruleset C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Team Tools\\Static Analysis Tools\\Rule Sets\\NativeRecommendedRules.ruleset -analyze:plugin C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Tools\\MSVC\\14.16.27023\\bin\\HostX86\\x86\\EspXEngine.dll -analyze:plugin C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Tools\\MSVC\\14.16.27023\\bin\\HostX86\\x86\\localespc.dll -FC -errorreport:prompt -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Tools\\MSVC\\14.16.27023\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Tools\\MSVC\\14.16.27023\\atlmfc\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Auxiliary\\VS\\include -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\ucrt -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\um -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\shared -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\winrt -I C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.6.1\\Include\\um -I C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.6.1\\Include\\um"
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Tools\\MSVC\\14.16.27023\\bin\\HostX86\\x64\\c1xx.dll\" -ACf{1F7B090C-16DB-4822-966A-A93D26ED4681} -ACpmspft140.dll -Alint -D_PREFAST_ -D_AST_FE_ -Analyze -zm0x00FC2080 -il C:\\Users\\Colin\\AppData\\Local\\Temp\\_CL_467c2e96ast -typedil -f fbxsdkstuff.cpp -Ze -D_MSC_EXTENSIONS -Zp16 -ZB64 -D_INTEGRAL_MAX_BITS=64 -pc \\:/ -D_MSC_VER=1916 -D_MSC_FULL_VER=191627045 -D_MSC_BUILD=0 -D_M_AMD64=100 -ZILP448 -D_M_X64=100 -D_WIN64 -D_WIN32 -GR -D_CPPRTTI -I D:\\Other\\libraries\\includes\\gli -I D:\\Other\\boost_1_72_0 -I C:\\Program Files\\Assimp\\include -I C:\\Program Files\\Autodesk\\FBX\\FBX SDK\\2019.0\\include -I C:\\Users\\Colin\\Documents\\Visual Studio 2017\\Libraries\\tinyobjloader -I C:\\Users\\Colin\\Documents\\Visual Studio 2017\\Libraries\\stb-master -I C:\\Users\\Colin\\Documents\\Visual Studio 2017\\Libraries\\glfw-3.3.bin.WIN64\\include -I D:\\Other\\libraries\\includes\\glm -I C:\\VulkanSDK\\1.1.106.0\\Include -nologo -W 3 -diagnostics:column- -diagnostics:caret- -D_GUARDOVERFLOW_CRT_ALLOCATORS=1 -Ot -DCODE_ANALYSIS -D_DEBUG -D_CONSOLE -D_UNICODE -DUNICODE -EHs -D_CPPUNWIND -EHc -D__MSVC_RUNTIME_CHECKS -RTCs -RTCu -D_DEBUG -D_MT -D_DLL -GS -D_M_FP_PRECISE -permissive- -Zc:wchar_t -Zc:forScope -std:c++17 -Fox64\\Debug\\fbxsdkstuff.obj -Fdx64\\Debug\\vc141.pdb -Gd -analyze:quiet -analyze:ruleset C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Team Tools\\Static Analysis Tools\\Rule Sets\\NativeRecommendedRules.ruleset -analyze:plugin C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Tools\\MSVC\\14.16.27023\\bin\\HostX86\\x86\\EspXEngine.dll -analyze:plugin C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Tools\\MSVC\\14.16.27023\\bin\\HostX86\\x86\\localespc.dll -FC -errorreport:prompt -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Tools\\MSVC\\14.16.27023\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Tools\\MSVC\\14.16.27023\\atlmfc\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Auxiliary\\VS\\include -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\ucrt -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\um -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\shared -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\winrt -I C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.6.1\\Include\\um -I C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.6.1\\Include\\um"
         }
       ],
       "files": {
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/logical/bitand.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/detail/type_vec2.inl": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/static_constant.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_float1_precision.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_float3x2.hpp": {
+        "file:///c:/vulkansdk/1.1.106.0/include/vulkan/vulkan.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxblendshapechannel.h": {
+        "file:///d:/other/libraries/includes/gli/core/bc.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_float2_precision.hpp": {
+        "file:///c:/vulkansdk/1.1.106.0/include/vulkan/vulkan.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/iterator/iterator_categories.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/sbcommandpool.cpp": {
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbbuffer.cpp": {
           "roles": [
             "analysisTarget",
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/config/detail/select_platform_config.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/facilities/is_1.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/multi_array/extent_range.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxobject.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/detail/type_vec2.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/preprocessed/plain/full_lambda.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/detail/type_vec1.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/users/colin/documents/visual studio 2017/libraries/glfw-3.3.bin.win64/include/glfw/glfw3.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/type_traits/has_multiplies.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -4514,112 +4544,6 @@
           ]
         },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/constraint/fbxconstraintutils.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/sblogicaldevice.cpp": {
-          "roles": [
-            "analysisTarget",
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/iterator/detail/facade_iterator_category.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_double3x4.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_double4_precision.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxcharptrset.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_int3.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/is_nothrow_move_constructible.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxdynamicarray.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/detail/type_quat.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/detail/_fixes.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/has_logical_not.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_double4x3.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/sbcommandpool.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/has_logical_or.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/fileio/fbx/fbxio.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/animation/fbxanimevalstate.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/detail/type_vec2.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_float1_precision.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/vulkansdk/1.1.106.0/include/vulkan/vulkan.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/vulkansdk/1.1.106.0/include/vulkan/vulkan.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/sblogicaldevice.h": {
           "roles": [
             "resultFile"
           ]
@@ -4729,6 +4653,11 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/gli/texture3d.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///g:/repos/vulkansandbox/vulkansandbox/sbvulkanbase.h": {
           "roles": [
             "resultFile"
@@ -4744,49 +4673,93 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/facilities/is_1.hpp": {
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sblogicaldevice.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/multi_array/extent_range.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/iterator/detail/facade_iterator_category.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxobject.h": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_double3x4.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/detail/type_vec2.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_double4_precision.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/preprocessed/plain/full_lambda.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/gtx/wrap.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/detail/type_vec1.inl": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxcharptrset.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///c:/users/colin/documents/visual studio 2017/libraries/glfw-3.3.bin.win64/include/glfw/glfw3.h": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_int3.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/has_multiplies.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/is_nothrow_move_constructible.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/sbbuffer.cpp": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxdynamicarray.h": {
           "roles": [
-            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/detail/type_quat.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/detail/_fixes.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/type_traits/has_logical_not.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_double4x3.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbcommandpool.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/type_traits/has_logical_or.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/load_dds.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/fileio/fbx/fbxio.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/animation/fbxanimevalstate.h": {
+          "roles": [
             "resultFile"
           ]
         },
@@ -4876,6 +4849,11 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/gli/core/format.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/libraries/includes/glm/glm/detail/setup.hpp": {
           "roles": [
             "resultFile"
@@ -4926,6 +4904,16 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/glm/glm/geometric.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/detail/type_mat2x2.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/boost_1_72_0/boost/preprocessor/facilities/identity.hpp": {
           "roles": [
             "resultFile"
@@ -4961,6 +4949,36 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/gli/load_kmg.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/logical/bitand.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/static_constant.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_float3x2.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxblendshapechannel.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_float2_precision.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/boost_1_72_0/boost/preprocessor/list/adt.hpp": {
           "roles": [
             "resultFile"
@@ -4977,6 +4995,11 @@
           ]
         },
         "file:///d:/other/boost_1_72_0/boost/type_traits/has_logical_and.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/gl.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -5041,6 +5064,11 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/gli/core/reduce.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/boost_1_72_0/boost/preprocessor/list/fold_left.hpp": {
           "roles": [
             "resultFile"
@@ -5062,6 +5090,11 @@
           ]
         },
         "file:///d:/other/libraries/includes/glm/glm/vec3.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/texture2d.inl": {
           "roles": [
             "resultFile"
           ]
@@ -5151,12 +5184,22 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/gli/sampler.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/libraries/includes/glm/glm/detail/type_vec3.inl": {
           "roles": [
             "resultFile"
           ]
         },
         "file:///d:/other/libraries/includes/glm/glm/ext/vector_bool3_precision.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/sampler1d.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -5221,6 +5264,11 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/gli/sampler_cube_array.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/boost_1_72_0/boost/multi_array/extent_gen.hpp": {
           "roles": [
             "resultFile"
@@ -5231,17 +5279,17 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/geometric.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/detail/type_mat2x2.hpp": {
+        "file:///d:/other/libraries/includes/gli/core/clear.hpp": {
           "roles": [
             "resultFile"
           ]
         },
         "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/compiler.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/texture1d_array.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -5307,6 +5355,11 @@
           ]
         },
         "file:///d:/other/libraries/includes/glm/glm/ext/matrix_double2x3_precision.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/convert_func.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -5557,6 +5610,11 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/gli/sampler2d_array.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/boost_1_72_0/boost/preprocessor/list/detail/fold_left.hpp": {
           "roles": [
             "resultFile"
@@ -5597,6 +5655,11 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/gli/core/sampler.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/libraries/includes/glm/glm/ext/matrix_transform.hpp": {
           "roles": [
             "resultFile"
@@ -5608,6 +5671,11 @@
           ]
         },
         "file:///d:/other/libraries/includes/glm/glm/ext/matrix_double4x2.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/transform.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -5737,6 +5805,11 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/glm/glm/ext/scalar_common.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///c:/program files/assimp/include/assimp/config.h": {
           "roles": [
             "resultFile"
@@ -5777,12 +5850,27 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/gli/dx.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/libraries/includes/glm/glm/detail/type_mat4x4.hpp": {
           "roles": [
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/gli/core/gl.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/libraries/includes/glm/glm/detail/type_mat4x4.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/storage_linear.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -5882,6 +5970,11 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_packing.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxproceduralgeometry.h": {
           "roles": [
             "resultFile"
@@ -5932,6 +6025,11 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/glm/glm/gtc/bitfield.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/libraries/includes/glm/glm/detail/func_packing.inl": {
           "roles": [
             "resultFile"
@@ -5943,6 +6041,11 @@
           ]
         },
         "file:///d:/other/boost_1_72_0/boost/type_traits/has_trivial_assign.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/filter.inl": {
           "roles": [
             "resultFile"
           ]
@@ -5992,6 +6095,11 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/glm/glm/simd/integer.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/libraries/includes/glm/glm/gtc/matrix_transform.hpp": {
           "roles": [
             "resultFile"
@@ -6013,6 +6121,11 @@
           ]
         },
         "file:///d:/other/libraries/includes/glm/glm/gtc/constants.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/scalar_common.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -6162,6 +6275,11 @@
             "resultFile"
           ]
         },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbmaterialdescriptorset.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/libraries/includes/glm/glm/ext/vector_float1.hpp": {
           "roles": [
             "resultFile"
@@ -6272,6 +6390,11 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/gli/texture_cube.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/libraries/includes/glm/glm/ext/quaternion_geometric.hpp": {
           "roles": [
             "resultFile"
@@ -6283,6 +6406,11 @@
           ]
         },
         "file:///d:/other/libraries/includes/glm/glm/ext/quaternion_geometric.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/save.inl": {
           "roles": [
             "resultFile"
           ]
@@ -6347,7 +6475,17 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/glm/glm/ext/scalar_relational.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/libraries/includes/glm/glm/ext/quaternion_double_precision.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_integer.inl": {
           "roles": [
             "resultFile"
           ]
@@ -6373,6 +6511,11 @@
           ]
         },
         "file:///d:/other/libraries/includes/glm/glm/ext/quaternion_transform.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/sampler1d_array.inl": {
           "roles": [
             "resultFile"
           ]
@@ -6458,6 +6601,11 @@
           ]
         },
         "file:///g:/repos/vulkansandbox/vulkansandbox/animationstuff.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/gtc/packing.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -6657,7 +6805,17 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/gli/view.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/boost_1_72_0/boost/multi_array.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/save_kmg.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -6767,6 +6925,21 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/boost_1_72_0/boost/iterator/iterator_categories.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/comparison.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/config/detail/select_platform_config.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/boost_1_72_0/boost/mpl/quote.hpp": {
           "roles": [
             "resultFile"
@@ -6783,6 +6956,11 @@
           ]
         },
         "file:///d:/other/boost_1_72_0/boost/assert.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/view.inl": {
           "roles": [
             "resultFile"
           ]
@@ -6882,6 +7060,11 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/gli/load.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/fbxgroupname.h": {
           "roles": [
             "resultFile"
@@ -6937,6 +7120,11 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/gli/core/flip.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/boost_1_72_0/boost/detail/call_traits.hpp": {
           "roles": [
             "resultFile"
@@ -6958,6 +7146,11 @@
           ]
         },
         "file:///d:/other/boost_1_72_0/boost/type_traits/is_lvalue_reference.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/convert.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -7027,6 +7220,11 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/glm/glm/gtc/integer.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/boost_1_72_0/boost/preprocessor/seq/elem.hpp": {
           "roles": [
             "resultFile"
@@ -7038,6 +7236,11 @@
           ]
         },
         "file:///d:/other/boost_1_72_0/boost/mpl/size_t.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/texture.inl": {
           "roles": [
             "resultFile"
           ]
@@ -7172,6 +7375,11 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/gli/image.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/boost_1_72_0/boost/mpl/aux_/na_spec.hpp": {
           "roles": [
             "resultFile"
@@ -7247,6 +7455,11 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/gli/save.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/boost_1_72_0/boost/mpl/aux_/integral_wrapper.hpp": {
           "roles": [
             "resultFile"
@@ -7282,6 +7495,11 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/gli/core/duplicate.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/fbxaudio.h": {
           "roles": [
             "resultFile"
@@ -7302,7 +7520,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/array/size.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/core/noinit_adaptor.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -7312,7 +7530,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/core/noinit_adaptor.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/array/size.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -7457,6 +7675,11 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/gli/core/levels.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/boost_1_72_0/boost/type_traits/is_integral.hpp": {
           "roles": [
             "resultFile"
@@ -7492,12 +7715,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/remove_cv.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/core/empty_value.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/core/empty_value.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/remove_cv.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -7572,6 +7795,11 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_common.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/boost_1_72_0/boost/preprocessor/array/elem.hpp": {
           "roles": [
             "resultFile"
@@ -7627,7 +7855,17 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/gli/load_ktx.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/boost_1_72_0/boost/mpl/next.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/file.inl": {
           "roles": [
             "resultFile"
           ]
@@ -7648,6 +7886,11 @@
           ]
         },
         "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/bcc.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/sampler_cube.inl": {
           "roles": [
             "resultFile"
           ]
@@ -7788,6 +8031,11 @@
           ]
         },
         "file:///d:/other/boost_1_72_0/boost/type_traits/is_union.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/texture3d.inl": {
           "roles": [
             "resultFile"
           ]
@@ -7952,7 +8200,17 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/glm/glm/gtc/color_space.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/boost_1_72_0/boost/type_traits/has_nothrow_destructor.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/duplicate.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -7963,6 +8221,11 @@
           ]
         },
         "file:///d:/other/boost_1_72_0/boost/type_traits/is_destructible.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/image.inl": {
           "roles": [
             "resultFile"
           ]
@@ -7998,6 +8261,11 @@
           ]
         },
         "file:///d:/other/boost_1_72_0/boost/type_traits/has_right_shift.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/transform.inl": {
           "roles": [
             "resultFile"
           ]
@@ -8087,6 +8355,11 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/gli/core/sampler3d.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/boost_1_72_0/boost/type_traits/make_signed.hpp": {
           "roles": [
             "resultFile"
@@ -8117,6 +8390,11 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/glm/glm/gtc/type_precision.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/shading/fbxtexture.h": {
           "roles": [
             "resultFile"
@@ -8133,41 +8411,6 @@
           ]
         },
         "file:///d:/other/boost_1_72_0/boost/type_traits/integral_promotion.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/header.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/sbcamera.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/uncompressedanimation.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/sbuniformbuffer.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/sbrenderpass.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/sbswapchain.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/sbpipeline.h": {
           "roles": [
             "resultFile"
           ]
@@ -8192,6 +8435,416 @@
             "resultFile"
           ]
         },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/texture.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/gli.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/format.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/type.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/target.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbdescriptorpool.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/levels.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxblendshape.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/gtc/integer.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/gtc/round.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/texture2d_array.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/utils/fbxrenamingstrategyfbx5.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/gtc/round.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/dx.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxredblacktree.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_integer.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/scalar_integer.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/shading/fbxsemanticentryview.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/scalar_integer.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/gtc/bitfield.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxevent.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/fbxvideo.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/gtc/type_precision.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/storage_linear.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/fbxselectionset.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/texture.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/texture1d.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/texture1d.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/texture1d_array.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/texture2d.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxquery.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/texture2d_array.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/texture_cube.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/texture_cube_array.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/texture_cube_array.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxarray.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/filter.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_common.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/gtx/wrap.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/mipmaps_compute.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/filter_compute.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxloadingstrategy.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/coord.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/s3tc.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/s3tc.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_packing.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxfile.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/gtc/packing.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/scalar_relational.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/bc.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/gtc/color_space.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxproperty.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxmultimap.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/sampler1d.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/sampler1d_array.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/sampler2d.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/sampler2d.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/sampler2d_array.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/sampler3d.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/sampler_cube.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/sampler_cube_array.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/convert.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxcontainerallocators.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxclassid.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/fileio/fbxgloballightsettings.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/comparison.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/reduce.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/load.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/load_dds.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/file.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/load_kmg.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/load_ktx.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/save_dds.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/save_dds.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/save_ktx.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/save_ktx.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/fileio/fbxfiletokens.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/save_kmg.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/flip.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxlayercontainer.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/vulkanhelperfunctions.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/fbxtakeinfo.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///g:/repos/vulkansandbox/vulkansandbox/vertex.h": {
           "roles": [
             "resultFile"
@@ -8208,6 +8861,41 @@
           ]
         },
         "file:///d:/other/libraries/includes/glm/glm/gtc/type_ptr.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbuniformbuffer.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/header.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbcamera.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/uncompressedanimation.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbrenderpass.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbswapchain.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbpipeline.h": {
           "roles": [
             "resultFile"
           ]
@@ -8243,37 +8931,7 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxarray.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxcontainerallocators.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxclassid.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/fileio/fbxgloballightsettings.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxstring.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxfile.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxredblacktree.h": {
           "roles": [
             "resultFile"
           ]
@@ -8323,16 +8981,6 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxloadingstrategy.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxquery.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxemitter.h": {
           "roles": [
             "resultFile"
@@ -8344,26 +8992,6 @@
           ]
         },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxeventhandler.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxevent.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/fbxvideo.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxproperty.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxmultimap.h": {
           "roles": [
             "resultFile"
           ]
@@ -8414,11 +9042,6 @@
           ]
         },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/fileio/fbxprogress.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/fileio/fbxfiletokens.h": {
           "roles": [
             "resultFile"
           ]
@@ -8503,17 +9126,7 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/fbxselectionset.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/fbxselectionnode.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/fbxtakeinfo.h": {
           "roles": [
             "resultFile"
           ]
@@ -8583,11 +9196,6 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxblendshape.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxdeformer.h": {
           "roles": [
             "resultFile"
@@ -8624,11 +9232,6 @@
           ]
         },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxgeometrybase.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxlayercontainer.h": {
           "roles": [
             "resultFile"
           ]
@@ -8733,11 +9336,6 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/shading/fbxsemanticentryview.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/shading/fbxsurfacelambert.h": {
           "roles": [
             "resultFile"
@@ -8764,11 +9362,6 @@
           ]
         },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/utils/fbxmaterialconverter.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/utils/fbxrenamingstrategyfbx5.h": {
           "roles": [
             "resultFile"
           ]

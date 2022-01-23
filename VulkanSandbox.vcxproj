@@ -185,8 +185,10 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="MyRenderPass.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="SbDescriptor.cpp" />
     <ClCompile Include="SbDescriptorSet.cpp" />
     <ClCompile Include="SbImage.cpp" />
+    <ClCompile Include="SbMaterialDescriptorSet.cpp" />
     <ClCompile Include="SbShaderLayout.cpp" />
     <ClCompile Include="SbTextureImage.cpp" />
     <ClCompile Include="SkeletalAnimationComponent.cpp" />
@@ -224,6 +226,7 @@
     <ClCompile Include="Sponza.cpp" />
     <ClCompile Include="UncompressedAnimation.cpp" />
     <ClCompile Include="UncompressedAnimationKeys.cpp" />
+    <ClCompile Include="VulkanHelperFunctions.cpp" />
     <ClCompile Include="vulkansetup.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -235,8 +238,10 @@
     <ClInclude Include="Mutant.hpp" />
     <ClInclude Include="MyRenderPass.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="SbDescriptor.h" />
     <ClInclude Include="SbDescriptorSet.h" />
     <ClInclude Include="SbImage.h" />
+    <ClInclude Include="SbMaterialDescriptorSet.h" />
     <ClInclude Include="SbShaderLayout.h" />
     <ClInclude Include="SbTextureImage.h" />
     <ClInclude Include="SceneStuff.h" />
@@ -260,6 +265,7 @@
     <ClInclude Include="spirv-cross\spirv_reflect.hpp" />
     <ClInclude Include="spirvloader.h" />
     <ClInclude Include="Sponza.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="UncompressedAnimation.h" />
     <ClInclude Include="UncompressedAnimationKeys.h" />
     <ClInclude Include="Util.h" />
@@ -278,7 +284,7 @@
     <ClInclude Include="spline.h" />
     <ClInclude Include="AnimatedVertex.h" />
     <ClInclude Include="Vertex.h" />
-    <ClInclude Include="VulkanHelperFunctions.hpp" />
+    <ClInclude Include="VulkanHelperFunctions.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="SbLogicalDevice.h" />
     <ClInclude Include="SbPhysicalDevice.h" />
@@ -303,6 +309,8 @@
     <None Include="shaders\gbuf.vert" />
     <None Include="shaders\shader.frag" />
     <None Include="shaders\shader.vert" />
+    <None Include="shaders\sponza.frag" />
+    <None Include="shaders\sponza.vert" />
     <None Include="shaders\transparent.frag" />
     <None Include="shaders\transparent.vert" />
   </ItemGroup>
@@ -310,6 +318,8 @@
     <Text Include="notes.txt" />
     <Text Include="scraps.txt" />
     <Text Include="tasks.txt" />
+    <Text Include="sponza.frag" />
+    <Text Include="sponza.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

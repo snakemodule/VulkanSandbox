@@ -40,7 +40,7 @@ void SbDescriptorSet::updateDescriptors()
 			descriptorWrites[currentBinding].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 			descriptorWrites[currentBinding].dstSet = allocatedDSs[setInstance];
 			descriptorWrites[currentBinding].dstBinding = currentBinding;
-			descriptorWrites[currentBinding].descriptorType = shaderLayout.bindingInfo[currentBinding].descriptorType;
+			descriptorWrites[currentBinding].descriptorType = DSLBindings[currentBinding].descriptorType;
 			descriptorWrites[currentBinding].descriptorCount = 1;
 			descriptorWrites[currentBinding].pImageInfo = &vkImageInfos[i];
 		}		
@@ -50,7 +50,7 @@ void SbDescriptorSet::updateDescriptors()
 			descriptorWrites[currentBinding].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 			descriptorWrites[currentBinding].dstSet = allocatedDSs[setInstance];
 			descriptorWrites[currentBinding].dstBinding = currentBinding;
-			descriptorWrites[currentBinding].descriptorType = shaderLayout.bindingInfo[currentBinding].descriptorType;
+			descriptorWrites[currentBinding].descriptorType = DSLBindings[currentBinding].descriptorType;
 			descriptorWrites[currentBinding].descriptorCount = 1;
 			descriptorWrites[currentBinding].pBufferInfo = &vkBufferInfos[i];
 		}
@@ -60,10 +60,11 @@ void SbDescriptorSet::updateDescriptors()
 }
 
 
-SbDescriptorSet::SbDescriptorSet(const VkDevice& device, SbSwapchain& swapchain, 
-	SbRenderpass::Subpass& subpass, int set)
+SbDescriptorSet::SbDescriptorSet(const VkDevice& device, SbSwapchain& swapchain,
+	const VkDescriptorSetLayout& DSL,
+	const std::vector<VkDescriptorSetLayoutBinding>& DSLBindings)
 	: device(device), swapchain(swapchain), 
-	shaderLayout(subpass.pipeline.shaderLayout.sbSetLayouts[set])
+	DSL(DSL), DSLBindings(DSLBindings)
 {
 
 }
@@ -117,12 +118,12 @@ proceed:
 	std::vector<VkDescriptorSetLayout> layouts;
 	if (setIsInstanced) 
 	{
-		layouts = std::vector<VkDescriptorSetLayout>(swapchain.getSize(), shaderLayout.layout);
+		layouts = std::vector<VkDescriptorSetLayout>(swapchain.getSize(), DSL);
 		allocatedDSs = std::vector<VkDescriptorSet>(swapchain.getSize());
 	}
 	else 
 	{
-		layouts = std::vector<VkDescriptorSetLayout>(1, shaderLayout.layout);
+		layouts = std::vector<VkDescriptorSetLayout>(1, DSL);
 		allocatedDSs = std::vector<VkDescriptorSet>(1);
 	}
 	
@@ -132,7 +133,21 @@ proceed:
 	allocInfo.descriptorSetCount = layouts.size();
 	allocInfo.pSetLayouts = layouts.data();
 
-	if (vkAllocateDescriptorSets(device, &allocInfo, allocatedDSs.data()) != VK_SUCCESS) {
+	auto result = vkAllocateDescriptorSets(device, &allocInfo, allocatedDSs.data());
+	if (result != VK_SUCCESS) {
+		switch (result)
+		{
+		case VK_ERROR_OUT_OF_HOST_MEMORY:
+			throw std::runtime_error("VK_ERROR_OUT_OF_HOST_MEMORY");
+		case VK_ERROR_OUT_OF_DEVICE_MEMORY:
+			throw std::runtime_error("VK_ERROR_OUT_OF_DEVICE_MEMORY");
+		case VK_ERROR_FRAGMENTED_POOL:
+			throw std::runtime_error("VK_ERROR_FRAGMENTED_POOL");
+		case VK_ERROR_OUT_OF_POOL_MEMORY:
+			throw std::runtime_error("VK_ERROR_OUT_OF_POOL_MEMORY");
+		default:
+			break;
+		}
 		throw std::runtime_error("failed to allocate descriptor sets!");
 	}
 

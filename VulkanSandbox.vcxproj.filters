@@ -165,6 +165,15 @@
     <ClCompile Include="Sponza.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SbMaterialDescriptorSet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SbDescriptor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanHelperFunctions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vulkansetup.h">
@@ -215,7 +224,7 @@
     <ClInclude Include="SbLogicalDevice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="VulkanHelperFunctions.hpp">
+    <ClInclude Include="VulkanHelperFunctions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SbVulkanBase.h">
@@ -356,6 +365,15 @@
     <ClInclude Include="SceneStuff.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SbMaterialDescriptorSet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SbDescriptor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\shader.frag">
@@ -397,6 +415,8 @@
     <None Include="shaders\transparent.vert">
       <Filter>Resource Files\shaders</Filter>
     </None>
+    <None Include="shaders\sponza.vert" />
+    <None Include="shaders\sponza.frag" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="tasks.txt">
@@ -406,5 +426,11 @@
       <Filter>Resource Files</Filter>
     </Text>
     <Text Include="notes.txt" />
+    <Text Include="sponza.frag">
+      <Filter>Resource Files\shaders</Filter>
+    </Text>
+    <Text Include="sponza.vert">
+      <Filter>Resource Files\shaders</Filter>
+    </Text>
   </ItemGroup>
 </Project>

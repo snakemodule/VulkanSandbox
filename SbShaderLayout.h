@@ -7,7 +7,7 @@
 
 class SbShaderLayout
 {
-public:
+
 
 	struct SubpassInput
 	{
@@ -35,18 +35,26 @@ public:
 		std::map<unsigned, SampledImage> imageSamplers;
 	};
 
+	
+
+	std::vector<set> sets;
+
+public:
+
 	struct SbSetLayout {
 		std::vector<VkDescriptorSetLayoutBinding> bindingInfo;
 		VkDescriptorSetLayout layout;
 	};
+	//std::vector<SbSetLayout> sbSetLayouts;
 
-	std::vector<set> sets;
+	std::vector<std::vector<VkDescriptorSetLayoutBinding>> bindings;
+	std::vector<VkDescriptorSetLayout> DSL;
+
 	VkPipelineLayout pipelineLayout;
-	std::vector<SbSetLayout> sbSetLayouts;
 
 
 	SbSetLayout createDSLayout(vk::Device device, int set);
-	VkPipelineLayout createPipelineLayout(vk::Device device);
+	//VkPipelineLayout createPipelineLayout(vk::Device device);
 
 	void parse(std::vector<uint32_t>& spirv_binary, VkShaderStageFlagBits shaderStage);
 	VkPipelineLayout reflect(vk::Device device, std::string vert, std::string frag, 

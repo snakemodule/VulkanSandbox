@@ -12,7 +12,7 @@ class SbBuffer
 {
 public:
 	vk::DeviceSize bufferSize;
-	vk::Buffer buffer;
+	VkBuffer buffer;
 	vk::DeviceMemory memory;
 
 	SbBuffer();

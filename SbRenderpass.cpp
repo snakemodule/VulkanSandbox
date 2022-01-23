@@ -9,8 +9,10 @@
 SbRenderpass::SbRenderpass(const SbVulkanBase & vkBase, uint32_t subpassCount, uint32_t attachmentCount, uint32_t swapchainSize)
 	: subpasses(subpassCount, Subpass(vkBase, swapchainSize)), attachments(attachmentCount)
 {
-	for (size_t i = 0; i < subpasses.size(); i++)
-		subpasses[i].pipeline.subpassIndex(i);
+	//for (size_t i = 0; i < subpasses.size(); i++)
+	//	subpasses[i].pipeline.subpassIndex(i);
+
+
 
 	//Subpass temp(vkBase, swapchainSize);
 	//subpasses = std::vector<Subpass>();
@@ -141,18 +143,17 @@ void SbRenderpass::createRenderpass(SbSwapchain& swapchain)
 	}
 }
 
-VkPipeline SbRenderpass::getSubpassPipeline(uint32_t subpassIndex)
+VkPipeline SbRenderpass::getSubpassPipeline(uint32_t subpassIndex, uint32_t pipelineIndex)
 {
-	return subpasses[subpassIndex].pipeline.handle;
+	return subpasses[subpassIndex].pipelines[pipelineIndex].handle;
 }
 
-VkPipelineLayout SbRenderpass::getSubpassPipelineLayout(uint32_t subpassIndex)
+VkPipelineLayout SbRenderpass::getSubpassPipelineLayout(uint32_t subpassIndex, uint32_t pipelineIndex)
 {
-	return subpasses[subpassIndex].pipeline.shaderLayout.pipelineLayout;
+	return subpasses[subpassIndex].pipelines[pipelineIndex].shaderLayout.pipelineLayout;
 }
 
 SbRenderpass::Subpass::Subpass(const SbVulkanBase & vkBase, const uint32_t & swapchainSize)
-	: pipeline()
 {
 
 }

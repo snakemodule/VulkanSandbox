@@ -2,7 +2,7 @@
 
 #include "SbBuffer.h"
 #include "SbImage.h"
-#include "VulkanHelperFunctions.hpp"
+#include "VulkanHelperFunctions.h"
 #include "VulkanInitializers.hpp"
 #include "SbVulkanBase.h"
 
@@ -17,6 +17,7 @@
 //{
 //}
 
+/*
 void setImageLayout(
 	VkCommandBuffer cmdbuffer,
 	VkImage image,
@@ -153,6 +154,7 @@ void setImageLayout(
 		0, nullptr,
 		1, &imageMemoryBarrier);
 }
+*/
 
 void transitionImageLayout(VkCommandBuffer cmd, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels) {
 	
@@ -249,33 +251,10 @@ SbTextureImage::SbTextureImage(SbVulkanBase& base, std::string path)
 
 	base.commandPool->transitionImageLayout(image->img, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_LAYOUT_UNDEFINED,
 		VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mipLevels);
-	//base.commandPool->copyBufferToImage(stagingBuffer.buffer, image->img,
-	//	static_cast<uint32_t>(image->width), static_cast<uint32_t>(image->height));
 	
-	/* */
-
 	VkCommandBuffer commandBuffer = base.commandPool->beginSingleTimeCommands();
 	// Setup buffer copy regions for each mip level
-
-	std::vector<VkBufferImageCopy> bufferCopyRegions;
-	uint32_t offset = 0;
-	for (uint32_t i = 0; i < mipLevels; i++)
-	{
-		VkBufferImageCopy bufferCopyRegion = {};
-		bufferCopyRegion.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-		bufferCopyRegion.imageSubresource.mipLevel = i;
-		bufferCopyRegion.imageSubresource.baseArrayLayer = 0;
-		bufferCopyRegion.imageSubresource.layerCount = 1;
-		bufferCopyRegion.imageExtent.width = static_cast<uint32_t>(tex2D[i].extent().x);
-		bufferCopyRegion.imageExtent.height = static_cast<uint32_t>(tex2D[i].extent().y);
-		bufferCopyRegion.imageExtent.depth = 1;
-		bufferCopyRegion.bufferOffset = offset;
-
-		bufferCopyRegions.push_back(bufferCopyRegion);
-
-		offset += static_cast<uint32_t>(tex2D[i].size());
-	}
-
+	
 	VkImageSubresourceRange subresourceRange = {};
 	subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 	subresourceRange.baseMipLevel = 0;
@@ -284,7 +263,7 @@ SbTextureImage::SbTextureImage(SbVulkanBase& base, std::string path)
 
 	// Image barrier for optimal image (target)
 	// Optimal image will be used as destination for the copy
-	setImageLayout(
+	vks::helper::setImageLayout(
 		commandBuffer,
 		image->img,
 		VK_IMAGE_ASPECT_COLOR_BIT,
@@ -292,11 +271,9 @@ SbTextureImage::SbTextureImage(SbVulkanBase& base, std::string path)
 		VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
 		subresourceRange);
 
-	vkCmdCopyBufferToImage(commandBuffer, stagingBuffer.buffer, image->img, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 
-		static_cast<uint32_t>(bufferCopyRegions.size()), bufferCopyRegions.data());
-
-	//this->layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL; todo do we need to save this?
-	setImageLayout(
+	vks::helper::copyBufferToImage(commandBuffer, tex2D, mipLevels, stagingBuffer.buffer, image->img);
+		
+	vks::helper::setImageLayout(
 		commandBuffer,
 		image->img,
 		VK_IMAGE_ASPECT_COLOR_BIT,
@@ -308,10 +285,18 @@ SbTextureImage::SbTextureImage(SbVulkanBase& base, std::string path)
 
 	stagingBuffer.Destroy(base.getDevice());
 
-	//base.commandPool->generateMipmaps(image->img, image->imageInfo.format, texWidth, texHeight, mipLevels);
-
 	textureImageView = vks::helper::createImageView(base.logicalDevice->device, image->img, 
 		image->imageInfo.format, VK_IMAGE_ASPECT_COLOR_BIT, mipLevels);
+
+	descriptorInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+	descriptorInfo.imageView = textureImageView;
+
+}
+
+SbTextureImage::SbTextureImage(SbVulkanBase& base, std::string path, VkSampler sampler)
+	: SbTextureImage(base, path)
+{
+	descriptorInfo.sampler = sampler;
 }
 
 void SbTextureImage::Destroy(vk::Device device) 

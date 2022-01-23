@@ -34,14 +34,14 @@
 
 #include <cmath>
 
-//#include <assimp/Importer.hpp> // C++ importer interface
-//#include <assimp/scene.h> // Output data structure
-//#include <assimp/postprocess.h> // Post processing flags
+
 
 #include "AnimationStuff.h"
 
 #include "SkeletalAnimationComponent.h"
 #include "Model.h"
+
+#include "Sponza.h"
 
 #include "Header.h"
 
@@ -135,6 +135,14 @@ public:
 	std::vector<DrawableMesh> drawables;
 
 
+	struct VPTransformBuffer {
+		alignas(16) glm::mat4 view;
+		alignas(16) glm::mat4 proj;
+	};
+
+	
+
+
 	struct UniformBufferObject {
 		alignas(16) glm::mat4 model;
 		alignas(16) glm::mat4 view;
@@ -177,13 +185,18 @@ private:
 
 	vk::Sampler textureSampler;
 
+	vk::Sampler materialSampler;
+
 	//custom model struct
 	AnimatedModel* mymodel = nullptr;
 
+	Sponza* sponza = nullptr;
 
+	std::unique_ptr<SbUniformBuffer<VPTransformBuffer>> vpTransformBuffer;	
 	std::unique_ptr<SbUniformBuffer<UniformBufferObject>> transformUniformBuffer;
+
 	std::unique_ptr<SbUniformBuffer<ShadingUBO>> shadingUniformBuffer;
-	std::unique_ptr<SbUniformBuffer<glm::mat4>> skeletonUniformBuffer;
+	//std::unique_ptr<SbUniformBuffer<glm::mat4>> skeletonUniformBuffer; //todo: use this
 
 	std::vector<VkBuffer> transformationgUB;
 	std::vector<VkDeviceMemory> transformationUBMemory;
@@ -195,6 +208,10 @@ private:
 	std::unique_ptr<SbDescriptorSet> gbufDesc;
 	std::unique_ptr<SbDescriptorSet> compDesc;
 	std::unique_ptr<SbDescriptorSet> transDesc;
+
+	std::unique_ptr<SbDescriptorSet> sceneGlobalDesc;
+	std::unique_ptr<SbDescriptorSet> sceneMaterialDesc;
+	std::unique_ptr<SbDescriptorSet> sceneInstanceDesc;
 
 	bool framebufferResized = false;
 
@@ -232,7 +249,7 @@ private:
 
 
 
-	//void createTextureSampler();
+	void createTextureSampler();
 
 	
 	

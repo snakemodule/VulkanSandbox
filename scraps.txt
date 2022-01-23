@@ -1,3 +1,96 @@
+//}
+	/*
+	else
+	{
+		DSL.resize(2);
+		bindings.resize(2);
+
+		//set 0
+		bindings[0].push_back(vkinit::descriptorSetLayoutBinding(
+			VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+			VK_SHADER_STAGE_VERTEX_BIT, 0));
+
+		VkDescriptorSetLayoutCreateInfo DSL_CI_0 = vks::initializers::descriptorSetLayoutCreateInfo(
+			bindings[0].data(), bindings[0].size());
+
+		if (vkCreateDescriptorSetLayout(device, &DSL_CI_0, nullptr, &DSL[0]) != VK_SUCCESS) {
+			throw std::runtime_error("failed to create descriptor set layout!");
+		}
+
+		//set 1
+		bindings[1].push_back(vkinit::descriptorSetLayoutBinding(
+			VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+			VK_SHADER_STAGE_FRAGMENT_BIT, 0));
+		bindings[1].push_back(vkinit::descriptorSetLayoutBinding(
+			VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+			VK_SHADER_STAGE_FRAGMENT_BIT, 1));
+		bindings[1].push_back(vkinit::descriptorSetLayoutBinding(
+			VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+			VK_SHADER_STAGE_FRAGMENT_BIT, 2));
+
+		VkDescriptorSetLayoutCreateInfo DSL_CI_1 = vks::initializers::descriptorSetLayoutCreateInfo(
+			bindings[1].data(), bindings[1].size());
+
+		if (vkCreateDescriptorSetLayout(device, &DSL_CI_1, nullptr, &DSL[1]) != VK_SUCCESS) {
+			throw std::runtime_error("failed to create descriptor set layout!");
+		}
+
+		//------------------------------
+
+
+		parse(vert_binary, VK_SHADER_STAGE_VERTEX_BIT);
+		parse(frag_binary, VK_SHADER_STAGE_FRAGMENT_BIT);
+
+		std::vector<std::vector<VkDescriptorSetLayoutBinding>> parseBindings;
+		std::vector<VkDescriptorSetLayout> parseDSL;
+		parseDSL.resize(sets.size());
+		parseBindings.resize(sets.size());
+
+		for (size_t set = 0; set < sets.size(); set++)
+		{
+			auto& imageSamplers = sets[set].imageSamplers;
+			auto& uniforms = sets[set].uniforms;
+			auto& inputAttachments = sets[set].inputAttachments;
+
+			//SbSetLayout layout;
+			//std::vector<VkDescriptorSetLayoutBinding>& currentSetBindings = parseBindings[set];
+
+			for (auto& pair : uniforms)
+				parseBindings[set].push_back(vkinit::descriptorSetLayoutBinding(
+					VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, pair.second.stageFlags, pair.first));
+			for (auto& pair : imageSamplers)
+				parseBindings[set].push_back(vkinit::descriptorSetLayoutBinding(
+					VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, pair.second.stageFlags, pair.first));
+			for (auto& pair : inputAttachments)
+				parseBindings[set].push_back(vkinit::descriptorSetLayoutBinding(
+					VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, pair.second.stageFlags, pair.first));
+
+			std::sort(parseBindings[set].begin(), parseBindings[set].end(),
+				[](VkDescriptorSetLayoutBinding lhs, VkDescriptorSetLayoutBinding rhs)
+				-> bool { return lhs.binding < rhs.binding; });
+
+			VkDescriptorSetLayoutCreateInfo DSL_CI = vks::initializers::descriptorSetLayoutCreateInfo(
+				parseBindings[set].data(), parseBindings[set].size());
+
+			if (vkCreateDescriptorSetLayout(device, &DSL_CI, nullptr, &DSL[set]) != VK_SUCCESS) {
+				throw std::runtime_error("failed to create descriptor set layout!");
+			}
+
+			int cmp0 = std::memcmp((void*)&DSL_CI, (void*)&DSL_CI_0, sizeof(VkDescriptorSetLayoutCreateInfo));
+			int cmp1 = std::memcmp((void*)&DSL_CI, (void*)&DSL_CI_1, sizeof(VkDescriptorSetLayoutCreateInfo));
+
+			cmp0 = std::memcmp((void*)parseBindings[set].data(), (void*)bindings[0].data(), sizeof(VkDescriptorSetLayoutBinding) * parseBindings[set].size());
+			cmp1 = std::memcmp((void*)parseBindings[set].data(), (void*)bindings[1].data(), sizeof(VkDescriptorSetLayoutBinding) * parseBindings[set].size());
+
+			parseLayout = true;
+		}
+
+	}
+	*/
+	//std::vector<VkDescriptorSetLayout> setLayouts = std::vector<VkDescriptorSetLayout>(sbSetLayouts.size());
+	//for (size_t i = 0; i < setLayouts.size(); i++)
+	//	setLayouts[i] = sbSetLayouts[i].layout;
+
 /*
 		// Input attachments
 		// These will be written in the first subpass, transitioned to input attachments 

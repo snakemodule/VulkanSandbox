@@ -10,9 +10,9 @@
 class Sponza
 {
 public:
-	
+	Scene scene;
 
-	static void load(SbVulkanBase * base) {
+	void load(SbVulkanBase & base) {
 
 		Assimp::Importer modelImporter;
 		const aiScene* modelScene;
@@ -24,9 +24,9 @@ public:
 		//	aiProcess_SortByPType |
 		//	aiProcess_ValidateDataStructure);
 
-		Scene scene = Scene();
+		
 
-		scene.load("models/Willems/sponza.dae", base);
+		scene.load("models/Willems/sponza.dae", &base);
 
 	}
 

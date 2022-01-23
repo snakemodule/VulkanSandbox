@@ -10,5 +10,8 @@ C:/VulkanSDK/1.1.106.0/Bin32/glslangValidator.exe -V composition.frag -o composi
 C:/VulkanSDK/1.1.106.0/Bin32/glslangValidator.exe -V transparent.vert -o transparent.vert.spv
 C:/VulkanSDK/1.1.106.0/Bin32/glslangValidator.exe -V transparent.frag -o transparent.frag.spv
 
+C:/VulkanSDK/1.1.106.0/Bin32/glslangValidator.exe -V sponza.vert -o sponza.vert.spv
+C:/VulkanSDK/1.1.106.0/Bin32/glslangValidator.exe -V sponza.frag -o sponza.frag.spv
+
 
 pause

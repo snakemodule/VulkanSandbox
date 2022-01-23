@@ -11,6 +11,7 @@
 class SbPipeline
 {
 private:
+public: //TODO temporary public
 	//restore these, easier to read than in constructor
 	VkPipelineInputAssemblyStateCreateInfo inputAssemblyStateCI;// = vks::initializers::pipelineInputAssemblyStateCreateInfo(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, 0, VK_FALSE);
 	VkPipelineRasterizationStateCreateInfo rasterizationStateCI;// = vks::initializers::pipelineRasterizationStateCreateInfo(VK_POLYGON_MODE_FILL, VK_CULL_MODE_BACK_BIT, VK_FRONT_FACE_CLOCKWISE, 0);
@@ -32,6 +33,7 @@ public:
 	SbShaderLayout shaderLayout;
 
 	SbPipeline& shaderLayouts(vk::Device device, std::string vert, std::string frag);
+	SbPipeline& shaderStageSpecialization(size_t stage, const VkSpecializationInfo* specializationInfo);
 	//VkDescriptorSetLayout getSetLayout(int set);
 
 	//obligatory
@@ -49,7 +51,17 @@ public:
 	SbPipeline& colorBlending(uint32_t attachmentIndex);
 
 
-	void createPipeline(const VkRenderPass & renderPass, const VkDevice & device);
+	void createPipeline(const VkRenderPass & renderPass, const VkDevice & device, uint32_t subpass);
+
+	const VkDescriptorSetLayout& getDSL(uint32_t set)
+	{
+		return shaderLayout.DSL[set];
+	}
+
+	const std::vector<VkDescriptorSetLayoutBinding>& getDSLBindings(uint32_t set)
+	{
+		return shaderLayout.bindings[set];
+	}
 
 	SbPipeline();
 	~SbPipeline();

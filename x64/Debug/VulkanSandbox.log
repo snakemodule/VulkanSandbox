@@ -13,13 +13,13 @@ g:\repos\vulkansandbox\vulkansandbox\animatedvertex.h(26): warning C4267: '=': c
           [
               T=int
           ]
-g:\repos\vulkansandbox\vulkansandbox\scenestuff.h(245): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\scenestuff.h(412): warning C4101: 'memReqs': unreferenced local variable
-g:\repos\vulkansandbox\vulkansandbox\scenestuff.h(415): warning C4101: 'data': unreferenced local variable
-g:\repos\vulkansandbox\vulkansandbox\scenestuff.h(414): warning C4101: 'err': unreferenced local variable
+g:\repos\vulkansandbox\vulkansandbox\sbmaterialdescriptorset.h(29): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\scenestuff.h(314): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\scenestuff.h(358): warning C4101: 'memReqs': unreferenced local variable
+g:\repos\vulkansandbox\vulkansandbox\scenestuff.h(361): warning C4101: 'data': unreferenced local variable
+g:\repos\vulkansandbox\vulkansandbox\scenestuff.h(360): warning C4101: 'err': unreferenced local variable
 g:\repos\vulkansandbox\vulkansandbox\sponza.h(18): warning C4101: 'modelScene': unreferenced local variable
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(368): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(476): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(509): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(410): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(526): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(601): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
   VulkanSandbox.vcxproj -> G:\repos\VulkanSandbox\x64\Debug\VulkanSandbox.exe

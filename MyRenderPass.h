@@ -11,6 +11,7 @@ public:
 	enum
 	{
 		kSubpass_GBUF,
+		//kSubpass_SCENE,
 		kSubpass_COMPOSE,
 		kSubpass_TRANSPARENT,
 

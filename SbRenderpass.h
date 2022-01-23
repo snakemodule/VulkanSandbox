@@ -20,7 +20,9 @@ public:
 		VkAccessFlags accessMaskAsDst;
 		VkAccessFlags accessMaskAsSrc;
 
-		SbPipeline pipeline;
+		//SbPipeline pipeline;
+
+		std::vector<SbPipeline> pipelines;
 
 		Subpass(const SbVulkanBase & vkBase, const uint32_t & swapchainSize);
 
@@ -58,9 +60,9 @@ public:
 
 	void createRenderpass(SbSwapchain& swapchain);
 
-	VkPipeline getSubpassPipeline(uint32_t subpassIndex);
+	VkPipeline getSubpassPipeline(uint32_t subpassIndex, uint32_t pipeline = 0);
 
-	VkPipelineLayout getSubpassPipelineLayout(uint32_t subpassIndex);;
+	VkPipelineLayout getSubpassPipelineLayout(uint32_t subpassIndex, uint32_t pipelineIndex = 0);
 
 };
 

@@ -19,6 +19,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "SbMaterialDescriptorSet.h"
+
 
 
 //std::string errorString(VkResult errorCode)
@@ -67,44 +69,79 @@
 //}	
 
 //a material ready to be used in a scene
-struct SceneMaterial
-{
-	std::string name;
-	//vkTools::VulkanTexture diffuse;
-	//vkTools::VulkanTexture specular;
-	//vkTools::VulkanTexture bump;
-	std::shared_ptr<SbTextureImage> diffuse = nullptr;
-	std::shared_ptr<SbTextureImage> specular = nullptr;
-	std::shared_ptr<SbTextureImage> bump = nullptr;
-	bool hasAlpha = false;
-	bool hasBump = false;
-	bool hasSpecular = false;
-	VkPipeline pipeline;
+//struct SceneMaterial
+//{
+//	std::string name;
+//	std::shared_ptr<SbTextureImage> diffuse = nullptr;
+//	std::shared_ptr<SbTextureImage> specular = nullptr;
+//	std::shared_ptr<SbTextureImage> bump = nullptr;
+//	bool hasAlpha = false;
+//	bool hasBump = false;
+//	bool hasSpecular = false;
+//	
+//	//VkPipeline pipeline;		
+//	//SbDescriptorSet descriptorSet;
+//
+//};
 
-	//moved from scenemesh
-	VkDescriptorSet descriptorSet;
+
+
+struct TextureAOS {
+	std::vector<vk::ImageView> imageView;
+	//struct {
+	std::vector<vk::Image> image;
+	std::vector<vk::DeviceMemory> memory;
+	std::vector<vk::DeviceSize> imageSize;
+	std::vector<uint32_t> mipLevels;
+	std::vector<VkImageCreateInfo> imageCreateInfo;
+	//} image;
+	//std::vector<SbImage> image;
+
+	//std::vector<uint32_t> channels;
+	std::vector<VkDescriptorImageInfo> descriptorInfo;
+};
+
+struct SceneMaterialAOS 
+{
+	std::vector<std::string> name;	
+	
+	TextureAOS diffuse;
+	TextureAOS specular;
+	TextureAOS bump;
+	std::vector<bool> hasAlpha;
+	//std::vector<bool> hasBump = false;
+	//std::vector<bool> hasSpecular = false;
+	std::vector<VkDescriptorSet> descriptorSets;
 };
 
 //a mesh ready to be used in a scene, drawablemesh
 struct SceneMesh
 {
-	SbBuffer indexBuffer;
-
-	SbBuffer vertexBuffer;
+	//SbBuffer indexBuffer;
+	//SbBuffer vertexBuffer;
 	
 	uint32_t indexCount;
 	uint32_t indexBase;
 
 
-	SceneMaterial* material;
+	//SceneMaterial* material;
+	uint32_t material;
+
 };
 
+struct MTransformBuffer {
+	alignas(16) glm::mat4 model;
+};
 
 // The scene
 class Scene 
 {
 public: 
-	std::vector<SceneMaterial> materials;
+	SceneMaterialAOS materials;
+
+	//std::vector<SceneMaterial> materials;
+	SbMaterialDescriptorSet materialDescriptors;
+
 	std::vector<SceneMesh> meshes;
 
 	//SbVulkanBase* base;
@@ -112,29 +149,57 @@ public:
 	SbBuffer vertexBuffer;
 	SbBuffer indexBuffer;	
 
-	void loadMaterials(const aiScene* aScene)
+	void resize(TextureAOS* texture, uint32_t size) {
+		texture->imageView.resize(size);		
+		texture->image.resize(size);
+		texture->memory.resize(size);
+		texture->imageSize.resize(size);
+		texture->mipLevels.resize(size);
+		texture->imageCreateInfo.resize(size);		
+		//texture->channels.resize(size);
+		texture->descriptorInfo.resize(size);
+	}
+
+	void resize(SceneMaterialAOS* materials, uint32_t size) {
+		materials->name.resize(size);
+		resize(&materials->diffuse, size);
+		resize(&materials->specular, size);
+		resize(&materials->bump, size);
+		materials->hasAlpha.resize(size);
+	}
+	
+	void loadMaterials(const aiScene* aScene, SbVulkanBase* base)
 	{
 		std::string assetPath = "models/Willems"; //TODO 
 
 		auto& resources = ResourceManager::getInstance();
+		VkSampler sharedSampler = resources.samplers["shared sampler"];
 
-		materials.resize(aScene->mNumMaterials);
+		// Add dummy textures for objects without texture
+		resources.loadTexture2D("dummy.diffuse", assetPath + "/sponza/dummy.dds", sharedSampler);
+		resources.loadTexture2D("dummy.specular", assetPath + "/sponza/dummy_specular.dds", sharedSampler);
+		resources.loadTexture2D("dummy.bump", assetPath + "/sponza/dummy_ddn.dds", sharedSampler);
 
-		for (uint32_t i = 0; i < materials.size(); i++)
+		//materials.resize(aScene->mNumMaterials);
+		resize(&materials, aScene->mNumMaterials);
+
+		for (uint32_t i = 0; i < materials.name.size(); i++)
 		{
-			materials[i] = {};
+			//materials[i] = {};
 
 			aiString name;
 			aScene->mMaterials[i]->Get(AI_MATKEY_NAME, name);
 			aiColor3D ambient;
 			aScene->mMaterials[i]->Get(AI_MATKEY_COLOR_AMBIENT, ambient);
-			materials[i].name = name.C_Str();
+
+			materials.name[i] = name.C_Str();
 
 			// Textures
 			aiString texturefile;
 			std::string diffuseMapFile;
 			
 			// Diffuse
+			std::shared_ptr<Texture> texture;
 			aScene->mMaterials[i]->GetTexture(aiTextureType_DIFFUSE, 0, &texturefile);
 			if (aScene->mMaterials[i]->GetTextureCount(aiTextureType_DIFFUSE) > 0)
 			{
@@ -142,22 +207,23 @@ public:
 				std::string fileName = std::string(texturefile.C_Str());
 				diffuseMapFile = fileName;
 				std::replace(fileName.begin(), fileName.end(), '\\', '/');
+				
 				if (!resources.textureExists(fileName))
-				{
-					materials[i].diffuse = resources.loadTexture2D(fileName, assetPath + fileName);
-				}
-				else 
-				{
-					materials[i].diffuse = resources.textures[fileName];
-				}
+					texture = resources.loadTexture2D(fileName, assetPath + fileName, sharedSampler);
+				else
+					texture = resources.textures[fileName];				
 			}
 			else
 			{
-				//std::cout << "  Material has no diffuse, using dummy texture!" << std::endl;
-				//std::cout << "  material should have diffuse" << std::endl;
-				//materials[i].diffuse = resources.textures->get("dummy.diffuse");
-				//assert(false);
+				std::cout << "  Material has no diffuse, using dummy texture!" << std::endl;
+				texture = resources.textures["dummy.diffuse"];
 			}
+			materials.diffuse.imageView[i] = texture->imageView;
+			materials.diffuse.image[i] = texture->image;
+			materials.diffuse.memory[i] = texture->memory;
+			materials.diffuse.imageSize[i] = texture->imageSize;
+			materials.diffuse.imageCreateInfo[i] = texture->imageCreateInfo;
+			materials.diffuse.descriptorInfo[i] = texture->descriptorInfo;
 
 			// Specular
 			if (aScene->mMaterials[i]->GetTextureCount(aiTextureType_SPECULAR) > 0)
@@ -166,20 +232,23 @@ public:
 				std::cout << "  Specular: \"" << texturefile.C_Str() << "\"" << std::endl;
 				std::string fileName = std::string(texturefile.C_Str());
 				std::replace(fileName.begin(), fileName.end(), '\\', '/');
-				if (!resources.textureExists(fileName)) 
-				{
-					materials[i].specular = resources.loadTexture2D(fileName, assetPath + fileName);
-				}
-				else 
-				{
-					materials[i].specular = resources.textures[fileName];
-				}
+
+				if (!resources.textureExists(fileName))
+					texture = resources.loadTexture2D(fileName, assetPath + fileName, sharedSampler);
+				else
+					texture = resources.textures[fileName];
 			}
 			else
 			{
 				std::cout << "  Material has no specular, using dummy texture!" << std::endl;
-				//materials[i].specular = resources.textures->get("dummy.specular");
+				texture = resources.textures["dummy.specular"];
 			}
+			materials.specular.imageView[i] = texture->imageView;
+			materials.specular.image[i] = texture->image;
+			materials.specular.memory[i] = texture->memory;
+			materials.specular.imageSize[i] = texture->imageSize;
+			materials.specular.imageCreateInfo[i] = texture->imageCreateInfo;
+			materials.specular.descriptorInfo[i] = texture->descriptorInfo;
 
 			// Bump (map_bump is mapped to height by assimp)
 			if (aScene->mMaterials[i]->GetTextureCount(aiTextureType_NORMALS) > 0)
@@ -188,30 +257,30 @@ public:
 				std::cout << "  Bump: \"" << texturefile.C_Str() << "\"" << std::endl;
 				std::string fileName = std::string(texturefile.C_Str());
 				std::replace(fileName.begin(), fileName.end(), '\\', '/');
-				materials[i].hasBump = true;
+				//materials.hasBump[i] = true;
 				if (!resources.textureExists(fileName))
-				{
-					materials[i].bump = resources.loadTexture2D(fileName, assetPath + fileName);
-				}
+					texture = resources.loadTexture2D(fileName, assetPath + fileName, sharedSampler);
 				else
-				{
-					materials[i].bump = resources.textures[fileName];
-				}
+					texture = resources.textures[fileName];
 			}
 			else
 			{
 				std::cout << "  Material has no bump, using dummy texture!" << std::endl;
-				//materials[i].specular = resources.textures->get("dummy.specular");
+				texture = resources.textures["dummy.bump"];
 			}
+			materials.bump.imageView[i] = texture->imageView;
+			materials.bump.image[i] = texture->image;
+			materials.bump.memory[i] = texture->memory;
+			materials.bump.imageSize[i] = texture->imageSize;
+			materials.bump.imageCreateInfo[i] = texture->imageCreateInfo;
+			materials.bump.descriptorInfo[i] = texture->descriptorInfo;
 
 			// Mask
 			if (aScene->mMaterials[i]->GetTextureCount(aiTextureType_OPACITY) > 0)
 			{
 				std::cout << "  Material has opacity, enabling alpha test" << std::endl;
-				materials[i].hasAlpha = true;
+				materials.hasAlpha[i] = true;
 			}
-
-			//materials[i].pipeline = resources.pipelines->get("scene.solid");
 		}
 	}
 
@@ -229,10 +298,10 @@ public:
 			aiMesh* aMesh = aScene->mMeshes[i];
 
 			std::cout << "Mesh \"" << aMesh->mName.C_Str() << "\"" << std::endl;
-			std::cout << "	Material: \"" << materials[aMesh->mMaterialIndex].name << "\"" << std::endl;
+			std::cout << "	Material: \"" << materials.name[aMesh->mMaterialIndex] << "\"" << std::endl;
 			std::cout << "	Faces: " << aMesh->mNumFaces << std::endl;
 
-			meshes[i].material = &materials[aMesh->mMaterialIndex];
+			meshes[i].material = aMesh->mMaterialIndex;// &materials[aMesh->mMaterialIndex];
 			meshes[i].indexBase = gIndexBase;
 
 			// Vertices
@@ -278,129 +347,6 @@ public:
 				gIndices.push_back(indices[i * 3 + 2] + vertexBase);
 				gIndexBase += 3;
 			}
-
-			// Create buffers
-			// todo : staging
-			// todo : only one memory allocation
-			/*
-			uint32_t vertexDataSize = vertices.size() * sizeof(Vertex);
-			uint32_t indexDataSize = indices.size() * sizeof(uint32_t);
-
-			VkMemoryAllocateInfo memAlloc = vks::initializers::memoryAllocateInfo();
-			VkMemoryRequirements memReqs;
-
-			VkResult err;
-			void* data;
-						
-			SbBuffer vBuffer = SbBuffer(*base, vertexDataSize, 
-				vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible);
-			vBuffer.MapAndFill(base->getDevice(), vertices.data(), vertexDataSize);
-			
-			meshes[i].vertexBuffer = SbBuffer(*base, vertexDataSize, vk::BufferUsageFlagBits::eVertexBuffer
-				| vk::BufferUsageFlagBits::eTransferDst, vk::MemoryPropertyFlagBits::eDeviceLocal);
-
-
-			SbBuffer iBuffer = SbBuffer(*base, indexDataSize, 
-				vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible);
-			iBuffer.MapAndFill(base->getDevice(), vertices.data(), indexDataSize);
-
-
-
-			//vk::BufferUsageFlagBits::eVertexBuffer
-				//| vk::BufferUsageFlagBits::eTransferDst
-
-
-			// Generate vertex buffer
-			VkBufferCreateInfo vBufferInfo;
-
-			
-
-			// Staging buffer
-			vBufferInfo = vks::initializers::bufferCreateInfo(VK_BUFFER_USAGE_TRANSFER_SRC_BIT, vertexDataSize);
-			VK_CHECK_RESULT(vkCreateBuffer(device, &vBufferInfo, nullptr, &staging.vBuffer.buffer));
-			vkGetBufferMemoryRequirements(device, staging.vBuffer.buffer, &memReqs);
-			memAlloc.allocationSize = memReqs.size;
-			memAlloc.memoryTypeIndex = 
-				base->findMemoryType(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
-				//getMemTypeIndex(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
-			VK_CHECK_RESULT(vkAllocateMemory(device, &memAlloc, nullptr, &staging.vBuffer.memory));
-			VK_CHECK_RESULT(vkMapMemory(device, staging.vBuffer.memory, 0, VK_WHOLE_SIZE, 0, &data));
-			memcpy(data, vertices.data(), vertexDataSize);
-			vkUnmapMemory(device, staging.vBuffer.memory);
-			VK_CHECK_RESULT(vkBindBufferMemory(device, staging.vBuffer.buffer, staging.vBuffer.memory, 0));
-
-			// Target
-			vBufferInfo = vks::initializers::bufferCreateInfo(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, vertexDataSize);
-			VK_CHECK_RESULT(vkCreateBuffer(device, &vBufferInfo, nullptr, &meshes[i].vertexBuffer));
-			vkGetBufferMemoryRequirements(device, meshes[i].vertexBuffer, &memReqs);
-			memAlloc.allocationSize = memReqs.size;
-			memAlloc.memoryTypeIndex = base->findMemoryType(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-			VK_CHECK_RESULT(vkAllocateMemory(device, &memAlloc, nullptr, &meshes[i].vertexMemory));
-			VK_CHECK_RESULT(vkBindBufferMemory(device, meshes[i].vertexBuffer, meshes[i].vertexMemory, 0));
-
-			// Generate index buffer
-			VkBufferCreateInfo iBufferInfo;
-
-			// Staging buffer
-			iBufferInfo = vks::initializers::bufferCreateInfo(VK_BUFFER_USAGE_TRANSFER_SRC_BIT, indexDataSize);
-			VK_CHECK_RESULT(vkCreateBuffer(device, &iBufferInfo, nullptr, &staging.iBuffer.buffer));
-			vkGetBufferMemoryRequirements(device, staging.iBuffer.buffer, &memReqs);
-			memAlloc.allocationSize = memReqs.size;
-			memAlloc.memoryTypeIndex = base->findMemoryType(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
-			VK_CHECK_RESULT(vkAllocateMemory(device, &memAlloc, nullptr, &staging.iBuffer.memory));
-			VK_CHECK_RESULT(vkMapMemory(device, staging.iBuffer.memory, 0, VK_WHOLE_SIZE, 0, &data));
-			memcpy(data, indices.data(), indexDataSize);
-			vkUnmapMemory(device, staging.iBuffer.memory);
-			VK_CHECK_RESULT(vkBindBufferMemory(device, staging.iBuffer.buffer, staging.iBuffer.memory, 0));
-
-			// Target
-			iBufferInfo = vks::initializers::bufferCreateInfo(VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, indexDataSize);
-			VK_CHECK_RESULT(vkCreateBuffer(device, &iBufferInfo, nullptr, &meshes[i].indexBuffer));
-			vkGetBufferMemoryRequirements(device, meshes[i].indexBuffer, &memReqs);
-			memAlloc.allocationSize = memReqs.size;
-			memAlloc.memoryTypeIndex = base->findMemoryType(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-			VK_CHECK_RESULT(vkAllocateMemory(device, &memAlloc, nullptr, &meshes[i].indexMemory));
-			VK_CHECK_RESULT(vkBindBufferMemory(device, meshes[i].indexBuffer, meshes[i].indexMemory, 0));
-
-			// Copy
-			VkCommandBuffer copyCmd = base->commandPool->beginSingleTimeCommands();
-			//VkCommandBufferBeginInfo cmdBufInfo = vks::initializers::commandBufferBeginInfo();
-			//VK_CHECK_RESULT(vkBeginCommandBuffer(copyCmd, &cmdBufInfo));
-
-
-			VkBufferCopy copyRegion = {};
-
-			copyRegion.size = vertexDataSize;
-			vkCmdCopyBuffer(
-				copyCmd,
-				staging.vBuffer.buffer,
-				meshes[i].vertexBuffer,
-				1,
-				&copyRegion);
-
-			copyRegion.size = indexDataSize;
-			vkCmdCopyBuffer(
-				copyCmd,
-				staging.iBuffer.buffer,
-				meshes[i].indexBuffer,
-				1,
-				&copyRegion);
-
-			VK_CHECK_RESULT(vkEndCommandBuffer(copyCmd));
-
-			VkSubmitInfo submitInfo = {};
-			submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-			submitInfo.commandBufferCount = 1;
-			submitInfo.pCommandBuffers = &copyCmd;
-
-			base->commandPool->endSingleTimeCommands(copyCmd);
-			
-			vkDestroyBuffer(device, staging.vBuffer.buffer, nullptr);
-			vkFreeMemory(device, staging.vBuffer.memory, nullptr);
-			vkDestroyBuffer(device, staging.iBuffer.buffer, nullptr);
-			vkFreeMemory(device, staging.iBuffer.memory, nullptr);
-
-			*/
 		}
 
 
@@ -437,16 +383,13 @@ public:
 
 		vBuffer.Destroy(device);// todo: this is ugly, kinda looks like destroying the device
 		iBuffer.Destroy(device);
-
-		// Generate descriptor sets for all meshes
-		// todo : think about a nicer solution, better suited per material?
-		// yes per material
-
+		
 	}
+
+	
 
 	void load(std::string sceneFilePath, SbVulkanBase* base) 
 	{
-
 		Assimp::Importer modelImporter;
 		const aiScene* modelScene;
 
@@ -456,8 +399,21 @@ public:
 
 		modelScene = modelImporter.ReadFile(sceneFilePath.c_str(),flags);
 
-		loadMaterials(modelScene);
-
+		loadMaterials(modelScene, base);
 		loadMeshes(modelScene, base);
 	}
+
+	void prepareMaterialDescriptors(SbVulkanBase& base, SbDescriptorPool& descriptorPool, VkDescriptorSetLayout layout)
+	{
+		materialDescriptors.allocate(base.getDevice(), descriptorPool,
+			layout, materials.name.size(), materials.descriptorSets);
+		
+		//writeDescriptor(base->getDevice(), 0, );
+		materialDescriptors.writeDescriptor(base.getDevice(), 0, materials.diffuse.descriptorInfo, 
+			VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, materials.descriptorSets);
+		materialDescriptors.writeDescriptor(base.getDevice(), 1, materials.specular.descriptorInfo,
+			VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, materials.descriptorSets);
+		materialDescriptors.writeDescriptor(base.getDevice(), 2, materials.bump.descriptorInfo,
+			VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, materials.descriptorSets);
+	};
 };

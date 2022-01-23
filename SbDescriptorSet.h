@@ -41,11 +41,15 @@ public:
 	std::vector<VkDescriptorSet> allocatedDSs;
 
 	SbSwapchain& swapchain;
-	SbShaderLayout::SbSetLayout& shaderLayout;
+	//SbShaderLayout::SbSetLayout& shaderLayout;
+	const VkDescriptorSetLayout& DSL;
+	const std::vector<VkDescriptorSetLayoutBinding>& DSLBindings;
+
 	const VkDevice device;
 		
 	SbDescriptorSet(const VkDevice& device, SbSwapchain& swapchain,
-		SbRenderpass::Subpass& subpass, int set);
+		const VkDescriptorSetLayout& DSL,
+		const std::vector<VkDescriptorSetLayoutBinding>& DSLBindings);
 
 	void updateDescriptors();
 

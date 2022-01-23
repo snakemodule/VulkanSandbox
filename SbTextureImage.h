@@ -18,8 +18,11 @@ public:
 	uint32_t mipLevels;
 	//VkImageLayout layout;
 
+	VkDescriptorImageInfo descriptorInfo;
 	
 	SbTextureImage(SbVulkanBase& base, std::string path);
+
+	SbTextureImage(SbVulkanBase& base, std::string path, VkSampler sampler);
 
 	void Destroy(vk::Device device);
 

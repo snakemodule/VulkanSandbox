@@ -4,7 +4,7 @@
 
 #include <algorithm>
 
-#include "VulkanHelperFunctions.hpp"
+#include "VulkanHelperFunctions.h"
 
 SbSwapchain::SbSwapchain(SbVulkanBase & base)
 	:physicalDevice(*base.physicalDevice), logicalDevice(*base.logicalDevice), vulkanBase(base)

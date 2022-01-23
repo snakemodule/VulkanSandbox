@@ -5,25 +5,6 @@
     {
       "results": [
         {
-          "ruleId": "28285",
-          "message": {
-            "text": "For function 'new' 'return' syntax error in 'SAL_writableTo(byteCount(__formal(0,_Size)))' near 'byteCount(__formal(0'."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "fileLocation": {
-                  "uri": "file:///g:/repos/vulkansandbox/vulkansandbox/predefined c++ types (compiler internal)"
-                },
-                "region": {
-                  "startLine": 33,
-                  "startColumn": 22
-                }
-              }
-            }
-          ]
-        },
-        {
           "ruleId": "26495",
           "message": {
             "text": "Variable 'spirv_cross::Meta::Decoration::Extended::values' is uninitialized. Always initialize a member variable (type.6)."
@@ -80,6 +61,104 @@
                 }
               },
               "fullyQualifiedLogicalName": "public: __cdecl spirv_cross::StringStream<4096,4096>::StringStream<4096,4096>(void)"
+            }
+          ]
+        },
+        {
+          "ruleId": "6001",
+          "message": {
+            "text": "Using uninitialized memory '*this'."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "fileLocation": {
+                  "uri": "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv_cross_containers.hpp"
+                },
+                "region": {
+                  "startLine": 697,
+                  "startColumn": 21
+                }
+              },
+              "fullyQualifiedLogicalName": "public: void __cdecl spirv_cross::StringStream<4096,4096>::reset(void)"
+            }
+          ],
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "step": 0,
+                      "location": {
+                        "physicalLocation": {
+                          "fileLocation": {
+                            "uri": "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv_cross_containers.hpp"
+                          },
+                          "region": {
+                            "startLine": 691,
+                            "startColumn": 0
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "step": 1,
+                      "location": {
+                        "physicalLocation": {
+                          "fileLocation": {
+                            "uri": "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv_cross_containers.hpp"
+                          },
+                          "region": {
+                            "startLine": 694,
+                            "startColumn": 28
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "step": 2,
+                      "location": {
+                        "physicalLocation": {
+                          "fileLocation": {
+                            "uri": "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv_cross_containers.hpp"
+                          },
+                          "region": {
+                            "startLine": 695,
+                            "startColumn": 7
+                          }
+                        },
+                        "message": {
+                          "text": "'*this' is not initialized"
+                        }
+                      },
+                      "kind": "declaration",
+                      "importance": "essential"
+                    },
+                    {
+                      "step": 3,
+                      "location": {
+                        "physicalLocation": {
+                          "fileLocation": {
+                            "uri": "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv_cross_containers.hpp"
+                          },
+                          "region": {
+                            "startLine": 697,
+                            "startColumn": 21
+                          }
+                        },
+                        "message": {
+                          "text": "'*this' is used, but may not have been initialized"
+                        }
+                      },
+                      "kind": "usage",
+                      "importance": "essential"
+                    }
+                  ]
+                }
+              ]
             }
           ]
         },
@@ -232,184 +311,11 @@
       },
       "invocations": [
         {
-          "commandLine": "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Tools\\MSVC\\14.16.27023\\bin\\HostX86\\x64\\c1xx.dll\" -ACf{1F7B090C-16DB-4822-966A-A93D26ED4681} -ACpmspft140.dll -Alint -D_PREFAST_ -D_AST_FE_ -Analyze -zm0x008E2080 -il C:\\Users\\Colin\\AppData\\Local\\Temp\\_CL_a9cf366bast -typedil -f spirv-cross\\spirv_parser.cpp -Ze -D_MSC_EXTENSIONS -Zp16 -ZB64 -D_INTEGRAL_MAX_BITS=64 -pc \\:/ -D_MSC_VER=1916 -D_MSC_FULL_VER=191627045 -D_MSC_BUILD=0 -D_M_AMD64=100 -ZILP448 -D_M_X64=100 -D_WIN64 -D_WIN32 -GR -D_CPPRTTI -I D:\\Other\\libraries\\includes\\gli -I D:\\Other\\boost_1_72_0 -I C:\\Program Files\\Assimp\\include -I C:\\Program Files\\Autodesk\\FBX\\FBX SDK\\2019.0\\include -I C:\\Users\\Colin\\Documents\\Visual Studio 2017\\Libraries\\tinyobjloader -I C:\\Users\\Colin\\Documents\\Visual Studio 2017\\Libraries\\stb-master -I C:\\Users\\Colin\\Documents\\Visual Studio 2017\\Libraries\\glfw-3.3.bin.WIN64\\include -I D:\\Other\\libraries\\includes\\glm -I C:\\VulkanSDK\\1.1.106.0\\Include -nologo -W 3 -diagnostics:column- -diagnostics:caret- -D_GUARDOVERFLOW_CRT_ALLOCATORS=1 -Ot -DCODE_ANALYSIS -D_DEBUG -D_CONSOLE -D_UNICODE -DUNICODE -EHs -D_CPPUNWIND -EHc -D__MSVC_RUNTIME_CHECKS -RTCs -RTCu -D_DEBUG -D_MT -D_DLL -GS -D_M_FP_PRECISE -permissive- -Zc:wchar_t -Zc:forScope -std:c++17 -Fox64\\Debug\\spirv_parser.obj -Fdx64\\Debug\\vc141.pdb -Gd -analyze:quiet -analyze:ruleset C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Team Tools\\Static Analysis Tools\\Rule Sets\\NativeRecommendedRules.ruleset -analyze:plugin C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Tools\\MSVC\\14.16.27023\\bin\\HostX86\\x86\\EspXEngine.dll -analyze:plugin C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Tools\\MSVC\\14.16.27023\\bin\\HostX86\\x86\\localespc.dll -FC -errorreport:prompt -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Tools\\MSVC\\14.16.27023\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Tools\\MSVC\\14.16.27023\\atlmfc\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Auxiliary\\VS\\include -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\ucrt -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\um -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\shared -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\winrt -I C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.6.1\\Include\\um -I C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.6.1\\Include\\um"
+          "commandLine": "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Tools\\MSVC\\14.16.27023\\bin\\HostX86\\x64\\c1xx.dll\" -ACf{1F7B090C-16DB-4822-966A-A93D26ED4681} -ACpmspft140.dll -Alint -D_PREFAST_ -D_AST_FE_ -Analyze -zm0x00FC2080 -il C:\\Users\\Colin\\AppData\\Local\\Temp\\_CL_660830dbast -typedil -f spirv-cross\\spirv_parser.cpp -Ze -D_MSC_EXTENSIONS -Zp16 -ZB64 -D_INTEGRAL_MAX_BITS=64 -pc \\:/ -D_MSC_VER=1916 -D_MSC_FULL_VER=191627045 -D_MSC_BUILD=0 -D_M_AMD64=100 -ZILP448 -D_M_X64=100 -D_WIN64 -D_WIN32 -GR -D_CPPRTTI -I D:\\Other\\libraries\\includes\\gli -I D:\\Other\\boost_1_72_0 -I C:\\Program Files\\Assimp\\include -I C:\\Program Files\\Autodesk\\FBX\\FBX SDK\\2019.0\\include -I C:\\Users\\Colin\\Documents\\Visual Studio 2017\\Libraries\\tinyobjloader -I C:\\Users\\Colin\\Documents\\Visual Studio 2017\\Libraries\\stb-master -I C:\\Users\\Colin\\Documents\\Visual Studio 2017\\Libraries\\glfw-3.3.bin.WIN64\\include -I D:\\Other\\libraries\\includes\\glm -I C:\\VulkanSDK\\1.1.106.0\\Include -nologo -W 3 -diagnostics:column- -diagnostics:caret- -D_GUARDOVERFLOW_CRT_ALLOCATORS=1 -Ot -DCODE_ANALYSIS -D_DEBUG -D_CONSOLE -D_UNICODE -DUNICODE -EHs -D_CPPUNWIND -EHc -D__MSVC_RUNTIME_CHECKS -RTCs -RTCu -D_DEBUG -D_MT -D_DLL -GS -D_M_FP_PRECISE -permissive- -Zc:wchar_t -Zc:forScope -std:c++17 -Fox64\\Debug\\spirv_parser.obj -Fdx64\\Debug\\vc141.pdb -Gd -analyze:quiet -analyze:ruleset C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Team Tools\\Static Analysis Tools\\Rule Sets\\NativeRecommendedRules.ruleset -analyze:plugin C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Tools\\MSVC\\14.16.27023\\bin\\HostX86\\x86\\EspXEngine.dll -analyze:plugin C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Tools\\MSVC\\14.16.27023\\bin\\HostX86\\x86\\localespc.dll -FC -errorreport:prompt -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Tools\\MSVC\\14.16.27023\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Tools\\MSVC\\14.16.27023\\atlmfc\\include -I C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Auxiliary\\VS\\include -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\ucrt -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\um -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\shared -I C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.16299.0\\winrt -I C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.6.1\\Include\\um -I C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.6.1\\Include\\um"
         }
       ],
       "files": {
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/logical/bitand.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/static_constant.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_float3x2.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxblendshapechannel.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/animationkeys.cpp": {
-          "roles": [
-            "analysisTarget",
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_float2_precision.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/iterator/iterator_categories.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/sbcommandpool.cpp": {
-          "roles": [
-            "analysisTarget",
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/comparison.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/config/detail/select_platform_config.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/matrix.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/sbbuffer.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/fbxsdk_version.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/constraint/fbxconstraintutils.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/sblogicaldevice.cpp": {
-          "roles": [
-            "analysisTarget",
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/iterator/detail/facade_iterator_category.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_double3x4.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_double4_precision.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxcharptrset.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/gtx/wrap.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_int3.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/is_nothrow_move_constructible.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxdynamicarray.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/detail/type_quat.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/detail/_fixes.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/has_logical_not.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_double4x3.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/sbcommandpool.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/has_logical_or.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/fileio/fbx/fbxio.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/animation/fbxanimevalstate.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/load_dds.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///d:/other/libraries/includes/glm/glm/detail/type_vec2.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_float1_precision.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/vulkansdk/1.1.106.0/include/vulkan/vulkan.h": {
           "roles": [
             "resultFile"
           ]
@@ -419,7 +325,12 @@
             "resultFile"
           ]
         },
-        "file:///c:/vulkansdk/1.1.106.0/include/vulkan/vulkan.hpp": {
+        "file:///c:/vulkansdk/1.1.106.0/include/vulkan/vulkan.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_float1_precision.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -430,142 +341,18 @@
             "resultFile"
           ]
         },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/sblogicaldevice.h": {
+        "file:///c:/vulkansdk/1.1.106.0/include/vulkan/vulkan.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/repetition/detail/msvc/for.hpp": {
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbbuffer.cpp": {
           "roles": [
+            "analysisTarget",
             "resultFile"
           ]
         },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/sbphysicaldevice.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_double3x3_precision.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/detail/type_vec4.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_double3.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_double4x4_precision.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/glm.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/arithmetic/dec.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/vulkansdk/1.1.106.0/include/vulkan/vk_platform.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/array.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_float4.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/has_trivial_move_assign.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/constraint/fbxcontrolset.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/tuple/eat.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/gtc/quaternion.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/vulkansdk/1.1.106.0/include/vulkan/vulkan_core.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/punctuation/comma.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/fbxcollection.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/fwd.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxmanager.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/myrenderpass.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/mpl/next_prior.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/texture3d.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/sbvulkanbase.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxdatatypes.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/shading/fbxbindingtable.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/facilities/is_1.hpp": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxobject.h": {
           "roles": [
             "resultFile"
           ]
@@ -575,7 +362,7 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxobject.h": {
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/facilities/is_1.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -590,7 +377,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/detail/type_vec1.inl": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/has_multiplies.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -600,18 +387,247 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/has_multiplies.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/detail/type_vec1.inl": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/sbbuffer.cpp": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/constraint/fbxconstraintutils.h": {
           "roles": [
-            "analysisTarget",
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_uint2_sized.hpp": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/fbxsdk_version.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbbuffer.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/matrix.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbphysicaldevice.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/repetition/detail/msvc/for.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/detail/type_vec4.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_double3x3_precision.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_double3.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/glm.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_double4x4_precision.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/vulkansdk/1.1.106.0/include/vulkan/vk_platform.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/arithmetic/dec.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/constraint/fbxcontrolset.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_float4.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/array.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/type_traits/has_trivial_move_assign.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/tuple/eat.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/vulkansdk/1.1.106.0/include/vulkan/vulkan_core.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/gtc/quaternion.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/fbxcollection.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/punctuation/comma.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/myrenderpass.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxmanager.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/fwd.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/texture3d.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/mpl/next_prior.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/shading/fbxbindingtable.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxdatatypes.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbvulkanbase.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sblogicaldevice.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxcharptrset.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/gtx/wrap.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_double4_precision.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/iterator/detail/facade_iterator_category.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_double3x4.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxdynamicarray.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/type_traits/is_nothrow_move_constructible.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_int3.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/type_traits/has_logical_not.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/detail/type_quat.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/detail/_fixes.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/animation/fbxanimevalstate.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/fileio/fbx/fbxio.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/load_dds.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/type_traits/has_logical_or.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbcommandpool.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_double4x3.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -621,12 +637,22 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_float2.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_uint2_sized.hpp": {
           "roles": [
             "resultFile"
           ]
         },
         "file:///d:/other/boost_1_72_0/boost/type_traits/rank.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_float2.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbdescriptorset.h": {
           "roles": [
             "resultFile"
           ]
@@ -637,7 +663,7 @@
             "resultFile"
           ]
         },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/sbdescriptorset.h": {
+        "file:///g:/repos/vulkansandbox/vulkansandbox/uncompressedanimationkeys.h": {
           "roles": [
             "resultFile"
           ]
@@ -652,17 +678,7 @@
             "resultFile"
           ]
         },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/uncompressedanimationkeys.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/control/if.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_uint2.hpp": {
+        "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv_cross_containers.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -672,12 +688,12 @@
             "resultFile"
           ]
         },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv_cross_containers.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_uint2.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/vec4.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/control/if.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -688,7 +704,7 @@
             "resultFile"
           ]
         },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/hellotriangleapplication.h": {
+        "file:///d:/other/libraries/includes/glm/glm/vec4.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -698,12 +714,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/facilities/detail/is_empty.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/is_complex.hpp": {
+        "file:///g:/repos/vulkansandbox/vulkansandbox/hellotriangleapplication.h": {
           "roles": [
             "resultFile"
           ]
@@ -713,12 +724,27 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/detail/setup.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/facilities/detail/is_empty.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbrenderpassattachment.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/type_traits/is_complex.hpp": {
           "roles": [
             "resultFile"
           ]
         },
         "file:///d:/other/libraries/includes/glm/glm/ext/vector_int2.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/detail/setup.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -733,17 +759,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_uint4.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/utils/fbxrenamingstrategyutilities.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/exception/exception.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_uint4.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -753,7 +774,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/full_lambda.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/exception/exception.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv_common.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -763,7 +789,22 @@
             "resultFile"
           ]
         },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv_common.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/full_lambda.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/detail/type_mat2x2.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/geometric.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxskin.h": {
           "roles": [
             "resultFile"
           ]
@@ -778,27 +819,13 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxskin.h": {
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbcamera.cpp": {
           "roles": [
+            "analysisTarget",
             "resultFile"
           ]
         },
         "file:///d:/other/boost_1_72_0/boost/preprocessor/control/iif.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/cat.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_bool2_precision.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_uint3.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -808,7 +835,54 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/list/adt.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/cat.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/vulkanhelperfunctions.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_uint3.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_bool2_precision.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/animationkeys.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/logical/bitand.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxblendshapechannel.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_float3x2.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/static_constant.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_float2_precision.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -818,12 +892,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_int3_sized.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/has_logical_and.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/list/adt.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -833,7 +902,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/multi_array/copy_array.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/has_logical_and.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_int3_sized.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -843,12 +917,17 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_double2x2.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/multi_array/copy_array.hpp": {
           "roles": [
             "resultFile"
           ]
         },
         "file:///g:/repos/vulkansandbox/vulkansandbox/glfwsetup.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_double2x2.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -863,12 +942,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/template_arity.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/facilities/is_empty.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_int2_sized.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -878,7 +952,17 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_int2_sized.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/facilities/is_empty.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/template_arity.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/reduce.inl": {
           "roles": [
             "resultFile"
           ]
@@ -893,7 +977,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/gli/core/reduce.inl": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/shading/fbxentryview.h": {
           "roles": [
             "resultFile"
           ]
@@ -903,7 +987,7 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/shading/fbxentryview.h": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_uint3_sized.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -913,7 +997,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_uint3_sized.hpp": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbssurface.h": {
           "roles": [
             "resultFile"
           ]
@@ -923,22 +1007,7 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbssurface.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///d:/other/libraries/includes/gli/core/texture2d.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/na_assert.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_float4_precision.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -948,12 +1017,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/lambda.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_float4_precision.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/tuple/elem.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/na_assert.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -963,7 +1032,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/detail/type_vec4.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/tuple/elem.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/lambda.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -973,7 +1047,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_bool3.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/detail/type_vec4.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -983,17 +1057,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/bind.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/facilities/empty.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_bool4.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_bool3.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1003,12 +1067,22 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/detail/type_vec3.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_bool4.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/config/detail/suffix.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/facilities/empty.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/mpl/bind.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/detail/type_vec3.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1018,12 +1092,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/detail/type_vec3.inl": {
+        "file:///d:/other/boost_1_72_0/boost/config/detail/suffix.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_bool3_precision.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/detail/type_vec3.inl": {
           "roles": [
             "resultFile"
           ]
@@ -1033,12 +1107,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_bool4_precision.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_bool3_precision.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_float3.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_bool4_precision.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1048,17 +1122,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/na_fwd.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_float3_precision.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/extent.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_float3.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1068,12 +1132,22 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/detail/type_mat2x2.inl": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/extent.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/gtc/quaternion.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_float3_precision.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/na_fwd.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/detail/type_mat2x2.inl": {
           "roles": [
             "resultFile"
           ]
@@ -1083,12 +1157,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_double4.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/gtc/quaternion.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_int4_sized.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_double4.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1098,17 +1172,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/multi_array/extent_gen.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/mat2x2.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/clear.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_int4_sized.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1118,17 +1182,17 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/geometric.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/multi_array/extent_gen.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/detail/type_mat2x2.hpp": {
+        "file:///d:/other/libraries/includes/gli/core/clear.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/compiler.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/mat2x2.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1138,12 +1202,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/mat2x3.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/compiler.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/iterator/iterator_concepts.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/mat2x3.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1153,7 +1217,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/multi_array/view.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/iterator/iterator_concepts.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/constraint/fbxconstraintrotation.h": {
           "roles": [
             "resultFile"
           ]
@@ -1168,12 +1237,7 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/constraint/fbxconstraintrotation.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/detail/type_mat2x3.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/multi_array/view.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1183,12 +1247,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/detail/type_mat2x3.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/has_left_shift_assign.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/detail/type_mat2x3.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1198,12 +1257,22 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_double2x3_precision.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/has_left_shift_assign.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/detail/type_mat2x3.inl": {
           "roles": [
             "resultFile"
           ]
         },
         "file:///d:/other/libraries/includes/gli/core/convert_func.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_double2x3_precision.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1218,17 +1287,22 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/has_apply.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///d:/other/libraries/includes/glm/glm/mat2x4.hpp": {
           "roles": [
             "resultFile"
           ]
         },
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/has_apply.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///c:/program files/assimp/include/assimp/color4.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/math/fbxaffinematrix.h": {
           "roles": [
             "resultFile"
           ]
@@ -1243,13 +1317,14 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/math/fbxaffinematrix.h": {
+        "file:///d:/other/libraries/includes/glm/glm/detail/type_mat2x4.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/detail/type_mat2x4.hpp": {
+        "file:///g:/repos/vulkansandbox/vulkansandbox/glfwsetup.cpp": {
           "roles": [
+            "analysisTarget",
             "resultFile"
           ]
         },
@@ -1263,13 +1338,12 @@
             "resultFile"
           ]
         },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/glfwsetup.cpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_double2x4_precision.hpp": {
           "roles": [
-            "analysisTarget",
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_double2x4_precision.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/has_bit_xor.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1279,7 +1353,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/has_bit_xor.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_float2x4_precision.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1294,22 +1368,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_float2x4_precision.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///d:/other/libraries/includes/glm/glm/mat3x2.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/empty.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/remove_reference.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1319,7 +1378,17 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/detail/func_trigonometric.inl": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/remove_reference.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/empty.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/type_traits/has_trivial_copy.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1329,7 +1398,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/has_trivial_copy.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/detail/func_trigonometric.inl": {
           "roles": [
             "resultFile"
           ]
@@ -1349,22 +1418,22 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/concept/detail/msvc.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///d:/other/libraries/includes/glm/glm/ext/matrix_double3x2_precision.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/is_pod.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/concept/detail/msvc.hpp": {
           "roles": [
             "resultFile"
           ]
         },
         "file:///d:/other/libraries/includes/glm/glm/ext/matrix_float3x2_precision.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/type_traits/is_pod.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1389,22 +1458,22 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/detail/type_mat3x3.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/constraint/fbxconstraintsinglechainik.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/has_type.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/detail/type_mat3x3.hpp": {
           "roles": [
             "resultFile"
           ]
         },
         "file:///d:/other/libraries/includes/glm/glm/detail/type_mat3x3.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/has_type.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1419,17 +1488,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/add_const.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///d:/other/libraries/includes/glm/glm/mat3x4.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/detail/type_mat3x4.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/add_const.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1439,12 +1503,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/template_arity_fwd.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/detail/type_mat3x4.inl": {
+        "file:///d:/other/libraries/includes/glm/glm/detail/type_mat3x4.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1454,7 +1513,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_double3x4_precision.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/detail/type_mat3x4.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/template_arity_fwd.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1464,7 +1528,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/list/detail/fold_left.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_double3x4_precision.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1474,12 +1538,12 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/assimp/include/assimp/vector3.h": {
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/list/detail/fold_left.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/integral.hpp": {
+        "file:///c:/program files/assimp/include/assimp/vector3.h": {
           "roles": [
             "resultFile"
           ]
@@ -1489,12 +1553,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/gtx/quaternion.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_float3x4_precision.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/integral.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1504,7 +1563,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/remove_pointer.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_float3x4_precision.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/gtx/quaternion.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1514,7 +1578,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_transform.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/remove_pointer.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1524,7 +1588,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_double4x2.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_transform.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1534,7 +1598,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/has_xxx.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_double4x2.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1544,12 +1608,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/detail/type_mat4x2.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/has_xxx.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/repetition/for.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/detail/type_mat4x2.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1559,7 +1623,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/detail/type_mat4x2.inl": {
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/repetition/for.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1569,7 +1633,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/workaround.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/detail/type_mat4x2.inl": {
           "roles": [
             "resultFile"
           ]
@@ -1579,7 +1643,17 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/workaround.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/libraries/includes/glm/glm/ext/matrix_double4x2_precision.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/type_traits/is_virtual_base_of.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1590,11 +1664,6 @@
           ]
         },
         "file:///d:/other/boost_1_72_0/boost/type_traits/is_empty.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/is_virtual_base_of.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1619,7 +1688,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/core/use_default.hpp": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/fbxenvironment.h": {
           "roles": [
             "resultFile"
           ]
@@ -1629,17 +1698,7 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/fbxenvironment.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/mpl/bool.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/skeletonanimation.h": {
+        "file:///d:/other/boost_1_72_0/boost/core/use_default.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1649,12 +1708,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/gtc/constants.inl": {
+        "file:///g:/repos/vulkansandbox/vulkansandbox/skeletonanimation.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_double4x3_precision.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/bool.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1664,7 +1723,12 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/assimp/include/assimp/config.h": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_double4x3_precision.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/gtc/constants.inl": {
           "roles": [
             "resultFile"
           ]
@@ -1674,7 +1738,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_float4x3_precision.hpp": {
+        "file:///c:/program files/assimp/include/assimp/config.h": {
           "roles": [
             "resultFile"
           ]
@@ -1684,7 +1748,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/arithmetic/inc.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_float4x3_precision.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1694,12 +1758,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/mat4x4.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/arithmetic/inc.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/add_reference.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/mat4x4.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1709,7 +1773,13 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/detail/type_mat4x4.hpp": {
+        "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv_cpp.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/type_traits/add_reference.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1719,7 +1789,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/detail/type_mat4x4.inl": {
+        "file:///d:/other/libraries/includes/glm/glm/detail/type_mat4x4.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1729,12 +1799,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_float4x4.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/detail/type_mat4x4.inl": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_float4x4_precision.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_float4x4.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1744,12 +1814,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/detail/func_matrix.inl": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_float4x4_precision.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///c:/program files/assimp/include/assimp/compiler/pushpack1.h": {
+        "file:///d:/other/libraries/includes/glm/glm/detail/func_matrix.inl": {
           "roles": [
             "resultFile"
           ]
@@ -1759,12 +1829,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/exponential.hpp": {
+        "file:///c:/program files/assimp/include/assimp/compiler/pushpack1.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/detail/type_vec1.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/exponential.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1774,7 +1844,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/detail/func_exponential.inl": {
+        "file:///d:/other/libraries/includes/glm/glm/detail/type_vec1.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1784,7 +1854,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/vector_relational.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/detail/func_exponential.inl": {
           "roles": [
             "resultFile"
           ]
@@ -1794,17 +1864,22 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/glm/glm/vector_relational.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/libraries/includes/glm/glm/detail/func_vector_relational.inl": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/core/addressof.hpp": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/sync/fbxclock.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/sync/fbxclock.h": {
+        "file:///d:/other/boost_1_72_0/boost/core/addressof.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1819,17 +1894,17 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/detail/func_common.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxproceduralgeometry.h": {
           "roles": [
             "resultFile"
           ]
         },
         "file:///d:/other/libraries/includes/glm/glm/ext/vector_packing.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/detail/func_common.inl": {
           "roles": [
             "resultFile"
           ]
@@ -1844,17 +1919,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_float2x2.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/fbxpose.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/preprocessor.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_float2x2.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1864,12 +1934,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_float2x2_precision.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/preprocessor.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/trigonometric.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_float2x2_precision.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1879,7 +1949,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/packing.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/trigonometric.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1889,7 +1959,27 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/glm/glm/packing.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/libraries/includes/glm/glm/detail/func_packing.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxsubdeformer.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxpropertypage.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/filter.inl": {
           "roles": [
             "resultFile"
           ]
@@ -1904,17 +1994,7 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxpropertypage.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxsubdeformer.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/filter.inl": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/shading/fbxbindingsentryview.h": {
           "roles": [
             "resultFile"
           ]
@@ -1924,7 +2004,7 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/shading/fbxbindingsentryview.h": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/is_fundamental.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1934,7 +2014,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/is_fundamental.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/integer.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1944,17 +2024,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/integer.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/simd/integer.h": {
           "roles": [
             "resultFile"
           ]
         },
         "file:///d:/other/libraries/includes/glm/glm/detail/func_integer.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/simd/integer.h": {
           "roles": [
             "resultFile"
           ]
@@ -1969,17 +2044,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_projection.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/animation/fbxanimstack.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/gtc/constants.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_projection.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -1989,12 +2059,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/scalar_common.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/gtc/constants.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/is_floating_point.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/scalar_common.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2004,7 +2074,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/scalar_constants.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/is_floating_point.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2014,17 +2084,12 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/glm/glm/ext/scalar_constants.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/libraries/includes/glm/glm/ext/scalar_constants.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_double1.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_projection.inl": {
           "roles": [
             "resultFile"
           ]
@@ -2034,12 +2099,17 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/bool_fwd.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_projection.inl": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///c:/program files/assimp/include/assimp/matrix3x3.inl": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_double1.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/mpl/bool_fwd.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2049,12 +2119,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_clip_space.inl": {
+        "file:///c:/program files/assimp/include/assimp/matrix3x3.inl": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/limits/arity.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/matrix_clip_space.inl": {
           "roles": [
             "resultFile"
           ]
@@ -2064,12 +2134,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/gtc/matrix_transform.inl": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/limits/arity.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/or.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/gtc/matrix_transform.inl": {
           "roles": [
             "resultFile"
           ]
@@ -2079,7 +2149,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/not.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/or.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2089,12 +2159,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/yes_no.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/quaternion_transform.inl": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/not.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2104,7 +2169,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/tuple/rem.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/quaternion_transform.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/yes_no.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2114,7 +2184,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/gtx/dual_quaternion.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/tuple/rem.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2124,7 +2194,17 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/glm/glm/gtx/dual_quaternion.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/libraries/includes/glm/glm/ext/vector_bool1_precision.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbmaterialdescriptorset.h": {
           "roles": [
             "resultFile"
           ]
@@ -2144,12 +2224,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/quaternion_relational.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_int1.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_int1.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/quaternion_relational.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2159,17 +2239,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_int1_sized.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxconnectionpoint.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/iterator/detail/enable_if.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_int1_sized.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2179,7 +2254,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/version.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/iterator/detail/enable_if.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2189,12 +2264,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/msvc_typename.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/quaternion_relational.inl": {
+        "file:///d:/other/boost_1_72_0/boost/version.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2204,12 +2274,17 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_uint1_sized.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/quaternion_relational.inl": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/is_function.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/msvc_typename.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_uint1_sized.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2219,17 +2294,12 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/boost_1_72_0/boost/type_traits/is_function.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/libraries/includes/glm/glm/ext/vector_relational.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/detail/type_float.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/type_with_alignment.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2239,7 +2309,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/quaternion_common.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/type_with_alignment.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/detail/type_float.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2249,17 +2324,12 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/glm/glm/ext/quaternion_common.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/libraries/includes/glm/glm/ext/quaternion_geometric.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/has_apply.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/quaternion_geometric.inl": {
           "roles": [
             "resultFile"
           ]
@@ -2269,12 +2339,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/is_same.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/quaternion_geometric.inl": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/sbtextureimage.h": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/has_apply.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2284,12 +2354,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/multi_array/concept_checks.hpp": {
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbtextureimage.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///c:/program files/assimp/include/assimp/vector2.inl": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/is_same.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2299,7 +2369,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/quaternion_float.hpp": {
+        "file:///c:/program files/assimp/include/assimp/vector2.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/multi_array/concept_checks.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2309,12 +2384,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/detail/type_quat.inl": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/quaternion_float.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/quaternion_float_precision.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/detail/type_quat.inl": {
           "roles": [
             "resultFile"
           ]
@@ -2325,12 +2400,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/preprocessed/plain/apply.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/quaternion_double.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/quaternion_float_precision.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2340,7 +2410,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/quaternion_double_precision.hpp": {
+        "file:///d:/other/libraries/includes/glm/glm/ext/quaternion_double.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/preprocessed/plain/apply.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2350,17 +2425,12 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/libraries/includes/glm/glm/ext/quaternion_double_precision.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/libraries/includes/glm/glm/ext/quaternion_trigonometric.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/quaternion_trigonometric.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/constraint/fbxconstraintparent.h": {
           "roles": [
             "resultFile"
           ]
@@ -2370,12 +2440,22 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/ext/quaternion_transform.hpp": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/constraint/fbxconstraintparent.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/quaternion_trigonometric.inl": {
           "roles": [
             "resultFile"
           ]
         },
         "file:///d:/other/libraries/includes/gli/core/sampler1d_array.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/quaternion_transform.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2400,12 +2480,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/control/detail/msvc/while.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/is_nothrow_swappable.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/is_nothrow_swappable.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/control/detail/msvc/while.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2415,17 +2495,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/debug/error.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///d:/other/libraries/includes/glm/glm/ext/quaternion_exponential.inl": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/gtx/norm.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/debug/error.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2435,7 +2510,12 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/assimp/include/assimp/material.h": {
+        "file:///d:/other/libraries/includes/glm/glm/gtx/norm.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxtimecode.h": {
           "roles": [
             "resultFile"
           ]
@@ -2445,7 +2525,7 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxtimecode.h": {
+        "file:///c:/program files/assimp/include/assimp/material.h": {
           "roles": [
             "resultFile"
           ]
@@ -2460,12 +2540,12 @@
             "resultFile"
           ]
         },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/animationstuff.h": {
+        "file:///d:/other/libraries/includes/glm/glm/gtc/packing.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/gtc/packing.hpp": {
+        "file:///g:/repos/vulkansandbox/vulkansandbox/animationstuff.h": {
           "roles": [
             "resultFile"
           ]
@@ -2475,7 +2555,7 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/assimp/include/assimp/scene.h": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbscurve.h": {
           "roles": [
             "resultFile"
           ]
@@ -2485,7 +2565,7 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnurbscurve.h": {
+        "file:///c:/program files/assimp/include/assimp/scene.h": {
           "roles": [
             "resultFile"
           ]
@@ -2495,7 +2575,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/arg_typedef.hpp": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/fbxsdk_nsbegin.h": {
           "roles": [
             "resultFile"
           ]
@@ -2505,7 +2585,7 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/fbxsdk_nsbegin.h": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/arg_typedef.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2515,17 +2595,17 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/assimp/include/assimp/compiler/poppack1.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///d:/other/boost_1_72_0/boost/type_traits/has_bit_and_assign.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/is_const.hpp": {
+        "file:///c:/program files/assimp/include/assimp/compiler/poppack1.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv_cross_util.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2535,7 +2615,7 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/assimp/include/assimp/vector3.inl": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/is_const.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2546,17 +2626,22 @@
             "resultFile"
           ]
         },
+        "file:///c:/program files/assimp/include/assimp/vector3.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///c:/program files/assimp/include/assimp/color4.inl": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/iterator/iterator_traits.hpp": {
+        "file:///c:/program files/assimp/include/assimp/quaternion.inl": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///c:/program files/assimp/include/assimp/quaternion.inl": {
+        "file:///d:/other/boost_1_72_0/boost/iterator/iterator_traits.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2576,17 +2661,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/add_pointer.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///c:/program files/assimp/include/assimp/light.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///c:/program files/assimp/include/assimp/camera.h": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/add_pointer.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2596,17 +2676,22 @@
             "resultFile"
           ]
         },
+        "file:///c:/program files/assimp/include/assimp/camera.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///c:/program files/assimp/include/assimp/material.inl": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///c:/program files/assimp/include/assimp/anim.h": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/fbxcontainer.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/fbxcontainer.h": {
+        "file:///c:/program files/assimp/include/assimp/anim.h": {
           "roles": [
             "resultFile"
           ]
@@ -2631,7 +2716,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/preprocessed/plain/quote.hpp": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/fileio/fbxwriter.h": {
           "roles": [
             "resultFile"
           ]
@@ -2641,12 +2726,17 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/fileio/fbxwriter.h": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/preprocessed/plain/quote.hpp": {
           "roles": [
             "resultFile"
           ]
         },
         "file:///d:/other/libraries/includes/glm/glm/gtx/compatibility.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/fileio/fbxiopluginregistry.h": {
           "roles": [
             "resultFile"
           ]
@@ -2661,12 +2751,7 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/fileio/fbxiopluginregistry.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/mpl/protect.hpp": {
+        "file:///d:/other/libraries/includes/gli/view.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2676,7 +2761,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/gli/view.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/protect.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/save_kmg.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2686,7 +2776,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/gli/save_kmg.hpp": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxplugincontainer.h": {
           "roles": [
             "resultFile"
           ]
@@ -2701,17 +2791,12 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxplugincontainer.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///d:/other/boost_1_72_0/boost/multi_array/range_list.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/include_preprocessed.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/facilities/expand.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2721,7 +2806,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/facilities/expand.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/include_preprocessed.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2761,12 +2846,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/config/pragma_message.hpp": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxmodule.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxmodule.h": {
+        "file:///d:/other/boost_1_72_0/boost/config/pragma_message.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2791,7 +2876,33 @@
             "resultFile"
           ]
         },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv_hlsl.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/boost_1_72_0/boost/config/stdlib/dinkumware.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbmaterialdescriptorset.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/comparison.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/iterator/iterator_categories.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/config/detail/select_platform_config.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2806,13 +2917,9 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/inc.hpp": {
+        "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv_cross_util.cpp": {
           "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/assert.hpp": {
-          "roles": [
+            "analysisTarget",
             "resultFile"
           ]
         },
@@ -2822,6 +2929,16 @@
           ]
         },
         "file:///d:/other/libraries/includes/gli/core/view.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/assert.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/inc.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2836,22 +2953,17 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/iterator/detail/config_def.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///d:/other/boost_1_72_0/boost/core/swap.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/detail/iterator.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/iterator/detail/config_def.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/throw_exception.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/detail/iterator.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2862,17 +2974,22 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/boost_1_72_0/boost/throw_exception.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/boost_1_72_0/boost/current_function.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/multi_array/types.hpp": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/math/fbxtransforms.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/math/fbxtransforms.h": {
+        "file:///d:/other/boost_1_72_0/boost/multi_array/types.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2917,12 +3034,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/integral_constant.hpp": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/fbxgroupname.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/fbxgroupname.h": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/integral_constant.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2932,17 +3049,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/conversion_traits.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///d:/other/boost_1_72_0/boost/type_traits/is_assignable.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/is_convertible.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/conversion_traits.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2952,12 +3064,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/and.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/intrinsics.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/is_convertible.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2967,17 +3074,17 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/boost_1_72_0/boost/type_traits/intrinsics.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/mpl/and.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/boost_1_72_0/boost/type_traits/is_complete.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/msvc.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/declval.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2987,7 +3094,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/detail/call_traits.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/declval.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/msvc.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -2997,7 +3109,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/is_reference.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/detail/call_traits.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3007,12 +3119,17 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/is_lvalue_reference.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/is_reference.hpp": {
           "roles": [
             "resultFile"
           ]
         },
         "file:///d:/other/libraries/includes/gli/convert.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/type_traits/is_lvalue_reference.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3027,7 +3144,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/nttp_decl.hpp": {
+        "file:///g:/repos/vulkansandbox/vulkansandbox/fbxsdkstuff.h": {
           "roles": [
             "resultFile"
           ]
@@ -3037,17 +3154,17 @@
             "resultFile"
           ]
         },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/fbxsdkstuff.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/mpl/int.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/nttp_decl.hpp": {
           "roles": [
             "resultFile"
           ]
         },
         "file:///g:/repos/vulkansandbox/vulkansandbox/sbshaderlayout.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/mpl/int.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3067,18 +3184,18 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/logical/bool.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///g:/repos/vulkansandbox/vulkansandbox/asset.cpp": {
           "roles": [
             "analysisTarget",
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/preprocessor/default_params.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/logical/bool.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/gtc/integer.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3088,7 +3205,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/glm/glm/gtc/integer.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/preprocessor/default_params.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3103,12 +3220,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/size_t.hpp": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxsystemunit.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxsystemunit.h": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/size_t.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3118,17 +3235,22 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/preprocessed/plain/or.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///d:/other/boost_1_72_0/boost/preprocessor/seq/detail/is_empty.hpp": {
           "roles": [
             "resultFile"
           ]
         },
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/preprocessed/plain/or.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/boost_1_72_0/boost/preprocessor/logical/compl.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/facilities/overload.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3143,12 +3265,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/facilities/overload.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/dtp.hpp": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxstream.h": {
           "roles": [
             "resultFile"
           ]
@@ -3158,7 +3275,7 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxstream.h": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/dtp.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3173,12 +3290,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/list/fold_right.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/punctuation/detail/is_begin_parens.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/punctuation/detail/is_begin_parens.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/list/fold_right.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3198,7 +3315,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/size_t_fwd.hpp": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxcamera.h": {
           "roles": [
             "resultFile"
           ]
@@ -3208,7 +3325,7 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxcamera.h": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/size_t_fwd.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3238,12 +3355,18 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/eti.hpp": {
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbphysicaldevice.cpp": {
           "roles": [
+            "analysisTarget",
             "resultFile"
           ]
         },
         "file:///d:/other/libraries/includes/gli/image.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/eti.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3253,12 +3376,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/detail/is_member_function_pointer_cxx_11.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/void_fwd.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/void_fwd.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/detail/is_member_function_pointer_cxx_11.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3268,12 +3391,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/preprocessed/plain/arg.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/adl_barrier.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/adl_barrier.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/preprocessed/plain/arg.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3288,12 +3411,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/intel.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/is_unsigned.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/is_unsigned.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/intel.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3308,17 +3431,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/arity_spec.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///d:/other/boost_1_72_0/boost/mpl/int_fwd.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/nttp.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/arity_spec.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3328,7 +3446,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/integral_wrapper.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/nttp.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3338,12 +3456,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/iterator/iterator_adaptor.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/integral_wrapper.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/arrays.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/iterator/iterator_adaptor.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3353,12 +3471,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/arity.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/arrays.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/preprocessor/params.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/arity.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3373,12 +3491,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/repeat.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/has_bit_or.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/preprocessor/params.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3388,7 +3501,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/array/size.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/has_bit_or.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/repeat.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3399,6 +3517,11 @@
           ]
         },
         "file:///d:/other/boost_1_72_0/boost/core/noinit_adaptor.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/array/size.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3438,12 +3561,13 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/list/reverse.hpp": {
+        "file:///g:/repos/vulkansandbox/vulkansandbox/model.cpp": {
           "roles": [
+            "analysisTarget",
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/overload_resolution.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/list/reverse.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3453,7 +3577,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/lambda_support.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/overload_resolution.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3463,17 +3587,12 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/lambda_support.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/boost_1_72_0/boost/mpl/identity.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/mpl/placeholders.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/has_greater.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3483,12 +3602,17 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/is_class.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/has_greater.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/arg.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/placeholders.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/type_traits/is_class.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3498,7 +3622,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/arg_fwd.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/arg.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3508,12 +3632,17 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/assert.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/arg_fwd.hpp": {
           "roles": [
             "resultFile"
           ]
         },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/math/fbxmath.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/mpl/assert.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3533,7 +3662,18 @@
             "resultFile"
           ]
         },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv_cross_c.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
         "file:///d:/other/boost_1_72_0/boost/mpl/aux_/preprocessed/plain/placeholders.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/levels.inl": {
           "roles": [
             "resultFile"
           ]
@@ -3548,11 +3688,6 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/libraries/includes/gli/core/levels.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///d:/other/boost_1_72_0/boost/type_traits/is_integral.hpp": {
           "roles": [
             "resultFile"
@@ -3563,12 +3698,18 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/void.hpp": {
+        "file:///g:/repos/vulkansandbox/vulkansandbox/skeletonanimationsystem.cpp": {
           "roles": [
+            "analysisTarget",
             "resultFile"
           ]
         },
         "file:///d:/other/boost_1_72_0/boost/detail/indirect_traits.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/mpl/void.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3588,6 +3729,11 @@
             "resultFile"
           ]
         },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxlistener.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/boost_1_72_0/boost/type_traits/remove_cv.hpp": {
           "roles": [
             "resultFile"
@@ -3598,17 +3744,12 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxlistener.h": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/utils/fbxrenamingstrategy.h": {
           "roles": [
             "resultFile"
           ]
         },
         "file:///d:/other/boost_1_72_0/boost/detail/select_type.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/utils/fbxrenamingstrategy.h": {
           "roles": [
             "resultFile"
           ]
@@ -3628,6 +3769,11 @@
             "resultFile"
           ]
         },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/asset.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/boost_1_72_0/boost/functional.hpp": {
           "roles": [
             "resultFile"
@@ -3638,12 +3784,12 @@
             "resultFile"
           ]
         },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/asset.h": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/always.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/always.hpp": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/fileio/fbxexternaldocreflistener.h": {
           "roles": [
             "resultFile"
           ]
@@ -3658,17 +3804,7 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/fileio/fbxexternaldocreflistener.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///d:/other/boost_1_72_0/boost/mpl/apply_fwd.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/preprocessed/plain/apply_fwd.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3678,12 +3814,17 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/preprocessor/array/elem.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/preprocessed/plain/apply_fwd.hpp": {
           "roles": [
             "resultFile"
           ]
         },
         "file:///d:/other/boost_1_72_0/boost/mpl/apply_wrap.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/preprocessor/array/elem.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3713,12 +3854,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/multi_array/subarray.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/bind_fwd.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/bind_fwd.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/multi_array/subarray.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3728,17 +3869,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/preprocessed/plain/bind_fwd.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///d:/other/libraries/includes/gli/load_ktx.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/next.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/preprocessed/plain/bind_fwd.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3748,12 +3884,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/common_name_wknd.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/next.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/preprocessed/plain/bind.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/common_name_wknd.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3763,12 +3899,17 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/bcc.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/preprocessed/plain/bind.hpp": {
           "roles": [
             "resultFile"
           ]
         },
         "file:///d:/other/libraries/includes/gli/core/sampler_cube.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/mpl/aux_/config/bcc.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3788,7 +3929,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/call_traits.hpp": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/fbxmediaclip.h": {
           "roles": [
             "resultFile"
           ]
@@ -3798,7 +3939,7 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/fbxmediaclip.h": {
+        "file:///d:/other/boost_1_72_0/boost/call_traits.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3818,22 +3959,22 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/add_volatile.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/utils/fbxscenecheckutility.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/aligned_storage.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/add_volatile.hpp": {
           "roles": [
             "resultFile"
           ]
         },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxpropertydef.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/type_traits/aligned_storage.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3863,12 +4004,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/copy_cv_ref.hpp": {
+        "file:///g:/repos/vulkansandbox/vulkansandbox/animatedvertex.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/animatedvertex.h": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/copy_cv_ref.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3883,17 +4024,27 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/floating_point_promotion.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///g:/repos/vulkansandbox/vulkansandbox/sponza.h": {
           "roles": [
             "resultFile"
           ]
         },
+        "file:///d:/other/boost_1_72_0/boost/type_traits/floating_point_promotion.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/boost_1_72_0/boost/type_traits/function_traits.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/texture3d.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/type_traits/is_union.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3908,22 +4059,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/is_union.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/texture3d.inl": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/has_post_increment.hpp": {
           "roles": [
             "resultFile"
           ]
         },
         "file:///d:/other/boost_1_72_0/boost/type_traits/detail/has_binary_operator.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/has_post_increment.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3943,7 +4084,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/detail/has_prefix_operator.hpp": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/sync/fbxthread.h": {
           "roles": [
             "resultFile"
           ]
@@ -3953,7 +4094,7 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/sync/fbxthread.h": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/detail/has_prefix_operator.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -3983,7 +4124,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/has_left_shift.hpp": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxmesh.h": {
           "roles": [
             "resultFile"
           ]
@@ -3993,7 +4134,7 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxmesh.h": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/has_left_shift.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -4008,12 +4149,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/has_minus.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/is_final.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/is_final.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/has_minus.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -4023,7 +4164,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/has_modulus.hpp": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/fileio/fbxstatistics.h": {
           "roles": [
             "resultFile"
           ]
@@ -4033,7 +4174,7 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/fileio/fbxstatistics.h": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/has_modulus.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -4063,17 +4204,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/has_trivial_constructor.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/utils/fbxprocessorxrefuserlib.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/is_default_constructible.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/has_trivial_constructor.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -4083,7 +4219,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/has_nothrow_destructor.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/is_default_constructible.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -4093,12 +4229,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/has_trivial_destructor.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/has_nothrow_destructor.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/is_destructible.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/has_trivial_destructor.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -4109,6 +4245,11 @@
           ]
         },
         "file:///d:/other/libraries/includes/gli/core/image.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/type_traits/is_destructible.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -4128,22 +4269,22 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/has_pre_increment.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/arch/fbxdebug.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/has_right_shift.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/has_pre_increment.hpp": {
           "roles": [
             "resultFile"
           ]
         },
         "file:///d:/other/libraries/includes/gli/core/transform.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/type_traits/has_right_shift.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -4173,7 +4314,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/is_constructible.hpp": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxlodgroup.h": {
           "roles": [
             "resultFile"
           ]
@@ -4183,7 +4324,7 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxlodgroup.h": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/is_constructible.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -4198,12 +4339,17 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/is_list_constructible.hpp": {
+        "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv_cross_c.h": {
           "roles": [
             "resultFile"
           ]
         },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/animation/fbxanimevalclassic.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/boost_1_72_0/boost/type_traits/is_list_constructible.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -4218,17 +4364,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/is_object.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxcluster.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/is_polymorphic.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/is_object.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -4238,12 +4379,12 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/make_signed.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/is_polymorphic.hpp": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/remove_all_extents.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/make_signed.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -4253,7 +4394,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/remove_cv_ref.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/remove_all_extents.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -4263,7 +4404,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/remove_volatile.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/remove_cv_ref.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -4278,7 +4419,7 @@
             "resultFile"
           ]
         },
-        "file:///d:/other/boost_1_72_0/boost/type_traits/type_identity.hpp": {
+        "file:///d:/other/boost_1_72_0/boost/type_traits/remove_volatile.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -4288,54 +4429,12 @@
             "resultFile"
           ]
         },
+        "file:///d:/other/boost_1_72_0/boost/type_traits/type_identity.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
         "file:///d:/other/boost_1_72_0/boost/type_traits/integral_promotion.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/header.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/animationstuff.cpp": {
-          "roles": [
-            "analysisTarget",
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv_parser.cpp": {
-          "roles": [
-            "analysisTarget",
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/sbcamera.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/uncompressedanimation.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/sbuniformbuffer.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/sbrenderpass.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/sbswapchain.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/sbpipeline.h": {
           "roles": [
             "resultFile"
           ]
@@ -4360,12 +4459,459 @@
             "resultFile"
           ]
         },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/vertex.h": {
+        "file:///g:/repos/vulkansandbox/vulkansandbox/texture.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/gli.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/format.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/type.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbdescriptorpool.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/target.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxblendshape.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/levels.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/gtc/integer.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/utils/fbxrenamingstrategyfbx5.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/texture2d_array.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/gtc/round.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxredblacktree.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/dx.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/gtc/round.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_integer.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/shading/fbxsemanticentryview.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/scalar_integer.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/scalar_integer.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/fbxvideo.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/gtc/bitfield.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxevent.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/gtc/type_precision.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/fbxselectionset.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/storage_linear.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/texture.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/texture1d.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/texture1d.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/texture1d_array.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxquery.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/texture2d.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/texture2d_array.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/texture_cube.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/texture_cube_array.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/skeletalanimationcomponent.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/texture_cube_array.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxarray.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/filter.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_common.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/gtx/wrap.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/mipmaps_compute.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxloadingstrategy.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/filter_compute.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/coord.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/s3tc.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/s3tc.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxfile.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/vector_packing.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/gtc/packing.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/ext/scalar_relational.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/bc.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxmultimap.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxproperty.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/glm/glm/gtc/color_space.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/sampler1d.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/sampler1d_array.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/sampler2d.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/sampler2d.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv_parser.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/sampler2d_array.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/sampler3d.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv_cross.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/sampler_cube.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/sampler_cube_array.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/fileio/fbxgloballightsettings.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxclassid.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxcontainerallocators.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/convert.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/comparison.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/reduce.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/load.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/load_dds.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/file.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/load_kmg.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/load_ktx.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbdescriptor.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/save_dds.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/save_dds.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/save_ktx.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/spline.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/fileio/fbxfiletokens.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/save_ktx.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/save_kmg.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxlayercontainer.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///d:/other/libraries/includes/gli/core/flip.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/fbxtakeinfo.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/vulkanhelperfunctions.h": {
           "roles": [
             "resultFile"
           ]
         },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/fileio/fbxglobalcamerasettings.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/vertex.h": {
           "roles": [
             "resultFile"
           ]
@@ -4376,6 +4922,53 @@
           ]
         },
         "file:///d:/other/libraries/includes/glm/glm/gtc/type_ptr.inl": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbuniformbuffer.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/animationstuff.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/header.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv_parser.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbcamera.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/uncompressedanimation.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbrenderpass.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbswapchain.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbpipeline.h": {
           "roles": [
             "resultFile"
           ]
@@ -4411,68 +5004,7 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxarray.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/skeletalanimationcomponent.cpp": {
-          "roles": [
-            "analysisTarget",
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/texture_cube_array.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxcontainerallocators.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxclassid.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/fileio/fbxgloballightsettings.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/convert.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxstring.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxfile.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_packing.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxredblacktree.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/gtc/round.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/dx.inl": {
           "roles": [
             "resultFile"
           ]
@@ -4522,22 +5054,7 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxloadingstrategy.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/filter_compute.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxquery.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/texture2d.hpp": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxpatch.h": {
           "roles": [
             "resultFile"
           ]
@@ -4547,42 +5064,7 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxpatch.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxeventhandler.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxevent.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/fbxvideo.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/gtc/bitfield.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxproperty.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/base/fbxmultimap.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/gtc/color_space.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -4602,12 +5084,12 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxscopedloadingdirectory.h": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxxref.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxxref.h": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/core/fbxscopedloadingdirectory.h": {
           "roles": [
             "resultFile"
           ]
@@ -4633,16 +5115,6 @@
           ]
         },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/fileio/fbxprogress.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/fileio/fbxfiletokens.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/save_ktx.inl": {
           "roles": [
             "resultFile"
           ]
@@ -4692,12 +5164,12 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/fbxreference.h": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/shading/fbxbindingtablebase.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/shading/fbxbindingtablebase.h": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/fbxreference.h": {
           "roles": [
             "resultFile"
           ]
@@ -4707,12 +5179,12 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnode.h": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/utils/fbxusernotification.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/utils/fbxusernotification.h": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxnode.h": {
           "roles": [
             "resultFile"
           ]
@@ -4722,27 +5194,18 @@
             "resultFile"
           ]
         },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv_reflect.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/fileio/fbxglobalsettings.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/fbxselectionset.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/storage_linear.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/fbxselectionnode.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/fbxtakeinfo.h": {
           "roles": [
             "resultFile"
           ]
@@ -4757,14 +5220,14 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/animation/fbxanimcurvenode.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///g:/repos/vulkansandbox/vulkansandbox/skeletonanimation.cpp": {
           "roles": [
             "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/animation/fbxanimcurvenode.h": {
+          "roles": [
             "resultFile"
           ]
         },
@@ -4780,12 +5243,6 @@
         },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/constraint/fbxcharacternodename.h": {
           "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/hellotriangleapplication.cpp": {
-          "roles": [
-            "analysisTarget",
             "resultFile"
           ]
         },
@@ -4814,22 +5271,18 @@
             "resultFile"
           ]
         },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/uncompressedanimationkeys.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/constraint/fbxconstraintscale.h": {
           "roles": [
             "resultFile"
           ]
         },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/constraint/fbxhik2fbxcharacter.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxblendshape.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/levels.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -4849,12 +5302,12 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxcamerastereo.h": {
+        "file:///g:/repos/vulkansandbox/vulkansandbox/spirvloader.h": {
           "roles": [
             "resultFile"
           ]
         },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/spirvloader.h": {
+        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxcamerastereo.h": {
           "roles": [
             "resultFile"
           ]
@@ -4875,16 +5328,6 @@
           ]
         },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxgeometrybase.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/geometry/fbxlayercontainer.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/flip.hpp": {
           "roles": [
             "resultFile"
           ]
@@ -4989,16 +5432,6 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/shading/fbxsemanticentryview.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/scalar_integer.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/scene/shading/fbxsurfacelambert.h": {
           "roles": [
             "resultFile"
@@ -5029,272 +5462,12 @@
             "resultFile"
           ]
         },
-        "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/utils/fbxrenamingstrategyfbx5.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/gtc/round.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/texture2d_array.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/utils/fbxrenamingstrategyfbx6.h": {
           "roles": [
             "resultFile"
           ]
         },
         "file:///c:/program files/autodesk/fbx/fbx sdk/2019.0/include/fbxsdk/utils/fbxrootnodeutility.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/vulkanhelperfunctions.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/gli.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/format.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/type.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/target.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/sbdescriptorpool.h": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/gtc/integer.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_integer.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/scalar_integer.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/gtc/type_precision.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/texture.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/texture1d.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/texture1d.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/texture1d_array.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/texture2d_array.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/texture_cube.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/texture_cube_array.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/filter.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/vector_common.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/gtx/wrap.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/mipmaps_compute.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/coord.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/s3tc.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/s3tc.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/gtc/packing.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/glm/glm/ext/scalar_relational.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/bc.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/sampler1d.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/sampler1d_array.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/sampler2d.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/sampler2d.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/sampler2d_array.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv_parser.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/sampler3d.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/sampler_cube.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv_cross.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/sampler_cube_array.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/comparison.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/reduce.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/load.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/load_dds.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/file.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/load_kmg.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/load_ktx.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/save_dds.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/save_dds.inl": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/save_ktx.hpp": {
-          "roles": [
-            "resultFile"
-          ]
-        },
-        "file:///d:/other/libraries/includes/gli/core/save_kmg.inl": {
           "roles": [
             "resultFile"
           ]
@@ -5321,8 +5494,125 @@
             "resultFile"
           ]
         },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbdescriptor.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
         "file:///g:/repos/vulkansandbox/vulkansandbox/entities.h": {
           "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv_hlsl.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv_glsl.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv_cross_parsed_ir.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv_cross.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv_cpp.hpp": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/spirv-cross/spirv_cfg.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/skeletonanimationsystem.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbvulkanbase.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbuniformbuffer.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbswapchain.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbpipeline.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbdescriptorpool.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbrenderpassattachment.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sblogicaldevice.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sbcommandpool.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/vulkansetup.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/vulkansetup.h": {
+          "roles": [
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/uncompressedanimation.cpp": {
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ]
+        },
+        "file:///g:/repos/vulkansandbox/vulkansandbox/sponza.cpp": {
+          "roles": [
+            "analysisTarget",
             "resultFile"
           ]
         }
