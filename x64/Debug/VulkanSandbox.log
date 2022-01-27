@@ -1,25 +1,4 @@
-﻿  HelloTriangleApplication.cpp
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(81): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(83): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(91): warning C4244: 'initializing': conversion from 'T' to 'float', possible loss of data
-          with
-          [
-              T=double
-          ]
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(93): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(99): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\animatedvertex.h(26): warning C4267: '=': conversion from 'size_t' to 'T', possible loss of data
-          with
-          [
-              T=int
-          ]
-g:\repos\vulkansandbox\vulkansandbox\sbmaterialdescriptorset.h(29): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\scenestuff.h(314): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\scenestuff.h(358): warning C4101: 'memReqs': unreferenced local variable
-g:\repos\vulkansandbox\vulkansandbox\scenestuff.h(361): warning C4101: 'data': unreferenced local variable
-g:\repos\vulkansandbox\vulkansandbox\scenestuff.h(360): warning C4101: 'err': unreferenced local variable
-g:\repos\vulkansandbox\vulkansandbox\sponza.h(18): warning C4101: 'modelScene': unreferenced local variable
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(410): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(526): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(601): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
+﻿  VkTest.cpp
+g:\repos\vulkansandbox\vulkansandbox\vktest.cpp(65): warning C4267: 'argument': conversion from 'size_t' to 'uint32_t', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\vktest.cpp(158): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
   VulkanSandbox.vcxproj -> G:\repos\VulkanSandbox\x64\Debug\VulkanSandbox.exe

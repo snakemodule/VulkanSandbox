@@ -63,7 +63,7 @@ public:
 	VkFormat findDepthFormat();
 	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
-	void submitCommandBuffers(std::vector<VkCommandBuffer> cmds, std::vector<VkSemaphore> waitSem, std::vector<VkSemaphore> finishedSem, VkFence inFlightFence);
+	void submitCommandBuffers(std::vector<vk::CommandBuffer> cmds, std::vector<vk::Semaphore> waitSem, std::vector<vk::Semaphore> finishedSem, vk::Fence inFlightFence);
 
 	const vk::PhysicalDevice& getPhysicalDevice() {	return physicalDevice->device;	};
 	const vk::Device& getDevice() { return logicalDevice->device; };

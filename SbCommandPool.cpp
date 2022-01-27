@@ -2,7 +2,7 @@
 
 
 
-SbCommandPool::SbCommandPool(SbVulkanBase & base)
+SbCommandPool::SbCommandPool(SbVulkanBase & base, VkCommandPoolCreateFlags flags)
 	:physicalDevice(*base.physicalDevice), logicalDevice(*base.logicalDevice)
 {
 	QueueFamilyIndices queueFamilyIndices = physicalDevice.findQueueFamilies(physicalDevice.device, base.surface);
@@ -10,6 +10,7 @@ SbCommandPool::SbCommandPool(SbVulkanBase & base)
 	VkCommandPoolCreateInfo poolInfo = {};
 	poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
 	poolInfo.queueFamilyIndex = queueFamilyIndices.graphicsFamily.value();
+	poolInfo.flags = flags;
 
 	if (vkCreateCommandPool(logicalDevice.device, &poolInfo, nullptr, &this->handle) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create graphics command pool!");

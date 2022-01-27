@@ -35,8 +35,6 @@ class SbShaderLayout
 		std::map<unsigned, SampledImage> imageSamplers;
 	};
 
-	
-
 	std::vector<set> sets;
 
 public:
@@ -47,8 +45,8 @@ public:
 	};
 	//std::vector<SbSetLayout> sbSetLayouts;
 
-	std::vector<std::vector<VkDescriptorSetLayoutBinding>> bindings;
-	std::vector<VkDescriptorSetLayout> DSL;
+	std::vector<std::vector<vk::DescriptorSetLayoutBinding>> bindings;
+	std::vector<vk::DescriptorSetLayout> DSL;
 
 	VkPipelineLayout pipelineLayout;
 
@@ -58,7 +56,7 @@ public:
 
 	void parse(std::vector<uint32_t>& spirv_binary, VkShaderStageFlagBits shaderStage);
 	VkPipelineLayout reflect(vk::Device device, std::string vert, std::string frag, 
-		std::vector<VkPipelineShaderStageCreateInfo>& out);
+		std::vector<vk::PipelineShaderStageCreateInfo>& out);
 
 
 

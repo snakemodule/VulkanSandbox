@@ -40,7 +40,7 @@ void SbDescriptorSet::updateDescriptors()
 			descriptorWrites[currentBinding].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 			descriptorWrites[currentBinding].dstSet = allocatedDSs[setInstance];
 			descriptorWrites[currentBinding].dstBinding = currentBinding;
-			descriptorWrites[currentBinding].descriptorType = DSLBindings[currentBinding].descriptorType;
+			descriptorWrites[currentBinding].descriptorType = static_cast<VkDescriptorType>(DSLBindings[currentBinding].descriptorType);
 			descriptorWrites[currentBinding].descriptorCount = 1;
 			descriptorWrites[currentBinding].pImageInfo = &vkImageInfos[i];
 		}		
@@ -50,7 +50,7 @@ void SbDescriptorSet::updateDescriptors()
 			descriptorWrites[currentBinding].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 			descriptorWrites[currentBinding].dstSet = allocatedDSs[setInstance];
 			descriptorWrites[currentBinding].dstBinding = currentBinding;
-			descriptorWrites[currentBinding].descriptorType = DSLBindings[currentBinding].descriptorType;
+			descriptorWrites[currentBinding].descriptorType = static_cast<VkDescriptorType>(DSLBindings[currentBinding].descriptorType);
 			descriptorWrites[currentBinding].descriptorCount = 1;
 			descriptorWrites[currentBinding].pBufferInfo = &vkBufferInfos[i];
 		}
@@ -61,8 +61,8 @@ void SbDescriptorSet::updateDescriptors()
 
 
 SbDescriptorSet::SbDescriptorSet(const VkDevice& device, SbSwapchain& swapchain,
-	const VkDescriptorSetLayout& DSL,
-	const std::vector<VkDescriptorSetLayoutBinding>& DSLBindings)
+	const vk::DescriptorSetLayout& DSL,
+	const std::vector<vk::DescriptorSetLayoutBinding>& DSLBindings)
 	: device(device), swapchain(swapchain), 
 	DSL(DSL), DSLBindings(DSLBindings)
 {

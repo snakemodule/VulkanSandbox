@@ -46,7 +46,7 @@ public:
 
 
 	VkSwapchainCreateInfoKHR swapchainCI;
-	VkSwapchainKHR handle;
+	vk::SwapchainKHR handle;
 
 	
 	std::vector<VkSemaphore> imageAvailableSemaphores;
@@ -88,7 +88,7 @@ public:
 	VkFence getInFlightFence();
 	uint32_t acquireNextImage();
 
-	void presentImage(uint32_t imageIndex, std::vector<VkSemaphore> waitSem);
+	void presentImage(uint32_t imageIndex, std::vector<vk::Semaphore> waitSem);
 
 	void updateFrameInFlightCounter();
 

@@ -22,14 +22,12 @@ VkShaderModule makeShaderModule(std::vector<uint32_t>& spirv_binary, VkDevice de
 	return shaderModule;
 }
 
-VkPipelineShaderStageCreateInfo shaderStageCI(VkShaderModule shaderModule, VkShaderStageFlagBits stage, VkDevice device)
+VkPipelineShaderStageCreateInfo shaderStageCI(vk::ShaderModule shaderModule, vk::ShaderStageFlagBits stage, vk::Device device)
 {
-	VkPipelineShaderStageCreateInfo shaderStage = {};
-	shaderStage.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+	vk::PipelineShaderStageCreateInfo shaderStage = {};	
 	shaderStage.stage = stage;
 	shaderStage.module = shaderModule;
 	shaderStage.pName = "main";
-	assert(shaderStage.module != VK_NULL_HANDLE);
 	return shaderStage;
 }
 
@@ -44,13 +42,13 @@ SbShaderLayout::SbSetLayout SbShaderLayout::createDSLayout(vk::Device device, in
 
 	for (auto& pair : uniforms)
 		layout.bindingInfo.push_back(vkinit::descriptorSetLayoutBinding(
-			VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, pair.second.stageFlags, pair.first));
+			vk::DescriptorType::eUniformBuffer, vk::ShaderStageFlags(pair.second.stageFlags), pair.first));
 	for (auto& pair : imageSamplers)
 		layout.bindingInfo.push_back(vkinit::descriptorSetLayoutBinding(
-			VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, pair.second.stageFlags, pair.first));
+			vk::DescriptorType::eCombinedImageSampler, vk::ShaderStageFlags(pair.second.stageFlags), pair.first));
 	for (auto& pair : inputAttachments)
 		layout.bindingInfo.push_back(vkinit::descriptorSetLayoutBinding(
-			VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, pair.second.stageFlags, pair.first));
+			vk::DescriptorType::eInputAttachment, vk::ShaderStageFlags(pair.second.stageFlags), pair.first));
 
 	//std::sort(layout.bindingInfo.begin(), layout.bindingInfo.end(),
 	//	[](VkDescriptorSetLayoutBinding lhs, VkDescriptorSetLayoutBinding rhs)
@@ -65,11 +63,14 @@ SbShaderLayout::SbSetLayout SbShaderLayout::createDSLayout(vk::Device device, in
 	//descriptorSetLayoutCreateInfo.pBindings = bindings.data();
 	//descriptorSetLayoutCreateInfo.bindingCount = static_cast<uint32_t>(bindings.size());
 
-	VkDescriptorSetLayoutCreateInfo DS_Layout_CI =
-		vks::initializers::descriptorSetLayoutCreateInfo(layout.bindingInfo);
-	if (vkCreateDescriptorSetLayout(device, &DS_Layout_CI, nullptr, &layout.layout) != VK_SUCCESS) {
-		throw std::runtime_error("failed to create descriptor set layout!");
-	}
+	vk::DescriptorSetLayoutCreateInfo DS_Layout_CI = vks::initializers::descriptorSetLayoutCreateInfo(layout.bindingInfo);
+	
+	vk::DescriptorSetLayout result = device.createDescriptorSetLayout(DS_Layout_CI);
+	layout.layout = result;
+
+	//if (vkCreateDescriptorSetLayout(device, &DS_Layout_CI, nullptr, &layout.layout) != VK_SUCCESS) {
+	//	throw std::runtime_error("failed to create descriptor set layout!");
+	//}
 	return layout;
 }
 
@@ -163,14 +164,14 @@ void SbShaderLayout::parse(std::vector<uint32_t>& spirv_binary, VkShaderStageFla
 }
 
 VkPipelineLayout SbShaderLayout::reflect(vk::Device device, std::string vert, std::string frag,
-	std::vector<VkPipelineShaderStageCreateInfo>& out)
+	std::vector<vk::PipelineShaderStageCreateInfo>& out)
 {
 	std::vector<uint32_t> vert_binary = loadSpirvBinary(vert);
 	std::vector<uint32_t> frag_binary = loadSpirvBinary(frag);
-	VkShaderModule vertModule = vks::helper::loadShader(vert.c_str(), device);//makeShaderModule(vert_binary, device);
-	VkShaderModule fragModule = vks::helper::loadShader(frag.c_str(), device);//makeShaderModule(frag_binary, device);
-	VkPipelineShaderStageCreateInfo vertCI = shaderStageCI(vertModule, VK_SHADER_STAGE_VERTEX_BIT, device);
-	VkPipelineShaderStageCreateInfo fragCI = shaderStageCI(fragModule, VK_SHADER_STAGE_FRAGMENT_BIT, device);
+	vk::ShaderModule vertModule = vks::helper::loadShader(vert.c_str(), device);
+	vk::ShaderModule fragModule = vks::helper::loadShader(frag.c_str(), device);
+	vk::PipelineShaderStageCreateInfo vertCI = shaderStageCI(vertModule, vk::ShaderStageFlagBits::eVertex, device);
+	vk::PipelineShaderStageCreateInfo fragCI = shaderStageCI(fragModule, vk::ShaderStageFlagBits::eFragment, device);
 	out.push_back(vertCI);
 	out.push_back(fragCI);
 
@@ -190,32 +191,33 @@ VkPipelineLayout SbShaderLayout::reflect(vk::Device device, std::string vert, st
 			auto& inputAttachments = sets[set].inputAttachments;
 
 			//SbSetLayout layout;
-			std::vector<VkDescriptorSetLayoutBinding>& currentSetBindings = bindings[set];
+			std::vector<vk::DescriptorSetLayoutBinding>& currentSetBindings = bindings[set];
 
 			for (auto& pair : uniforms)
 				currentSetBindings.push_back(vkinit::descriptorSetLayoutBinding(
-					VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, pair.second.stageFlags, pair.first));
+					vk::DescriptorType::eUniformBuffer, vk::ShaderStageFlags(pair.second.stageFlags), pair.first));
 			for (auto& pair : imageSamplers)
 				currentSetBindings.push_back(vkinit::descriptorSetLayoutBinding(
-					VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, pair.second.stageFlags, pair.first));
+					vk::DescriptorType::eCombinedImageSampler, vk::ShaderStageFlags(pair.second.stageFlags), pair.first));
 			for (auto& pair : inputAttachments)
 				currentSetBindings.push_back(vkinit::descriptorSetLayoutBinding(
-					VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, pair.second.stageFlags, pair.first));
+					vk::DescriptorType::eInputAttachment, vk::ShaderStageFlags(pair.second.stageFlags), pair.first));
 
 			std::sort(currentSetBindings.begin(), currentSetBindings.end(),
 				[](VkDescriptorSetLayoutBinding lhs, VkDescriptorSetLayoutBinding rhs)
 				-> bool { return lhs.binding < rhs.binding; });
 
-			VkDescriptorSetLayoutCreateInfo DSL_CI = vks::initializers::descriptorSetLayoutCreateInfo(
+			vk::DescriptorSetLayoutCreateInfo DSL_CI = vks::initializers::descriptorSetLayoutCreateInfo(
 				currentSetBindings.data(), currentSetBindings.size());
 
-			if (vkCreateDescriptorSetLayout(device, &DSL_CI, nullptr, &DSL[set]) != VK_SUCCESS) {
-				throw std::runtime_error("failed to create descriptor set layout!");
-			}
+			DSL[set] = device.createDescriptorSetLayout(DSL_CI);
+
+			//if (vkCreateDescriptorSetLayout(device, &DSL_CI, nullptr, &DSL[set]) != VK_SUCCESS) {
+			//	throw std::runtime_error("failed to create descriptor set layout!");
+			//}
 			//sbSetLayouts.push_back(createDSLayout(device, i));
 		}
 	}
-
 	else 
 	{
 		DSL.resize(2);
@@ -223,33 +225,36 @@ VkPipelineLayout SbShaderLayout::reflect(vk::Device device, std::string vert, st
 
 		//set 0
 		bindings[0].push_back(vkinit::descriptorSetLayoutBinding(
-			VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 
-			VK_SHADER_STAGE_VERTEX_BIT, 0));
+			vk::DescriptorType::eUniformBuffer, 
+			vk::ShaderStageFlagBits::eVertex, 0));
 
 		VkDescriptorSetLayoutCreateInfo DSL_CI_0 = vks::initializers::descriptorSetLayoutCreateInfo(
 			bindings[0].data(), bindings[0].size());
 
-		if (vkCreateDescriptorSetLayout(device, &DSL_CI_0, nullptr, &DSL[0]) != VK_SUCCESS) {
-			throw std::runtime_error("failed to create descriptor set layout!");
-		}
+		DSL[0] = device.createDescriptorSetLayout(DSL_CI_0);
 
-		//set 1		
+		//if (vkCreateDescriptorSetLayout(device, &DSL_CI_0, nullptr, &DSL[0]) != VK_SUCCESS) {
+		//	throw std::runtime_error("failed to create descriptor set layout!");
+		//}
+
+		//set 1
 		bindings[1].push_back(vkinit::descriptorSetLayoutBinding(
-			VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-			VK_SHADER_STAGE_FRAGMENT_BIT, 0));
+			vk::DescriptorType::eCombinedImageSampler,
+			vk::ShaderStageFlagBits::eFragment, 0));
 		bindings[1].push_back(vkinit::descriptorSetLayoutBinding(
-			VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-			VK_SHADER_STAGE_FRAGMENT_BIT, 1));
+			vk::DescriptorType::eCombinedImageSampler,
+			vk::ShaderStageFlagBits::eFragment, 1));
 		bindings[1].push_back(vkinit::descriptorSetLayoutBinding(
-			VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-			VK_SHADER_STAGE_FRAGMENT_BIT, 2));
+			vk::DescriptorType::eCombinedImageSampler,
+			vk::ShaderStageFlagBits::eFragment, 2));
 
 		VkDescriptorSetLayoutCreateInfo DSL_CI_1 = vks::initializers::descriptorSetLayoutCreateInfo(
 			bindings[1].data(), bindings[1].size());
 
-		if (vkCreateDescriptorSetLayout(device, &DSL_CI_1, nullptr, &DSL[1]) != VK_SUCCESS) {
-			throw std::runtime_error("failed to create descriptor set layout!");
-		}
+		DSL[1] = device.createDescriptorSetLayout(DSL_CI_1);
+		//if (vkCreateDescriptorSetLayout(device, &DSL_CI_1, nullptr, &DSL[1]) != VK_SUCCESS) {
+		//	throw std::runtime_error("failed to create descriptor set layout!");
+		//}
 
 		//------------------------------
 		/*
@@ -309,9 +314,11 @@ VkPipelineLayout SbShaderLayout::reflect(vk::Device device, std::string vert, st
 
 	VkPipelineLayoutCreateInfo pipelineLayoutCI = vks::initializers::pipelineLayoutCreateInfo(DSL.data(), DSL.size());
 	//VkPipelineLayout pipelineLayout;
-	if (vkCreatePipelineLayout(device, &pipelineLayoutCI, nullptr, &pipelineLayout) != VK_SUCCESS) {
-		throw std::runtime_error("failed to create pipeline layout!");
-	}
+	pipelineLayout = device.createPipelineLayout(pipelineLayoutCI);
+
+	//if (vkCreatePipelineLayout(device, &pipelineLayoutCI, nullptr, &pipelineLayout) != VK_SUCCESS) {
+	//	throw std::runtime_error("failed to create pipeline layout!");
+	//}
 	//pipelineLayout = createPipelineLayout(device);
 	return pipelineLayout;
 }

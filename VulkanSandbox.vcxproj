@@ -165,7 +165,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Program Files\Assimp\include;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\tinyobjloader;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\stb-master;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\glfw-3.3.bin.WIN64\include;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\glm;C:\VulkanSDK\1.1.106.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Other\libraries\includes\gli;D:\Other\boost_1_72_0;C:\Program Files\Assimp\include;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\tinyobjloader;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\stb-master;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\glfw-3.3.bin.WIN64\include;D:\Other\libraries\includes\glm;C:\VulkanSDK\1.1.106.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -180,6 +180,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Asset.cpp" />
+    <ClCompile Include="DescriptorAllocator.cpp" />
+    <ClCompile Include="DescriptorBuilder.cpp" />
+    <ClCompile Include="DescriptorSetLayoutCache.cpp" />
     <ClCompile Include="Entities.cpp" />
     <ClCompile Include="HelloTriangleApplication.cpp" />
     <ClCompile Include="Model.cpp" />
@@ -189,6 +192,7 @@
     <ClCompile Include="SbDescriptorSet.cpp" />
     <ClCompile Include="SbImage.cpp" />
     <ClCompile Include="SbMaterialDescriptorSet.cpp" />
+    <ClCompile Include="SbPipelineBuilder.cpp" />
     <ClCompile Include="SbShaderLayout.cpp" />
     <ClCompile Include="SbTextureImage.cpp" />
     <ClCompile Include="SkeletalAnimationComponent.cpp" />
@@ -222,17 +226,24 @@
     <ClCompile Include="spirv-cross\spirv_msl.cpp" />
     <ClCompile Include="spirv-cross\spirv_parser.cpp" />
     <ClCompile Include="spirv-cross\spirv_reflect.cpp" />
+    <ClCompile Include="spirvloader.cpp" />
     <ClCompile Include="spline.cpp" />
     <ClCompile Include="Sponza.cpp" />
+    <ClCompile Include="TestRenderpass.cpp" />
     <ClCompile Include="UncompressedAnimation.cpp" />
     <ClCompile Include="UncompressedAnimationKeys.cpp" />
+    <ClCompile Include="VkTest.cpp" />
     <ClCompile Include="VulkanHelperFunctions.cpp" />
+    <ClCompile Include="VulkanInitializers.cpp" />
     <ClCompile Include="vulkansetup.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="algo.hpp" />
     <ClInclude Include="Asset.h" />
     <ClInclude Include="assimp_print.hpp" />
+    <ClInclude Include="DescriptorAllocator.h" />
+    <ClInclude Include="DescriptorBuilder.h" />
+    <ClInclude Include="DescriptorSetLayoutCache.h" />
     <ClInclude Include="Entities.h" />
     <ClInclude Include="HelloTriangleApplication.h" />
     <ClInclude Include="Mutant.hpp" />
@@ -242,6 +253,7 @@
     <ClInclude Include="SbDescriptorSet.h" />
     <ClInclude Include="SbImage.h" />
     <ClInclude Include="SbMaterialDescriptorSet.h" />
+    <ClInclude Include="SbPipelineBuilder.h" />
     <ClInclude Include="SbShaderLayout.h" />
     <ClInclude Include="SbTextureImage.h" />
     <ClInclude Include="SceneStuff.h" />
@@ -265,6 +277,7 @@
     <ClInclude Include="spirv-cross\spirv_reflect.hpp" />
     <ClInclude Include="spirvloader.h" />
     <ClInclude Include="Sponza.h" />
+    <ClInclude Include="TestRenderpass.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="UncompressedAnimation.h" />
     <ClInclude Include="UncompressedAnimationKeys.h" />
@@ -284,6 +297,7 @@
     <ClInclude Include="spline.h" />
     <ClInclude Include="AnimatedVertex.h" />
     <ClInclude Include="Vertex.h" />
+    <ClInclude Include="VkTest.h" />
     <ClInclude Include="VulkanHelperFunctions.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="SbLogicalDevice.h" />

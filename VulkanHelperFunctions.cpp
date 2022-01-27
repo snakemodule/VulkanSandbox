@@ -1,6 +1,9 @@
 #include "VulkanHelperFunctions.h"
 
-VkShaderModule vks::helper::loadShader(const char* fileName, VkDevice device)
+
+#include "VulkanInitializers.hpp"
+
+vk::ShaderModule vks::helper::loadShader(const char* fileName, vk::Device device)
 {
 	std::ifstream is(fileName, std::ios::binary | std::ios::in | std::ios::ate);
 
@@ -14,35 +17,33 @@ VkShaderModule vks::helper::loadShader(const char* fileName, VkDevice device)
 
 		assert(size > 0);
 
-		VkShaderModule shaderModule;
-		VkShaderModuleCreateInfo moduleCreateInfo{};
-		moduleCreateInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+		vk::ShaderModuleCreateInfo moduleCreateInfo{};
 		moduleCreateInfo.codeSize = size;
 		moduleCreateInfo.pCode = (uint32_t*)shaderCode;
-
-		vkCreateShaderModule(device, &moduleCreateInfo, NULL, &shaderModule);
+		vk::ShaderModule shaderModule = device.createShaderModule(moduleCreateInfo);
 
 		delete[] shaderCode;
-
 		return shaderModule;
 	}
 	else
 	{
 		std::cerr << "Error: Could not open shader file \"" << fileName << "\"" << std::endl;
-		return VK_NULL_HANDLE;
+		vk::ShaderModule shaderModule;
+		assert(false);
+		return shaderModule;
 	}
 }
 
-VkPipelineShaderStageCreateInfo vks::helper::loadShader(std::string fileName, VkShaderStageFlagBits stage, VkDevice device)
-{
-	VkPipelineShaderStageCreateInfo shaderStage = {};
-	shaderStage.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-	shaderStage.stage = stage;
-	shaderStage.module = loadShader(fileName.c_str(), device);
-	shaderStage.pName = "main"; // todo : make param
-	assert(shaderStage.module != VK_NULL_HANDLE);
-	return shaderStage;
-}
+//VkPipelineShaderStageCreateInfo vks::helper::loadShader(std::string fileName, VkShaderStageFlagBits stage, VkDevice device)
+//{
+//	VkPipelineShaderStageCreateInfo shaderStage = {};
+//	shaderStage.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+//	shaderStage.stage = stage;
+//	shaderStage.module = loadShader(fileName.c_str(), device);
+//	shaderStage.pName = "main"; // todo : make param
+//	assert(shaderStage.module != VK_NULL_HANDLE);
+//	return shaderStage;
+//}
 
 //todo flytta till SbVulkanBase?
 VkImageView vks::helper::createImageView(VkDevice device, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels) {

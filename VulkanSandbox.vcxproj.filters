@@ -25,6 +25,9 @@
     <Filter Include="Source Files\spirv-cross">
       <UniqueIdentifier>{facf9ce0-7ac4-4e0d-ab06-39be3833bc7a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\vkg">
+      <UniqueIdentifier>{cb156b51-a9d1-4dca-aa2d-5ddfea2f4cd5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -173,6 +176,30 @@
     </ClCompile>
     <ClCompile Include="VulkanHelperFunctions.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VkTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestRenderpass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SbPipelineBuilder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanInitializers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="spirvloader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DescriptorBuilder.cpp">
+      <Filter>Source Files\vkg</Filter>
+    </ClCompile>
+    <ClCompile Include="DescriptorSetLayoutCache.cpp">
+      <Filter>Source Files\vkg</Filter>
+    </ClCompile>
+    <ClCompile Include="DescriptorAllocator.cpp">
+      <Filter>Source Files\vkg</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -372,6 +399,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VkTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TestRenderpass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SbPipelineBuilder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DescriptorBuilder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DescriptorSetLayoutCache.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DescriptorAllocator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

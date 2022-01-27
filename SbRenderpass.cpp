@@ -145,12 +145,12 @@ void SbRenderpass::createRenderpass(SbSwapchain& swapchain)
 
 VkPipeline SbRenderpass::getSubpassPipeline(uint32_t subpassIndex, uint32_t pipelineIndex)
 {
-	return subpasses[subpassIndex].pipelines[pipelineIndex].handle;
+	return subpasses[subpassIndex].pipelines[pipelineIndex].pipeline;
 }
 
 VkPipelineLayout SbRenderpass::getSubpassPipelineLayout(uint32_t subpassIndex, uint32_t pipelineIndex)
 {
-	return subpasses[subpassIndex].pipelines[pipelineIndex].shaderLayout.pipelineLayout;
+	return subpasses[subpassIndex].pipelines[pipelineIndex].pipelineLayout;
 }
 
 SbRenderpass::Subpass::Subpass(const SbVulkanBase & vkBase, const uint32_t & swapchainSize)

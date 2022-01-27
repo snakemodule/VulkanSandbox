@@ -1,5 +1,8 @@
-a pipeline (?) has multiple descriptor sets
 
-a descriptor set has multiple bindings
+next, try to draw the triangle through the composition pass
 
-a binding has a type and a index
+
+
+----------- want features 
+anistrophic filtering
+antialias (supersampling?)

@@ -8,14 +8,9 @@ layout (location = 1) in vec3 inNormal;
 layout (location = 2) in vec3 inWorldPos;
 layout (location = 3) in vec2 fragTexCoord;
 
-//layout(set = 0, binding = 1) uniform sampler2D _diffuse;
-//layout(set = 0, binding = 2) uniform sampler2D _specular;
-//layout(set = 0, binding = 3) uniform sampler2D _bump;
-
-
-layout(set = 1, binding = 0) uniform sampler2D _diffuse;
-layout(set = 1, binding = 1) uniform sampler2D _specular;
-layout(set = 1, binding = 2) uniform sampler2D _bump;
+//layout(set = 1, binding = 0) uniform sampler2D _diffuse;
+//layout(set = 1, binding = 1) uniform sampler2D _specular;
+//layout(set = 1, binding = 2) uniform sampler2D _bump;
 
 layout (location = 0) out vec4 outColor;
 layout (location = 1) out vec4 outPosition;
@@ -31,7 +26,8 @@ void main()
 {
 	outPosition = vec4(inWorldPos, gl_FragCoord.z);
 
-	vec4 color = texture(_diffuse, fragTexCoord);
+	//vec4 color = texture(_diffuse, fragTexCoord);
+	vec4 color = vec4(1.0f);	
 	outAlbedo.rgb = color.rgb;
 
 	if (ENABLE_DISCARD == 0)

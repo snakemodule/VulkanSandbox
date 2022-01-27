@@ -7,7 +7,7 @@
 
 #include "AnimationKeys.h"
 
-#include "boost/multi_array.hpp"
+//#include "boost/multi_array.hpp"
 
 #include "Skeleton.h"
 

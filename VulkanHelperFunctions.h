@@ -1,20 +1,20 @@
 
-#include "vulkan/vulkan.h"
+#include "vulkan/vulkan.hpp"
 
 #include <fstream>
 #include <assert.h>
 #include <iostream>
 
 #include "gli.hpp"
-#include "VulkanInitializers.hpp"
+
 
 namespace vks
 {
 	namespace helper
 	{
-		VkShaderModule loadShader(const char* fileName, VkDevice device);
+		vk::ShaderModule loadShader(const char* fileName, vk::Device device);
 
-		VkPipelineShaderStageCreateInfo loadShader(std::string fileName, VkShaderStageFlagBits stage, VkDevice device);
+		//VkPipelineShaderStageCreateInfo loadShader(std::string fileName, VkShaderStageFlagBits stage, VkDevice device);
 
 		//todo flytta till SbVulkanBase?
 		VkImageView createImageView(VkDevice device, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels);

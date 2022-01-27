@@ -354,7 +354,7 @@ public:
 		size_t vertexDataSize = gVertices.size() * sizeof(Vertex);
 		size_t indexDataSize = gIndices.size() * sizeof(uint32_t);
 
-		VkMemoryAllocateInfo memAlloc = vks::initializers::memoryAllocateInfo();
+		VkMemoryAllocateInfo memAlloc = vk::MemoryAllocateInfo();
 		VkMemoryRequirements memReqs;
 
 		VkResult err;

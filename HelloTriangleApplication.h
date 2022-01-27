@@ -6,10 +6,6 @@
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #define GLM_ENABLE_EXPERIMENTAL
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/hash.hpp>
-#include <glm/gtx/quaternion.hpp>
 
 //#define STB_IMAGE_IMPLEMENTATION
 //#include <stb_image.h>
@@ -17,33 +13,15 @@
 //#define TINYOBJLOADER_IMPLEMENTATION
 //#include <tiny_obj_loader.h>
 
-#include <iostream>
-#include <fstream>
-#include <stdexcept>
-#include <algorithm>
 #include <chrono>
-#include <vector>
-#include <cstring>
 #include <cstdlib>
-#include <array>
-#include <optional>
-#include <set>
-#include <unordered_map>
-#include <string>
-#include <memory>
-
-#include <cmath>
 
 
 
-#include "AnimationStuff.h"
 
-#include "SkeletalAnimationComponent.h"
-#include "Model.h"
 
-#include "Sponza.h"
 
-#include "Header.h"
+
 
 #include "SbCamera.h"
 
@@ -51,71 +29,60 @@
 
 
 
-#include "UncompressedAnimationKeys.h"
-#include "UncompressedAnimation.h"
 
 //#include "SbCommandPool.h"
-
-
 //#include "SbDescriptorPool.h"
-
 //#include "SbVulkanBase.h"
 //#include "SbSwapchain.h"
-#include "SbDescriptorSet.h"
-
 //#include "SbRenderpass.h"
 //#include "MyRenderPass.h"
-
-#include "SbUniformBuffer.h"
 //#include "SbImage.h"
-
 //#include "SbTextureImage.h"
 
 
 #include "vulkan/vulkan.hpp"
+#include "glm/ext/matrix_float4x4.hpp"  // for mat4
+#include "glm/ext/vector_float4.hpp"    // for vec4
+#include "stdint.h"                     // for uint32_t
+#include "type_traits"                  // for hash
+#include "vulkan/vulkan_core.h"         // for VkBuffer, VkDeviceMemory, VkDescriptorSet
+#include "xstring"                      // for string
+#include "vector"                       // for vector
+#include <memory>                       // for allocator
 
 
-class SbTextureImage;
+class Sponza;
+struct AnimatedModel;
+struct AnimatedVertex;
 class SbVulkanBase;
 class SbSwapchain;
 class SbRenderpass;
+class SbDescriptorSet;
 class SbDescriptorPool;
-//class SbDescriptorSet;
 
+template <class T>
+class SbUniformBuffer;
 
 
 const int WIDTH = 800;
 const int HEIGHT = 600;
 
 const std::string TEXTURE_PATH = "textures/chalet.jpg";
-
 const int MAX_FRAMES_IN_FLIGHT = 2;
-
-
-
  
 
-namespace std {
-	template<> struct hash<AnimatedVertex> {
-		size_t operator()(AnimatedVertex const& vertex) const {
-			return ((hash<glm::vec3>()(vertex.pos) ^ (hash<glm::vec3>()(vertex.color) << 1)) >> 1) ^ (hash<glm::vec2>()(vertex.texCoord) << 1);
-		}
-	};
-}
-
-
-
+//amespace std {
+//	template<> struct hash<AnimatedVertex> {
+//		size_t operator()(AnimatedVertex const& vertex) const {
+//			return ((hash<glm::vec3>()(vertex.pos) ^ (hash<glm::vec3>()(vertex.color) << 1)) >> 1) ^ (hash<glm::vec2>()(vertex.texCoord) << 1);
+//		}
+//	};
+//
 
 //struct DefaultSkeletonTransformUBO {
 //	alignas(16) glm::mat4 boneTransforms[52]; 
 //	//this is only the size of the skeleton, the animation system does not output whole skeletons contigously
 //};
-
-
-
-
-
-
 
 class HelloTriangleApplication {
 public:
@@ -176,15 +143,15 @@ public:
 private:
 	GLFWwindow* window;
 
-	std::unique_ptr<SbVulkanBase> vulkanBase;
-	std::unique_ptr<SbSwapchain> swapchain;
-	std::unique_ptr<SbRenderpass> renderPass;
+	SbVulkanBase* vulkanBase;
+	SbSwapchain* swapchain;
+	SbRenderpass* renderPass;
+	SbDescriptorPool* descriptorPool;
 
 
 	//std::unique_ptr<SbTextureImage> texture;
 
 	vk::Sampler textureSampler;
-
 	vk::Sampler materialSampler;
 
 	//custom model struct
@@ -192,39 +159,31 @@ private:
 
 	Sponza* sponza = nullptr;
 
-	std::unique_ptr<SbUniformBuffer<VPTransformBuffer>> vpTransformBuffer;	
-	std::unique_ptr<SbUniformBuffer<UniformBufferObject>> transformUniformBuffer;
-
-	std::unique_ptr<SbUniformBuffer<ShadingUBO>> shadingUniformBuffer;
-	//std::unique_ptr<SbUniformBuffer<glm::mat4>> skeletonUniformBuffer; //todo: use this
+	SbUniformBuffer<VPTransformBuffer>* vpTransformBuffer;	
+	SbUniformBuffer<UniformBufferObject>* transformUniformBuffer;
+	SbUniformBuffer<ShadingUBO>* shadingUniformBuffer;
 
 	std::vector<VkBuffer> transformationgUB;
 	std::vector<VkDeviceMemory> transformationUBMemory;
-	std::unique_ptr<SbDescriptorPool> descriptorPool;
 	std::vector<VkCommandBuffer> commandBuffers;
 
 	VkDescriptorSet myOneDescriptorSet;
 
-	std::unique_ptr<SbDescriptorSet> gbufDesc;
-	std::unique_ptr<SbDescriptorSet> compDesc;
-	std::unique_ptr<SbDescriptorSet> transDesc;
-
-	std::unique_ptr<SbDescriptorSet> sceneGlobalDesc;
-	std::unique_ptr<SbDescriptorSet> sceneMaterialDesc;
-	std::unique_ptr<SbDescriptorSet> sceneInstanceDesc;
+	SbDescriptorSet* gbufDesc;
+	SbDescriptorSet* compDesc;
+	SbDescriptorSet* transDesc;
+	SbDescriptorSet* sceneGlobalDesc;
+	SbDescriptorSet* sceneMaterialDesc;
+	SbDescriptorSet* sceneInstanceDesc;
 
 	bool framebufferResized = false;
 
 
 	SbCamera cam;
 
-
-
-
 	void initWindow();
 
 	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-
 	static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
 
 	void initVulkan();
@@ -236,39 +195,15 @@ private:
 
 	void cleanupSwapChain();
 	void cleanup();
-
 	void recreateSwapChain();
-
 	void createInstance();
-
-
-
 	void createPipelines();
-
 	void createDescriptorSets();
-
-
-
-	void createTextureSampler();
-
-	
-	
-	//AnimationKeys running;
-	//AnimationKeys walking;
-	//UncompressedAnimationKeys uk;
-	//SkeletonAnimation sa()
-
-	//TODO make function take model argument?
+	void createTextureSampler();	
 	void createVertexBuffer();
-
 	void createUniformBuffers();
-
 	void createDescriptorPool();
-
 	void createCommandBuffers();
-
-	//todo move this
-	void createSyncObjects();
 
 	void updateUniformBuffer(uint32_t currentImage);
 

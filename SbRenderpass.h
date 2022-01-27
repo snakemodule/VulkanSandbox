@@ -20,7 +20,12 @@ public:
 		VkAccessFlags accessMaskAsDst;
 		VkAccessFlags accessMaskAsSrc;
 
-		//SbPipeline pipeline;
+		struct SbPipeline {
+			vk::Pipeline pipeline;
+			std::vector<std::vector<vk::DescriptorSetLayoutBinding>> bindings;
+			std::vector<vk::DescriptorSetLayout> DSL;
+			vk::PipelineLayout pipelineLayout;
+		};
 
 		std::vector<SbPipeline> pipelines;
 

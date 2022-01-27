@@ -59,9 +59,10 @@ void SbSwapchain::createSwapChain(VkSurfaceKHR surface, GLFWwindow* window)
 
 	swapchainCI = createInfo;
 
-	if (vkCreateSwapchainKHR(logicalDevice.device, &createInfo, nullptr, &handle) != VK_SUCCESS) {
-		throw std::runtime_error("failed to create swap chain!");
-	}
+	handle = logicalDevice.device.createSwapchainKHR(createInfo);
+	//if (vkCreateSwapchainKHR(logicalDevice.device, &createInfo, nullptr, handle) != VK_SUCCESS) {
+	//	throw std::runtime_error("failed to create swap chain!");
+	//}
 
 	createImageViews(); // here we set the size of the swapchain
 		
@@ -283,19 +284,16 @@ uint32_t SbSwapchain::acquireNextImage() {
 
 }
 
-void SbSwapchain::presentImage(uint32_t imageIndex, std::vector<VkSemaphore> waitSem) {
-	VkPresentInfoKHR presentInfo = {};
-	presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-
+void SbSwapchain::presentImage(uint32_t imageIndex, std::vector<vk::Semaphore> waitSem) {
+	vk::PresentInfoKHR presentInfo = {};
 	presentInfo.waitSemaphoreCount = waitSem.size();
 	presentInfo.pWaitSemaphores = waitSem.data();
-
 	presentInfo.swapchainCount = 1;
-	presentInfo.pSwapchains = &this->handle;
-
+	presentInfo.pSwapchains = &handle;
 	presentInfo.pImageIndices = &imageIndex;
 
-	VkResult result = vkQueuePresentKHR(logicalDevice.presentQueue, &presentInfo);
+	logicalDevice.presentQueue.presentKHR(presentInfo);
+
 
 	/* TODO HANDLE FRAME BUFFER RESIZE
 	if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || framebufferResized) {

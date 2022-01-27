@@ -42,14 +42,14 @@ public:
 
 	SbSwapchain& swapchain;
 	//SbShaderLayout::SbSetLayout& shaderLayout;
-	const VkDescriptorSetLayout& DSL;
-	const std::vector<VkDescriptorSetLayoutBinding>& DSLBindings;
+	const vk::DescriptorSetLayout& DSL;
+	const std::vector<vk::DescriptorSetLayoutBinding>& DSLBindings;
 
 	const VkDevice device;
 		
 	SbDescriptorSet(const VkDevice& device, SbSwapchain& swapchain,
-		const VkDescriptorSetLayout& DSL,
-		const std::vector<VkDescriptorSetLayoutBinding>& DSLBindings);
+		const vk::DescriptorSetLayout& DSL,
+		const std::vector<vk::DescriptorSetLayoutBinding>& DSLBindings);
 
 	void updateDescriptors();
 

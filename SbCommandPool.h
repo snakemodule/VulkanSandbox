@@ -16,7 +16,7 @@ public:
 	SbPhysicalDevice & physicalDevice;
 	SbLogicalDevice & logicalDevice;
 
-	SbCommandPool(SbVulkanBase & base);
+	SbCommandPool(SbVulkanBase & base, VkCommandPoolCreateFlags flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);
 	~SbCommandPool();
 
 	VkCommandBuffer beginSingleTimeCommands();

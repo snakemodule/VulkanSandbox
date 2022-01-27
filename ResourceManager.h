@@ -127,7 +127,7 @@ public:
 
 
         texture->descriptorInfo = vks::initializers::descriptorImageInfo(sampler, 
-            texture->imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+            texture->imageView, vk::ImageLayout::eShaderReadOnlyOptimal);
 
         
         textures[name] = texture;

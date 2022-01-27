@@ -1,16 +1,37 @@
 #include "HelloTriangleApplication.h"
 
-#include "VulkanHelperFunctions.h"
 #include "VulkanInitializers.hpp"
 
-#include "SbDescriptorPool.h"
 //#include "SbDescriptorSet.h"
-#include "MyRenderPass.h"
-#include "SbTextureImage.h"
 
 #include "ResourceManager.h"
 
 #include "Sponza.h"
+#include "AnimatedVertex.h"              // for AnimatedVertex
+#include "array"                         // for array
+#include "chrono"                        // for high_resolution_clock, steady_clock::time_point
+#include "cmath"                         // for sinf
+#include "corecrt_malloc.h"              // for _aligned_free, _aligned_malloc
+#include "corecrt_math.h"                // for sinf
+#include "GLFW/glfw3.h"                  // for glfwCreateWindow, glfwDestroyWindow, glfwGetFramebufferSize, glfwGetWindowUserPointer, glfwInit, glfwPollEvents, glfwSetFramebufferSizeCallback, glfwSetKeyCallback, glfwSetWindowUserPointer, glfwTerminate, glfwWaitEvents, glfwWindowHint, glfwWindowShouldClose, GLFWwindow, GLFW_CLIENT_API, GLFW_NO_API
+#include "iosfwd"                        // for ifstream
+#include "Model.h"                       // for AnimatedModel, AnimatedMesh, Material
+#include "SbBuffer.h"                    // for SbBuffer
+#include "SbVulkanBase.h"                // for SbVulkanBase, enableValidationLayers
+#include "SkeletalAnimationComponent.h"  // for SkeletalAnimationComponent
+#include "stddef.h"                      // for offsetof
+#include "stdexcept"                     // for runtime_error
+#include "vcruntime_new.h"               // for operator new, operator delete
+#include "vcruntime_string.h"            // for memcpy
+#include "Vertex.h"                      // for Vertex
+
+
+#include "SbSwapchain.h"
+#include "MyRenderPass.h"
+#include "SbDescriptorSet.h"
+#include "SbDescriptorPool.h"
+#include "SbCommandPool.h"
+
 
 // Wrapper functions for aligned memory allocation
 // There is currently no standard for this in C++ that works across all platforms and vendors, so we abstract this
@@ -88,28 +109,23 @@ void HelloTriangleApplication::framebufferResizeCallback(GLFWwindow* window, int
 
 void HelloTriangleApplication::initVulkan() {
 	createInstance();
-	vulkanBase->commandPool = std::make_unique<SbCommandPool>(*vulkanBase);
+	vulkanBase->commandPool = std::unique_ptr<SbCommandPool>(new SbCommandPool(*vulkanBase));
 
-	ResourceManager::getInstance().vkBase = vulkanBase.get(); //todo ugly bad
+	ResourceManager::getInstance().vkBase = vulkanBase; //todo ugly bad
 
 	createTextureSampler();
 	sponza = new Sponza();
 	sponza->load(*vulkanBase);
 
 
-	swapchain = std::make_unique<SbSwapchain>(*vulkanBase);
+	swapchain = new SbSwapchain(*vulkanBase);
 	swapchain->createSwapChain(vulkanBase->surface, window);
 
-	MyRenderPass* pass = new MyRenderPass(*vulkanBase, *swapchain);
-	renderPass = std::unique_ptr<MyRenderPass>(pass);
+	renderPass = new MyRenderPass(*vulkanBase, *swapchain);
+	 
 
 	swapchain->createFramebuffersForRenderpass(renderPass->renderPass);
-		
-	//todo why is this here and why does it fail?
-	//texture = std::make_unique<SbTextureImage>(*vulkanBase, TEXTURE_PATH); 
-
-		
-
+	
 	mymodel = new AnimatedModel("jump.fbx");
 	createVertexBuffer();
 
@@ -258,7 +274,7 @@ void HelloTriangleApplication::recreateSwapChain() {
 }
 
 void HelloTriangleApplication::createInstance() {
-	vulkanBase = std::make_unique<SbVulkanBase>();
+	vulkanBase = new SbVulkanBase();
 	vulkanBase->createInstance(enableValidationLayers);
 	vulkanBase->setupDebugMessenger(enableValidationLayers);//moved here from setupdebugmessenger
 	vulkanBase->createSurface(window); //moved from createsurface
@@ -272,11 +288,15 @@ void HelloTriangleApplication::createPipelines() {
 	auto& subpassgbuf = renderPass->subpasses[MyRenderPass::kSubpass_GBUF];
 	const auto& bind = AnimatedVertex::getBindingDescriptions();
 	const auto& attr = AnimatedVertex::getAttributeDescriptions();
-	subpassgbuf.pipelines.emplace_back().shaderLayouts(vulkanBase->getDevice(), "shaders/gbuf.vert.spv", "shaders/gbuf.frag.spv")
-		.addBlendAttachmentStates(vks::initializers::pipelineColorBlendAttachmentState(0xf, VK_FALSE), 0, 3)
-		.vertexBindingDescription(std::vector<VkVertexInputBindingDescription> {bind.begin(), bind.end()})
-		.vertexAttributeDescription(std::vector<VkVertexInputAttributeDescription> {attr.begin(), attr.end()})		
+	SbPipeline newPipeline = SbPipeline();
+	newPipeline.shaderLayouts(vulkanBase->getDevice(), "shaders/gbuf.vert.spv", "shaders/gbuf.frag.spv")
+		.addBlendAttachmentStates(vks::initializers::pipelineColorBlendAttachmentState(vk::ColorComponentFlags(), false), 0, 3)
+		.vertexBindingDescription(std::vector<vk::VertexInputBindingDescription> {bind.begin(), bind.end()})
+		.vertexAttributeDescription(std::vector<vk::VertexInputAttributeDescription> {attr.begin(), attr.end()})
 		.createPipeline(renderPass->renderPass, vulkanBase->logicalDevice->device, MyRenderPass::kSubpass_GBUF); //todo this enum should be automatic
+	subpassgbuf.pipelines.push_back({
+		newPipeline.handle, newPipeline.shaderLayout.bindings, newPipeline.shaderLayout.DSL
+	});
 
 	const std::array<VkVertexInputBindingDescription, 1>& vertexBind = Vertex::getBindingDescriptions();
 	const std::array<VkVertexInputAttributeDescription, 4>& vertexAttr = Vertex::getAttributeDescriptions();
@@ -285,15 +305,19 @@ void HelloTriangleApplication::createPipelines() {
 		int32_t discard = 0;
 	} specializationData;
 	auto specEntry = vks::initializers::specializationMapEntry(0, offsetof(SpecializationData, discard), sizeof(int32_t));
-	VkSpecializationInfo specializationInfo = vks::initializers::specializationInfo(1, &specEntry, sizeof(specializationData), &specializationData);
+	vk::SpecializationInfo specializationInfo = vks::initializers::specializationInfo(1, &specEntry, sizeof(specializationData), &specializationData);
 
 	//SbRenderpass::Subpass subpassScene = renderPass->subpasses[MyRenderPass::kSubpass_SCENE];
-	subpassgbuf.pipelines.emplace_back().shaderLayouts(vulkanBase->getDevice(), "shaders/sponza.vert.spv", "shaders/sponza.frag.spv")
+	newPipeline = SbPipeline();
+	newPipeline.shaderLayouts(vulkanBase->getDevice(), "shaders/sponza.vert.spv", "shaders/sponza.frag.spv")
 		.shaderStageSpecialization(1, &specializationInfo)
-		.addBlendAttachmentStates(vks::initializers::pipelineColorBlendAttachmentState(0xf, VK_FALSE), 0, 3)
-		.vertexBindingDescription(std::vector<VkVertexInputBindingDescription> {vertexBind.begin(), vertexBind.end()})
-		.vertexAttributeDescription(std::vector<VkVertexInputAttributeDescription> {vertexAttr.begin(), vertexAttr.end()})
+		.addBlendAttachmentStates(vks::initializers::pipelineColorBlendAttachmentState(vk::ColorComponentFlags(), false), 0, 3)
+		.vertexBindingDescription(std::vector<vk::VertexInputBindingDescription> {vertexBind.begin(), vertexBind.end()})
+		.vertexAttributeDescription(std::vector<vk::VertexInputAttributeDescription> {vertexAttr.begin(), vertexAttr.end()})
 		.createPipeline(renderPass->renderPass, vulkanBase->logicalDevice->device, MyRenderPass::kSubpass_GBUF);
+	subpassgbuf.pipelines.push_back({ 
+		newPipeline.handle, newPipeline.shaderLayout.bindings, newPipeline.shaderLayout.DSL 
+	});
 
 	//skip transparent for now
 	//specializationData.discard = 1;
@@ -304,61 +328,69 @@ void HelloTriangleApplication::createPipelines() {
 
 	//compose
 	auto& subpasscomp = renderPass->subpasses[MyRenderPass::kSubpass_COMPOSE];
-	subpasscomp.pipelines.emplace_back().shaderLayouts(vulkanBase->getDevice(), "shaders/composition.vert.spv", "shaders/composition.frag.spv")
-		.cullMode(VK_CULL_MODE_NONE)
-		.depthWriteEnable(VK_FALSE)
+	newPipeline = SbPipeline();
+	newPipeline.shaderLayouts(vulkanBase->getDevice(), "shaders/composition.vert.spv", "shaders/composition.frag.spv")
+		.cullMode(vk::CullModeFlagBits::eNone)
+		.depthWriteEnable(false)
 		.createPipeline(renderPass->renderPass, vulkanBase->logicalDevice->device, MyRenderPass::kSubpass_COMPOSE);
+	subpasscomp.pipelines.push_back({
+		newPipeline.handle, newPipeline.shaderLayout.bindings, newPipeline.shaderLayout.DSL
+	});
 
 	//Transparent pass
 	auto& subpasstransparent = renderPass->subpasses[MyRenderPass::kSubpass_TRANSPARENT];
-	subpasstransparent.pipelines.emplace_back().shaderLayouts(vulkanBase->getDevice(), "shaders/transparent.vert.spv", "shaders/transparent.frag.spv")
+	newPipeline = SbPipeline();
+	newPipeline.shaderLayouts(vulkanBase->getDevice(), "shaders/transparent.vert.spv", "shaders/transparent.frag.spv")
 		.colorBlending(0)
-		.vertexBindingDescription(std::vector<VkVertexInputBindingDescription> {bind.begin(), bind.end()})
-		.vertexAttributeDescription(std::vector<VkVertexInputAttributeDescription> {attr.begin(), attr.end()})
-		.cullMode(VK_CULL_MODE_BACK_BIT)
-		.depthWriteEnable(VK_FALSE)
+		.vertexBindingDescription(std::vector<vk::VertexInputBindingDescription> {bind.begin(), bind.end()})
+		.vertexAttributeDescription(std::vector<vk::VertexInputAttributeDescription> {attr.begin(), attr.end()})
+		.cullMode(vk::CullModeFlagBits::eBack)
+		.depthWriteEnable(false)
 		.createPipeline(renderPass->renderPass, vulkanBase->logicalDevice->device, MyRenderPass::kSubpass_TRANSPARENT);
+	subpasstransparent.pipelines.push_back({
+		newPipeline.handle, newPipeline.shaderLayout.bindings, newPipeline.shaderLayout.DSL
+	});
 
 }
 
 void HelloTriangleApplication::createDescriptorSets()
 {
-	SbPipeline gbufPipeline0 = renderPass->subpasses[MyRenderPass::kSubpass_GBUF].pipelines[0];
-	gbufDesc = std::unique_ptr<SbDescriptorSet>(new SbDescriptorSet(vulkanBase->getDevice(), *swapchain, 
-		gbufPipeline0.getDSL(0), gbufPipeline0.getDSLBindings(0)));
+	auto gbufPipeline0 = renderPass->subpasses[MyRenderPass::kSubpass_GBUF].pipelines[0];
+	gbufDesc = new SbDescriptorSet(vulkanBase->getDevice(), *swapchain, 
+		gbufPipeline0.DSL[0], gbufPipeline0.bindings[0]);
 	gbufDesc->addBufferBinding(0, *transformUniformBuffer);
 	gbufDesc->addBufferBinding(1, *shadingUniformBuffer);
-	gbufDesc->allocate(*descriptorPool.get());
+	gbufDesc->allocate(*descriptorPool);
 	gbufDesc->updateDescriptors();
 
-	SbPipeline composePipeline0 = renderPass->subpasses[MyRenderPass::kSubpass_COMPOSE].pipelines[0];
-	compDesc = std::unique_ptr<SbDescriptorSet>(new SbDescriptorSet(vulkanBase->getDevice(), *swapchain, 
-		composePipeline0.getDSL(0), composePipeline0.getDSLBindings(0)));
+	auto composePipeline0 = renderPass->subpasses[MyRenderPass::kSubpass_COMPOSE].pipelines[0];
+	compDesc = new SbDescriptorSet(vulkanBase->getDevice(), *swapchain, 
+		composePipeline0.DSL[0], composePipeline0.bindings[0]);
 	compDesc->addInputAttachmentBinding(0, MyRenderPass::kAttachment_POSITION);
 	compDesc->addInputAttachmentBinding(1, MyRenderPass::kAttachment_NORMAL);
 	compDesc->addInputAttachmentBinding(2, MyRenderPass::kAttachment_ALBEDO);
-	compDesc->allocate(*descriptorPool.get());
+	compDesc->allocate(*descriptorPool);
 	compDesc->updateDescriptors();
 
-	SbPipeline transparentPipeline0 = renderPass->subpasses[MyRenderPass::kSubpass_TRANSPARENT].pipelines[0];
-	transDesc = std::unique_ptr<SbDescriptorSet>(new SbDescriptorSet(vulkanBase->getDevice(), *swapchain, 
-		transparentPipeline0.getDSL(0), transparentPipeline0.getDSLBindings(0)));
+	auto transparentPipeline0 = renderPass->subpasses[MyRenderPass::kSubpass_TRANSPARENT].pipelines[0];
+	transDesc = new SbDescriptorSet(vulkanBase->getDevice(), *swapchain, 
+		transparentPipeline0.DSL[0], transparentPipeline0.bindings[0]);
 	transDesc->addBufferBinding(0, *transformUniformBuffer);
 	transDesc->addBufferBinding(1, *shadingUniformBuffer);
 	transDesc->addInputAttachmentBinding(2, MyRenderPass::kAttachment_POSITION);
-	transDesc->allocate(*descriptorPool.get());
+	transDesc->allocate(*descriptorPool);
 	transDesc->updateDescriptors();
 
 	//set 0 vp matrix
-	SbPipeline gbufPipeline1 = renderPass->subpasses[MyRenderPass::kSubpass_GBUF].pipelines[1];
-	sceneGlobalDesc = std::unique_ptr<SbDescriptorSet>(	new SbDescriptorSet(vulkanBase->getDevice(), *swapchain, 
-		gbufPipeline1.getDSL(0), gbufPipeline1.getDSLBindings(0)));
+	auto gbufPipeline1 = renderPass->subpasses[MyRenderPass::kSubpass_GBUF].pipelines[1];
+	sceneGlobalDesc = new SbDescriptorSet(vulkanBase->getDevice(), 
+		*swapchain, gbufPipeline1.DSL[0], gbufPipeline1.bindings[0]);
 	sceneGlobalDesc->addBufferBinding(0, *vpTransformBuffer);
-	sceneGlobalDesc->allocate(*descriptorPool.get());
+	sceneGlobalDesc->allocate(*descriptorPool);
 	sceneGlobalDesc->updateDescriptors();
 
 	//set 1	
-	sponza->scene.prepareMaterialDescriptors(*vulkanBase, *descriptorPool, gbufPipeline1.getDSL(1));
+	sponza->scene.prepareMaterialDescriptors(*vulkanBase, *descriptorPool, gbufPipeline1.DSL[1]);
 	
 }
 
@@ -426,21 +458,17 @@ void HelloTriangleApplication::createVertexBuffer() {
 }
 
 void HelloTriangleApplication::createUniformBuffers() {
-	transformUniformBuffer = std::make_unique<SbUniformBuffer<UniformBufferObject>>(*vulkanBase,
-		swapchain->getSize());
+	transformUniformBuffer = new SbUniformBuffer<UniformBufferObject>(*vulkanBase,	swapchain->getSize());
 
-	//todo: use this
-	//skeletonUniformBuffer = std::make_unique<SbUniformBuffer<glm::mat4>>(
-	//	*vulkanBase, swapchain->getSize(), 52 * 5); //room for 5 skeletons in buffer
-
-	vpTransformBuffer = std::make_unique<SbUniformBuffer<VPTransformBuffer>>(*vulkanBase,	1);
+	vpTransformBuffer = new SbUniformBuffer<VPTransformBuffer>(
+		*vulkanBase, swapchain->getSize());
 	VPTransformBuffer VPUBO = {};
 	VPUBO.view = cam.getViewMatrix();
 	VPUBO.proj = cam.getProjectionMatrix();	
 	vpTransformBuffer->writeBufferData(VPUBO);
 	vpTransformBuffer->copyDataToBufferMemory(*vulkanBase);
 
-	shadingUniformBuffer = std::make_unique<SbUniformBuffer<ShadingUBO>>(*vulkanBase, 1, drawables.size());
+	shadingUniformBuffer =  new SbUniformBuffer<ShadingUBO>(*vulkanBase, 1, drawables.size());
 	for (size_t i = 0; i < drawables.size(); i++)
 	{
 		ShadingUBO data = { drawables[i].AmbientColor, drawables[i].DiffuseColor, drawables[i].SpecularColor };
@@ -451,7 +479,7 @@ void HelloTriangleApplication::createUniformBuffers() {
 
 void HelloTriangleApplication::createDescriptorPool() {
 
-	descriptorPool = std::make_unique<SbDescriptorPool>(vulkanBase->logicalDevice->device);
+	descriptorPool = new SbDescriptorPool(vulkanBase->logicalDevice->device);
 
 	std::vector<VkDescriptorPoolSize> poolSizes(4);
 	poolSizes[0] = { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, static_cast<uint32_t>(1000) };//(swapchain->getSize() * 2) }; 
@@ -539,31 +567,31 @@ void HelloTriangleApplication::createCommandBuffers() {
 		}			
 		//scene pipelines
 		{
-			//auto& sceneRef = sponza->scene;
+			auto& sceneRef = sponza->scene;
 			////opaque
-			//VkPipeline pipeline = renderPass->getSubpassPipeline(MyRenderPass::kSubpass_GBUF, 1); //todo these pipelines should have enums
-			//VkPipelineLayout pipelineLayout = renderPass->getSubpassPipelineLayout(MyRenderPass::kSubpass_GBUF, 1);			
-			//vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline); 
+			VkPipeline pipeline = renderPass->getSubpassPipeline(MyRenderPass::kSubpass_GBUF, 1); //todo these pipelines should have enums
+			VkPipelineLayout pipelineLayout = renderPass->getSubpassPipelineLayout(MyRenderPass::kSubpass_GBUF, 1);			
+			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline); 
 			//
-			//vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS,
-			//	pipelineLayout, 0, 1, &sceneGlobalDesc->allocatedDSs[0], 0, NULL);
+			vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS,
+				pipelineLayout, 0, 1, &sceneGlobalDesc->allocatedDSs[i], 0, NULL);
 			//
 			//// Render from global buffer using index offsets
-			//VkDeviceSize offsets[] = { 0 };
-			//vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, &sceneRef.vertexBuffer.buffer, offsets);
-			//vkCmdBindIndexBuffer(commandBuffers[i], sceneRef.indexBuffer.buffer, 0, VK_INDEX_TYPE_UINT32);
+			VkDeviceSize offsets[] = { 0 };
+			vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, &sceneRef.vertexBuffer.buffer, offsets);
+			vkCmdBindIndexBuffer(commandBuffers[i], sceneRef.indexBuffer.buffer, 0, VK_INDEX_TYPE_UINT32);
 			//
-			//for (auto mesh : sceneRef.meshes)
-			//{				
-			//	if (sceneRef.materials.hasAlpha[mesh.material])
-			//	{
-			//		continue;
-			//	}
-			//	auto& materialDescriptorSet = sceneRef.materials.descriptorSets[mesh.material];
-			//	vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, 
-			//		pipelineLayout, 1, 1, &materialDescriptorSet, 0, NULL);
-			//	vkCmdDrawIndexed(commandBuffers[i], mesh.indexCount, 1, 0, mesh.indexBase, 0);
-			//}
+			for (auto mesh : sceneRef.meshes)
+			{	
+				if (sceneRef.materials.hasAlpha[mesh.material])
+				{
+					continue;
+				}
+				auto& materialDescriptorSet = sceneRef.materials.descriptorSets[mesh.material];
+				vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, 
+					pipelineLayout, 1, 1, &materialDescriptorSet, 0, NULL);
+				vkCmdDrawIndexed(commandBuffers[i], mesh.indexCount, 1, 0, mesh.indexBase, 0);
+			}
 		
 			//transparent skipped
 			//pipeline = renderPass->getSubpassPipeline(MyRenderPass::kSubpass_GBUF, 2); //todo these pipelines should have enums
@@ -647,9 +675,9 @@ void HelloTriangleApplication::updateUniformBuffer(uint32_t currentImage) {
 void HelloTriangleApplication::drawFrame() {
 	uint32_t imageIndex = swapchain->acquireNextImage();
 	updateUniformBuffer(imageIndex);
-	std::vector<VkCommandBuffer> cmds{ commandBuffers[imageIndex] };
-	std::vector<VkSemaphore> waitSem{ swapchain->getImageAvailableSemaphore() };
-	std::vector<VkSemaphore> signalSem{ swapchain->getRenderFinishedSemaphore() };
+	std::vector<vk::CommandBuffer> cmds{ commandBuffers[imageIndex] };
+	std::vector<vk::Semaphore> waitSem{ swapchain->getImageAvailableSemaphore() };
+	std::vector<vk::Semaphore> signalSem{ swapchain->getRenderFinishedSemaphore() };
 	vulkanBase->submitCommandBuffers(cmds, waitSem, signalSem, swapchain->getInFlightFence());
 	swapchain->presentImage(imageIndex, signalSem);
 	swapchain->updateFrameInFlightCounter();

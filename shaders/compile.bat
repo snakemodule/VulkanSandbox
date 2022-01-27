@@ -13,5 +13,10 @@ C:/VulkanSDK/1.1.106.0/Bin32/glslangValidator.exe -V transparent.frag -o transpa
 C:/VulkanSDK/1.1.106.0/Bin32/glslangValidator.exe -V sponza.vert -o sponza.vert.spv
 C:/VulkanSDK/1.1.106.0/Bin32/glslangValidator.exe -V sponza.frag -o sponza.frag.spv
 
+C:/VulkanSDK/1.1.106.0/Bin32/glslangValidator.exe -V triangle.vert -o triangle.vert.spv
+C:/VulkanSDK/1.1.106.0/Bin32/glslangValidator.exe -V triangle.frag -o triangle.frag.spv
+
+C:/VulkanSDK/1.1.106.0/Bin32/glslangValidator.exe -V compose_test.vert -o compose_test.vert.spv
+C:/VulkanSDK/1.1.106.0/Bin32/glslangValidator.exe -V compose_test.frag -o compose_test.frag.spv
 
 pause

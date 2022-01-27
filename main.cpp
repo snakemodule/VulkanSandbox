@@ -1,11 +1,14 @@
-
 #include "HelloTriangleApplication.h"
+#include "VkTest.h"
 
-#include "Sponza.h"
+
+
+//#include "Sponza.h"
 
 int main() {
 
-	HelloTriangleApplication app;
+	//HelloTriangleApplication app;
+	VkTest app;
 
 	try {
 		app.run();
