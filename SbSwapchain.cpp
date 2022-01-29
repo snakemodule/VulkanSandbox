@@ -264,7 +264,7 @@ uint32_t SbSwapchain::acquireNextImage() {
 	uint32_t imageIndex;
 	VkResult result = vkAcquireNextImageKHR(logicalDevice.device, this->handle,
 		UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
-
+	assert(result == VK_SUCCESS);
 	/* //TODO recreate swapchain broken
 	if (result == VK_ERROR_OUT_OF_DATE_KHR) {
 		recreateSwapchain();
@@ -276,7 +276,8 @@ uint32_t SbSwapchain::acquireNextImage() {
 	*/
 
 	if (imagesInFlight[imageIndex] != VK_NULL_HANDLE) {
-		vkWaitForFences(logicalDevice.device, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
+		VkResult result = vkWaitForFences(logicalDevice.device, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
+		assert(result == VK_SUCCESS);
 	}
 	imagesInFlight[imageIndex] = inFlightFences[currentFrame];
 

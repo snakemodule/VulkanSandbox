@@ -21,41 +21,8 @@
 
 #include "SbMaterialDescriptorSet.h"
 
+#include "DescriptorAllocator.h"
 
-
-//std::string errorString(VkResult errorCode)
-//{
-//	switch (errorCode)
-//	{
-//#define STR(r) case VK_ ##r: return #r
-//		STR(NOT_READY);
-//		STR(TIMEOUT);
-//		STR(EVENT_SET);
-//		STR(EVENT_RESET);
-//		STR(INCOMPLETE);
-//		STR(ERROR_OUT_OF_HOST_MEMORY);
-//		STR(ERROR_OUT_OF_DEVICE_MEMORY);
-//		STR(ERROR_INITIALIZATION_FAILED);
-//		STR(ERROR_DEVICE_LOST);
-//		STR(ERROR_MEMORY_MAP_FAILED);
-//		STR(ERROR_LAYER_NOT_PRESENT);
-//		STR(ERROR_EXTENSION_NOT_PRESENT);
-//		STR(ERROR_FEATURE_NOT_PRESENT);
-//		STR(ERROR_INCOMPATIBLE_DRIVER);
-//		STR(ERROR_TOO_MANY_OBJECTS);
-//		STR(ERROR_FORMAT_NOT_SUPPORTED);
-//		STR(ERROR_SURFACE_LOST_KHR);
-//		STR(ERROR_NATIVE_WINDOW_IN_USE_KHR);
-//		STR(SUBOPTIMAL_KHR);
-//		STR(ERROR_OUT_OF_DATE_KHR);
-//		STR(ERROR_INCOMPATIBLE_DISPLAY_KHR);
-//		STR(ERROR_VALIDATION_FAILED_EXT);
-//		STR(ERROR_INVALID_SHADER_NV);
-//#undef STR
-//	default:
-//		return "UNKNOWN_ERROR";
-//	}
-//}
 
 // Macro to check and display Vulkan return results
 //#define VK_CHECK_RESULT(f)																				\
@@ -68,37 +35,16 @@
 //	}																									\
 //}	
 
-//a material ready to be used in a scene
-//struct SceneMaterial
-//{
-//	std::string name;
-//	std::shared_ptr<SbTextureImage> diffuse = nullptr;
-//	std::shared_ptr<SbTextureImage> specular = nullptr;
-//	std::shared_ptr<SbTextureImage> bump = nullptr;
-//	bool hasAlpha = false;
-//	bool hasBump = false;
-//	bool hasSpecular = false;
-//	
-//	//VkPipeline pipeline;		
-//	//SbDescriptorSet descriptorSet;
-//
-//};
-
-
-
 struct TextureAOS {
 	std::vector<vk::ImageView> imageView;
-	//struct {
+	
 	std::vector<vk::Image> image;
 	std::vector<vk::DeviceMemory> memory;
 	std::vector<vk::DeviceSize> imageSize;
 	std::vector<uint32_t> mipLevels;
-	std::vector<VkImageCreateInfo> imageCreateInfo;
-	//} image;
-	//std::vector<SbImage> image;
-
-	//std::vector<uint32_t> channels;
-	std::vector<VkDescriptorImageInfo> descriptorInfo;
+	std::vector<vk::ImageCreateInfo> imageCreateInfo;
+	
+	std::vector<vk::DescriptorImageInfo> descriptorInfo;
 };
 
 struct SceneMaterialAOS 
@@ -108,29 +54,16 @@ struct SceneMaterialAOS
 	TextureAOS diffuse;
 	TextureAOS specular;
 	TextureAOS bump;
-	std::vector<bool> hasAlpha;
-	//std::vector<bool> hasBump = false;
-	//std::vector<bool> hasSpecular = false;
-	std::vector<VkDescriptorSet> descriptorSets;
+	std::vector<bool> hasAlpha;	
+	std::vector<vk::DescriptorSet> descriptorSets;
 };
 
-//a mesh ready to be used in a scene, drawablemesh
+
 struct SceneMesh
 {
-	//SbBuffer indexBuffer;
-	//SbBuffer vertexBuffer;
-	
 	uint32_t indexCount;
 	uint32_t indexBase;
-
-
-	//SceneMaterial* material;
 	uint32_t material;
-
-};
-
-struct MTransformBuffer {
-	alignas(16) glm::mat4 model;
 };
 
 // The scene
@@ -318,8 +251,7 @@ public:
 				vertices[i].pos = glm::make_vec3(&aMesh->mVertices[i].x);// *0.5f;
 				vertices[i].pos.y = -vertices[i].pos.y;
 				vertices[i].texCoord = (hasUV) ? 
-					glm::make_vec2(&aMesh->mTextureCoords[0][i].x) : 
-					glm::vec3(0.0f);
+					glm::make_vec2(&aMesh->mTextureCoords[0][i].x) : glm::vec2(0.0f);
 				vertices[i].normal = glm::make_vec3(&aMesh->mNormals[i].x);
 				vertices[i].normal.y = -vertices[i].normal.y;
 				vertices[i].color = glm::vec3(1.0f); // todo : take from material
@@ -385,9 +317,7 @@ public:
 		iBuffer.Destroy(device);
 		
 	}
-
 	
-
 	void load(std::string sceneFilePath, SbVulkanBase* base) 
 	{
 		Assimp::Importer modelImporter;
@@ -403,17 +333,47 @@ public:
 		loadMeshes(modelScene, base);
 	}
 
-	void prepareMaterialDescriptors(SbVulkanBase& base, SbDescriptorPool& descriptorPool, VkDescriptorSetLayout layout)
+	//allocate descriptors for materials
+	void allocateMaterialDescriptors(DescriptorAllocator& allocator, vk::DescriptorSetLayout layout, 
+		size_t count, std::vector<vk::DescriptorSet>& descriptorSets)
 	{
-		materialDescriptors.allocate(base.getDevice(), descriptorPool,
-			layout, materials.name.size(), materials.descriptorSets);
-		
-		//writeDescriptor(base->getDevice(), 0, );
-		materialDescriptors.writeDescriptor(base.getDevice(), 0, materials.diffuse.descriptorInfo, 
-			VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, materials.descriptorSets);
-		materialDescriptors.writeDescriptor(base.getDevice(), 1, materials.specular.descriptorInfo,
-			VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, materials.descriptorSets);
-		materialDescriptors.writeDescriptor(base.getDevice(), 2, materials.bump.descriptorInfo,
-			VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, materials.descriptorSets);
+		descriptorSets.resize(count);
+		for (size_t i = 0; i < count; i++)
+		{
+			allocator.allocate(layout, &descriptorSets[i]);
+		}
+
+		//std::vector<vk::DescriptorSetLayout> layouts = std::vector<vk::DescriptorSetLayout>(count, layout);
+		//vk::DescriptorSetAllocateInfo allocInfo = {};
+		//allocInfo.descriptorPool = descriptorPool.pool;
+		//allocInfo.descriptorSetCount = layouts.size();
+		//allocInfo.pSetLayouts = layouts.data();
+		//
+		//if (device.allocateDescriptorSets(&allocInfo, descriptorSets.data()) != vk::Result::eSuccess) {
+		//	throw std::runtime_error("failed to allocate descriptor sets!");
+		//}
+	}
+
+	void writeMaterialDescriptors(vk::Device device, uint32_t binding, std::vector<vk::DescriptorImageInfo> imageInfo,
+		vk::DescriptorType descriptorType, std::vector<vk::DescriptorSet>& descriptorSets)
+	{
+		std::vector<vk::WriteDescriptorSet> writes = std::vector<vk::WriteDescriptorSet>(descriptorSets.size());
+		for (size_t i = 0; i < writes.size(); i++)
+		{
+			writes[i] = vk::WriteDescriptorSet(descriptorSets[i], binding, 0, 1, descriptorType, &imageInfo[i]);
+		}
+		device.updateDescriptorSets(writes.size(), writes.data(), 0, nullptr);
+	}
+
+	void prepareMaterialDescriptors(SbVulkanBase& base, DescriptorAllocator& allocator, vk::DescriptorSetLayout layout)
+	{
+		allocateMaterialDescriptors(allocator, layout, materials.name.size(), materials.descriptorSets);
+				
+		writeMaterialDescriptors(base.getDevice(), 0, materials.diffuse.descriptorInfo,
+			vk::DescriptorType::eCombinedImageSampler, materials.descriptorSets);
+		writeMaterialDescriptors(base.getDevice(), 1, materials.specular.descriptorInfo,
+			vk::DescriptorType::eCombinedImageSampler, materials.descriptorSets);
+		writeMaterialDescriptors(base.getDevice(), 2, materials.bump.descriptorInfo,
+			vk::DescriptorType::eCombinedImageSampler, materials.descriptorSets);
 	};
 };

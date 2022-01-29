@@ -39,6 +39,12 @@ SbPipelineBuilder& SbPipelineBuilder::setViewport(int width, int height)
 	return *this;
 }
 
+SbPipelineBuilder& SbPipelineBuilder::setAttachmentColorBlend(vk::PipelineColorBlendAttachmentState blend, unsigned index)
+{
+	_colorBlendAttachment[index] = blend;
+	return *this;
+}
+
 
 SbPipelineBuilder& SbPipelineBuilder::shaderReflection(vk::Device device, const char* vertPath, const char* fragPath,
 	DescriptorSetLayoutCache& DSL_cache, SbSwapchain& swapchain, SbRenderpass& rp, uint32_t subpassID)
@@ -47,6 +53,7 @@ SbPipelineBuilder& SbPipelineBuilder::shaderReflection(vk::Device device, const 
 
 	//const char* vertName = "shaders/gbuf.vert.spv";
 	//const char* fragName = "shaders/gbuf.frag.spv";
+
 
 	std::vector<uint32_t> vert_binary = loadSpirvBinary(vertPath);
 	spirv_cross::CompilerGLSL vert(std::move(vert_binary));
@@ -58,8 +65,8 @@ SbPipelineBuilder& SbPipelineBuilder::shaderReflection(vk::Device device, const 
 	//_vertexInputInfo
 	reflectVertexInput(vert);
 
-	getDescriptorSetResources(vert, VK_SHADER_STAGE_VERTEX_BIT);
-	getDescriptorSetResources(frag, VK_SHADER_STAGE_FRAGMENT_BIT);
+	getDescriptorSetResources(vert, vk::ShaderStageFlagBits::eVertex);
+	getDescriptorSetResources(frag, vk::ShaderStageFlagBits::eFragment);
 
 	reflectFragmentOutputs(frag);
 
@@ -95,10 +102,14 @@ SbPipelineBuilder& SbPipelineBuilder::shaderReflection(vk::Device device, const 
 				
 		DSL[set] = DSL_cache.create_descriptor_layout(&DSL_CI);
 	}
-
-	vk::PipelineLayoutCreateInfo pipelineLayoutCI = vks::initializers::pipelineLayoutCreateInfo(DSL.data(), DSL.size());
-	_pipelineLayout = device.createPipelineLayout(pipelineLayoutCI);
-
+	
+	vk::PipelineLayoutCreateInfo pipeline_layout_info = vks::initializers::pipelineLayoutCreateInfo(DSL.data(), DSL.size());
+	if (push_constant.size != 0)
+	{
+		pipeline_layout_info.pPushConstantRanges = &push_constant;
+		pipeline_layout_info.pushConstantRangeCount = 1;
+	}
+	_pipelineLayout = device.createPipelineLayout(pipeline_layout_info);
 
 	auto shaderStageCI = [](vk::ShaderModule shaderModule, vk::ShaderStageFlagBits stage, vk::Device device)
 		-> vk::PipelineShaderStageCreateInfo
@@ -109,9 +120,6 @@ SbPipelineBuilder& SbPipelineBuilder::shaderReflection(vk::Device device, const 
 		shaderStage.pName = "main";
 		return shaderStage;
 	};
-
-	vk::PipelineLayoutCreateInfo pipeline_layout_info = vks::initializers::pipelineLayoutCreateInfo(DSL.data(), DSL.size());
-	_pipelineLayout = device.createPipelineLayout(pipeline_layout_info);
 
 	vk::ShaderModule vertModule = vks::helper::loadShader(vertPath, device);
 	vk::ShaderModule fragModule = vks::helper::loadShader(fragPath, device);
@@ -148,6 +156,10 @@ SbPipelineBuilder& SbPipelineBuilder::shaderReflection(vk::Device device, const 
 			}
 		}
 	}
+
+	auto& colorAttachments = rp.subpasses[subpassID].colorAttachments;
+	_colorBlendAttachment = std::vector<vk::PipelineColorBlendAttachmentState>(colorAttachments.size(), vks::initializers::pipelineColorBlendAttachmentState());
+
 	return *this;
 }
 
@@ -156,7 +168,7 @@ SbPipelineBuilder& SbPipelineBuilder::shaderReflection(vk::Device device, const 
 vk::Pipeline SbPipelineBuilder::build_pipeline(vk::Device device, vk::RenderPass pass, uint32_t subpass)
 {
 	//make viewport state from our stored viewport and scissor.
-			//at the moment we won't support multiple viewports or scissors
+		//at the moment we won't support multiple viewports or scissors
 	vk::PipelineViewportStateCreateInfo viewportState;
 	viewportState.pNext = nullptr;
 	viewportState.viewportCount = 1;
@@ -192,6 +204,7 @@ vk::Pipeline SbPipelineBuilder::build_pipeline(vk::Device device, vk::RenderPass
 
 	
 
+
 	//it's easy to error out on create graphics pipeline, so we handle it a bit better than the common VK_CHECK case
 	vk::Pipeline pipeline;
 	vk::Result res = device.createGraphicsPipelines(vk::PipelineCache(), 1, &pipelineInfo, nullptr, &pipeline);
@@ -205,11 +218,10 @@ vk::Pipeline SbPipelineBuilder::build_pipeline(vk::Device device, vk::RenderPass
 	}
 }
 
-void SbPipelineBuilder::reflectDescriptorSets(spirv_cross::CompilerGLSL& vert, spirv_cross::CompilerGLSL& frag)
-{
-	getDescriptorSetResources(vert, VK_SHADER_STAGE_VERTEX_BIT);
-	getDescriptorSetResources(frag, VK_SHADER_STAGE_FRAGMENT_BIT);
-}
+//void SbPipelineBuilder::reflectDescriptorSets(spirv_cross::CompilerGLSL& vert, spirv_cross::CompilerGLSL& frag)
+//{
+//	
+//}
 
 void SbPipelineBuilder::reflectVertexInput(spirv_cross::CompilerGLSL& glsl)
 {
@@ -223,7 +235,7 @@ void SbPipelineBuilder::reflectVertexInput(spirv_cross::CompilerGLSL& glsl)
 		const auto& type = glsl.get_type(resource.type_id);
 		if (type.basetype == spirv_cross::SPIRType::BaseType::Float)
 		{
-			vk::VertexInputAttributeDescription newInput = vertexAttributeDescriptions.emplace_back();
+			vk::VertexInputAttributeDescription& newInput = vertexAttributeDescriptions.emplace_back();
 			newInput.binding = 0;
 			newInput.location = glsl.get_decoration(resource.id, spv::DecorationLocation);
 			switch (type.vecsize)
@@ -299,7 +311,7 @@ void SbPipelineBuilder::reflectVertexInput(spirv_cross::CompilerGLSL& glsl)
 
 }
 
-void SbPipelineBuilder::getDescriptorSetResources(spirv_cross::CompilerGLSL& glsl, VkShaderStageFlagBits shaderStage)
+void SbPipelineBuilder::getDescriptorSetResources(spirv_cross::CompilerGLSL& glsl, vk::ShaderStageFlagBits shaderStage)
 {
 	// The SPIR-V is now parsed, and we can perform reflection on it.
 	spirv_cross::ShaderResources resources = glsl.get_shader_resources();
@@ -316,7 +328,7 @@ void SbPipelineBuilder::getDescriptorSetResources(spirv_cross::CompilerGLSL& gls
 		auto& setImageSamplers = sets[set].imageSamplers;
 		auto it = setImageSamplers.find(binding);
 		if (it != setImageSamplers.end())
-			it->second.stageFlags |= shaderStage;
+			it->second.stageFlags |= (uint64_t)shaderStage;
 		else
 			setImageSamplers[binding] = { resource.name, (uint64_t)shaderStage };
 
@@ -336,7 +348,7 @@ void SbPipelineBuilder::getDescriptorSetResources(spirv_cross::CompilerGLSL& gls
 		auto& setSubpassInputs = sets[set].inputAttachments;
 		auto it = setSubpassInputs.find(binding);
 		if (it != setSubpassInputs.end())
-			it->second.stageFlags |= shaderStage;
+			it->second.stageFlags |= (uint64_t)shaderStage;
 		else
 			setSubpassInputs[binding] = { resource.name, (uint64_t)shaderStage, attachment_index };
 
@@ -356,17 +368,29 @@ void SbPipelineBuilder::getDescriptorSetResources(spirv_cross::CompilerGLSL& gls
 		auto& setUniforms = sets[set].uniforms;
 		auto it = setUniforms.find(binding);
 		if (it != setUniforms.end())
-			it->second.stageFlags |= shaderStage;
+			it->second.stageFlags |= (uint64_t)shaderStage;
 		else
 			setUniforms[binding] = { resource.name, (uint64_t)shaderStage, (unsigned)size };
 
 		printf("Uniform buffer %s at set = %u, binding = %u\n", resource.name.c_str(), set, binding);
 	}
 
+	for (auto& resource : resources.push_constant_buffers) {
+		const spirv_cross::SPIRType& type = glsl.get_type(resource.base_type_id);
+		size_t size = glsl.get_declared_struct_size(type);
+				
+		//this push constant range starts at the beginning
+		push_constant.offset = 0;
+		//this push constant range takes up the size of a MeshPushConstants struct
+		push_constant.size = size;
+		//this push constant range is accessible only in the vertex shader
+		push_constant.stageFlags |= shaderStage;
+	}
+
 	//todo why was this checked?
 	for (set& s : sets)
 	{
-		assert(!(s.imageSamplers.empty() && s.inputAttachments.empty() && s.uniforms.empty()));
+		assert(!(s.imageSamplers.empty() && s.inputAttachments.empty() && s.uniforms.empty() && push_constant.size == 0));
 	}
 }
 

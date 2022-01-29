@@ -390,7 +390,8 @@ void HelloTriangleApplication::createDescriptorSets()
 	sceneGlobalDesc->updateDescriptors();
 
 	//set 1	
-	sponza->scene.prepareMaterialDescriptors(*vulkanBase, *descriptorPool, gbufPipeline1.DSL[1]);
+	//sponza->scene.prepareMaterialDescriptors(*vulkanBase, *descriptorPool, gbufPipeline1.DSL[1]);
+	assert(false);
 	
 }
 
@@ -587,7 +588,7 @@ void HelloTriangleApplication::createCommandBuffers() {
 				{
 					continue;
 				}
-				auto& materialDescriptorSet = sceneRef.materials.descriptorSets[mesh.material];
+				VkDescriptorSet materialDescriptorSet = sceneRef.materials.descriptorSets[mesh.material];
 				vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, 
 					pipelineLayout, 1, 1, &materialDescriptorSet, 0, NULL);
 				vkCmdDrawIndexed(commandBuffers[i], mesh.indexCount, 1, 0, mesh.indexBase, 0);

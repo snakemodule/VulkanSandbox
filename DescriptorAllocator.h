@@ -30,7 +30,7 @@ public:
 	};
 
 	void reset_pools();
-	bool allocate(vk::DescriptorSet* set, vk::DescriptorSetLayout layout);
+	bool allocate(vk::DescriptorSetLayout layout, vk::DescriptorSet* set);
 
 	void init(vk::Device newDevice);
 

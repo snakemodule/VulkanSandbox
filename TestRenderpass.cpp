@@ -4,17 +4,35 @@
 
 void TestRenderpass::setUpRenderpass(SbSwapchain& swapchain)
 {
+	std::array<AttachmentFormat, kAttachment_COUNT> attachmentFormatTable;
+	attachmentFormatTable[kAttachment_POSITION] = { VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT };
+	attachmentFormatTable[kAttachment_NORMAL] = { VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT };
+	attachmentFormatTable[kAttachment_ALBEDO] = { VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT };
+	//attachmentFormatTable[kAttachment_DEPTH] = { base.findDepthFormat(), VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT };
+
+	swapchain.prepareAttachmentSets(kAttachment_COUNT);
+	auto createAttachment = [&attachmentFormatTable, &swapchain](int attachmentIndex)
+	{ 
+		swapchain.createAttachment(attachmentIndex, 
+			attachmentFormatTable[attachmentIndex].first, 
+			attachmentFormatTable[attachmentIndex].second); 
+	};
+	createAttachment(kAttachment_POSITION);
+	createAttachment(kAttachment_NORMAL);
+	createAttachment(kAttachment_ALBEDO);
+	//createAttachment(kAttachment_DEPTH);
+	
 	addSwapchainAttachments(swapchain);
 
 	addColorAttachmentRef(kSubpass_GBUF, kAttachment_BACK);
-	//addColorAttachmentRef(kSubpass_GBUF, kAttachment_POSITION);
-	//addColorAttachmentRef(kSubpass_GBUF, kAttachment_NORMAL);
+	addColorAttachmentRef(kSubpass_GBUF, kAttachment_POSITION);
+	addColorAttachmentRef(kSubpass_GBUF, kAttachment_NORMAL);
 	addColorAttachmentRef(kSubpass_GBUF, kAttachment_ALBEDO);
 	//setDepthStencilAttachmentRef(kSubpass_GBUF, kAttachment_DEPTH);
 
 	addColorAttachmentRef(kSubpass_COMPOSE, kAttachment_BACK);
-	//addInputAttachmentRef(kSubpass_COMPOSE, kAttachment_POSITION);
-	//addInputAttachmentRef(kSubpass_COMPOSE, kAttachment_NORMAL);
+	addInputAttachmentRef(kSubpass_COMPOSE, kAttachment_POSITION);
+	addInputAttachmentRef(kSubpass_COMPOSE, kAttachment_NORMAL);
 	addInputAttachmentRef(kSubpass_COMPOSE, kAttachment_ALBEDO);
 	//setDepthStencilAttachmentRef(kSubpass_COMPOSE, kAttachment_DEPTH);
 		

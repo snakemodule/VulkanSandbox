@@ -225,8 +225,8 @@ void SbVulkanBase::submitCommandBuffers(std::vector<vk::CommandBuffer> cmds,
 	logicalDevice->device.resetFences(1, &inFlightFence);
 	//vkResetFences(logicalDevice->device, 1, &inFlightFence);
 
-	logicalDevice->graphicsQueue.submit(1, &submitInfo, inFlightFence);
-	
+	vk::Result result = logicalDevice->graphicsQueue.submit(1, &submitInfo, inFlightFence);
+	assert(result == vk::Result::eSuccess);
 	
 	//auto result = vkQueueSubmit(logicalDevice->graphicsQueue, 1, &submitInfo, inFlightFence);
 	//if (result != VK_SUCCESS) {

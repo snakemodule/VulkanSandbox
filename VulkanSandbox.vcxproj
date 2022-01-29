@@ -195,6 +195,7 @@
     <ClCompile Include="SbPipelineBuilder.cpp" />
     <ClCompile Include="SbShaderLayout.cpp" />
     <ClCompile Include="SbTextureImage.cpp" />
+    <ClCompile Include="SbUniformBufferSingle.cpp" />
     <ClCompile Include="SkeletalAnimationComponent.cpp" />
     <ClCompile Include="SkeletonAnimation.cpp" />
     <ClCompile Include="AnimationKeys.cpp" />
@@ -256,6 +257,7 @@
     <ClInclude Include="SbPipelineBuilder.h" />
     <ClInclude Include="SbShaderLayout.h" />
     <ClInclude Include="SbTextureImage.h" />
+    <ClInclude Include="SbUniformBufferSingle.h" />
     <ClInclude Include="SceneStuff.h" />
     <ClInclude Include="Skeleton.h" />
     <ClInclude Include="spirv-cross\GLSL.std.450.h" />

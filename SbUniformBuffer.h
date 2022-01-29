@@ -1,6 +1,5 @@
 #pragma once
 
-#include "SbBuffer.h"
 #include <vector>
 
 #include "SbVulkanBase.h"
@@ -87,7 +86,6 @@ public:
 		vkMapMemory(vkBase.logicalDevice->device, bufferMemory[instance], 0, bufferSize, 0, &data);
 		memcpy(data, pUBOdata, bufferSize);
 		vkUnmapMemory(vkBase.logicalDevice->device, bufferMemory[instance]);
-		
 	}
 
 	void* alignedAlloc(size_t size, size_t alignment)

@@ -30,6 +30,8 @@ private:
     ResourceManager() {}
 
 public:
+    void init(SbVulkanBase* base);
+
     ResourceManager(ResourceManager const&) = delete;
     void operator=(ResourceManager const&) = delete;
 

@@ -1,5 +1,9 @@
 
-next, try to draw the triangle through the composition pass
+test push constant and switch between buffers
+
+draw a sponza mesh
+perhaps use a push constant for transforms
+don't forget to rip camera from before
 
 
 

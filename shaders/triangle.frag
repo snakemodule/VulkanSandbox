@@ -1,20 +1,21 @@
 #version 450
-#extension GL_KHR_vulkan_glsl : enable
 
-layout (location = 0) in vec3 inVertexColor;
+//layout (location = 0) in vec4 in_world_pos;
+layout (location = 0) in vec3 in_color;
+//layout (location = 3) in vec2 in_tex_coord;
+//layout (location = 2) in vec3 in_normal;
 
 
-//layout (location = 1) in vec3 inNormal;
+//layout(set = 1, binding = 0) uniform sampler2D _diffuse;
+//layout(set = 1, binding = 1) uniform sampler2D _specular;
+//layout(set = 1, binding = 2) uniform sampler2D _bump;
 
-//layout (location = 3) in vec2 fragTexCoord;
-//layout (location = 4) in vec3 vertexColor;
 
-layout (location = 0) out vec4 outColor;
-layout (location = 1) out vec4 outAlbedo;
+layout (location = 0) out vec4 outColor; //rgba
 
-//layout (location = 1) out vec4 outPosition;
-//layout (location = 2) out vec4 outNormal;
-//layout (location = 3) out vec4 outAlbedo;
+layout (location = 1) out vec4 outPosition; //xyz depth
+layout (location = 2) out vec3 outNormal; //xyz
+layout (location = 3) out vec3 outAlbedo; //rgb
 
 
 
@@ -24,11 +25,14 @@ void main()
 	// Store linearized depth in alpha component
 	//outPosition.a = gl_FragCoord.z;
 
-	outAlbedo.rgb = vec3(inVertexColor);
+	
 
-	//outNormal = vec4(1.0);
+	outPosition = vec4(0,1,0,1);//in_world_pos;
+	outNormal = vec3(1,0,0);//in_normal;
+	outAlbedo = in_color;
+	
 
 
 	// Write color attachments to avoid undefined behaviour (validation error)
-	outColor = vec4(inVertexColor, 1.0f);//vec4(1.f,0.f,0.f,1.0f);
+	outColor = vec4(0,0,0, 1.0f); //vec4(1.f,0.f,0.f,1.0f);
 }

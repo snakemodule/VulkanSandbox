@@ -15,7 +15,7 @@ void DescriptorAllocator::reset_pools() {
 }
 
 
-bool DescriptorAllocator::allocate(vk::DescriptorSet* set, vk::DescriptorSetLayout layout)
+bool DescriptorAllocator::allocate(vk::DescriptorSetLayout layout, vk::DescriptorSet* set)
 {
 	//initialize the currentPool handle if it's null
 	if (currentPool == vk::DescriptorPool()) {

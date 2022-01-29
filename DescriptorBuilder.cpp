@@ -102,7 +102,7 @@ bool DescriptorBuilder::build(uint32_t set, vk::DescriptorSet& resultDesc, uint3
 	}
 
 	//allocate descriptor
-	bool success = alloc->allocate(&resultDesc, DSL);
+	bool success = alloc->allocate(DSL, &resultDesc);
 	if (!success) { return false; };
 
 	//write descriptor

@@ -201,6 +201,9 @@
     <ClCompile Include="DescriptorAllocator.cpp">
       <Filter>Source Files\vkg</Filter>
     </ClCompile>
+    <ClCompile Include="SbUniformBufferSingle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vulkansetup.h">
@@ -417,6 +420,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DescriptorAllocator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SbUniformBufferSingle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

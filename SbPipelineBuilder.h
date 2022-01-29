@@ -24,8 +24,9 @@ public:
 	vk::Viewport _viewport;
 	vk::Rect2D _scissor;
 	vk::PipelineRasterizationStateCreateInfo _rasterizer = vks::initializers::pipelineRasterizationStateCreateInfo(vk::PolygonMode::eFill);
-	std::vector<vk::PipelineColorBlendAttachmentState> _colorBlendAttachment = { vks::initializers::pipelineColorBlendAttachmentState() };
+	std::vector<vk::PipelineColorBlendAttachmentState> _colorBlendAttachment;
 	vk::PipelineMultisampleStateCreateInfo _multisampling = vks::initializers::pipelineMultisampleStateCreateInfo();
+	vk::PushConstantRange push_constant;
 	vk::PipelineLayout _pipelineLayout; //reflect
 	
 	uint32_t subpassID;
@@ -38,6 +39,7 @@ public:
 	SbPipelineBuilder& setRasterizationState(vk::PolygonMode polygonMode);
 	SbPipelineBuilder& setInputAssembly(vk::PrimitiveTopology topology);
 	SbPipelineBuilder& setViewport(int width, int height);
+	SbPipelineBuilder& setAttachmentColorBlend(vk::PipelineColorBlendAttachmentState blend, unsigned index);
 
 	SbPipelineBuilder& shaderReflection(vk::Device device, const char* vertPath, const char* fragPath,
 		DescriptorSetLayoutCache& DSL_cache, SbSwapchain& swapchain, SbRenderpass& rp, uint32_t subpassID);
@@ -49,7 +51,7 @@ private:
 	vk::VertexInputBindingDescription vertexBindingDescription;
 
 
-	void reflectDescriptorSets(spirv_cross::CompilerGLSL& vert, spirv_cross::CompilerGLSL& frag);
+	//void reflectDescriptorSets(spirv_cross::CompilerGLSL& vert, spirv_cross::CompilerGLSL& frag);
 	void reflectVertexInput(spirv_cross::CompilerGLSL& glsl);
 
 	struct SubpassInput
@@ -81,7 +83,7 @@ private:
 
 	
 
-	void getDescriptorSetResources(spirv_cross::CompilerGLSL& glsl, VkShaderStageFlagBits shaderStage);
+	void getDescriptorSetResources(spirv_cross::CompilerGLSL& glsl, vk::ShaderStageFlagBits shaderStage);
 
 	void reflectFragmentOutputs(spirv_cross::CompilerGLSL& frag);
 
