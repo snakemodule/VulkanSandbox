@@ -14,8 +14,8 @@ public:
 
 	static void load(SbVulkanBase * base) {
 
-		Assimp::Importer modelImporter;
-		const aiScene* modelScene;
+		//Assimp::Importer modelImporter;
+		//const aiScene* modelScene;
 
 		//modelScene = modelImporter.ReadFile("models/Willems/sponza.dae",//correct?
 		//	aiProcess_CalcTangentSpace |

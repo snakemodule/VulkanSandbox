@@ -156,7 +156,7 @@ public:
 		glm::vec4 ambientColor;
 	};
 
-	ShadingUBO* shadingUboData;
+	//ShadingUBO* shadingUboData = nullptr;
 
 
 	HelloTriangleApplication();
@@ -166,7 +166,7 @@ public:
 	~HelloTriangleApplication();
 
 private:
-	GLFWwindow* window;
+	GLFWwindow* window = nullptr;
 
 	std::unique_ptr<SbVulkanBase> vulkanBase;
 	std::unique_ptr<SbSwapchain> swapchain;

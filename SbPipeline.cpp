@@ -74,17 +74,6 @@ SbPipeline & SbPipeline::colorBlending(uint32_t attachmentIndex)
 	return *this;
 }
 
-SbPipeline & SbPipeline::addShaderStage(const VkPipelineShaderStageCreateInfo & shaderStageCI)
-{
-	//reflect
-	//uniform buffers
-	//sampled images (texture samplers)
-	//subpass inputs (image attachment)s
-
-	shaderStages.push_back(shaderStageCI);
-	return *this;
-}
-
 SbPipeline & SbPipeline::addBlendAttachmentState(VkPipelineColorBlendAttachmentState blend, uint32_t index)
 {
 	if (index > blendAttachmentStates.size()-1 )
@@ -110,22 +99,11 @@ SbPipeline & SbPipeline::addBlendAttachmentStates(VkPipelineColorBlendAttachment
 
 void SbPipeline::createPipeline(const VkRenderPass & renderPass, const VkDevice & device)
 {
-	pipelineCI.renderPass = renderPass;
-	pipelineCI.pInputAssemblyState = &inputAssemblyStateCI;
-	pipelineCI.pRasterizationState = &rasterizationStateCI;
-	pipelineCI.pColorBlendState = &vks::initializers::pipelineColorBlendStateCreateInfo(
-		static_cast<uint32_t>(blendAttachmentStates.size()), blendAttachmentStates.data());
-	pipelineCI.pDepthStencilState = &depthStencilStateCI;
-	pipelineCI.pViewportState = &viewportStateCI;
-	pipelineCI.pMultisampleState = &multisampleStateCI;
-	pipelineCI.pDynamicState = &vks::initializers::pipelineDynamicStateCreateInfo(dynamicStateEnables); //&dynamicStateCI;
-	pipelineCI.stageCount = static_cast<uint32_t>(shaderStages.size());
-	pipelineCI.pStages = shaderStages.data();
 
-
-	auto & bind = vertexBindingDescriptions;
-	auto & attr = vertexAttributeDescriptions;
+	auto& bind = vertexBindingDescriptions;
+	auto& attr = vertexAttributeDescriptions;
 	VkPipelineVertexInputStateCreateInfo vertexInputStateCI = vks::initializers::pipelineVertexInputStateCreateInfo();
+	pipelineCI.pVertexInputState = &vertexInputStateCI;
 	if (bind.size())
 	{
 		vertexInputStateCI.vertexBindingDescriptionCount = static_cast<uint32_t>(bind.size());
@@ -136,7 +114,25 @@ void SbPipeline::createPipeline(const VkRenderPass & renderPass, const VkDevice 
 		vertexInputStateCI.vertexAttributeDescriptionCount = static_cast<uint32_t>(attr.size());
 		vertexInputStateCI.pVertexAttributeDescriptions = attr.data();
 	}
-	pipelineCI.pVertexInputState = &vertexInputStateCI;
+
+	VkPipelineDynamicStateCreateInfo dynamicStateCI = vks::initializers::pipelineDynamicStateCreateInfo(dynamicStateEnables);
+
+	VkPipelineColorBlendStateCreateInfo blendstateCI = vks::initializers::pipelineColorBlendStateCreateInfo(
+		static_cast<uint32_t>(blendAttachmentStates.size()), blendAttachmentStates.data());
+
+	pipelineCI.renderPass = renderPass;
+	pipelineCI.pInputAssemblyState = &inputAssemblyStateCI;
+	pipelineCI.pRasterizationState = &rasterizationStateCI;
+	pipelineCI.pColorBlendState = &blendstateCI;
+	pipelineCI.pDepthStencilState = &depthStencilStateCI;
+	pipelineCI.pViewportState = &viewportStateCI;
+	pipelineCI.pMultisampleState = &multisampleStateCI;
+	pipelineCI.pDynamicState = &dynamicStateCI;
+	pipelineCI.stageCount = static_cast<uint32_t>(shaderStages.size());
+	pipelineCI.pStages = shaderStages.data();
+
+
+	
 
 
 

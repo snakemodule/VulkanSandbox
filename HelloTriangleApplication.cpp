@@ -55,11 +55,7 @@ void HelloTriangleApplication::run() {
 	cleanup();
 }
 
-HelloTriangleApplication::~HelloTriangleApplication() {
-	if (shadingUboData)
-	{
-		alignedFree(shadingUboData);
-	}
+HelloTriangleApplication::~HelloTriangleApplication() {	
 	delete(mymodel);
 }
 
@@ -91,7 +87,9 @@ void HelloTriangleApplication::initVulkan() {
 	vulkanBase->commandPool = std::make_unique<SbCommandPool>(*vulkanBase);
 
 	ResourceManager::getInstance().vkBase = vulkanBase.get(); //todo ugly bad
-	Sponza::load(vulkanBase.get());
+	
+															  
+	//Sponza::load(vulkanBase.get());
 
 
 
@@ -386,6 +384,7 @@ void HelloTriangleApplication::createVertexBuffer() {
 void HelloTriangleApplication::createUniformBuffers() {
 	transformUniformBuffer = std::make_unique<SbUniformBuffer<UniformBufferObject>>(*vulkanBase,
 		swapchain->getSize());
+	
 
 	skeletonUniformBuffer = std::make_unique<SbUniformBuffer<glm::mat4>>(
 		*vulkanBase, swapchain->getSize(), 52 * 5); //room for 5 skeletons in buffer

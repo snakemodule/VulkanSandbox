@@ -22,7 +22,7 @@ private:
 	std::vector<VkDynamicState> dynamicStateEnables;// = { VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR };
 	//VkPipelineDynamicStateCreateInfo dynamicStateCI = vks::initializers::pipelineDynamicStateCreateInfo(dynamicStateEnables);
 	VkGraphicsPipelineCreateInfo pipelineCI;// = vks::initializers::pipelineCreateInfo();
-	std::vector<VkPipelineShaderStageCreateInfo> shaderStages;
+	std::array<VkPipelineShaderStageCreateInfo,2> shaderStages;
 	std::vector<VkVertexInputAttributeDescription> vertexAttributeDescriptions;
 	std::vector<VkVertexInputBindingDescription> vertexBindingDescriptions;
 	std::vector<VkPipelineColorBlendAttachmentState> blendAttachmentStates;
@@ -37,7 +37,7 @@ public:
 	//obligatory
 	SbPipeline& layout(const VkPipelineLayout & pipelineLayout);
 	SbPipeline& subpassIndex(const uint32_t & subpass);
-	SbPipeline& addShaderStage(const VkPipelineShaderStageCreateInfo & shaderStage);
+	//SbPipeline& addShaderStage(const VkPipelineShaderStageCreateInfo & shaderStage);
 	SbPipeline& addBlendAttachmentState(VkPipelineColorBlendAttachmentState blend, uint32_t index);
 	SbPipeline& addBlendAttachmentStates(VkPipelineColorBlendAttachmentState blend, uint32_t startIndex, uint32_t endIndex);
 

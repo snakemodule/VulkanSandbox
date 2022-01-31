@@ -107,7 +107,7 @@ VKAPI_ATTR VkBool32 VKAPI_CALL SbVulkanBase::debugCallback(VkDebugUtilsMessageSe
 }
 
 void SbVulkanBase::setupDebugMessenger(bool validation) {
-	if (!validation) return; //todo wtf is this
+	if (!validation) return; 
 
 	VkDebugUtilsMessengerCreateInfoEXT createInfo;
 	populateDebugMessengerCreateInfo(createInfo);

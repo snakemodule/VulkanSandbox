@@ -1,7 +1,7 @@
 #pragma once
 
 #include <array>
-#include "boost/multi_array.hpp"
+
 #include <memory>
 
 /*

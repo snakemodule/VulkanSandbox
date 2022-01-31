@@ -151,7 +151,7 @@ void SbShaderLayout::parse(std::vector<uint32_t>& spirv_binary, VkShaderStageFla
 }
 
 VkPipelineLayout SbShaderLayout::reflect(vk::Device device, std::string vert, std::string frag,
-	std::vector<VkPipelineShaderStageCreateInfo>& out)
+	std::array<VkPipelineShaderStageCreateInfo, 2>& out)
 {
 	std::vector<uint32_t> vert_binary = loadSpirvBinary(vert);
 	std::vector<uint32_t> frag_binary = loadSpirvBinary(frag);
@@ -159,8 +159,8 @@ VkPipelineLayout SbShaderLayout::reflect(vk::Device device, std::string vert, st
 	auto fragModule = vks::helper::loadShader(frag.c_str(), device);//makeShaderModule(frag_binary, device);
 	auto vertCI = shaderStageCI(vertModule, VK_SHADER_STAGE_VERTEX_BIT, device);
 	auto fragCI = shaderStageCI(fragModule, VK_SHADER_STAGE_FRAGMENT_BIT, device);
-	out.push_back(vertCI);
-	out.push_back(fragCI);
+	out[0]=vertCI;
+	out[1]=fragCI;
 	parse(vert_binary, VK_SHADER_STAGE_VERTEX_BIT);
 	parse(frag_binary, VK_SHADER_STAGE_FRAGMENT_BIT);
 

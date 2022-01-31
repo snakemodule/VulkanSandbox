@@ -50,7 +50,7 @@ public:
 
 	void parse(std::vector<uint32_t>& spirv_binary, VkShaderStageFlagBits shaderStage);
 	VkPipelineLayout reflect(vk::Device device, std::string vert, std::string frag, 
-		std::vector<VkPipelineShaderStageCreateInfo>& out);
+		std::array<VkPipelineShaderStageCreateInfo,2>& out);
 
 
 
