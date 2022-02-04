@@ -227,11 +227,13 @@ void transitionImageLayout(VkCommandBuffer cmd, VkImage image, VkFormat format, 
 
 SbTextureImage::SbTextureImage(SbVulkanBase& base, std::string path)
 {
-	gli::texture2d tex2D = gli::texture2d(gli::load(path.c_str()));
-	
-	if (tex2D.empty()) {
+	gli::texture loaded = gli::load(path.c_str());
+	if (loaded.empty()) 
 		throw std::runtime_error("failed to load texture image!");
-	}
+
+	gli::texture2d tex2D = gli::texture2d(loaded);
+	if (tex2D.empty())
+		throw std::runtime_error("failed to load texture image!");
 
 	texWidth = static_cast<uint32_t>(tex2D.extent().x);
 	texHeight = static_cast<uint32_t>(tex2D.extent().y);

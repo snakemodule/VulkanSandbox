@@ -2,95 +2,46 @@
 
 #include "vulkan/vulkan.hpp"
 
+#include "Vertex.h"
+#include "SbBuffer.h"
+#include "SbTextureImage.h"
+
 #include <assimp/Importer.hpp> // C++ importer interface
 #include <assimp/scene.h> // Output data structure
 #include <assimp/postprocess.h> // Post processing flags
-
-#include "iostream"
-
-#include "ResourceManager.h"
-
-#include "Vertex.h"
-#include "SbBuffer.h"
-#include "SbVulkanBase.h"
-
+#include <iostream>
 #include "VulkanInitializers.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "SbVulkanBase.h"
+#include "ResourceManager.h"
+
+#include "SbDescriptorSet.h"
+
+class SbDescriptorSet;
 
 
-//std::string errorString(VkResult errorCode)
-//{
-//	switch (errorCode)
-//	{
-//#define STR(r) case VK_ ##r: return #r
-//		STR(NOT_READY);
-//		STR(TIMEOUT);
-//		STR(EVENT_SET);
-//		STR(EVENT_RESET);
-//		STR(INCOMPLETE);
-//		STR(ERROR_OUT_OF_HOST_MEMORY);
-//		STR(ERROR_OUT_OF_DEVICE_MEMORY);
-//		STR(ERROR_INITIALIZATION_FAILED);
-//		STR(ERROR_DEVICE_LOST);
-//		STR(ERROR_MEMORY_MAP_FAILED);
-//		STR(ERROR_LAYER_NOT_PRESENT);
-//		STR(ERROR_EXTENSION_NOT_PRESENT);
-//		STR(ERROR_FEATURE_NOT_PRESENT);
-//		STR(ERROR_INCOMPATIBLE_DRIVER);
-//		STR(ERROR_TOO_MANY_OBJECTS);
-//		STR(ERROR_FORMAT_NOT_SUPPORTED);
-//		STR(ERROR_SURFACE_LOST_KHR);
-//		STR(ERROR_NATIVE_WINDOW_IN_USE_KHR);
-//		STR(SUBOPTIMAL_KHR);
-//		STR(ERROR_OUT_OF_DATE_KHR);
-//		STR(ERROR_INCOMPATIBLE_DISPLAY_KHR);
-//		STR(ERROR_VALIDATION_FAILED_EXT);
-//		STR(ERROR_INVALID_SHADER_NV);
-//#undef STR
-//	default:
-//		return "UNKNOWN_ERROR";
-//	}
-//}
-
-// Macro to check and display Vulkan return results
-//#define VK_CHECK_RESULT(f)																				\
-//{																										\
-//	VkResult res = (f);																					\
-//	if (res != VK_SUCCESS)																				\
-//	{																									\
-//		std::cout << "Fatal : VkResult is \"" << errorString(res) << "\" in " << __FILE__ << " at line " << __LINE__ << std::endl; \
-//		assert(res == VK_SUCCESS);																		\
-//	}																									\
-//}	
-
-//a material ready to be used in a scene
 struct SceneMaterial
 {
 	std::string name;
-	//vkTools::VulkanTexture diffuse;
-	//vkTools::VulkanTexture specular;
-	//vkTools::VulkanTexture bump;
 	std::shared_ptr<SbTextureImage> diffuse = nullptr;
 	std::shared_ptr<SbTextureImage> specular = nullptr;
 	std::shared_ptr<SbTextureImage> bump = nullptr;
 	bool hasAlpha = false;
 	bool hasBump = false;
 	bool hasSpecular = false;
-	VkPipeline pipeline;
 
-	//moved from scenemesh
-	VkDescriptorSet descriptorSet;
+
+	SbDescriptorSet* descriptor;
 };
 
-//a mesh ready to be used in a scene, drawablemesh
+
 struct SceneMesh
 {
-	SbBuffer indexBuffer;
-
-	SbBuffer vertexBuffer;
+	//SbBuffer indexBuffer;
+	//SbBuffer vertexBuffer;
 	
 	uint32_t indexCount;
 	uint32_t indexBase;
@@ -114,16 +65,14 @@ public:
 
 	void loadMaterials(const aiScene* aScene)
 	{
-		std::string assetPath = "models/Willems"; //TODO 
+		std::string assetPath = "models/Willems/"; //TODO 
 
 		auto& resources = ResourceManager::getInstance();
-
+		resources.loadTexture2D("dummy.diffuse", assetPath + "sponza/dummy.dds");
+		
 		materials.resize(aScene->mNumMaterials);
-
 		for (uint32_t i = 0; i < materials.size(); i++)
 		{
-			materials[i] = {};
-
 			aiString name;
 			aScene->mMaterials[i]->Get(AI_MATKEY_NAME, name);
 			aiColor3D ambient;
@@ -133,7 +82,7 @@ public:
 			// Textures
 			aiString texturefile;
 			std::string diffuseMapFile;
-			
+
 			// Diffuse
 			aScene->mMaterials[i]->GetTexture(aiTextureType_DIFFUSE, 0, &texturefile);
 			if (aScene->mMaterials[i]->GetTextureCount(aiTextureType_DIFFUSE) > 0)
@@ -146,7 +95,7 @@ public:
 				{
 					materials[i].diffuse = resources.loadTexture2D(fileName, assetPath + fileName);
 				}
-				else 
+				else
 				{
 					materials[i].diffuse = resources.textures[fileName];
 				}
@@ -154,9 +103,7 @@ public:
 			else
 			{
 				//std::cout << "  Material has no diffuse, using dummy texture!" << std::endl;
-				//std::cout << "  material should have diffuse" << std::endl;
-				//materials[i].diffuse = resources.textures->get("dummy.diffuse");
-				//assert(false);
+				materials[i].diffuse = resources.textures["dummy.diffuse"];
 			}
 
 			// Specular
@@ -166,18 +113,19 @@ public:
 				std::cout << "  Specular: \"" << texturefile.C_Str() << "\"" << std::endl;
 				std::string fileName = std::string(texturefile.C_Str());
 				std::replace(fileName.begin(), fileName.end(), '\\', '/');
-				if (!resources.textureExists(fileName)) 
+				if (!resources.textureExists(fileName))
 				{
 					materials[i].specular = resources.loadTexture2D(fileName, assetPath + fileName);
 				}
-				else 
+				else
 				{
 					materials[i].specular = resources.textures[fileName];
 				}
+				materials[i].hasSpecular = true;
 			}
 			else
 			{
-				std::cout << "  Material has no specular, using dummy texture!" << std::endl;
+				std::cout << "  Material has no specular" << std::endl;
 				//materials[i].specular = resources.textures->get("dummy.specular");
 			}
 
@@ -197,10 +145,11 @@ public:
 				{
 					materials[i].bump = resources.textures[fileName];
 				}
+				materials[i].hasBump = true;
 			}
 			else
 			{
-				std::cout << "  Material has no bump, using dummy texture!" << std::endl;
+				std::cout << "  Material has no bump" << std::endl;
 				//materials[i].specular = resources.textures->get("dummy.specular");
 			}
 
@@ -210,13 +159,11 @@ public:
 				std::cout << "  Material has opacity, enabling alpha test" << std::endl;
 				materials[i].hasAlpha = true;
 			}
-
-			//materials[i].pipeline = resources.pipelines->get("scene.solid");
 		}
 	}
 
 	void loadMeshes(const aiScene* aScene, SbVulkanBase* base)
-	{		
+	{
 		std::vector<Vertex> gVertices;
 		std::vector<uint32_t> gIndices;
 		unsigned int gIndexBase = 0;
@@ -245,20 +192,21 @@ public:
 			uint32_t vertexBase = gVertices.size();
 
 			for (uint32_t i = 0; i < aMesh->mNumVertices; i++)
-			{		
+			{
 				vertices[i].pos = glm::make_vec3(&aMesh->mVertices[i].x);// *0.5f;
-				vertices[i].pos.y = -vertices[i].pos.y;
-				vertices[i].texCoord = (hasUV) ? 
-					glm::make_vec2(&aMesh->mTextureCoords[0][i].x) : 
+				vertices[i].pos.y = vertices[i].pos.y;
+				vertices[i].texCoord = (hasUV) ?
+					glm::make_vec2(&aMesh->mTextureCoords[0][i].x) :
 					glm::vec3(0.0f);
+				vertices[i].texCoord.y = 1 - vertices[i].texCoord.y;
 				vertices[i].normal = glm::make_vec3(&aMesh->mNormals[i].x);
-				vertices[i].normal.y = -vertices[i].normal.y;
+				vertices[i].normal.y = vertices[i].normal.y;
 				vertices[i].color = glm::vec3(1.0f); // todo : take from material
-				vertices[i].tangent = (hasTangent) ? 
-					glm::make_vec3(&aMesh->mTangents[i].x) : 
+				vertices[i].tangent = (hasTangent) ?
+					glm::make_vec3(&aMesh->mTangents[i].x) :
 					glm::vec3(0.0f, 1.0f, 0.0f);
-				vertices[i].bitangent = (hasTangent) ? 
-					glm::make_vec3(&aMesh->mBitangents[i].x) : 
+				vertices[i].bitangent = (hasTangent) ?
+					glm::make_vec3(&aMesh->mBitangents[i].x) :
 					glm::vec3(0.0f, 1.0f, 0.0f);
 				gVertices.push_back(vertices[i]);
 			}
@@ -291,38 +239,38 @@ public:
 
 			VkResult err;
 			void* data;
-						
-			SbBuffer vBuffer = SbBuffer(*base, vertexDataSize, 
-				vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible);
+
+			SbBuffer vBuffer = SbBuffer(*base, vertexDataSize,
+			vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible);
 			vBuffer.MapAndFill(base->getDevice(), vertices.data(), vertexDataSize);
-			
+
 			meshes[i].vertexBuffer = SbBuffer(*base, vertexDataSize, vk::BufferUsageFlagBits::eVertexBuffer
-				| vk::BufferUsageFlagBits::eTransferDst, vk::MemoryPropertyFlagBits::eDeviceLocal);
+			| vk::BufferUsageFlagBits::eTransferDst, vk::MemoryPropertyFlagBits::eDeviceLocal);
 
 
-			SbBuffer iBuffer = SbBuffer(*base, indexDataSize, 
-				vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible);
+			SbBuffer iBuffer = SbBuffer(*base, indexDataSize,
+			vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible);
 			iBuffer.MapAndFill(base->getDevice(), vertices.data(), indexDataSize);
 
 
 
 			//vk::BufferUsageFlagBits::eVertexBuffer
-				//| vk::BufferUsageFlagBits::eTransferDst
+			//| vk::BufferUsageFlagBits::eTransferDst
 
 
 			// Generate vertex buffer
 			VkBufferCreateInfo vBufferInfo;
 
-			
+
 
 			// Staging buffer
 			vBufferInfo = vks::initializers::bufferCreateInfo(VK_BUFFER_USAGE_TRANSFER_SRC_BIT, vertexDataSize);
 			VK_CHECK_RESULT(vkCreateBuffer(device, &vBufferInfo, nullptr, &staging.vBuffer.buffer));
 			vkGetBufferMemoryRequirements(device, staging.vBuffer.buffer, &memReqs);
 			memAlloc.allocationSize = memReqs.size;
-			memAlloc.memoryTypeIndex = 
-				base->findMemoryType(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
-				//getMemTypeIndex(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
+			memAlloc.memoryTypeIndex =
+			base->findMemoryType(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
+			//getMemTypeIndex(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
 			VK_CHECK_RESULT(vkAllocateMemory(device, &memAlloc, nullptr, &staging.vBuffer.memory));
 			VK_CHECK_RESULT(vkMapMemory(device, staging.vBuffer.memory, 0, VK_WHOLE_SIZE, 0, &data));
 			memcpy(data, vertices.data(), vertexDataSize);
@@ -372,19 +320,19 @@ public:
 
 			copyRegion.size = vertexDataSize;
 			vkCmdCopyBuffer(
-				copyCmd,
-				staging.vBuffer.buffer,
-				meshes[i].vertexBuffer,
-				1,
-				&copyRegion);
+			copyCmd,
+			staging.vBuffer.buffer,
+			meshes[i].vertexBuffer,
+			1,
+			&copyRegion);
 
 			copyRegion.size = indexDataSize;
 			vkCmdCopyBuffer(
-				copyCmd,
-				staging.iBuffer.buffer,
-				meshes[i].indexBuffer,
-				1,
-				&copyRegion);
+			copyCmd,
+			staging.iBuffer.buffer,
+			meshes[i].indexBuffer,
+			1,
+			&copyRegion);
 
 			VK_CHECK_RESULT(vkEndCommandBuffer(copyCmd));
 
@@ -394,7 +342,7 @@ public:
 			submitInfo.pCommandBuffers = &copyCmd;
 
 			base->commandPool->endSingleTimeCommands(copyCmd);
-			
+
 			vkDestroyBuffer(device, staging.vBuffer.buffer, nullptr);
 			vkFreeMemory(device, staging.vBuffer.memory, nullptr);
 			vkDestroyBuffer(device, staging.iBuffer.buffer, nullptr);
@@ -408,35 +356,39 @@ public:
 		size_t vertexDataSize = gVertices.size() * sizeof(Vertex);
 		size_t indexDataSize = gIndices.size() * sizeof(uint32_t);
 
-		VkMemoryAllocateInfo memAlloc = vks::initializers::memoryAllocateInfo();
-		VkMemoryRequirements memReqs;
+		
 
-		VkResult err;
-		void* data;
+		
 
 		// Generate vertex buffer
 		// Staging buffer
-		SbBuffer vBuffer = SbBuffer(*base, vertexDataSize, 
-			vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible);		
+		SbBuffer vertexStagingBuffer = SbBuffer(*base, vertexDataSize,
+			vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible);
 		// Target
-		vertexBuffer = SbBuffer(*base, vertexDataSize, vk::BufferUsageFlagBits::eVertexBuffer 
+		vertexBuffer = SbBuffer(*base, vertexDataSize, vk::BufferUsageFlagBits::eVertexBuffer
 			| vk::BufferUsageFlagBits::eTransferDst, vk::MemoryPropertyFlagBits::eDeviceLocal);
-				
+
 		// Generate index buffer
 		// Staging buffer
-		SbBuffer iBuffer = SbBuffer(*base, indexDataSize, vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible);
+		SbBuffer indexStagingBuffer = SbBuffer(*base, indexDataSize, vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible);
 		// Target
 		indexBuffer = SbBuffer(*base, indexDataSize, vk::BufferUsageFlagBits::eIndexBuffer
 			| vk::BufferUsageFlagBits::eTransferDst, vk::MemoryPropertyFlagBits::eDeviceLocal);
+
 		
+		vertexStagingBuffer.MapAndFill(device, gVertices.data(), vertexDataSize);
+		indexStagingBuffer.MapAndFill(device, gIndices.data(), indexDataSize);
+
 		//copy into staging?
 		VkCommandBuffer copyCmd = base->commandPool->beginSingleTimeCommands();
-		vBuffer.CopyBuffer(copyCmd, vertexBuffer);
-		iBuffer.CopyBuffer(copyCmd, indexBuffer);
+		vertexStagingBuffer.CopyBuffer(copyCmd, vertexBuffer);
+		indexStagingBuffer.CopyBuffer(copyCmd, indexBuffer);
 		base->commandPool->endSingleTimeCommands(copyCmd);
 
-		vBuffer.Destroy(device);// todo: this is ugly, kinda looks like destroying the device
-		iBuffer.Destroy(device);
+
+
+		vertexStagingBuffer.Destroy(device);// todo: this is ugly, kinda looks like destroying the device
+		indexStagingBuffer.Destroy(device);
 
 		// Generate descriptor sets for all meshes
 		// todo : think about a nicer solution, better suited per material?
@@ -444,20 +396,21 @@ public:
 
 	}
 
-	void load(std::string sceneFilePath, SbVulkanBase* base) 
+	void load(std::string sceneFilePath, SbVulkanBase* base)
 	{
 
 		Assimp::Importer modelImporter;
 		const aiScene* modelScene;
 
-		int flags = aiProcess_FlipWindingOrder | aiProcess_Triangulate 
-			| aiProcess_PreTransformVertices | aiProcess_CalcTangentSpace 
+		int flags = /*aiProcess_FlipWindingOrder |*/ aiProcess_Triangulate
+			| aiProcess_PreTransformVertices | aiProcess_CalcTangentSpace
 			| aiProcess_GenSmoothNormals;
 
-		modelScene = modelImporter.ReadFile(sceneFilePath.c_str(),flags);
+		modelScene = modelImporter.ReadFile(sceneFilePath.c_str(), flags);
 
 		loadMaterials(modelScene);
 
 		loadMeshes(modelScene, base);
 	}
+
 };

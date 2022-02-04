@@ -41,17 +41,18 @@ public:
 	std::vector<VkDescriptorSet> allocatedDSs;
 
 	SbSwapchain& swapchain;
-	SbShaderLayout::SbSetLayout& shaderLayout;
+
+	std::vector<VkDescriptorSetLayoutBinding> bindingInfo;
+	VkDescriptorSetLayout setLayout;
+
 	const VkDevice device;
 		
-	SbDescriptorSet(const VkDevice& device, SbSwapchain& swapchain,
-		SbRenderpass::Subpass& subpass, int set);
+	SbDescriptorSet(const VkDevice& device, SbSwapchain& swapchain, SbShaderLayout& shaderLayout, uint32_t set);
 
 	void updateDescriptors();
 
 	SbDescriptorSet& addImageBinding(uint32_t binding, VkSampler sampler, VkImageView* imageView);
 	SbDescriptorSet& addInputAttachmentBinding(uint32_t binding, uint32_t attachmentID);
-	
 
 	void allocate(const SbDescriptorPool& descriptorPool);
 

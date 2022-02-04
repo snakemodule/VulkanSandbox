@@ -5,8 +5,8 @@
 class SbCamera
 {
 
-	glm::vec3 position = glm::vec3(2.0f, 2.0f, 2.0f);
-	glm::vec3 facing = glm::normalize(glm::vec3(0.0f, 2.0f, 0.0f)-position);
+	glm::vec3 position = glm::vec3(0.0f, 1.0f, 0.0f);
+	glm::vec3 facing = glm::normalize(glm::vec3(1.0f, 0.0f, 0.0f))+position;
 	glm::vec3 globalUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
 

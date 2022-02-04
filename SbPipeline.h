@@ -3,18 +3,18 @@
 #include "vulkan/vulkan.h"
 #include <vector>
 #include "VulkanInitializers.hpp"
+#include "SbShaderLayout.h"
+
 
 //encapsulates pipeline creation using named parameter idiom.
-
-#include "SbShaderLayout.h"
 
 class SbPipeline
 {
 private:
 	//restore these, easier to read than in constructor
-	VkPipelineInputAssemblyStateCreateInfo inputAssemblyStateCI;// = vks::initializers::pipelineInputAssemblyStateCreateInfo(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, 0, VK_FALSE);
-	VkPipelineRasterizationStateCreateInfo rasterizationStateCI;// = vks::initializers::pipelineRasterizationStateCreateInfo(VK_POLYGON_MODE_FILL, VK_CULL_MODE_BACK_BIT, VK_FRONT_FACE_CLOCKWISE, 0);
-	//VkPipelineColorBlendAttachmentState defaultBlendAttachmentState;// = vks::initializers::pipelineColorBlendAttachmentState(0xf, VK_FALSE);
+	VkPipelineInputAssemblyStateCreateInfo inputAssemblyStateCI;
+	VkPipelineRasterizationStateCreateInfo rasterizationStateCI;
+	//VkPipelineColorBlendAttachmentState defaultBlendAttachmentState;
 	//VkPipelineColorBlendStateCreateInfo colorBlendStateCI = vks::initializers::pipelineColorBlendStateCreateInfo(1, &blendAttachmentState);
 	VkPipelineDepthStencilStateCreateInfo depthStencilStateCI;// = vks::initializers::pipelineDepthStencilStateCreateInfo(VK_TRUE, VK_TRUE, VK_COMPARE_OP_LESS);
 	VkPipelineViewportStateCreateInfo viewportStateCI;// = vks::initializers::pipelineViewportStateCreateInfo(1, 1, 0);
@@ -26,28 +26,32 @@ private:
 	std::vector<VkVertexInputAttributeDescription> vertexAttributeDescriptions;
 	std::vector<VkVertexInputBindingDescription> vertexBindingDescriptions;
 	std::vector<VkPipelineColorBlendAttachmentState> blendAttachmentStates;
+
+	
 public:
 	VkPipeline handle;
 
-	SbShaderLayout shaderLayout;
+	
 
-	SbPipeline& shaderLayouts(vk::Device device, std::string vert, std::string frag);
+	SbPipeline& shaderLayouts(SbShaderLayout& shaderLayout);
 	//VkDescriptorSetLayout getSetLayout(int set);
 
 	//obligatory
-	SbPipeline& layout(const VkPipelineLayout & pipelineLayout);
 	SbPipeline& subpassIndex(const uint32_t & subpass);
 	//SbPipeline& addShaderStage(const VkPipelineShaderStageCreateInfo & shaderStage);
 	SbPipeline& addBlendAttachmentState(VkPipelineColorBlendAttachmentState blend, uint32_t index);
 	SbPipeline& addBlendAttachmentStates(VkPipelineColorBlendAttachmentState blend, uint32_t startIndex, uint32_t endIndex);
 
 	//optional parameters
+	SbPipeline& specializeFrag(VkSpecializationInfo*);
+	SbPipeline& specializeVert(VkSpecializationInfo*);
 	SbPipeline & vertexBindingDescription(const std::vector<VkVertexInputBindingDescription>& v);
 	SbPipeline & vertexAttributeDescription(const std::vector<VkVertexInputAttributeDescription>& v);
 	SbPipeline& cullMode(const VkCullModeFlags & flags);
 	SbPipeline& depthWriteEnable(const VkBool32 & enable);
 	SbPipeline& colorBlending(uint32_t attachmentIndex);
 
+	VkPipelineLayout getLayout();
 
 	void createPipeline(const VkRenderPass & renderPass, const VkDevice & device);
 

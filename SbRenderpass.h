@@ -20,9 +20,9 @@ public:
 		VkAccessFlags accessMaskAsDst;
 		VkAccessFlags accessMaskAsSrc;
 
-		SbPipeline pipeline;
+		//SbPipeline pipeline;
 
-		Subpass(const SbVulkanBase & vkBase, const uint32_t & swapchainSize);
+		
 
 	};
 
@@ -37,7 +37,7 @@ public:
 
 	VkRenderPass renderPass;
 
-	SbRenderpass(const SbVulkanBase & vkBase, uint32_t subpassCount, uint32_t attachmentCount, uint32_t swapchainSize);
+	SbRenderpass(uint32_t subpassCount, uint32_t attachmentCount);
 	~SbRenderpass();
 
 	
@@ -58,9 +58,9 @@ public:
 
 	void createRenderpass(SbSwapchain& swapchain);
 
-	VkPipeline getSubpassPipeline(uint32_t subpassIndex);
+	//VkPipeline getSubpassPipeline(uint32_t subpassIndex);
 
-	VkPipelineLayout getSubpassPipelineLayout(uint32_t subpassIndex);;
+	//VkPipelineLayout getSubpassPipelineLayout(uint32_t subpassIndex);;
 
 };
 

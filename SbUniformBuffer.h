@@ -80,6 +80,11 @@ public:
 			throw std::runtime_error("attempted to write outside uniform buffer allocation");
 		}
 	}
+
+	T* getPtr(size_t offset = 0) 
+	{
+		return (reinterpret_cast<T*>((uint64_t)pUBOdata + (offset * dynamicAlignment)));
+	}
 	
 	void copyDataToBufferMemory(SbVulkanBase & vkBase, uint32_t instance = 0)
 	{

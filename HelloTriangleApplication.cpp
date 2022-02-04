@@ -12,6 +12,8 @@
 
 #include "Sponza.h"
 
+Sponza sponza;
+
 // Wrapper functions for aligned memory allocation
 // There is currently no standard for this in C++ that works across all platforms and vendors, so we abstract this
 void* alignedAlloc(size_t size, size_t alignment)
@@ -55,7 +57,7 @@ void HelloTriangleApplication::run() {
 	cleanup();
 }
 
-HelloTriangleApplication::~HelloTriangleApplication() {	
+HelloTriangleApplication::~HelloTriangleApplication() {
 	delete(mymodel);
 }
 
@@ -70,10 +72,16 @@ void HelloTriangleApplication::initWindow() {
 	glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
 }
 
+std::vector<int> keyPresses;
+
 void HelloTriangleApplication::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	//if (key == GLFW_KEY_E && action == GLFW_PRESS);
-	//activate_airship();
+	if (action == GLFW_PRESS)
+	{		
+			keyPresses.push_back(key);		
+	}
+	
+	
 	std::cout << "basic key callback" << std::endl;
 }
 
@@ -87,9 +95,10 @@ void HelloTriangleApplication::initVulkan() {
 	vulkanBase->commandPool = std::make_unique<SbCommandPool>(*vulkanBase);
 
 	ResourceManager::getInstance().vkBase = vulkanBase.get(); //todo ugly bad
-	
-															  
-	//Sponza::load(vulkanBase.get());
+
+
+
+	sponza.load(vulkanBase.get());
 
 
 
@@ -100,12 +109,12 @@ void HelloTriangleApplication::initVulkan() {
 	renderPass = std::unique_ptr<MyRenderPass>(pass);
 
 	swapchain->createFramebuffersForRenderpass(renderPass->renderPass);
-		
+
 	//todo why is this here and why does it fail?
 	//texture = std::make_unique<SbTextureImage>(*vulkanBase, TEXTURE_PATH); 
 
-	//todo why does this still exist?
-	//createTextureSampler();	
+
+	createTextureSampler();
 
 	mymodel = new AnimatedModel("jump.fbx");
 	createVertexBuffer();
@@ -125,10 +134,11 @@ void HelloTriangleApplication::mainLoop() {
 		deltaTime = std::chrono::duration<float, std::chrono::seconds::period>(std::chrono::high_resolution_clock::now() - frameTime).count();
 		frameTime = std::chrono::high_resolution_clock::now();
 		glfwPollEvents();
+		handleKeyPresses();
 		drawFrame();
 	}
 
-	vkDeviceWaitIdle(vulkanBase->logicalDevice->device);
+	vkDeviceWaitIdle(vulkanBase->getDevice());
 }
 
 void HelloTriangleApplication::cleanupSwapChain() {
@@ -154,32 +164,32 @@ void HelloTriangleApplication::cleanupSwapChain() {
 	vkFreeMemory(device, colorAttachment.mem, nullptr);*/
 
 	for (auto framebuffer : swapchain->swapChainFramebuffers) {
-		vkDestroyFramebuffer(vulkanBase->logicalDevice->device, framebuffer, nullptr);
+		vkDestroyFramebuffer(vulkanBase->getDevice(), framebuffer, nullptr);
 	}
 
-	vkFreeCommandBuffers(vulkanBase->logicalDevice->device, vulkanBase->commandPool->handle, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
+	vkFreeCommandBuffers(vulkanBase->getDevice(), vulkanBase->commandPool->handle, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
 
-	//vkDestroyPipeline(vulkanBase->logicalDevice->device, attachmentWriteSubpass.Pipeline, nullptr);
-	//vkDestroyPipeline(vulkanBase->logicalDevice->device, attachmentReadSubpass.Pipeline, nullptr);
-	//vkDestroyPipelineLayout(vulkanBase->logicalDevice->device, attachmentWriteSubpass.descriptorSets.get()->pipelineLayout, nullptr);
-	//vkDestroyPipelineLayout(vulkanBase->logicalDevice->device, attachmentReadSubpass.descriptorSets.get()->pipelineLayout, nullptr);
-	vkDestroyRenderPass(vulkanBase->logicalDevice->device, renderPass->renderPass, nullptr);
+	//vkDestroyPipeline(vulkanBase->getDevice(), attachmentWriteSubpass.Pipeline, nullptr);
+	//vkDestroyPipeline(vulkanBase->getDevice(), attachmentReadSubpass.Pipeline, nullptr);
+	//vkDestroyPipelineLayout(vulkanBase->getDevice(), attachmentWriteSubpass.descriptorSets.get()->pipelineLayout, nullptr);
+	//vkDestroyPipelineLayout(vulkanBase->getDevice(), attachmentReadSubpass.descriptorSets.get()->pipelineLayout, nullptr);
+	vkDestroyRenderPass(vulkanBase->getDevice(), renderPass->renderPass, nullptr);
 
 	/*
 	for (auto imageView : swapchain->swapChainImageViews) {
-	vkDestroyImageView(vulkanBase->logicalDevice->device, imageView, nullptr);
+	vkDestroyImageView(vulkanBase->getDevice(), imageView, nullptr);
 	}
 
-	vkDestroySwapchainKHR(vulkanBase->logicalDevice->device, swapchain->handle, nullptr);
+	vkDestroySwapchainKHR(vulkanBase->getDevice(), swapchain->handle, nullptr);
 
 	for (size_t i = 0; i < swapchain->swapChainImages.size(); i++) {
-	vkDestroyBuffer(vulkanBase->logicalDevice->device, uniformBuffers[i], nullptr);
-	vkFreeMemory(vulkanBase->logicalDevice->device, uniformBuffersMemory[i], nullptr);
+	vkDestroyBuffer(vulkanBase->getDevice(), uniformBuffers[i], nullptr);
+	vkFreeMemory(vulkanBase->getDevice(), uniformBuffersMemory[i], nullptr);
 	}
 
 	for (size_t i = 0; i < swapchain->swapChainImages.size(); i++) {
-	vkDestroyBuffer(vulkanBase->logicalDevice->device, shadingUniformBuffers[i], nullptr);
-	vkFreeMemory(vulkanBase->logicalDevice->device, shadingUniformBuffersMemory[i], nullptr);
+	vkDestroyBuffer(vulkanBase->getDevice(), shadingUniformBuffers[i], nullptr);
+	vkFreeMemory(vulkanBase->getDevice(), shadingUniformBuffersMemory[i], nullptr);
 	}
 	*/
 
@@ -189,35 +199,35 @@ void HelloTriangleApplication::cleanupSwapChain() {
 void HelloTriangleApplication::cleanup() {
 	cleanupSwapChain();
 
-	//vkDestroySampler(vulkanBase->logicalDevice->device, textureSampler, nullptr);
-	//vkDestroyImageView(vulkanBase->logicalDevice->device, textureImageView, nullptr);
+	//vkDestroySampler(vulkanBase->getDevice(), textureSampler, nullptr);
+	//vkDestroyImageView(vulkanBase->getDevice(), textureImageView, nullptr);
 
-	//vkDestroyImage(vulkanBase->logicalDevice->device, textureImage, nullptr);
-	//vkFreeMemory(vulkanBase->logicalDevice->device, textureImageMemory, nullptr);
+	//vkDestroyImage(vulkanBase->getDevice(), textureImage, nullptr);
+	//vkFreeMemory(vulkanBase->getDevice(), textureImageMemory, nullptr);
 
-	//vkDestroyDescriptorSetLayout(vulkanBase->logicalDevice->device, attachmentWriteSubpass.descriptorSets.get()->DSLayout, nullptr);
-	//vkDestroyDescriptorSetLayout(vulkanBase->logicalDevice->device, attachmentReadSubpass.descriptorSets.get()->DSLayout, nullptr);
+	//vkDestroyDescriptorSetLayout(vulkanBase->getDevice(), attachmentWriteSubpass.descriptorSets.get()->DSLayout, nullptr);
+	//vkDestroyDescriptorSetLayout(vulkanBase->getDevice(), attachmentReadSubpass.descriptorSets.get()->DSLayout, nullptr);
 
 	for (size_t i = 0; i < drawables.size(); i++)
 	{
-		vkDestroyBuffer(vulkanBase->logicalDevice->device, drawables[i].IndexBuffer, nullptr);
-		vkFreeMemory(vulkanBase->logicalDevice->device, drawables[i].IndexBufferMemory, nullptr);
+		vkDestroyBuffer(vulkanBase->getDevice(), drawables[i].IndexBuffer, nullptr);
+		vkFreeMemory(vulkanBase->getDevice(), drawables[i].IndexBufferMemory, nullptr);
 
-		vkDestroyBuffer(vulkanBase->logicalDevice->device, drawables[i].VertexBuffer, nullptr);
-		vkFreeMemory(vulkanBase->logicalDevice->device, drawables[i].VertexBufferMemory, nullptr);
+		vkDestroyBuffer(vulkanBase->getDevice(), drawables[i].VertexBuffer, nullptr);
+		vkFreeMemory(vulkanBase->getDevice(), drawables[i].VertexBufferMemory, nullptr);
 	}
 
 	/*
 	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-	vkDestroySemaphore(vulkanBase->logicalDevice->device, renderFinishedSemaphores[i], nullptr);
-	vkDestroySemaphore(vulkanBase->logicalDevice->device, imageAvailableSemaphores[i], nullptr);
-	vkDestroyFence(vulkanBase->logicalDevice->device, inFlightFences[i], nullptr);
+	vkDestroySemaphore(vulkanBase->getDevice(), renderFinishedSemaphores[i], nullptr);
+	vkDestroySemaphore(vulkanBase->getDevice(), imageAvailableSemaphores[i], nullptr);
+	vkDestroyFence(vulkanBase->getDevice(), inFlightFences[i], nullptr);
 	}
 	*/
 
-	vkDestroyCommandPool(vulkanBase->logicalDevice->device, vulkanBase->commandPool->handle, nullptr);
+	vkDestroyCommandPool(vulkanBase->getDevice(), vulkanBase->commandPool->handle, nullptr);
 
-	vkDestroyDevice(vulkanBase->logicalDevice->device, nullptr);
+	vkDestroyDevice(vulkanBase->getDevice(), nullptr);
 
 	if (enableValidationLayers) {
 		DestroyDebugUtilsMessengerEXT(vulkanBase->instance, vulkanBase->debugMessenger, nullptr);
@@ -238,7 +248,7 @@ void HelloTriangleApplication::recreateSwapChain() {
 		glfwWaitEvents();
 	}
 
-	vkDeviceWaitIdle(vulkanBase->logicalDevice->device);
+	vkDeviceWaitIdle(vulkanBase->getDevice());
 
 	cleanupSwapChain();
 
@@ -265,45 +275,115 @@ void HelloTriangleApplication::createInstance() {
 }
 
 
-void HelloTriangleApplication::createPipelines() {
+void HelloTriangleApplication::handleKeyPresses()
+{
+	
+	for (size_t i = 0; i < keyPresses.size(); i++)
+	{
+		switch (keyPresses[i])
+		{
+		case GLFW_KEY_0:
+			setOutputMode(0);
+			goto break_out;
+		case GLFW_KEY_1:
+			setOutputMode(1);
+			goto break_out;
+		case GLFW_KEY_2:
+			setOutputMode(2);
+			goto break_out;
+		case GLFW_KEY_3:
+			setOutputMode(3);
+			goto break_out;
+		default:
+			break;
+		}
+	}
+break_out:
 
-	auto& subpassgbuf = renderPass->subpasses[MyRenderPass::kSubpass_GBUF];
-	const auto& bind = AnimatedVertex::getBindingDescriptions();
-	const auto& attr = AnimatedVertex::getAttributeDescriptions();
-	subpassgbuf.pipeline.shaderLayouts(vulkanBase->getDevice(), "shaders/gbuf.vert.spv", "shaders/gbuf.frag.spv")
+	keyPresses.clear();
+}
+
+void HelloTriangleApplication::setOutputMode(uint32_t mode)
+{
+
+	VkSpecializationMapEntry entry = vk::SpecializationMapEntry();
+	entry.constantID = 0;
+	entry.offset = 0;
+	entry.size = sizeof(uint32_t);	
+
+	VkSpecializationInfo specialization = vk::SpecializationInfo();
+	specialization.mapEntryCount = 1;
+	specialization.pMapEntries = &entry;
+	specialization.pData = &mode;
+	specialization.dataSize = sizeof(uint32_t);
+
+	pipelines.composition.specializeFrag(&specialization).createPipeline(renderPass->renderPass, vulkanBase->getDevice());
+}
+
+void HelloTriangleApplication::createPipelines()
+{
+	shaderLayouts.gbuf.reflect(vulkanBase->getDevice(), "shaders/gbuf.vert.spv", "shaders/gbuf.frag.spv");
+	shaderLayouts.sponza.reflect(vulkanBase->getDevice(), "shaders/sponza.vert.spv", "shaders/sponza.frag.spv");
+	shaderLayouts.composition.reflect(vulkanBase->getDevice(), "shaders/composition.vert.spv", "shaders/composition.frag.spv");
+	shaderLayouts.transparent.reflect(vulkanBase->getDevice(), "shaders/transparent.vert.spv", "shaders/transparent.frag.spv");
+
+	//auto& subpassgbuf = renderPass->subpasses[MyRenderPass::kSubpass_GBUF];
+	//const auto bind = AnimatedVertex::getBindingDescriptions();
+	//const auto attr = AnimatedVertex::getAttributeDescriptions();
+	//pipelines.character.shaderLayouts(shaderLayouts.gbuf)
+	//	.addBlendAttachmentStates(vks::initializers::pipelineColorBlendAttachmentState(0xf, VK_FALSE), 0, 3)
+	//	.vertexBindingDescription(std::vector<VkVertexInputBindingDescription> {bind.begin(), bind.end()})
+	//	.vertexAttributeDescription(std::vector<VkVertexInputAttributeDescription> {attr.begin(), attr.end()})
+	//	.subpassIndex(MyRenderPass::kSubpass_GBUF)
+	//	.createPipeline(renderPass->renderPass, vulkanBase->getDevice());
+
+	const auto vbind = Vertex::getBindingDescriptions();
+	const auto vattr = Vertex::getAttributeDescriptions();
+	pipelines.opaque.shaderLayouts(shaderLayouts.sponza)
 		.addBlendAttachmentStates(vks::initializers::pipelineColorBlendAttachmentState(0xf, VK_FALSE), 0, 3)
-		.vertexBindingDescription(std::vector<VkVertexInputBindingDescription> {bind.begin(), bind.end()})
-		.vertexAttributeDescription(std::vector<VkVertexInputAttributeDescription> {attr.begin(), attr.end()})		
-		.createPipeline(renderPass->renderPass, vulkanBase->logicalDevice->device);
+		.vertexBindingDescription(std::vector<VkVertexInputBindingDescription> {vbind.begin(), vbind.end()})
+		.vertexAttributeDescription(std::vector<VkVertexInputAttributeDescription> {vattr.begin(), vattr.end()})
+		.subpassIndex(MyRenderPass::kSubpass_GBUF)
+		.createPipeline(renderPass->renderPass, vulkanBase->getDevice());
 
-	auto& subpasscomp = renderPass->subpasses[MyRenderPass::kSubpass_COMPOSE];
-	subpasscomp.pipeline.shaderLayouts(vulkanBase->getDevice(), "shaders/composition.vert.spv", "shaders/composition.frag.spv")
+	//auto& subpasscomp = renderPass->subpasses[MyRenderPass::kSubpass_COMPOSE];
+	pipelines.composition.shaderLayouts(shaderLayouts.composition)
 		.cullMode(VK_CULL_MODE_NONE)
 		.depthWriteEnable(VK_FALSE)
-		.createPipeline(renderPass->renderPass, vulkanBase->logicalDevice->device);
+		.subpassIndex(MyRenderPass::kSubpass_COMPOSE)
+		.createPipeline(renderPass->renderPass, vulkanBase->getDevice());
 
-	auto& subpasstransparent = renderPass->subpasses[MyRenderPass::kSubpass_TRANSPARENT];
-	subpasstransparent.pipeline.shaderLayouts(vulkanBase->getDevice(), "shaders/transparent.vert.spv", "shaders/transparent.frag.spv")
-		.colorBlending(0)
-		.vertexBindingDescription(std::vector<VkVertexInputBindingDescription> {bind.begin(), bind.end()})
-		.vertexAttributeDescription(std::vector<VkVertexInputAttributeDescription> {attr.begin(), attr.end()})
-		.cullMode(VK_CULL_MODE_BACK_BIT)
-		.depthWriteEnable(VK_FALSE)
-		.createPipeline(renderPass->renderPass, vulkanBase->logicalDevice->device);
+	////auto& subpasstransparent = renderPass->subpasses[MyRenderPass::kSubpass_TRANSPARENT];
+	//pipelines.transparentCharacter.shaderLayouts(shaderLayouts.transparent)
+	//	.colorBlending(0)
+	//	.vertexBindingDescription(std::vector<VkVertexInputBindingDescription> {bind.begin(), bind.end()})
+	//	.vertexAttributeDescription(std::vector<VkVertexInputAttributeDescription> {attr.begin(), attr.end()})
+	//	.cullMode(VK_CULL_MODE_BACK_BIT)
+	//	.depthWriteEnable(VK_FALSE)
+	//	.subpassIndex(MyRenderPass::kSubpass_TRANSPARENT)
+	//	.createPipeline(renderPass->renderPass, vulkanBase->getDevice());
 
 }
 
 void HelloTriangleApplication::createDescriptorSets()
 {
 	gbufDesc = std::unique_ptr<SbDescriptorSet>(
-		new SbDescriptorSet(vulkanBase->getDevice(), *swapchain, renderPass->subpasses[MyRenderPass::kSubpass_GBUF], 0));
+		new SbDescriptorSet(vulkanBase->getDevice(), *swapchain, shaderLayouts.gbuf, 0));
 	gbufDesc->addBufferBinding(0, *transformUniformBuffer);
-	gbufDesc->addBufferBinding(1, *shadingUniformBuffer);
+	//gbufDesc->addBufferBinding(1, *shadingUniformBuffer);
 	gbufDesc->allocate(*descriptorPool.get());
 	gbufDesc->updateDescriptors();
 
+	matrixDesc = std::unique_ptr<SbDescriptorSet>(
+		new SbDescriptorSet(vulkanBase->getDevice(), *swapchain, shaderLayouts.sponza, 0));
+	matrixDesc->addBufferBinding(0, *matrixUniformBuffer);
+	matrixDesc->allocate(*descriptorPool.get());
+	matrixDesc->updateDescriptors();
+
+	
+
 	compDesc = std::unique_ptr<SbDescriptorSet>(
-		new SbDescriptorSet(vulkanBase->getDevice(), *swapchain, renderPass->subpasses[MyRenderPass::kSubpass_COMPOSE], 0));
+		new SbDescriptorSet(vulkanBase->getDevice(), *swapchain, shaderLayouts.composition, 0));
 	compDesc->addInputAttachmentBinding(0, MyRenderPass::kAttachment_POSITION);
 	compDesc->addInputAttachmentBinding(1, MyRenderPass::kAttachment_NORMAL);
 	compDesc->addInputAttachmentBinding(2, MyRenderPass::kAttachment_ALBEDO);
@@ -311,27 +391,46 @@ void HelloTriangleApplication::createDescriptorSets()
 	compDesc->updateDescriptors();
 
 	transDesc = std::unique_ptr<SbDescriptorSet>(
-		new SbDescriptorSet(vulkanBase->getDevice(), *swapchain, renderPass->subpasses[MyRenderPass::kSubpass_TRANSPARENT], 0));
+		new SbDescriptorSet(vulkanBase->getDevice(), *swapchain, shaderLayouts.transparent, 0));
 	transDesc->addBufferBinding(0, *transformUniformBuffer);
 	transDesc->addBufferBinding(1, *shadingUniformBuffer);
 	transDesc->addInputAttachmentBinding(2, MyRenderPass::kAttachment_POSITION);
 	transDesc->allocate(*descriptorPool.get());
 	transDesc->updateDescriptors();
+
+	auto& materials = sponza.scene.materials;
+	for (size_t i = 0; i < materials.size(); i++)
+	{
+		if (!materials[i].hasAlpha &&
+			materials[i].hasBump &&
+			materials[i].hasSpecular &&
+			i != 17)
+		{
+
+			materials[i].descriptor = new SbDescriptorSet(
+				vulkanBase->getDevice(), *swapchain, shaderLayouts.sponza, 1);
+			materials[i].descriptor->addImageBinding(0, textureSampler, &materials[i].diffuse->textureImageView);
+			materials[i].descriptor->addImageBinding(1, textureSampler, &materials[i].bump->textureImageView);
+			materials[i].descriptor->addImageBinding(2, textureSampler, &materials[i].specular->textureImageView);
+			materials[i].descriptor->allocate(*descriptorPool.get());
+			materials[i].descriptor->updateDescriptors();
+		}
+	}
 }
 
 
-//void HelloTriangleApplication::createTextureSampler() {
+void HelloTriangleApplication::createTextureSampler() {
 
-	//auto samplerInfo = vk::SamplerCreateInfo(vk::SamplerCreateFlags(),
-	//	vk::Filter::eLinear, vk::Filter::eLinear, vk::SamplerMipmapMode::eLinear,
-	//	vk::SamplerAddressMode::eRepeat, vk::SamplerAddressMode::eRepeat, vk::SamplerAddressMode::eRepeat,
-	//	0, VK_TRUE, 16,
-	//	VK_FALSE, vk::CompareOp::eAlways,
-	//	0, texture->mipLevels, //todo this sampler is hardcoded to use the miplevels of the one and only texture
-	//	vk::BorderColor::eIntOpaqueBlack, VK_FALSE);
-	//
-	//textureSampler = vulkanBase->getDevice().createSampler(samplerInfo);
-//}
+	auto samplerInfo = vk::SamplerCreateInfo(vk::SamplerCreateFlags(),
+		vk::Filter::eLinear, vk::Filter::eLinear, vk::SamplerMipmapMode::eLinear,
+		vk::SamplerAddressMode::eRepeat, vk::SamplerAddressMode::eRepeat, vk::SamplerAddressMode::eRepeat,
+		0, VK_TRUE, 16,
+		VK_FALSE, vk::CompareOp::eAlways,
+		0, 1,
+		vk::BorderColor::eIntOpaqueBlack, VK_FALSE);
+
+	textureSampler = vulkanBase->getDevice().createSampler(samplerInfo);
+}
 
 //TODO make function take model argument?
 void HelloTriangleApplication::createVertexBuffer() {
@@ -382,9 +481,12 @@ void HelloTriangleApplication::createVertexBuffer() {
 }
 
 void HelloTriangleApplication::createUniformBuffers() {
+	matrixUniformBuffer = std::make_unique<SbUniformBuffer<MatrixBufferObject>>(*vulkanBase, swapchain->getSize());
+	
+
 	transformUniformBuffer = std::make_unique<SbUniformBuffer<UniformBufferObject>>(*vulkanBase,
 		swapchain->getSize());
-	
+
 
 	skeletonUniformBuffer = std::make_unique<SbUniformBuffer<glm::mat4>>(
 		*vulkanBase, swapchain->getSize(), 52 * 5); //room for 5 skeletons in buffer
@@ -401,7 +503,7 @@ void HelloTriangleApplication::createUniformBuffers() {
 
 void HelloTriangleApplication::createDescriptorPool() {
 
-	descriptorPool = std::make_unique<SbDescriptorPool>(vulkanBase->logicalDevice->device);
+	descriptorPool = std::make_unique<SbDescriptorPool>(vulkanBase->getDevice());
 
 	std::vector<VkDescriptorPoolSize> poolSizes(4);
 	poolSizes[0] = { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, static_cast<uint32_t>(100) };//(swapchain->getSize() * 2) }; 
@@ -409,7 +511,7 @@ void HelloTriangleApplication::createDescriptorPool() {
 	poolSizes[2] = { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, static_cast<uint32_t>(100) };//(swapchain->getSize() * 2) };
 	poolSizes[3] = { VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, static_cast<uint32_t>(100) };//(swapchain->getSize() * 4) };
 
-	descriptorPool->createDescriptorPool(poolSizes, static_cast<uint32_t>(swapchain->getSize()) * 3);
+	descriptorPool->createDescriptorPool(poolSizes, static_cast<uint32_t>(swapchain->getSize()) * 100);
 
 }
 
@@ -422,23 +524,23 @@ void HelloTriangleApplication::createCommandBuffers() {
 	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
 	allocInfo.commandBufferCount = (uint32_t)commandBuffers.size();
 
-	if (vkAllocateCommandBuffers(vulkanBase->logicalDevice->device, &allocInfo, commandBuffers.data()) != VK_SUCCESS) {
+	if (vkAllocateCommandBuffers(vulkanBase->getDevice(), &allocInfo, commandBuffers.data()) != VK_SUCCESS) {
 		throw std::runtime_error("failed to allocate command buffers!");
 	}
 
-	for (size_t i = 0; i < commandBuffers.size(); i++) {
+	for (size_t cmdIdx = 0; cmdIdx < commandBuffers.size(); cmdIdx++) {
 		VkCommandBufferBeginInfo beginInfo = {};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 		beginInfo.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
 
-		if (vkBeginCommandBuffer(commandBuffers[i], &beginInfo) != VK_SUCCESS) {
+		if (vkBeginCommandBuffer(commandBuffers[cmdIdx], &beginInfo) != VK_SUCCESS) {
 			throw std::runtime_error("failed to begin recording command buffer!");
 		}
 
 		VkRenderPassBeginInfo renderPassInfo = {};
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 		renderPassInfo.renderPass = renderPass->renderPass;
-		renderPassInfo.framebuffer = swapchain->swapChainFramebuffers[i];
+		renderPassInfo.framebuffer = swapchain->swapChainFramebuffers[cmdIdx];
 		renderPassInfo.renderArea.offset = { 0, 0 };
 		renderPassInfo.renderArea.extent = swapchain->swapchainCI.imageExtent;
 
@@ -457,72 +559,94 @@ void HelloTriangleApplication::createCommandBuffers() {
 		renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
 		renderPassInfo.pClearValues = clearValues.data();
 
-		vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+		vkCmdBeginRenderPass(commandBuffers[cmdIdx], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
 		VkViewport viewport = vks::initializers::viewport(
 			(float)swapchain->swapchainCI.imageExtent.width,
 			(float)swapchain->swapchainCI.imageExtent.height, 0.0f, 1.0f);
-		vkCmdSetViewport(commandBuffers[i], 0, 1, &viewport);
+		vkCmdSetViewport(commandBuffers[cmdIdx], 0, 1, &viewport);
 
 		VkRect2D scissor = vks::initializers::rect2D(swapchain->swapchainCI.imageExtent, 0, 0);
-		vkCmdSetScissor(commandBuffers[i], 0, 1, &scissor);
+		vkCmdSetScissor(commandBuffers[cmdIdx], 0, 1, &scissor);
 
 		{
-			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getSubpassPipeline(MyRenderPass::kSubpass_GBUF));
+			//vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.character.handle);
+			//
+			//for (size_t j = 0; j < drawables.size() - 1; j++)
+			//{
+			//	uint32_t offset = j * static_cast<uint32_t>(shadingUniformBuffer->dynamicAlignment);
+			//	vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.character.getLayout(),
+			//		0, 1, &gbufDesc->allocatedDSs[i], 0, &offset); //todo dynamic offset count should be what?
+			//
+			//	VkBuffer vert[] = { drawables[j].VertexBuffer };
+			//	VkDeviceSize offsets[] = { 0 };
+			//	vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vert, offsets);
+			//
+			//	//vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer[j], 0, VK_INDEX_TYPE_UINT32);
+			//	vkCmdBindIndexBuffer(commandBuffers[i], drawables[j].IndexBuffer, 0, VK_INDEX_TYPE_UINT32);
+			//
+			//	vkCmdDrawIndexed(commandBuffers[i], drawables[j].IndexCount, 1, 0, 0, 0);
+			//}
 
-			for (size_t j = 0; j < drawables.size() - 1; j++)
+			vkCmdBindPipeline(commandBuffers[cmdIdx], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.opaque.handle);
+			
+			VkDeviceSize offsets[] = { 0 };
+			VkBuffer vert[] = { sponza.scene.vertexBuffer.buffer };
+			vkCmdBindVertexBuffers(commandBuffers[cmdIdx], 0, 1, vert, offsets);			
+			vkCmdBindIndexBuffer(commandBuffers[cmdIdx], sponza.scene.indexBuffer.buffer, 0, VK_INDEX_TYPE_UINT32);
+			//vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.opaque.getLayout(), 0, 1, sets, 0, nullptr);
+			for (size_t meshIdx = 0; meshIdx < sponza.scene.meshes.size(); meshIdx++)
 			{
-				uint32_t offset = j * static_cast<uint32_t>(shadingUniformBuffer->dynamicAlignment);
-				vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getSubpassPipelineLayout(MyRenderPass::kSubpass_GBUF),
-					0, 1, &gbufDesc->allocatedDSs[i], 0, &offset); //todo dynamic offset count should be what?
-
-				VkBuffer vert[] = { drawables[j].VertexBuffer };
-				VkDeviceSize offsets[] = { 0 };
-				vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vert, offsets);
-
-				//vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer[j], 0, VK_INDEX_TYPE_UINT32);
-				vkCmdBindIndexBuffer(commandBuffers[i], drawables[j].IndexBuffer, 0, VK_INDEX_TYPE_UINT32);
-
-				vkCmdDrawIndexed(commandBuffers[i], drawables[j].IndexCount, 1, 0, 0, 0);
+				auto currentMaterial = sponza.scene.meshes[meshIdx].material;
+				if (!currentMaterial->hasAlpha &&
+					currentMaterial->hasBump &&
+					currentMaterial->hasSpecular &&
+					cmdIdx != 17)
+				{
+					VkDescriptorSet sets[] = { matrixDesc->allocatedDSs[0], currentMaterial->descriptor->allocatedDSs[0] };
+					vkCmdBindDescriptorSets(commandBuffers[cmdIdx], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.opaque.getLayout(), 0, 2, sets, 0, nullptr);
+			
+					vkCmdDrawIndexed(commandBuffers[cmdIdx], sponza.scene.meshes[meshIdx].indexCount, 1, sponza.scene.meshes[meshIdx].indexBase, 0, 0);
+				}
 			}
 		}
 
 
-		vkCmdNextSubpass(commandBuffers[i], VK_SUBPASS_CONTENTS_INLINE);
+		vkCmdNextSubpass(commandBuffers[cmdIdx], VK_SUBPASS_CONTENTS_INLINE);
 		{
 
-			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getSubpassPipeline(MyRenderPass::kSubpass_COMPOSE));
-			vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getSubpassPipelineLayout(MyRenderPass::kSubpass_COMPOSE), 
-				0, 1, &compDesc->allocatedDSs[i], 0, NULL);
-			vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
+			vkCmdBindPipeline(commandBuffers[cmdIdx], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.composition.handle);
+			vkCmdBindDescriptorSets(commandBuffers[cmdIdx], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.composition.getLayout(),
+				0, 1, &compDesc->allocatedDSs[cmdIdx], 0, NULL);
+			vkCmdDraw(commandBuffers[cmdIdx], 3, 1, 0, 0);
 		}
 
 
-		vkCmdNextSubpass(commandBuffers[i], VK_SUBPASS_CONTENTS_INLINE);
+		vkCmdNextSubpass(commandBuffers[cmdIdx], VK_SUBPASS_CONTENTS_INLINE);
 		{
 
-			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getSubpassPipeline(MyRenderPass::kSubpass_TRANSPARENT));
-
-			for (size_t j = drawables.size() - 1; j < drawables.size(); j++)
-			{
-				uint32_t offset = j * static_cast<uint32_t>(shadingUniformBuffer->dynamicAlignment);
-				vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->getSubpassPipelineLayout(MyRenderPass::kSubpass_TRANSPARENT),
-					0, 1, &transDesc->allocatedDSs[i], 0, &offset);
-
-				VkBuffer vert[] = { drawables[j].VertexBuffer };
-				VkDeviceSize offsets[] = { 0 };
-				vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vert, offsets);
-
-				//vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer[j], 0, VK_INDEX_TYPE_UINT32);
-				vkCmdBindIndexBuffer(commandBuffers[i], drawables[j].IndexBuffer, 0, VK_INDEX_TYPE_UINT32);
-
-				vkCmdDrawIndexed(commandBuffers[i], drawables[j].IndexCount, 1, 0, 0, 0);
-			}
+			//vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.transparentCharacter.handle);
+			//
+			//for (size_t j = drawables.size() - 1; j < drawables.size(); j++)
+			//{
+			//	uint32_t offset = j * static_cast<uint32_t>(shadingUniformBuffer->dynamicAlignment);
+			//	vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.transparentCharacter.getLayout(),
+			//		0, 1, &transDesc->allocatedDSs[i], 0, &offset);
+			//
+			//	VkBuffer vert[] = { drawables[j].VertexBuffer };
+			//	VkDeviceSize offsets[] = { 0 };
+			//	vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vert, offsets);
+			//
+			//	//vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer[j], 0, VK_INDEX_TYPE_UINT32);
+			//	vkCmdBindIndexBuffer(commandBuffers[i], drawables[j].IndexBuffer, 0, VK_INDEX_TYPE_UINT32);
+			//
+			//	vkCmdDrawIndexed(commandBuffers[i], drawables[j].IndexCount, 1, 0, 0, 0);
+			//}
 		}
 
-		vkCmdEndRenderPass(commandBuffers[i]);
+		vkCmdEndRenderPass(commandBuffers[cmdIdx]);
 
-		if (vkEndCommandBuffer(commandBuffers[i]) != VK_SUCCESS) {
+		if (vkEndCommandBuffer(commandBuffers[cmdIdx]) != VK_SUCCESS) {
 			throw std::runtime_error("failed to record command buffer!");
 		}
 	}
@@ -538,13 +662,13 @@ void HelloTriangleApplication::updateUniformBuffer(uint32_t currentImage) {
 	//	modelScene->mAnimations[0]->mTicksPerSecond : 25.0f;
 	//float TimeInTicks = time * TicksPerSecond;
 	//float AnimationTime = fmod(TimeInTicks, modelScene->mAnimations[0]->mDuration);
-	
+
 	float s = 0.5f * std::sinf(time / (3.14f)) + 0.5f;
 	mymodel->skeletalAnimationComponent.evaluate(deltaTime, std::vector<float> { s });
 
 	UniformBufferObject ubo = {};
-	ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f))
-		* glm::scale(glm::mat4(1.0f), { 0.01f,0.01f ,0.01f });
+	ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(15.0f), glm::vec3(0.0f, 1.0f, 0.0f))
+		* glm::scale(glm::mat4(1.0f), { 0.02f,0.02f ,0.02f });
 	ubo.view = cam.getViewMatrix();
 	ubo.proj = cam.getProjectionMatrix();
 	memcpy(ubo.boneTransforms, mymodel->skeletalAnimationComponent.transformations.data(),
@@ -552,6 +676,15 @@ void HelloTriangleApplication::updateUniformBuffer(uint32_t currentImage) {
 	transformUniformBuffer->writeBufferData(ubo);
 	transformUniformBuffer->copyDataToBufferMemory(*vulkanBase, currentImage);
 
+
+	auto buf = matrixUniformBuffer->getPtr();
+	buf->model = ubo.model;
+	buf->view = cam.getViewMatrix();
+	buf->proj = cam.getProjectionMatrix();
+	//matrixUniformBuffer->writeBufferData(buf);	
+	matrixUniformBuffer->copyDataToBufferMemory(*vulkanBase, currentImage);
+
+	
 }
 
 void HelloTriangleApplication::drawFrame() {

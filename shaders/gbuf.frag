@@ -7,11 +7,11 @@ layout (location = 2) in vec3 inWorldPos;
 layout (location = 3) in vec2 fragTexCoord;
 layout (location = 4) in vec3 vertexColor;
 
-layout(binding = 1) uniform ShadingBufferObject {
-	vec4 specularColor;
-	vec4 diffuseColor;
-	vec4 ambientColor;
-} shading;
+//layout(binding = 1) uniform ShadingBufferObject {
+//	vec4 specularColor;
+//	vec4 diffuseColor;
+//	vec4 ambientColor;
+//} shading;
 
 layout (location = 0) out vec4 outColor;
 layout (location = 1) out vec4 outPosition;
@@ -36,7 +36,7 @@ void main()
 	outNormal = vec4(N, 1.0);
 
 	//vec4 check = {linearDepth(gl_FragCoord.z)/FAR_PLANE, gl_FragCoord.z, 0.0f, 1.0f};
-	outAlbedo.rgb = shading.diffuseColor.rgb;//inColor;
+	outAlbedo.rgb = vec3(1.0f); //shading.diffuseColor.rgb;
 
 	// Store linearized depth in alpha component
 	outPosition.a = gl_FragCoord.z;

@@ -40,7 +40,7 @@ void SbDescriptorSet::updateDescriptors()
 			descriptorWrites[currentBinding].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 			descriptorWrites[currentBinding].dstSet = allocatedDSs[setInstance];
 			descriptorWrites[currentBinding].dstBinding = currentBinding;
-			descriptorWrites[currentBinding].descriptorType = shaderLayout.bindingInfo[currentBinding].descriptorType;
+			descriptorWrites[currentBinding].descriptorType = bindingInfo[currentBinding].descriptorType;
 			descriptorWrites[currentBinding].descriptorCount = 1;
 			descriptorWrites[currentBinding].pImageInfo = &vkImageInfos[i];
 		}		
@@ -50,7 +50,7 @@ void SbDescriptorSet::updateDescriptors()
 			descriptorWrites[currentBinding].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 			descriptorWrites[currentBinding].dstSet = allocatedDSs[setInstance];
 			descriptorWrites[currentBinding].dstBinding = currentBinding;
-			descriptorWrites[currentBinding].descriptorType = shaderLayout.bindingInfo[currentBinding].descriptorType;
+			descriptorWrites[currentBinding].descriptorType = bindingInfo[currentBinding].descriptorType;
 			descriptorWrites[currentBinding].descriptorCount = 1;
 			descriptorWrites[currentBinding].pBufferInfo = &vkBufferInfos[i];
 		}
@@ -60,13 +60,11 @@ void SbDescriptorSet::updateDescriptors()
 }
 
 
-SbDescriptorSet::SbDescriptorSet(const VkDevice& device, SbSwapchain& swapchain, 
-	SbRenderpass::Subpass& subpass, int set)
+SbDescriptorSet::SbDescriptorSet(const VkDevice& device, SbSwapchain& swapchain, SbShaderLayout& shaderLayout, uint32_t set)
 	: device(device), swapchain(swapchain), 
-	shaderLayout(subpass.pipeline.shaderLayout.sbSetLayouts[set])
-{
-
-}
+	bindingInfo(shaderLayout.results.bindingInfo[set]), 
+	setLayout(shaderLayout.results.setLayouts[set])
+{	}
 
 SbDescriptorSet& SbDescriptorSet::addImageBinding(uint32_t binding, VkSampler sampler, VkImageView* imageView)
 {
@@ -94,7 +92,6 @@ SbDescriptorSet& SbDescriptorSet::addInputAttachmentBinding(uint32_t binding, ui
 	return *this;
 }
 
-
 void SbDescriptorSet::allocate(const SbDescriptorPool& descriptorPool)
 {
 	bool setIsInstanced = false;
@@ -117,12 +114,12 @@ proceed:
 	std::vector<VkDescriptorSetLayout> layouts;
 	if (setIsInstanced) 
 	{
-		layouts = std::vector<VkDescriptorSetLayout>(swapchain.getSize(), shaderLayout.layout);
+		layouts = std::vector<VkDescriptorSetLayout>(swapchain.getSize(), setLayout);
 		allocatedDSs = std::vector<VkDescriptorSet>(swapchain.getSize());
 	}
 	else 
 	{
-		layouts = std::vector<VkDescriptorSetLayout>(1, shaderLayout.layout);
+		layouts = std::vector<VkDescriptorSetLayout>(1, setLayout);
 		allocatedDSs = std::vector<VkDescriptorSet>(1);
 	}
 	
@@ -132,7 +129,9 @@ proceed:
 	allocInfo.descriptorSetCount = layouts.size();
 	allocInfo.pSetLayouts = layouts.data();
 
-	if (vkAllocateDescriptorSets(device, &allocInfo, allocatedDSs.data()) != VK_SUCCESS) {
+	auto vkresult = vkAllocateDescriptorSets(device, &allocInfo, allocatedDSs.data());
+	if (vkresult != VK_SUCCESS) 
+	{
 		throw std::runtime_error("failed to allocate descriptor sets!");
 	}
 

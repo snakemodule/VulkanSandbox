@@ -189,6 +189,7 @@
     <ClCompile Include="SbImage.cpp" />
     <ClCompile Include="SbShaderLayout.cpp" />
     <ClCompile Include="SbTextureImage.cpp" />
+    <ClCompile Include="SceneStuff.cpp" />
     <ClCompile Include="SkeletalAnimationComponent.cpp" />
     <ClCompile Include="SkeletonAnimation.cpp" />
     <ClCompile Include="AnimationKeys.cpp" />
@@ -209,6 +210,7 @@
     <ClCompile Include="SbUniformBuffer.cpp" />
     <ClCompile Include="SbVulkanBase.cpp" />
     <ClCompile Include="SkeletonAnimationSystem.cpp" />
+    <ClCompile Include="VulkanHelperFunctions.cpp" />
     <ClCompile Include="spirv-cross\spirv_cfg.cpp" />
     <ClCompile Include="spirv-cross\spirv_cpp.cpp" />
     <ClCompile Include="spirv-cross\spirv_cross.cpp" />
@@ -224,6 +226,7 @@
     <ClCompile Include="Sponza.cpp" />
     <ClCompile Include="UncompressedAnimation.cpp" />
     <ClCompile Include="UncompressedAnimationKeys.cpp" />
+    <ClCompile Include="VulkanInitializers.cpp" />
     <ClCompile Include="vulkansetup.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -232,7 +235,6 @@
     <ClInclude Include="assimp_print.hpp" />
     <ClInclude Include="Entities.h" />
     <ClInclude Include="HelloTriangleApplication.h" />
-    <ClInclude Include="Mutant.hpp" />
     <ClInclude Include="MyRenderPass.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="SbDescriptorSet.h" />
@@ -269,7 +271,6 @@
     <ClInclude Include="AnimationStuff.h" />
     <ClInclude Include="fbxsdkstuff.h" />
     <ClInclude Include="glfwsetup.h" />
-    <ClInclude Include="Header.h" />
     <ClInclude Include="SbBuffer.h" />
     <ClInclude Include="SbCommandPool.h" />
     <ClInclude Include="SbUniformBuffer.h" />

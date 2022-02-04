@@ -33,51 +33,42 @@ VkPipelineShaderStageCreateInfo shaderStageCI(VkShaderModule shaderModule, VkSha
 	return shaderStage;
 }
 
-SbShaderLayout::SbSetLayout SbShaderLayout::createDSLayout(vk::Device device, int set)
+void SbShaderLayout::createDSLayout(vk::Device device, int set)
 {
 	auto& currentSet = sets[set];
 	auto& imageSamplers = currentSet.imageSamplers;
 	auto& uniforms = currentSet.uniforms;
 	auto& inputAttachments = currentSet.inputAttachments;
 
-	SbSetLayout layout;
-
+	auto& bindingInfo = results.bindingInfo[set];
 	for (auto& pair : uniforms)
-		layout.bindingInfo.push_back(vkinit::descriptorSetLayoutBinding(
-			VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, pair.second.stageFlags, pair.first));
+		bindingInfo.push_back(vkinit::descriptorSetLayoutBinding(
+			VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, pair.second.stageFlags, pair.first, 1));
 	for (auto& pair : imageSamplers)
-		layout.bindingInfo.push_back(vkinit::descriptorSetLayoutBinding(
-			VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, pair.second.stageFlags, pair.first));
+		bindingInfo.push_back(vkinit::descriptorSetLayoutBinding(
+			VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, pair.second.stageFlags, pair.first, 1));
 	for (auto& pair : inputAttachments)
-		layout.bindingInfo.push_back(vkinit::descriptorSetLayoutBinding(
-			VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, pair.second.stageFlags, pair.first));
+		bindingInfo.push_back(vkinit::descriptorSetLayoutBinding(
+			VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, pair.second.stageFlags, pair.first, 1));
 
-	std::sort(layout.bindingInfo.begin(), layout.bindingInfo.end(),
+	std::sort(bindingInfo.begin(), bindingInfo.end(),
 		[](VkDescriptorSetLayoutBinding lhs, VkDescriptorSetLayoutBinding rhs)
 		-> bool { return lhs.binding < rhs.binding; });
 
-	
-	
+
 	VkDescriptorSetLayoutCreateInfo DS_Layout_CI =
-		vks::initializers::descriptorSetLayoutCreateInfo(layout.bindingInfo);
-	if (vkCreateDescriptorSetLayout(device, &DS_Layout_CI, nullptr, &layout.layout) != VK_SUCCESS) {
+		vks::initializers::descriptorSetLayoutCreateInfo(bindingInfo);
+	if (vkCreateDescriptorSetLayout(device, &DS_Layout_CI, nullptr, &results.setLayouts[set]) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create descriptor set layout!");
 	}
-	return layout;
 }
 
-VkPipelineLayout SbShaderLayout::createPipelineLayout(vk::Device device) 
+void SbShaderLayout::createPipelineLayout(vk::Device device)
 {
-	std::vector<VkDescriptorSetLayout> setLayouts = std::vector<VkDescriptorSetLayout>(sbSetLayouts.size());
-	for (size_t i = 0; i < setLayouts.size(); i++)
-		setLayouts[i] = sbSetLayouts[i].layout;
-
-	VkPipelineLayoutCreateInfo pipelineLayoutCI = vks::initializers::pipelineLayoutCreateInfo(setLayouts.data());
-	VkPipelineLayout pl;
-	if (vkCreatePipelineLayout(device, &pipelineLayoutCI, nullptr, &pl) != VK_SUCCESS) {
+	VkPipelineLayoutCreateInfo pipelineLayoutCI = vks::initializers::pipelineLayoutCreateInfo(results.setLayouts.data(), results.setLayouts.size());
+	if (vkCreatePipelineLayout(device, &pipelineLayoutCI, nullptr, &results.pipelineLayout) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create pipeline layout!");
 	}
-	return pl;
 }
 
 void SbShaderLayout::parse(std::vector<uint32_t>& spirv_binary, VkShaderStageFlagBits shaderStage)
@@ -102,9 +93,9 @@ void SbShaderLayout::parse(std::vector<uint32_t>& spirv_binary, VkShaderStageFla
 			it->second.stageFlags |= shaderStage;
 		else
 			setImageSamplers[binding] = { resource.name, (uint64_t)shaderStage };
-	
+
 		printf("Image %s at set = %u, binding = %u\n", resource.name.c_str(), set, binding);
-		
+
 	}
 
 	for (auto& resource : resources.subpass_inputs) //attachments, use here or put early in renderpass construction
@@ -150,24 +141,26 @@ void SbShaderLayout::parse(std::vector<uint32_t>& spirv_binary, VkShaderStageFla
 	}
 }
 
-VkPipelineLayout SbShaderLayout::reflect(vk::Device device, std::string vert, std::string frag,
-	std::array<VkPipelineShaderStageCreateInfo, 2>& out)
+void SbShaderLayout::reflect(vk::Device device, std::string vert, std::string frag)
 {
 	std::vector<uint32_t> vert_binary = loadSpirvBinary(vert);
 	std::vector<uint32_t> frag_binary = loadSpirvBinary(frag);
+	assert(vert_binary.size() > 0);
+	assert(frag_binary.size() > 0);
 	auto vertModule = vks::helper::loadShader(vert.c_str(), device);//makeShaderModule(vert_binary, device);
 	auto fragModule = vks::helper::loadShader(frag.c_str(), device);//makeShaderModule(frag_binary, device);
 	auto vertCI = shaderStageCI(vertModule, VK_SHADER_STAGE_VERTEX_BIT, device);
 	auto fragCI = shaderStageCI(fragModule, VK_SHADER_STAGE_FRAGMENT_BIT, device);
-	out[0]=vertCI;
-	out[1]=fragCI;
+	results.shaderInfo[0] = vertCI;
+	results.shaderInfo[1] = fragCI;
 	parse(vert_binary, VK_SHADER_STAGE_VERTEX_BIT);
 	parse(frag_binary, VK_SHADER_STAGE_FRAGMENT_BIT);
 
+	results.bindingInfo.resize(sets.size());
+	results.setLayouts.resize(sets.size());
 
 	for (size_t i = 0; i < sets.size(); i++)
-		sbSetLayouts.push_back(createDSLayout(device, i));
+		createDSLayout(device, i);
 
-	pipelineLayout = createPipelineLayout(device);
-	return pipelineLayout;
+	createPipelineLayout(device);
 }

@@ -36,7 +36,8 @@ std::vector<VkDescriptorSet> SbDescriptorPool::allocateDescriptorSet(const uint3
 	allocInfo.pSetLayouts = layouts.data();// &attachmentWriteSubpass.DS_Layout;
 
 	std::vector<VkDescriptorSet> result(n);
-	if (vkAllocateDescriptorSets(device, &allocInfo, result.data()) != VK_SUCCESS) {
+	auto vkresult = vkAllocateDescriptorSets(device, &allocInfo, result.data());
+	if (vkresult != VK_SUCCESS) {
 		throw std::runtime_error("failed to allocate descriptor sets!");
 	}
 	return result;

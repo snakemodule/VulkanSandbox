@@ -34,23 +34,20 @@ public:
 		std::map<unsigned, SubpassInput> inputAttachments;
 		std::map<unsigned, SampledImage> imageSamplers;
 	};
-
-	struct SbSetLayout {
-		std::vector<VkDescriptorSetLayoutBinding> bindingInfo;
-		VkDescriptorSetLayout layout;
-	};
-
 	std::vector<set> sets;
-	VkPipelineLayout pipelineLayout;
-	std::vector<SbSetLayout> sbSetLayouts;
+		
+	struct {
+		std::vector<std::vector<VkDescriptorSetLayoutBinding>> bindingInfo;
+		std::vector<VkDescriptorSetLayout> setLayouts;
+		std::array<VkPipelineShaderStageCreateInfo, 2> shaderInfo;
+		VkPipelineLayout pipelineLayout;
+	} results;	
 
-
-	SbSetLayout createDSLayout(vk::Device device, int set);
-	VkPipelineLayout createPipelineLayout(vk::Device device);
+	void createDSLayout(vk::Device device, int set);
+	void createPipelineLayout(vk::Device device);
 
 	void parse(std::vector<uint32_t>& spirv_binary, VkShaderStageFlagBits shaderStage);
-	VkPipelineLayout reflect(vk::Device device, std::string vert, std::string frag, 
-		std::array<VkPipelineShaderStageCreateInfo,2>& out);
+	void reflect(vk::Device device, std::string vert, std::string frag);
 
 
 

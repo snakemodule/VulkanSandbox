@@ -9,7 +9,7 @@ glm::mat4 SbCamera::getViewMatrix()
 
 glm::mat4 SbCamera::getProjectionMatrix()
 {
-	auto proj = glm::perspective(glm::radians(45.0f), width / (float)height, 0.1f, 10.0f);
+	auto proj = glm::perspective(glm::radians(85.0f), width / (float)height, 0.1f, 10.0f);
 	proj[1][1] *= -1;
 	return proj;
 }

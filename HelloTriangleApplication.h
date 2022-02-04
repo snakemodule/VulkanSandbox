@@ -31,7 +31,6 @@
 #include <unordered_map>
 #include <string>
 #include <memory>
-
 #include <cmath>
 
 //#include <assimp/Importer.hpp> // C++ importer interface
@@ -39,40 +38,17 @@
 //#include <assimp/postprocess.h> // Post processing flags
 
 #include "AnimationStuff.h"
-
 #include "SkeletalAnimationComponent.h"
 #include "Model.h"
 
-#include "Header.h"
-
 #include "SbCamera.h"
-
-//#include "AnimationKeys.h"
-
-
-
 #include "UncompressedAnimationKeys.h"
 #include "UncompressedAnimation.h"
-
-//#include "SbCommandPool.h"
-
-
-//#include "SbDescriptorPool.h"
-
-//#include "SbVulkanBase.h"
-//#include "SbSwapchain.h"
 #include "SbDescriptorSet.h"
-
-//#include "SbRenderpass.h"
-//#include "MyRenderPass.h"
-
 #include "SbUniformBuffer.h"
-//#include "SbImage.h"
-
-//#include "SbTextureImage.h"
-
-
 #include "vulkan/vulkan.hpp"
+#include "SbPipeline.h"
+
 
 
 class SbTextureImage;
@@ -80,8 +56,6 @@ class SbVulkanBase;
 class SbSwapchain;
 class SbRenderpass;
 class SbDescriptorPool;
-//class SbDescriptorSet;
-
 
 
 const int WIDTH = 800;
@@ -92,9 +66,6 @@ const std::string TEXTURE_PATH = "textures/chalet.jpg";
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
 
-
- 
-
 namespace std {
 	template<> struct hash<AnimatedVertex> {
 		size_t operator()(AnimatedVertex const& vertex) const {
@@ -103,22 +74,34 @@ namespace std {
 	};
 }
 
-
-
-
 //struct DefaultSkeletonTransformUBO {
 //	alignas(16) glm::mat4 boneTransforms[52]; 
 //	//this is only the size of the skeleton, the animation system does not output whole skeletons contigously
 //};
 
 
-
-
-
-
-
 class HelloTriangleApplication {
 public:
+	
+	struct {
+		//SbPipeline character;
+		SbPipeline opaque;
+		SbPipeline masked;
+
+		SbPipeline composition;
+
+		//SbPipeline transparentCharacter;
+	} pipelines;
+
+	struct 
+	{
+		SbShaderLayout gbuf;
+		SbShaderLayout sponza;
+		SbShaderLayout composition;
+		SbShaderLayout transparent;
+	} shaderLayouts ;
+
+
 
 	struct DrawableMesh {
 		VkBuffer VertexBuffer;
@@ -134,6 +117,12 @@ public:
 	};
 	std::vector<DrawableMesh> drawables;
 
+	struct MatrixBufferObject 
+	{
+		alignas(16) glm::mat4 model;
+		alignas(16) glm::mat4 view;
+		alignas(16) glm::mat4 proj;
+	};
 
 	struct UniformBufferObject {
 		alignas(16) glm::mat4 model;
@@ -181,6 +170,8 @@ private:
 	AnimatedModel* mymodel = nullptr;
 
 
+	std::unique_ptr<SbUniformBuffer<MatrixBufferObject>> matrixUniformBuffer;
+
 	std::unique_ptr<SbUniformBuffer<UniformBufferObject>> transformUniformBuffer;
 	std::unique_ptr<SbUniformBuffer<ShadingUBO>> shadingUniformBuffer;
 	std::unique_ptr<SbUniformBuffer<glm::mat4>> skeletonUniformBuffer;
@@ -192,6 +183,8 @@ private:
 
 	VkDescriptorSet myOneDescriptorSet;
 
+	std::unique_ptr<SbDescriptorSet> matrixDesc;
+	
 	std::unique_ptr<SbDescriptorSet> gbufDesc;
 	std::unique_ptr<SbDescriptorSet> compDesc;
 	std::unique_ptr<SbDescriptorSet> transDesc;
@@ -225,24 +218,17 @@ private:
 	void createInstance();
 
 
+	void handleKeyPresses();
+	void setOutputMode(uint32_t);
 
 	void createPipelines();
 
 	void createDescriptorSets();
 
+	void createTextureSampler();
 
 
-	//void createTextureSampler();
-
-	
-	
-	//AnimationKeys running;
-	//AnimationKeys walking;
-	//UncompressedAnimationKeys uk;
-	//SkeletonAnimation sa()
-
-	//TODO make function take model argument?
-	void createVertexBuffer();
+	void createVertexBuffer(); //for animated model
 
 	void createUniformBuffers();
 

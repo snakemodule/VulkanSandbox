@@ -10,7 +10,7 @@ class SbVulkanBase;
 class SbTextureImage
 {
 public:
-	vk::ImageView textureImageView;
+	VkImageView textureImageView;
 	SbImage* image;
 
 	int texWidth, texHeight, texChannels;

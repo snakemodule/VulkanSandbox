@@ -6,25 +6,17 @@
 
 #include "Model.h" //TODO is this necessary, get vertex data some other way?
 
-SbRenderpass::SbRenderpass(const SbVulkanBase & vkBase, uint32_t subpassCount, uint32_t attachmentCount, uint32_t swapchainSize)
-	: subpasses(subpassCount, Subpass(vkBase, swapchainSize)), attachments(attachmentCount)
+SbRenderpass::SbRenderpass(uint32_t subpassCount, uint32_t attachmentCount)
+	: subpasses(subpassCount), attachments(attachmentCount)
 {
-	for (size_t i = 0; i < subpasses.size(); i++)
-		subpasses[i].pipeline.subpassIndex(i);
-
-	//Subpass temp(vkBase, swapchainSize);
-	//subpasses = std::vector<Subpass>();
-	//attachments = std::vector<VkAttachmentDescription>(attachmentCount);
+	//for (size_t i = 0; i < subpasses.size(); i++)
+	//	subpasses[i].pipeline.subpassIndex(i);	
 }
 
 SbRenderpass::~SbRenderpass()
 {
 }
 
-//void SbRenderpass::addAttachment(uint32_t attachmentIndex, VkAttachmentDescription desc)
-//{
-//	attachments[attachmentIndex] = desc;
-//}
 
 void SbRenderpass::addSwapchainAttachments(SbSwapchain & swapchain)
 {
@@ -51,19 +43,6 @@ void SbRenderpass::addInputAttachmentRef(uint32_t subpassIndex, uint32_t attachm
 	VkAttachmentReference ref{ attachmentIndex, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL };
 	subpasses[subpassIndex].inputAttachments.push_back(ref);
 }
-
-//void SbRenderpass::addSyncMasks(uint32_t subpassIndex, VkPipelineStageFlags pipelineMaskAsDst, VkPipelineStageFlags pipelineMaskAsSrc, VkAccessFlags accessMaskAsDst, VkAccessFlags accessMaskAsSrc)
-//{
-//	subpasses[subpassIndex].pipelineMaskAsDst = pipelineMaskAsDst;
-//	subpasses[subpassIndex].pipelineMaskAsSrc = pipelineMaskAsSrc;
-//	subpasses[subpassIndex].accessMaskAsDst = accessMaskAsDst;
-//	subpasses[subpassIndex].accessMaskAsSrc = accessMaskAsSrc;
-//}
-
-//void SbRenderpass::addDependency(uint32_t srcSubpassIndex, uint32_t dstSubpassIndex)
-//{
-//	dependencies.push_back(std::pair<uint32_t, uint32_t>(srcSubpassIndex, dstSubpassIndex));
-//}
 
 void SbRenderpass::addDependency(VkSubpassDependency dep)
 {
@@ -139,20 +118,4 @@ void SbRenderpass::createRenderpass(SbSwapchain& swapchain)
 	if (vkCreateRenderPass(swapchain.logicalDevice.device, &renderPassInfo, nullptr, &renderPass) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create render pass!");
 	}
-}
-
-VkPipeline SbRenderpass::getSubpassPipeline(uint32_t subpassIndex)
-{
-	return subpasses[subpassIndex].pipeline.handle;
-}
-
-VkPipelineLayout SbRenderpass::getSubpassPipelineLayout(uint32_t subpassIndex)
-{
-	return subpasses[subpassIndex].pipeline.shaderLayout.pipelineLayout;
-}
-
-SbRenderpass::Subpass::Subpass(const SbVulkanBase & vkBase, const uint32_t & swapchainSize)
-	: pipeline()
-{
-
 }

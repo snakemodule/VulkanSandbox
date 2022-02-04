@@ -8,6 +8,18 @@
 //#include "spirv_reflect.hpp"
 //#include <utility>
 
+SbPipeline& SbPipeline::specializeFrag(VkSpecializationInfo* info)
+{
+	shaderStages[0].pSpecializationInfo = info;
+	return *this;
+}
+
+SbPipeline& SbPipeline::specializeVert(VkSpecializationInfo* info)
+{
+	shaderStages[1].pSpecializationInfo = info;
+	return *this;
+}
+
 SbPipeline & SbPipeline::vertexBindingDescription(const std::vector<VkVertexInputBindingDescription> & v)
 {
 	vertexBindingDescriptions = v;
@@ -20,9 +32,10 @@ SbPipeline & SbPipeline::vertexAttributeDescription(const std::vector<VkVertexIn
 	return *this;
 }
 
-SbPipeline& SbPipeline::shaderLayouts(vk::Device device, std::string vert, std::string frag)
+SbPipeline& SbPipeline::shaderLayouts(SbShaderLayout& shaderLayout)
 {	
-	pipelineCI.layout = shaderLayout.reflect(device, vert, frag, shaderStages);
+	pipelineCI.layout = shaderLayout.results.pipelineLayout;
+	shaderStages = shaderLayout.results.shaderInfo;
 	return *this;
 }
 
@@ -31,10 +44,9 @@ SbPipeline& SbPipeline::shaderLayouts(vk::Device device, std::string vert, std::
 //	return shaderLayout.setLayouts[set];
 //}
 
-SbPipeline & SbPipeline::layout(const VkPipelineLayout & pipelineLayout)
+VkPipelineLayout SbPipeline::getLayout()
 {
-	pipelineCI.layout = pipelineLayout;
-	return *this;
+	return pipelineCI.layout;
 }
 
 SbPipeline & SbPipeline::subpassIndex(const uint32_t & subpass)
@@ -99,7 +111,6 @@ SbPipeline & SbPipeline::addBlendAttachmentStates(VkPipelineColorBlendAttachment
 
 void SbPipeline::createPipeline(const VkRenderPass & renderPass, const VkDevice & device)
 {
-
 	auto& bind = vertexBindingDescriptions;
 	auto& attr = vertexAttributeDescriptions;
 	VkPipelineVertexInputStateCreateInfo vertexInputStateCI = vks::initializers::pipelineVertexInputStateCreateInfo();
@@ -131,14 +142,10 @@ void SbPipeline::createPipeline(const VkRenderPass & renderPass, const VkDevice 
 	pipelineCI.stageCount = static_cast<uint32_t>(shaderStages.size());
 	pipelineCI.pStages = shaderStages.data();
 
-
-	
-
-
-
 	vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineCI, nullptr, &handle);
 
-
+	shaderStages[0].pSpecializationInfo = nullptr;
+	shaderStages[1].pSpecializationInfo = nullptr;
 }
 
 SbPipeline::SbPipeline()
