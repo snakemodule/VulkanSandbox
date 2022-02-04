@@ -10,13 +10,13 @@
 
 SbPipeline& SbPipeline::specializeFrag(VkSpecializationInfo* info)
 {
-	shaderStages[0].pSpecializationInfo = info;
+	shaderStages[1].pSpecializationInfo = info;
 	return *this;
 }
 
 SbPipeline& SbPipeline::specializeVert(VkSpecializationInfo* info)
 {
-	shaderStages[1].pSpecializationInfo = info;
+	shaderStages[0].pSpecializationInfo = info;
 	return *this;
 }
 

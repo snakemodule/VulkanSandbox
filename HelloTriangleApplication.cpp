@@ -305,19 +305,28 @@ break_out:
 
 void HelloTriangleApplication::setOutputMode(uint32_t mode)
 {
+	struct SpecializationData {
+		uint32_t output_mode;
+	} specializationData;
+
+	specializationData.output_mode = mode;
+
 
 	VkSpecializationMapEntry entry = vk::SpecializationMapEntry();
 	entry.constantID = 0;
 	entry.offset = 0;
-	entry.size = sizeof(uint32_t);	
+	entry.size = sizeof(specializationData.output_mode);
 
 	VkSpecializationInfo specialization = vk::SpecializationInfo();
 	specialization.mapEntryCount = 1;
 	specialization.pMapEntries = &entry;
-	specialization.pData = &mode;
-	specialization.dataSize = sizeof(uint32_t);
+	specialization.pData = &specializationData;
+	specialization.dataSize = sizeof(specializationData);
 
 	pipelines.composition.specializeFrag(&specialization).createPipeline(renderPass->renderPass, vulkanBase->getDevice());
+
+	//rebuild command buffers
+	createCommandBuffers();
 }
 
 void HelloTriangleApplication::createPipelines()
