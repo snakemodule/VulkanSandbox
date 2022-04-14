@@ -35,7 +35,8 @@ SbPipeline & SbPipeline::vertexAttributeDescription(const std::vector<VkVertexIn
 SbPipeline& SbPipeline::shaderLayouts(SbShaderLayout& shaderLayout)
 {	
 	pipelineCI.layout = shaderLayout.results.pipelineLayout;
-	shaderStages = shaderLayout.results.shaderInfo;
+	assert(shaderLayout.results.shaderInfo.size() == 2);
+	shaderStages = { shaderLayout.results.shaderInfo[0], shaderLayout.results.shaderInfo[1] };
 	return *this;
 }
 

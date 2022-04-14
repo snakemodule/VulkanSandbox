@@ -17,7 +17,10 @@ namespace vks
 		//todo flytta till SbVulkanBase?
 		VkImageView createImageView(VkDevice device, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels);
 
+		void transitionImageLayout(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout, VkImageSubresourceRange subresourceRange);
 
+		void transitionImageLayout(VkCommandBuffer cmd, VkImage image, 
+			VkImageAspectFlagBits aspect, VkImageLayout oldLayout, VkImageLayout newLayout);
 		
 
 	}

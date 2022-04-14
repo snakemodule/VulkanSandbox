@@ -62,10 +62,10 @@ public:
 	
 
 	template <class T>
-	void addBufferBinding(uint32_t binding, const SbUniformBuffer<T>& buffer) {
+	void addBufferBinding(uint32_t binding, const SbUniformBuffer<T>* buffer) {
 		//todo how to determine instanced mode?
-		bool instanced = buffer.buffers.size() > 1;
-		SbBufferInfo info = { binding, buffer.buffers.data(), 0, sizeof(T), instanced };
+		bool instanced = buffer->buffers.size() > 1;
+		SbBufferInfo info = { binding, buffer->buffers.data(), 0, buffer->bufferSize, instanced };
 		bufInfo.push_back(info);
 	};
 

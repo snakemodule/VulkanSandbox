@@ -64,4 +64,5 @@ void SbLogicalDevice::createLogicalDevice(VkSurfaceKHR surface, bool validation,
 	//vkGetDeviceQueue(device, indices.presentFamily.value(), 0, &presentQueue);
 	graphicsQueue = device.getQueue(indices.graphicsFamily.value(), 0);
 	presentQueue = device.getQueue(indices.presentFamily.value(), 0);
+	computeQueue = device.getQueue(indices.computeFamily.value(), 0);
 }

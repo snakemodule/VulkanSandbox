@@ -1,5 +1,6 @@
 #pragma once
 
+
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
@@ -33,10 +34,6 @@
 #include <memory>
 #include <cmath>
 
-//#include <assimp/Importer.hpp> // C++ importer interface
-//#include <assimp/scene.h> // Output data structure
-//#include <assimp/postprocess.h> // Post processing flags
-
 #include "AnimationStuff.h"
 #include "SkeletalAnimationComponent.h"
 #include "Model.h"
@@ -46,8 +43,11 @@
 #include "UncompressedAnimation.h"
 #include "SbDescriptorSet.h"
 #include "SbUniformBuffer.h"
-#include "vulkan/vulkan.hpp"
 #include "SbPipeline.h"
+#include "SbComputePipeline.h"
+
+#include "vk_mem_alloc.h"
+#include "vulkan/vulkan.hpp"
 
 
 
@@ -56,6 +56,7 @@ class SbVulkanBase;
 class SbSwapchain;
 class SbRenderpass;
 class SbDescriptorPool;
+class RenderPassHelper;
 
 
 const int WIDTH = 800;
@@ -74,34 +75,63 @@ namespace std {
 	};
 }
 
-//struct DefaultSkeletonTransformUBO {
-//	alignas(16) glm::mat4 boneTransforms[52]; 
-//	//this is only the size of the skeleton, the animation system does not output whole skeletons contigously
-//};
+struct SbAllocatedBuffer {
+	VkBuffer buffer;
+	VmaAllocation allocation;
+
+};
 
 
 class HelloTriangleApplication {
 public:
 	
+	VmaAllocator vmaAllocator;
+
+	//SbTextureImage* shadowCubeMap;
+
 	struct {
-		//SbPipeline character;
+		VkImage image;
+		unsigned width, height;
+		VkDeviceMemory deviceMemory;
+		VkSampler sampler;
+		VkImageView view;
+	} shadowCubeMap;
+
+	
+
+	struct {
 		SbPipeline opaque;
 		SbPipeline masked;
 
 		SbPipeline composition;
 
+		SbComputePipeline cluster;
+		SbComputePipeline lightAssignment;
+
+		SbPipeline offscreen; //todo create pipeline
+
+		//SbPipeline character;
 		//SbPipeline transparentCharacter;
 	} pipelines;
+
+		
+	
 
 	struct 
 	{
 		SbShaderLayout gbuf;
 		SbShaderLayout sponza;
 		SbShaderLayout composition;
+
+		SbShaderLayout light_composition;
+
 		SbShaderLayout transparent;
+
+		SbShaderLayout cluster;
+		SbShaderLayout lightAssignment;
+
+		SbShaderLayout offscreenShadow;
 	} shaderLayouts ;
-
-
 
 	struct DrawableMesh {
 		VkBuffer VertexBuffer;
@@ -116,6 +146,33 @@ public:
 		float Shininess;
 	};
 	std::vector<DrawableMesh> drawables;
+	
+	struct LightGrid {
+		uint32_t offset;
+		uint32_t count;
+	};
+
+	struct PointLight
+	{
+		glm::vec4 position;
+		glm::vec4 color;
+		uint32_t enabled;
+		float intensity;
+		float range;
+	};
+
+	struct AABB {
+		glm::vec4 min;
+		glm::vec4 max;
+	};
+
+	struct ScreenToViewUniform {
+		glm::mat4 inverseProjection;
+		glm::uvec4 tileSizes;
+		glm::uvec2 screenDimensions;
+		float sliceScalingFactor;
+		float sliceBiasFactor;
+	};
 
 	struct MatrixBufferObject 
 	{
@@ -132,21 +189,10 @@ public:
 	};
 
 	struct ShadingUBO {
-		/*alignas(16) glm::vec3 lightPosition;
-		alignas(16) glm::vec4 lightColor;
-		alignas(16) glm::vec4 specularColor;
-		alignas(16) glm::vec4 diffuseColor;
-		alignas(16) glm::vec4 ambientColor;*/
-		//alignas(256) 
 		glm::vec4 specularColor;
-		//alignas(256) 
 		glm::vec4 diffuseColor;
-		//alignas(256) 
 		glm::vec4 ambientColor;
 	};
-
-	//ShadingUBO* shadingUboData = nullptr;
-
 
 	HelloTriangleApplication();
 
@@ -158,52 +204,80 @@ private:
 	GLFWwindow* window = nullptr;
 
 	std::unique_ptr<SbVulkanBase> vulkanBase;
-	std::unique_ptr<SbSwapchain> swapchain;
-	std::unique_ptr<SbRenderpass> renderPass;
 
+	SbSwapchain* swapchain;
 
-	//std::unique_ptr<SbTextureImage> texture;
+	std::vector<SbFramebuffer> deferredFrameBuffers = {};
+	RenderpassHelper* deferredRenderPass;
 
+	std::vector<SbFramebuffer> shadowFrameBuffers = {};
+	RenderpassHelper* shadowRenderPass;
+
+	//std::unique_ptr<SbSwapchain> swapchain;
+		
 	vk::Sampler textureSampler;
 
-	//custom model struct
 	AnimatedModel* mymodel = nullptr;
 
+	
 
-	std::unique_ptr<SbUniformBuffer<MatrixBufferObject>> matrixUniformBuffer;
+	struct {
+		SbUniformBuffer<AABB>* clusterSSBO;
+		SbUniformBuffer<ScreenToViewUniform>* screenToViewUniform;
+		SbUniformBuffer<PointLight>* lightsSSBO;
+		SbUniformBuffer<uint32_t>* lightIndexSSBO;
+		SbUniformBuffer<LightGrid>* lightGridSSBO;
+		SbUniformBuffer<uint32_t>* lightIndexCountSSBO;
 
-	std::unique_ptr<SbUniformBuffer<UniformBufferObject>> transformUniformBuffer;
-	std::unique_ptr<SbUniformBuffer<ShadingUBO>> shadingUniformBuffer;
-	std::unique_ptr<SbUniformBuffer<glm::mat4>> skeletonUniformBuffer;
+		SbUniformBuffer<MatrixBufferObject>* matrixUniform;
+		//SbUniformBuffer<UniformBufferObject>* transformUniform;
+		//SbUniformBuffer<ShadingUBO>* shadingUniform;
+		SbUniformBuffer<glm::mat4>* skeletonUniform;
 
-	std::vector<VkBuffer> transformationgUB;
-	std::vector<VkDeviceMemory> transformationUBMemory;
+		SbUniformBuffer<glm::vec4>* cameraUniform;
+	} shaderStorage;
+	
 	std::unique_ptr<SbDescriptorPool> descriptorPool;
 	std::vector<VkCommandBuffer> commandBuffers;
+	VkCommandBuffer computeCommandBuffer;
+		
+	struct {
+		//compute
+		SbDescriptorSet* lights;
 
-	VkDescriptorSet myOneDescriptorSet;
+		SbDescriptorSet* lightAssignment;
+		SbDescriptorSet* cluster;
 
-	std::unique_ptr<SbDescriptorSet> matrixDesc;
-	
-	std::unique_ptr<SbDescriptorSet> gbufDesc;
-	std::unique_ptr<SbDescriptorSet> compDesc;
-	std::unique_ptr<SbDescriptorSet> transDesc;
+		SbDescriptorSet* lights_g;
+		//SbDescriptorSet* compose;
+
+		SbDescriptorSet* matrixDesc;
+
+		SbDescriptorSet* gbufDesc;
+		SbDescriptorSet* compDesc;
+		SbDescriptorSet* transDesc;
+	} descriptorSets;
 
 	bool framebufferResized = false;
-
-
 	SbCamera cam;
-
-
-
 
 	void initWindow();
 
+
+	static glm::dvec2 last_mouse_pos;
+	static glm::dvec2 delta_mouse_pos;
+	static std::vector<int> keyPresses;
+
 	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+	static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 
 	static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
 
 	void initVulkan();
+
+	void createShadowRenderpass();
+
+	void createDeferredRenderpass();
 
 	std::chrono::high_resolution_clock::time_point frameTime = std::chrono::high_resolution_clock::now();
 	float deltaTime = 0;
@@ -223,6 +297,10 @@ private:
 
 	void createPipelines();
 
+	SbAllocatedBuffer create_buffer(size_t allocSize, VkBufferUsageFlags usage, VmaMemoryUsage memoryUsage);
+
+	void prepareComputePipeline();
+
 	void createDescriptorSets();
 
 	void createTextureSampler();
@@ -231,6 +309,18 @@ private:
 	void createVertexBuffer(); //for animated model
 
 	void createUniformBuffers();
+
+	void prepareCubeMap();
+
+	void createOffscreenRenderpass();
+
+	void prepareOffscreenFramebuffer();
+
+	void prepareOffscreenRenderpass();
+
+	void setupDescriptorSetLayout();
+
+	void updateCubeFace(uint32_t faceIndex, VkCommandBuffer commandBuffer);
 
 	void createDescriptorPool();
 

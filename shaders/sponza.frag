@@ -31,12 +31,12 @@ void main()
 	outPosition = vec4(inWorldPos, 1.0);
 
 	vec3 N = normalize(inNormal);
-	N.y = -N.y;
+	//N.y = -N.y;
 	outNormal = vec4(N, 1.0);
 
 	//vec4 check = {linearDepth(gl_FragCoord.z)/FAR_PLANE, gl_FragCoord.z, 0.0f, 1.0f};
-	outAlbedo = texture(diffuse, fragTexCoord); //vec4(fragTexCoord, 0.0, 1.0);
-    outAlbedo.a = 1.0;
+	outAlbedo = texture(diffuse, fragTexCoord);
+    outAlbedo.a = texture(specular,fragTexCoord).r;
 
 	// Store linearized depth in alpha component
 	outPosition.a = gl_FragCoord.z;

@@ -15,25 +15,13 @@ public:
 		std::vector<VkAttachmentReference> inputAttachments;
 		std::vector<VkAttachmentReference> colorAttachments;
 		VkAttachmentReference depthStencilAttachment = { VK_ATTACHMENT_UNUSED , VK_IMAGE_LAYOUT_UNDEFINED };
-		VkPipelineStageFlags pipelineMaskAsDst;
-		VkPipelineStageFlags pipelineMaskAsSrc;
-		VkAccessFlags accessMaskAsDst;
-		VkAccessFlags accessMaskAsSrc;
-
-		//SbPipeline pipeline;
-
-		
-
 	};
-
-
 
 	std::vector<Subpass> subpasses;
 	std::vector<VkAttachmentDescription> attachments;
 
-	std::vector<std::pair<uint32_t, uint32_t>> dependencies = {};
 
-	std::vector<VkSubpassDependency> premadeDependencies = {};
+	std::vector<VkSubpassDependency> dependencies = {};
 
 	VkRenderPass renderPass;
 

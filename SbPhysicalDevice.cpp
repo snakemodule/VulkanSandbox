@@ -84,6 +84,11 @@ QueueFamilyIndices SbPhysicalDevice::findQueueFamilies(VkPhysicalDevice device, 
 			indices.presentFamily = i;
 		}
 
+		if (queueFamily.queueCount > 0 && queueFamily.queueFlags & VK_QUEUE_COMPUTE_BIT)
+		{
+			indices.computeFamily = i;
+		}
+
 		if (indices.isComplete()) {
 			break;
 		}

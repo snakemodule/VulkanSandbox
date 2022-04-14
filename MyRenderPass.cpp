@@ -16,9 +16,9 @@ void MyRenderPass::setUpRenderpass(SbSwapchain& swapchain)
 	addInputAttachmentRef(kSubpass_COMPOSE, kAttachment_ALBEDO);
 	setDepthStencilAttachmentRef(kSubpass_COMPOSE, kAttachment_DEPTH);
 
-	addColorAttachmentRef(kSubpass_TRANSPARENT, kAttachment_BACK);
-	addInputAttachmentRef(kSubpass_TRANSPARENT, kAttachment_POSITION);
-	setDepthStencilAttachmentRef(kSubpass_TRANSPARENT, kAttachment_DEPTH);
+	//addColorAttachmentRef(kSubpass_TRANSPARENT, kAttachment_BACK);
+	//addInputAttachmentRef(kSubpass_TRANSPARENT, kAttachment_POSITION);
+	//setDepthStencilAttachmentRef(kSubpass_TRANSPARENT, kAttachment_DEPTH);
 
 	//todo test doable with above functions? ^^^^
 	std::array<VkSubpassDependency, 4> dependencies;
@@ -66,6 +66,9 @@ void MyRenderPass::setUpRenderpass(SbSwapchain& swapchain)
 
 void MyRenderPass::createAttachmentFor(SbSwapchain& swapchain, int attachmentIndex)
 {
-	swapchain.createAttachment(attachmentIndex, attachmentFormatTable[attachmentIndex].first, attachmentFormatTable[attachmentIndex].second);
+	swapchain.createAttachment(
+		attachmentIndex, 
+		attachmentFormatTable[attachmentIndex].first, 
+		attachmentFormatTable[attachmentIndex].second);
 }
 

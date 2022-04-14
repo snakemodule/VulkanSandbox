@@ -13,6 +13,7 @@ public:
 	vk::Device device;
 	vk::Queue graphicsQueue;
 	vk::Queue presentQueue;
+	vk::Queue computeQueue;
 
 	void createLogicalDevice(VkSurfaceKHR surface, bool validation, const std::vector<const char*> validationLayers);
 

@@ -3,3 +3,67 @@ a pipeline (?) has multiple descriptor sets
 a descriptor set has multiple bindings
 
 a binding has a type and a index
+
+ideas:
+SbBufferUniform factory
+
+
+//---------------------
+
+TODO: 22/03
+generate lights buffer,
+read lights, lightgrid and light indices in compose fragment shader
+
+
+Log:
+27/03:
+using linear depth in frag
+
+28/03:
+fixed dynamic buffer count, but not completely?
+
+plans for 29/03: start debugging clusters, or try world space clusters first
+discovery: lighting goes well outside the range of the light, clusters outside the range of the light seem to be active...
+depth slicing used log2 all along!?
+different attenuation formula keeps inside radius?
+
+31 inspect tileBuffer 
+tilebuffer seems ok so far
+discovery: zTile reaches cluster end before far plane?
+small success: highlighting depth slice with aabb intersection
+
+it works, with fragment in view space coords,
+	try depth.
+
+
+01: problem when only 1 light, 
+solved: misaligned memory in SbUniformBuffer
+
+looking into shadow mapping cube maps.
+11: sascha willems shadow omni example
+13: remaking renderpass abstractions
+
+
+
+//---------------------------
+clustered shading notes
+
+
+avalanche:
+
+*do not cluster with normals
+
+culling
+*cull against the AABB of the clusters, simple solution.
+*Iterative sphere refinement, how? code example in ppt
+	*spotlight iterative plane narrowing, no example in ppt, skipping
+
+
+*light assignment on CPU, example in Emil code, upload to buffer instead of 3d texture.
+
+
+
+
+*many shadow casters requires virtual textures.
+	key words?: sparse textures, texture paging?
+	

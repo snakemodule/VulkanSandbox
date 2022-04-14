@@ -122,7 +122,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\Other\libraries\includes\gli;D:\Other\boost_1_72_0;C:\Program Files\Assimp\include;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\tinyobjloader;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\stb-master;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\glfw-3.3.bin.WIN64\include;D:\Other\libraries\includes\glm;C:\VulkanSDK\1.1.106.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Other\libraries\includes\VulkanMemoryAllocator\include;D:\Other\libraries\includes\gli;D:\Other\boost_1_72_0;C:\Program Files\Assimp\include;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\tinyobjloader;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\stb-master;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\glfw-3.3.bin.WIN64\include;D:\Other\libraries\includes\glm;C:\VulkanSDK\1.1.106.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -165,7 +165,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\Other\libraries\includes\gli;C:\Program Files\Assimp\include;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\tinyobjloader;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\stb-master;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\glfw-3.3.bin.WIN64\include;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\glm;C:\VulkanSDK\1.1.106.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Other\libraries\includes\VulkanMemoryAllocator\include;D:\Other\libraries\includes\gli;C:\Program Files\Assimp\include;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\tinyobjloader;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\stb-master;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\glfw-3.3.bin.WIN64\include;C:\Users\Colin\Documents\Visual Studio 2017\Libraries\glm;C:\VulkanSDK\1.1.106.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -184,12 +184,17 @@
     <ClCompile Include="HelloTriangleApplication.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="MyRenderPass.cpp" />
+    <ClCompile Include="RenderpassHelper.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="SbComputePipeline.cpp" />
     <ClCompile Include="SbDescriptorSet.cpp" />
+    <ClCompile Include="SbFramebuffer.cpp" />
     <ClCompile Include="SbImage.cpp" />
     <ClCompile Include="SbShaderLayout.cpp" />
+    <ClCompile Include="SbStorageBuffer.cpp" />
     <ClCompile Include="SbTextureImage.cpp" />
     <ClCompile Include="SceneStuff.cpp" />
+    <ClCompile Include="ShadowRenderpass.cpp" />
     <ClCompile Include="SkeletalAnimationComponent.cpp" />
     <ClCompile Include="SkeletonAnimation.cpp" />
     <ClCompile Include="AnimationKeys.cpp" />
@@ -236,12 +241,17 @@
     <ClInclude Include="Entities.h" />
     <ClInclude Include="HelloTriangleApplication.h" />
     <ClInclude Include="MyRenderPass.h" />
+    <ClInclude Include="RenderpassHelper.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="SbComputePipeline.h" />
     <ClInclude Include="SbDescriptorSet.h" />
+    <ClInclude Include="SbFramebuffer.h" />
     <ClInclude Include="SbImage.h" />
     <ClInclude Include="SbShaderLayout.h" />
+    <ClInclude Include="SbStorageBuffer.h" />
     <ClInclude Include="SbTextureImage.h" />
     <ClInclude Include="SceneStuff.h" />
+    <ClInclude Include="ShadowRenderpass.h" />
     <ClInclude Include="Skeleton.h" />
     <ClInclude Include="spirv-cross\GLSL.std.450.h" />
     <ClInclude Include="spirv-cross\spirv.h" />
@@ -302,6 +312,8 @@
     <None Include="shaders\composition.vert" />
     <None Include="shaders\gbuf.frag" />
     <None Include="shaders\gbuf.vert" />
+    <None Include="shaders\offscreen.frag" />
+    <None Include="shaders\offscreen.vert" />
     <None Include="shaders\shader.frag" />
     <None Include="shaders\shader.vert" />
     <None Include="shaders\transparent.frag" />

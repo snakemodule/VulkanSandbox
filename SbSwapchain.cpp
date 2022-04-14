@@ -67,10 +67,10 @@ void SbSwapchain::createSwapChain(VkSurfaceKHR surface, GLFWwindow* window)
 		
 }
 
-void SbSwapchain::prepareAttachmentSets(int attachmentCount)
-{
-	swapchainAttachmentSets = std::vector<SbSwapchain::SwapchainAttachment>(attachmentCount - 1, SbSwapchain::SwapchainAttachment(swapChainImages.size()));
-}
+//void SbSwapchain::prepareAttachmentSets(int attachmentCount)
+//{
+//	swapchainAttachmentSets = std::vector<SbSwapchain::SwapchainAttachment>(attachmentCount - 1, SbSwapchain::SwapchainAttachment(swapChainImages.size()));
+//}
 
 VkSurfaceFormatKHR SbSwapchain::chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) {
 	for (const auto& availableFormat : availableFormats) {
@@ -117,7 +117,8 @@ VkExtent2D SbSwapchain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabil
 	}
 }
 
-void SbSwapchain::createImageViews() {
+void SbSwapchain::createImageViews() 
+{
 
 	uint32_t imageCount;
 	vkGetSwapchainImagesKHR(logicalDevice.device, handle, &imageCount, nullptr);
@@ -140,44 +141,42 @@ void SbSwapchain::createImageViews() {
 	swapChainImageViews.resize(swapChainImages.size());
 
 	for (uint32_t i = 0; i < swapChainImages.size(); i++) {
-		swapChainImageViews[i] = vks::helper::createImageView(logicalDevice.device, swapChainImages[i], desc.format, VK_IMAGE_ASPECT_COLOR_BIT, 1);
+		swapChainImageViews[i] = vks::helper::createImageView(logicalDevice.device, swapChainImages[i], swapchainCI.imageFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1);
 	}
 
 	
 }
 
-void SbSwapchain::createFramebuffersForRenderpass(VkRenderPass renderpass) {
-	swapChainFramebuffers.resize(swapChainImageViews.size());
-
-
-	std::vector<VkImageView> attachmentViews (1+swapchainAttachmentSets.size());
-
-	VkFramebufferCreateInfo framebufferCI = {};
-	framebufferCI.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-	framebufferCI.renderPass = renderpass;
-	framebufferCI.attachmentCount = static_cast<uint32_t>(attachmentViews.size());
-	framebufferCI.pAttachments = attachmentViews.data();
-	framebufferCI.width = swapchainCI.imageExtent.width;
-	framebufferCI.height = swapchainCI.imageExtent.height;
-	framebufferCI.layers = 1;
-
-	for (size_t i = 0; i < swapChainImageViews.size(); i++) {
-
-		attachmentViews[0] = swapChainImageViews[i];
-		for (size_t j = 0; j < swapchainAttachmentSets.size(); j++)
-		{
-			attachmentViews[1+j] = swapchainAttachmentSets[j].view[i];
-		}
-		//attachmentViews[kAttachment_COLOR] = swapchainAttachmentSets[SbSwapchain::attachmentIndex::eSetIndex_Color].view[i]; //attachments[i].color.view;
-		//attachmentViews[kAttachment_DEPTH] = swapchainAttachmentSets[SbSwapchain::attachmentIndex::eSetIndex_Depth].view[i];
-
-		if (vkCreateFramebuffer(logicalDevice.device, &framebufferCI, nullptr, &swapChainFramebuffers[i]) != VK_SUCCESS) {
-			throw std::runtime_error("failed to create framebuffer!");
-		}
-	}
-}
+//void SbSwapchain::createFramebuffersForRenderpass(VkRenderPass renderpass) {
+//	swapChainFramebuffers.resize(swapChainImageViews.size());
+//
+//	std::vector<VkImageView> attachmentViews (1+swapchainAttachmentSets.size());
+//
+//	VkFramebufferCreateInfo framebufferCI = {};
+//	framebufferCI.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+//	framebufferCI.renderPass = renderpass;
+//	framebufferCI.attachmentCount = static_cast<uint32_t>(attachmentViews.size());
+//	framebufferCI.pAttachments = attachmentViews.data();
+//	framebufferCI.width = swapchainCI.imageExtent.width;
+//	framebufferCI.height = swapchainCI.imageExtent.height;
+//	framebufferCI.layers = 1;
+//
+//	for (size_t i = 0; i < swapChainImageViews.size(); i++) {
+//
+//		attachmentViews[0] = swapChainImageViews[i];
+//		for (size_t j = 0; j < swapchainAttachmentSets.size(); j++)
+//		{
+//			attachmentViews[1+j] = swapchainAttachmentSets[j].view[i];
+//		}
+//
+//		if (vkCreateFramebuffer(logicalDevice.device, &framebufferCI, nullptr, &swapChainFramebuffers[i]) != VK_SUCCESS) {
+//			throw std::runtime_error("failed to create framebuffer!");
+//		}
+//	}
+//}
 
 //todo use enum to configure common types?
+/*
 void SbSwapchain::createAttachment(
 	uint32_t attachmentIndex,
 	VkFormat format, 
@@ -190,7 +189,7 @@ void SbSwapchain::createAttachment(
 {
 	assert(attachmentIndex > 0);
 	--attachmentIndex;
-	assert(attachmentIndex < swapchainAttachmentSets.size());
+	//assert(attachmentIndex < swapchainAttachmentSets.size());
 
 	VkImageAspectFlags aspectMask = 0;
 	VkImageLayout imageLayout;
@@ -207,7 +206,7 @@ void SbSwapchain::createAttachment(
 		imageLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 	}
 
-	auto & colorAttachment = swapchainAttachmentSets[attachmentIndex].description;
+	VkAttachmentDescription& colorAttachment = swapchainAttachmentSets[attachmentIndex].description;
 	colorAttachment.flags = 0;
 	colorAttachment.format = format;
 	colorAttachment.samples = swapchainAttachmentDescription.samples;
@@ -230,7 +229,7 @@ void SbSwapchain::createAttachment(
 		view = vks::helper::createImageView(logicalDevice.device, image, format, aspectMask, 1);
 		vulkanBase.commandPool->transitionImageLayout(image, format, colorAttachment.initialLayout, imageLayout, 1);
 	}
-}
+}*/
 
 void SbSwapchain::createSyncObjects(const uint32_t MAX_FRAMES_IN_FLIGHT) {
 	imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
@@ -329,6 +328,7 @@ VkFence SbSwapchain::getInFlightFence() {
 	return inFlightFences[currentFrame];
 }
 
+/*
 std::vector<VkImageView> & SbSwapchain::getAttachmentViews(uint32_t index)
 {
 	assert(index >= 0);
@@ -340,7 +340,7 @@ std::vector<VkImageView> & SbSwapchain::getAttachmentViews(uint32_t index)
 }
 
 VkAttachmentDescription SbSwapchain::getAttachmentDescription(uint32_t index) {
-	assert(index >= 0);
+	assert(index > 0);
 	if (index == 0)
 	{
 		return swapchainAttachmentDescription;
@@ -348,13 +348,14 @@ VkAttachmentDescription SbSwapchain::getAttachmentDescription(uint32_t index) {
 	return swapchainAttachmentSets[index - 1].description;
 }
 
-uint32_t SbSwapchain::getSize()
-{
-	return swapChainImages.size();
-}
 
 uint32_t SbSwapchain::getAttachmentCount()
 {
 	return swapchainAttachmentSets.size()+1;
 }
+*/
 
+uint32_t SbSwapchain::getSize()
+{
+	return swapChainImages.size();
+}

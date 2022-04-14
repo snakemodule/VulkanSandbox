@@ -128,6 +128,8 @@ namespace vks
 
 		VkDescriptorImageInfo descriptorImageInfo(VkSampler sampler, VkImageView imageView, VkImageLayout imageLayout);
 
+		VkDescriptorBufferInfo descriptorBufferInfo(VkBuffer buffer, VkDeviceSize offset, VkDeviceSize range);
+
 		VkWriteDescriptorSet writeDescriptorSet(
 			VkDescriptorSet dstSet,
 			VkDescriptorType type,

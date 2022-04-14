@@ -1,0 +1,56 @@
+#version 450 core
+
+
+//function prototype
+void markActiveClusters();
+uint getClusterIndex(vec3 pixelCoord);
+void buildCompactClusterList();
+
+//Input
+vec2 pixelID; // The thread x and y id corresponding to the pixel it is representing
+vec2 screenDimensions; // The total pixel size of the screen in x and y
+
+//Output
+bool clusterActive[];
+
+//We will evaluate the whole screen in one compute shader
+//so each thread is equivalent to a pixel
+void markActiveClusters(){
+    //Getting the depth value
+    vec2 screenCord = pixelID.xy / screenDimensions.xy;
+    float z = texture(screenCord) //reading the depth buffer
+
+    //Getting the linear cluster index value
+    uint clusterID = getClusterIndex(vec3(pixelID.xy, z));
+    clusterActive[clusterID] = true;
+}
+
+
+
+uint getDepthSlice(float depth) {
+    uint numSlices = 16; //todo specialization constants?
+    float zNear = 0.1;
+    float zFar = 10;
+    float denominator = log(zFar/zNear);
+
+    float term1 = log(depth)*(numSlices/denominator);
+    float term2 = (numSlices*log(zNear))/denominator;
+    return floor(term1-term2);
+}
+
+//Input
+uint tileSizeInPx; // How many pixels a rectangular cluster takes in x and y
+uvec3 numClusters; // The fixed number of clusters in x y and z axes
+
+uint getClusterIndex(vec2 pixelCoord, float depth) { // Screen space pixel coordinate with depth
+    // Uses equation (3) from Building a Cluster Grid section
+    uint clusterZVal  = getDepthSlice(depth);
+
+    uvec3 clusters    = uvec3( uvec2( pixelCoord.xy / tileSizeInPx), clusterZVal);
+    uint clusterIndex = clusters.x +
+                        numClusters.x * clusters.y +
+                        (numClusters.x * numClusters.y) * clusters.z;
+
+    return clusterIndex; // The linear index of the cluster the pixel belongs to
+}
+

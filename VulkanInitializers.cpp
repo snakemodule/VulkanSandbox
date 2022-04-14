@@ -267,6 +267,15 @@ VkDescriptorImageInfo vks::initializers::descriptorImageInfo(VkSampler sampler, 
 	return descriptorImageInfo;
 }
 
+VkDescriptorBufferInfo vks::initializers::descriptorBufferInfo(VkBuffer buffer, VkDeviceSize offset, VkDeviceSize range) 
+{
+	VkDescriptorBufferInfo descriptorBufferInfo{};
+	descriptorBufferInfo.buffer = buffer;
+	descriptorBufferInfo.offset = offset;
+	descriptorBufferInfo.range = range;	
+	return descriptorBufferInfo;
+}
+
 VkWriteDescriptorSet vks::initializers::writeDescriptorSet(VkDescriptorSet dstSet, VkDescriptorType type, uint32_t binding, VkDescriptorBufferInfo* bufferInfo, uint32_t descriptorCount)
 {
 	VkWriteDescriptorSet writeDescriptorSet{};

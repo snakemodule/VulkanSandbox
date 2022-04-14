@@ -46,45 +46,11 @@ void SbRenderpass::addInputAttachmentRef(uint32_t subpassIndex, uint32_t attachm
 
 void SbRenderpass::addDependency(VkSubpassDependency dep)
 {
-	premadeDependencies.push_back(dep);
+	dependencies.push_back(dep);
 }
 
 void SbRenderpass::createRenderpass(SbSwapchain& swapchain)
 {
-	std::vector<VkSubpassDependency> vkDependencies;
-	if (premadeDependencies.size() != 0)
-	{
-		vkDependencies = premadeDependencies;
-	}
-	else
-	{
-		vkDependencies.resize(dependencies.size());
-
-		for (size_t i = 0; i < dependencies.size(); i++)
-		{
-			VkSubpassDependency dep;
-			dep.srcSubpass = dependencies[i].first;
-			dep.dstSubpass = dependencies[i].second;
-			dep.dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
-			if (dep.srcSubpass ==VK_SUBPASS_EXTERNAL)	{
-				dep.srcStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
-				dep.srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
-			} else {
-				dep.srcStageMask = subpasses[dep.srcSubpass].pipelineMaskAsSrc;
-				dep.srcAccessMask = subpasses[dep.srcSubpass].accessMaskAsSrc;
-			}
-
-			if (dep.dstSubpass == VK_SUBPASS_EXTERNAL) {
-				dep.dstStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
-				dep.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
-			} else {
-				dep.dstStageMask = subpasses[dep.dstSubpass].pipelineMaskAsDst;
-				dep.dstAccessMask = subpasses[dep.dstSubpass].accessMaskAsDst;
-			}
-			vkDependencies[i] = dep;
-		}
-	}
-
 	std::vector<VkSubpassDescription> subpassDescriptions(subpasses.size());
 
 	for (size_t i = 0; i < subpasses.size(); i++)
@@ -94,15 +60,14 @@ void SbRenderpass::createRenderpass(SbSwapchain& swapchain)
 		desc.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
 		desc.colorAttachmentCount = subpasses[i].colorAttachments.size();
 		desc.pColorAttachments = subpasses[i].colorAttachments.data();
-		desc.pDepthStencilAttachment = (subpasses[i].depthStencilAttachment.attachment == VK_ATTACHMENT_UNUSED) ? nullptr :
-			&subpasses[i].depthStencilAttachment;
+		desc.pDepthStencilAttachment = (subpasses[i].depthStencilAttachment.attachment == VK_ATTACHMENT_UNUSED) ? 
+			nullptr : &subpasses[i].depthStencilAttachment;
 		desc.inputAttachmentCount = subpasses[i].inputAttachments.size();
 		desc.pInputAttachments = subpasses[i].inputAttachments.data();
 		
 		desc.pResolveAttachments = nullptr;
 		desc.preserveAttachmentCount = 0;
 		desc.pPreserveAttachments = nullptr;
-		//subpassDescriptions.push_back(desc);
 		subpassDescriptions[i] = desc;
 	}
 
@@ -112,8 +77,8 @@ void SbRenderpass::createRenderpass(SbSwapchain& swapchain)
 	renderPassInfo.pAttachments = attachments.data();
 	renderPassInfo.subpassCount = static_cast<uint32_t>(subpassDescriptions.size());
 	renderPassInfo.pSubpasses = subpassDescriptions.data();
-	renderPassInfo.dependencyCount = static_cast<uint32_t>(vkDependencies.size());
-	renderPassInfo.pDependencies = vkDependencies.data();
+	renderPassInfo.dependencyCount = static_cast<uint32_t>(dependencies.size());
+	renderPassInfo.pDependencies = dependencies.data();
 
 	if (vkCreateRenderPass(swapchain.logicalDevice.device, &renderPassInfo, nullptr, &renderPass) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create render pass!");

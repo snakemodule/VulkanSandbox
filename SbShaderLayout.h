@@ -23,6 +23,11 @@ public:
 		unsigned size = 0;
 	};
 
+	struct StorageBuffer {
+		std::string name;
+		uint64_t stageFlags = 0;
+	};
+
 	struct SampledImage
 	{
 		std::string name;
@@ -31,6 +36,7 @@ public:
 
 	struct set {
 		std::map<unsigned, UniformBuffer> uniforms;
+		std::map<unsigned, StorageBuffer> storageBuffers;
 		std::map<unsigned, SubpassInput> inputAttachments;
 		std::map<unsigned, SampledImage> imageSamplers;
 	};
@@ -39,7 +45,8 @@ public:
 	struct {
 		std::vector<std::vector<VkDescriptorSetLayoutBinding>> bindingInfo;
 		std::vector<VkDescriptorSetLayout> setLayouts;
-		std::array<VkPipelineShaderStageCreateInfo, 2> shaderInfo;
+		//std::array<VkPipelineShaderStageCreateInfo, 2> shaderInfo;
+		std::vector<VkPipelineShaderStageCreateInfo> shaderInfo;
 		VkPipelineLayout pipelineLayout;
 	} results;	
 
@@ -48,7 +55,11 @@ public:
 
 	void parse(std::vector<uint32_t>& spirv_binary, VkShaderStageFlagBits shaderStage);
 	void reflect(vk::Device device, std::string vert, std::string frag);
+	void reflect(vk::Device device, std::string compute);
 
+	void addBuffer() {
+
+	}
 
 
 

@@ -13,7 +13,7 @@ public:
 	VkImageView textureImageView;
 	SbImage* image;
 
-	int texWidth, texHeight, texChannels;
+	unsigned int texWidth, texHeight, texChannels;
 	vk::DeviceSize imageSize;
 	uint32_t mipLevels;
 	//VkImageLayout layout;
