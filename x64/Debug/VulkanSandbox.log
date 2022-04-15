@@ -14,73 +14,14 @@ g:\repos\vulkansandbox\vulkansandbox\animatedvertex.h(26): warning C4267: '=': c
           [
               T=int
           ]
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(209): error C2065: 'SbFramebuffer': undeclared identifier
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(209): error C2923: 'std::vector': 'SbFramebuffer' is not a valid template type argument for parameter '_Ty'
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(209): error C2903: 'allocator': symbol is neither a class template nor a function template
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(209): error C3203: 'allocator': unspecialized class template can't be used as a template argument for template parameter '_Alloc', expected a real type
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(209): error C2955: 'std::vector': use of class template requires template argument list
-  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.16.27023\include\vector(625): note: see declaration of 'std::vector'
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(210): error C2143: syntax error: missing ';' before '*'
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(210): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(210): error C2238: unexpected token(s) preceding ';'
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(212): error C2065: 'SbFramebuffer': undeclared identifier
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(212): error C2923: 'std::vector': 'SbFramebuffer' is not a valid template type argument for parameter '_Ty'
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(212): error C2903: 'allocator': symbol is neither a class template nor a function template
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(212): error C3203: 'allocator': unspecialized class template can't be used as a template argument for template parameter '_Alloc', expected a real type
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(212): error C2955: 'std::vector': use of class template requires template argument list
-  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.16.27023\include\vector(625): note: see declaration of 'std::vector'
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(213): error C2143: syntax error: missing ';' before '*'
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(213): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(213): error C2238: unexpected token(s) preceding ';'
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(209): fatal error C1903: unable to recover from previous error(s); stopping compilation
-  Model.cpp
-g:\repos\vulkansandbox\vulkansandbox\animatedvertex.h(26): warning C4267: '=': conversion from 'size_t' to 'T', possible loss of data
-          with
-          [
-              T=int
-          ]
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(81): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(83): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(91): warning C4244: 'initializing': conversion from 'T' to 'float', possible loss of data
-          with
-          [
-              T=double
-          ]
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(93): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(99): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\scenestuff.h(192): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(680): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(723): warning C4018: '<': signed/unsigned mismatch
+g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(877): warning C4101: 'memReqs': unreferenced local variable
+g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(927): warning C4101: 'attachments': unreferenced local variable
+g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(1321): warning C4267: 'argument': conversion from 'size_t' to 'uint32_t', possible loss of data
+  MyRenderPass.cpp
   RenderpassHelper.cpp
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(34): error C2061: syntax error: identifier 'RenderpassHelper'
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(67): error C2061: syntax error: identifier 'RenderpassHelper'
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(38): error C2065: 'rp': undeclared identifier
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(38): error C2065: 'attachmentIndex': undeclared identifier
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(38): error C2530: 'samples': references must be initialized
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(39): error C2065: 'rp': undeclared identifier
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(39): error C2065: 'attachmentIndex': undeclared identifier
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(41): error C2065: 'attachmentIndex': undeclared identifier
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(41): error C2530: 'image': references must be initialized
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(42): error C2065: 'attachmentIndex': undeclared identifier
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(42): error C2530: 'memory': references must be initialized
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(43): error C2065: 'attachmentIndex': undeclared identifier
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(43): error C2530: 'view': references must be initialized
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(45): error C3536: 'samples': cannot be used before it is initialized
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(46): error C2065: 'rp': undeclared identifier
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(46): error C2065: 'attachmentIndex': undeclared identifier
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(45): error C2661: 'SbVulkanBase::createImage': no overloaded function takes 8 arguments
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(47): error C3083: 'helper': the symbol to the left of a '::' must be a type
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(47): error C2039: 'createImageView': is not a member of 'vks'
-  g:\repos\vulkansandbox\vulkansandbox\vulkaninitializers.hpp(16): note: see declaration of 'vks'
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(47): error C2065: 'rp': undeclared identifier
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(47): error C2065: 'attachmentIndex': undeclared identifier
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(47): error C3861: 'createImageView': identifier not found
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(49): error C2065: 'rp': undeclared identifier
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(49): error C2065: 'attachmentIndex': undeclared identifier
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(48): error C2664: 'void SbCommandPool::transitionImageLayout(VkImage,VkImageLayout,VkImageLayout,VkImageSubresourceRange)': cannot convert argument 2 from 'VkFormat' to 'VkImageLayout'
-  g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(49): note: Conversion to enumeration type requires an explicit cast (static_cast, C-style cast or function-style cast)
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(58): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(68): error C2065: 'rp': undeclared identifier
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(69): error C2065: 'rp': undeclared identifier
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(70): error C2065: 'rp': undeclared identifier
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(72): error C2065: 'rp': undeclared identifier
 g:\repos\vulkansandbox\vulkansandbox\animatedvertex.h(26): warning C4267: '=': conversion from 'size_t' to 'T', possible loss of data
           with
           [
@@ -95,33 +36,57 @@ g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(91): warning C
           ]
 g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(93): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(99): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\renderpasshelper.cpp(105): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\renderpasshelper.cpp(109): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
-  ResourceManager.cpp
-g:\repos\vulkansandbox\vulkansandbox\animatedvertex.h(26): warning C4267: '=': conversion from 'size_t' to 'T', possible loss of data
-          with
-          [
-              T=int
-          ]
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(81): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(83): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(91): warning C4244: 'initializing': conversion from 'T' to 'float', possible loss of data
-          with
-          [
-              T=double
-          ]
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(93): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(99): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\renderpasshelper.cpp(111): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\renderpasshelper.cpp(115): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+  SbComputePipeline.cpp
+  SbDescriptorSet.cpp
+g:\repos\vulkansandbox\vulkansandbox\sbdescriptorset.cpp(135): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
   SbFramebuffer.cpp
-g:\repos\vulkansandbox\vulkansandbox\renderpasshelper.h(71): error C3646: 'createFrameBuffer': unknown override specifier
-g:\repos\vulkansandbox\vulkansandbox\renderpasshelper.h(71): error C2059: syntax error: '('
-g:\repos\vulkansandbox\vulkansandbox\renderpasshelper.h(71): error C2238: unexpected token(s) preceding ';'
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(47): error C3083: 'helper': the symbol to the left of a '::' must be a type
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(47): error C2039: 'createImageView': is not a member of 'vks'
-  g:\repos\vulkansandbox\vulkansandbox\vulkaninitializers.hpp(16): note: see declaration of 'vks'
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(47): error C3861: 'createImageView': identifier not found
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.h(58): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
-  SbImage.cpp
+g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.cpp(37): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+  SbPipeline.cpp
+  SbRenderpass.cpp
+g:\repos\vulkansandbox\vulkansandbox\animatedvertex.h(26): warning C4267: '=': conversion from 'size_t' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(81): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(83): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(91): warning C4244: 'initializing': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=double
+          ]
+g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(93): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(99): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\sbrenderpass.cpp(61): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\sbrenderpass.cpp(65): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+  SbShaderLayout.cpp
+g:\repos\vulkansandbox\vulkansandbox\sbshaderlayout.cpp(43): warning C4244: 'argument': conversion from 'uint64_t' to 'VkShaderStageFlags', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\sbshaderlayout.cpp(46): warning C4244: 'argument': conversion from 'uint64_t' to 'VkShaderStageFlags', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\sbshaderlayout.cpp(49): warning C4244: 'argument': conversion from 'uint64_t' to 'VkShaderStageFlags', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\sbshaderlayout.cpp(52): warning C4244: 'argument': conversion from 'uint64_t' to 'VkShaderStageFlags', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\sbshaderlayout.cpp(67): warning C4267: 'argument': conversion from 'size_t' to 'uint32_t', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\sbshaderlayout.cpp(181): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\sbshaderlayout.cpp(204): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\sbshaderlayout.cpp(223): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  ShadowRenderpass.cpp
+  Sponza.cpp
+g:\repos\vulkansandbox\vulkansandbox\animatedvertex.h(26): warning C4267: '=': conversion from 'size_t' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(81): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(83): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(91): warning C4244: 'initializing': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=double
+          ]
+g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(93): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(99): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\scenestuff.h(192): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
   main.cpp
 g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(81): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
 g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(83): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
@@ -137,23 +102,6 @@ g:\repos\vulkansandbox\vulkansandbox\animatedvertex.h(26): warning C4267: '=': c
           [
               T=int
           ]
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(209): error C2065: 'SbFramebuffer': undeclared identifier
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(209): error C2923: 'std::vector': 'SbFramebuffer' is not a valid template type argument for parameter '_Ty'
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(209): error C2903: 'allocator': symbol is neither a class template nor a function template
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(209): error C3203: 'allocator': unspecialized class template can't be used as a template argument for template parameter '_Alloc', expected a real type
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(209): error C2955: 'std::vector': use of class template requires template argument list
-  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.16.27023\include\vector(625): note: see declaration of 'std::vector'
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(210): error C2143: syntax error: missing ';' before '*'
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(210): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(210): error C2238: unexpected token(s) preceding ';'
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(212): error C2065: 'SbFramebuffer': undeclared identifier
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(212): error C2923: 'std::vector': 'SbFramebuffer' is not a valid template type argument for parameter '_Ty'
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(212): error C2903: 'allocator': symbol is neither a class template nor a function template
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(212): error C3203: 'allocator': unspecialized class template can't be used as a template argument for template parameter '_Alloc', expected a real type
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(212): error C2955: 'std::vector': use of class template requires template argument list
-  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.16.27023\include\vector(625): note: see declaration of 'std::vector'
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(213): error C2143: syntax error: missing ';' before '*'
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(213): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(213): error C2238: unexpected token(s) preceding ';'
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.h(209): fatal error C1903: unable to recover from previous error(s); stopping compilation
+g:\repos\vulkansandbox\vulkansandbox\scenestuff.h(192): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
   Generating Code...
+  VulkanSandbox.vcxproj -> G:\repos\VulkanSandbox\x64\Debug\VulkanSandbox.exe

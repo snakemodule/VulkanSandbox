@@ -51,7 +51,7 @@ public:
 		attachmentFormatTable[kAttachment_DEPTH] = 
 			{ base.findDepthFormat(), VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT };
 
-		setUpSwapchainAttachments(swapchain);
+		//setUpSwapchainAttachments(swapchain);
 		setUpRenderpass(swapchain);
 	};
 

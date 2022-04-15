@@ -2,7 +2,7 @@
 
 void MyRenderPass::setUpRenderpass(SbSwapchain& swapchain)
 {
-	addSwapchainAttachments(swapchain);
+	//addSwapchainAttachments(swapchain);
 
 	addColorAttachmentRef(kSubpass_GBUF, kAttachment_BACK);
 	addColorAttachmentRef(kSubpass_GBUF, kAttachment_POSITION);
@@ -66,9 +66,9 @@ void MyRenderPass::setUpRenderpass(SbSwapchain& swapchain)
 
 void MyRenderPass::createAttachmentFor(SbSwapchain& swapchain, int attachmentIndex)
 {
-	swapchain.createAttachment(
-		attachmentIndex, 
-		attachmentFormatTable[attachmentIndex].first, 
-		attachmentFormatTable[attachmentIndex].second);
+	//swapchain.createAttachment(
+	//	attachmentIndex, 
+	//	attachmentFormatTable[attachmentIndex].first, 
+	//	attachmentFormatTable[attachmentIndex].second);
 }
 

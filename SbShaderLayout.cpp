@@ -183,7 +183,30 @@ void SbShaderLayout::reflect(vk::Device device, std::string vert, std::string fr
 	createPipelineLayout(device);
 }
 
-void SbShaderLayout::reflect(vk::Device device, std::string compute)
+void SbShaderLayout::reflect_nofrag(vk::Device device, std::string vert) 
+{
+	std::vector<uint32_t> vert_binary = loadSpirvBinary(vert);
+
+	assert(vert_binary.size() > 0);
+
+	auto vertModule = vks::helper::loadShader(vert.c_str(), device);
+
+	auto vertCI = shaderStageCI(vertModule, VK_SHADER_STAGE_VERTEX_BIT, device);
+
+	results.shaderInfo.push_back(vertCI);
+
+	parse(vert_binary, VK_SHADER_STAGE_VERTEX_BIT);
+
+	results.bindingInfo.resize(sets.size());
+	results.setLayouts.resize(sets.size());
+
+	for (size_t i = 0; i < sets.size(); i++)
+		createDSLayout(device, i);
+
+	createPipelineLayout(device);
+}
+
+void SbShaderLayout::reflect_compute(vk::Device device, std::string compute)
 {
 	std::vector<uint32_t> binary = loadSpirvBinary(compute);
 	assert(binary.size() > 0);

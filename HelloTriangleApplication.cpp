@@ -5,7 +5,7 @@
 
 #include "SbDescriptorPool.h"
 //#include "SbDescriptorSet.h"
-#include "MyRenderPass.h"
+//#include "MyRenderPass.h"
 #include "SbTextureImage.h"
 #include "SbImage.h"
 
@@ -169,25 +169,20 @@ void HelloTriangleApplication::initVulkan() {
 
 void HelloTriangleApplication::createShadowRenderpass() {
 	VkDevice device = vulkanBase->getDevice();
-	enum subpasses {		
-		sDEPTH,
-		sCOUNT
-	};
-
-	enum attachments {		
-		aDEPTH,
-		aCOUNT
-	};
 	
-	shadowRenderPass = new RenderpassHelper(sCOUNT, aCOUNT);
-	shadowRenderPass->depthAttachmentDesc(aDEPTH, vulkanBase->findDepthFormat());
-	shadowRenderPass->setDepthStencilAttachmentRef(aDEPTH, sDEPTH);
+	using sa = shadow_attachments;
+	using ss = shadow_subpasses;
+
+	shadowRenderPass = new RenderpassHelper(ss::COUNT, sa::COUNT);
+	shadowRenderPass->depthAttachmentDesc(sa::DEPTH, vulkanBase->findDepthFormat());
+	shadowRenderPass->setDepthStencilAttachmentRef(sa::DEPTH, ss::DEPTH);
 	shadowRenderPass->createRenderpass(device);
 
 	shadowFrameBuffers.resize(swapchain->getSize());
 	for (size_t i = 0; i < swapchain->getSize(); i++)
 	{
-		shadowFrameBuffers[i].createAttachmentImage(vulkanBase.get(), *shadowRenderPass, aDEPTH);
+		shadowFrameBuffers[i] = SbFramebuffer(swapchain->extent, shadowRenderPass);
+		shadowFrameBuffers[i].createAttachmentImage(vulkanBase.get(), shadowRenderPass, sa::DEPTH);
 		shadowFrameBuffers[i].createFramebuffer(device);
 	}
 }
@@ -196,42 +191,31 @@ void HelloTriangleApplication::createDeferredRenderpass()
 {
 	VkDevice device = vulkanBase->getDevice();
 
-	enum subpasses {
-		sGBUF,
-		sCOMPOSE,
-		sCOUNT
-	};
+	using da = deferred_attachments;
+	using ds = deferred_subpasses;
 
-	enum attachments {
-		aBACK, 
-		aPOSITION, 
-		aNORMAL,
-		aALBEDO,
-		aDEPTH,
-		aCOUNT
-	};
+	deferredRenderPass = new RenderpassHelper(ds::COUNT, da::COUNT);
+	deferredRenderPass->addAttachmentDescription(da::BACK, swapchain->swapchainAttachmentDescription);
+	deferredRenderPass->colorAttachmentDesc(da::POSITION, VK_FORMAT_R16G16B16A16_SFLOAT);
+	deferredRenderPass->colorAttachmentDesc(da::NORMAL, VK_FORMAT_R16G16B16A16_SFLOAT);
+	deferredRenderPass->colorAttachmentDesc(da::ALBEDO, VK_FORMAT_R8G8B8A8_UNORM);
+	deferredRenderPass->depthAttachmentDesc(da::DEPTH, vulkanBase->findDepthFormat());
 
-	deferredRenderPass = new RenderpassHelper(sCOUNT, aCOUNT);
-	deferredRenderPass->colorAttachmentDesc(aPOSITION, VK_FORMAT_R16G16B16A16_SFLOAT);
-	deferredRenderPass->colorAttachmentDesc(aNORMAL, VK_FORMAT_R16G16B16A16_SFLOAT);
-	deferredRenderPass->colorAttachmentDesc(aALBEDO, VK_FORMAT_R8G8B8A8_UNORM);
-	deferredRenderPass->depthAttachmentDesc(aDEPTH, vulkanBase->findDepthFormat());
+	deferredRenderPass->addColorAttachmentRef(ds::GBUF, da::POSITION);
+	deferredRenderPass->addColorAttachmentRef(ds::GBUF, da::NORMAL);
+	deferredRenderPass->addColorAttachmentRef(ds::GBUF, da::ALBEDO);
+	deferredRenderPass->setDepthStencilAttachmentRef(ds::GBUF, da::DEPTH);
 
-	deferredRenderPass->addColorAttachmentRef(sGBUF, aPOSITION);
-	deferredRenderPass->addColorAttachmentRef(sGBUF, aNORMAL);
-	deferredRenderPass->addColorAttachmentRef(sGBUF, aALBEDO);
-	deferredRenderPass->setDepthStencilAttachmentRef(sGBUF, aDEPTH);
-
-	deferredRenderPass->addColorAttachmentRef(sCOMPOSE, aBACK);
-	deferredRenderPass->addInputAttachmentRef(sCOMPOSE, aPOSITION);
-	deferredRenderPass->addInputAttachmentRef(sCOMPOSE, aNORMAL);
-	deferredRenderPass->addInputAttachmentRef(sCOMPOSE, aALBEDO);
-	deferredRenderPass->setDepthStencilAttachmentRef(sCOMPOSE, aDEPTH);
+	deferredRenderPass->addColorAttachmentRef(ds::COMPOSE, da::BACK);
+	deferredRenderPass->addInputAttachmentRef(ds::COMPOSE, da::POSITION);
+	deferredRenderPass->addInputAttachmentRef(ds::COMPOSE, da::NORMAL);
+	deferredRenderPass->addInputAttachmentRef(ds::COMPOSE, da::ALBEDO);
+	deferredRenderPass->setDepthStencilAttachmentRef(ds::COMPOSE, da::DEPTH);
 	
 	std::array<VkSubpassDependency, 3> dependencies;
 
 	dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
-	dependencies[0].dstSubpass = sGBUF;
+	dependencies[0].dstSubpass = ds::GBUF;
 	dependencies[0].srcStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
 	dependencies[0].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 	dependencies[0].srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
@@ -239,15 +223,15 @@ void HelloTriangleApplication::createDeferredRenderpass()
 	dependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
 
 	// This dependency transitions the input attachment from color attachment to shader read
-	dependencies[1].srcSubpass = sGBUF;
-	dependencies[1].dstSubpass = sCOMPOSE;
+	dependencies[1].srcSubpass = ds::GBUF;
+	dependencies[1].dstSubpass = ds::COMPOSE;
 	dependencies[1].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 	dependencies[1].dstStageMask = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
 	dependencies[1].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
 	dependencies[1].dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
 	dependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
 		
-	dependencies[2].srcSubpass = sCOMPOSE;
+	dependencies[2].srcSubpass = ds::COMPOSE;
 	dependencies[2].dstSubpass = VK_SUBPASS_EXTERNAL;
 	dependencies[2].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 	dependencies[2].dstStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
@@ -262,14 +246,14 @@ void HelloTriangleApplication::createDeferredRenderpass()
 	deferredRenderPass->createRenderpass(device);
 
 	deferredFrameBuffers.resize(swapchain->getSize());
-
 	for (size_t i = 0; i < swapchain->getSize(); i++)
 	{
-		deferredFrameBuffers[i].addAttachmentImage(aBACK, swapchain->swapChainImageViews[i]);
-		deferredFrameBuffers[i].createAttachmentImage(vulkanBase.get(), *deferredRenderPass, aPOSITION);
-		deferredFrameBuffers[i].createAttachmentImage(vulkanBase.get(), *deferredRenderPass, aNORMAL);
-		deferredFrameBuffers[i].createAttachmentImage(vulkanBase.get(), *deferredRenderPass, aALBEDO);
-		deferredFrameBuffers[i].createAttachmentImage(vulkanBase.get(), *deferredRenderPass, aDEPTH);
+		deferredFrameBuffers[i] = SbFramebuffer(swapchain->extent, deferredRenderPass);
+		deferredFrameBuffers[i].addAttachmentImage(da::BACK, swapchain->swapChainImageViews[i]);
+		deferredFrameBuffers[i].createAttachmentImage(vulkanBase.get(), deferredRenderPass, da::POSITION);
+		deferredFrameBuffers[i].createAttachmentImage(vulkanBase.get(), deferredRenderPass, da::NORMAL);
+		deferredFrameBuffers[i].createAttachmentImage(vulkanBase.get(), deferredRenderPass, da::ALBEDO);
+		deferredFrameBuffers[i].createAttachmentImage(vulkanBase.get(), deferredRenderPass, da::DEPTH);
 		deferredFrameBuffers[i].createFramebuffer(device);
 	}
 	
@@ -490,12 +474,12 @@ void HelloTriangleApplication::createPipelines()
 	shaderLayouts.light_composition.reflect(device, "shaders/composition.vert.spv", "shaders/composelights.frag.spv");
 	shaderLayouts.transparent.reflect(device, "shaders/transparent.vert.spv", "shaders/transparent.frag.spv");
 
-	shaderLayouts.cluster.reflect(device, "shaders/cluster.comp.spv");
-	shaderLayouts.lightAssignment.reflect(device, "shaders/lightassignment.comp.spv");
+	shaderLayouts.cluster.reflect_compute(device, "shaders/cluster.comp.spv");
+	shaderLayouts.lightAssignment.reflect_compute(device, "shaders/lightassignment.comp.spv");
 	pipelines.cluster.createPipeline(device, shaderLayouts.cluster);
 	pipelines.lightAssignment.createPipeline(device, shaderLayouts.lightAssignment);
 
-	shaderLayouts.offscreenShadow.reflect(device, "shaders/offscreen.vert.spv", "shaders/offscreen.frag.spv");
+	shaderLayouts.offscreenShadow.reflect_nofrag(device, "shaders/offscreen.vert.spv");
 
 
 
@@ -517,14 +501,14 @@ void HelloTriangleApplication::createPipelines()
 		.addBlendAttachmentStates(vks::initializers::pipelineColorBlendAttachmentState(0xf, VK_FALSE), 0, 3)
 		.vertexBindingDescription(std::vector<VkVertexInputBindingDescription> {vbind.begin(), vbind.end()})
 		.vertexAttributeDescription(std::vector<VkVertexInputAttributeDescription> {vattr.begin(), vattr.end()})
-		.subpassIndex(MyRenderPass::kSubpass_GBUF)
+		.subpassIndex(deferred_subpasses::GBUF)
 		.createPipeline(deferredRenderPass->renderPass, vulkanBase->getDevice());
 	
 	//auto& subpasscomp = renderPass->subpasses[MyRenderPass::kSubpass_COMPOSE];
 	pipelines.composition.shaderLayouts(shaderLayouts.light_composition)
 		.cullMode(VK_CULL_MODE_NONE)
 		.depthWriteEnable(VK_FALSE)
-		.subpassIndex(MyRenderPass::kSubpass_COMPOSE)
+		.subpassIndex(deferred_subpasses::COMPOSE)
 		.createPipeline(deferredRenderPass->renderPass, vulkanBase->getDevice());
 
 	pipelines.offscreen.shaderLayouts(shaderLayouts.offscreenShadow)
@@ -611,11 +595,11 @@ void HelloTriangleApplication::createDescriptorSets()
 	descriptorSets.matrixDesc->updateDescriptors();
 
 
-
+	
 	descriptorSets.compDesc = new SbDescriptorSet(vulkanBase->getDevice(), *swapchain, shaderLayouts.light_composition, 0);
-	descriptorSets.compDesc->addInputAttachmentBinding(0, MyRenderPass::kAttachment_POSITION);
-	descriptorSets.compDesc->addInputAttachmentBinding(1, MyRenderPass::kAttachment_NORMAL);
-	descriptorSets.compDesc->addInputAttachmentBinding(2, MyRenderPass::kAttachment_ALBEDO);
+	descriptorSets.compDesc->addInputAttachmentBinding(0, deferred_attachments::POSITION, deferredFrameBuffers);
+	descriptorSets.compDesc->addInputAttachmentBinding(1, deferred_attachments::NORMAL, deferredFrameBuffers);
+	descriptorSets.compDesc->addInputAttachmentBinding(2, deferred_attachments::ALBEDO, deferredFrameBuffers);
 	descriptorSets.compDesc->addBufferBinding(3, shaderStorage.screenToViewUniform);
 	descriptorSets.compDesc->addBufferBinding(4, shaderStorage.cameraUniform);
 	descriptorSets.compDesc->addBufferBinding(5, shaderStorage.matrixUniform);
@@ -640,9 +624,9 @@ void HelloTriangleApplication::createDescriptorSets()
 
 			materials[i].descriptor = new SbDescriptorSet(
 				vulkanBase->getDevice(), *swapchain, shaderLayouts.sponza, 1);
-			materials[i].descriptor->addImageBinding(0, textureSampler, &materials[i].diffuse->textureImageView);
-			materials[i].descriptor->addImageBinding(1, textureSampler, &materials[i].bump->textureImageView);
-			materials[i].descriptor->addImageBinding(2, textureSampler, &materials[i].specular->textureImageView);
+			materials[i].descriptor->addImageBinding(0, textureSampler, materials[i].diffuse->textureImageView);
+			materials[i].descriptor->addImageBinding(1, textureSampler, materials[i].bump->textureImageView);
+			materials[i].descriptor->addImageBinding(2, textureSampler, materials[i].specular->textureImageView);
 			materials[i].descriptor->allocate(*descriptorPool.get());
 			materials[i].descriptor->updateDescriptors();
 		}
@@ -894,8 +878,8 @@ void HelloTriangleApplication::prepareOffscreenFramebuffer()
 
 	//assert(VK_SUCCESS == vkCreateImage(device, &imageCreateInfo, nullptr, &offscreenPass.color.image));
 	//vkGetImageMemoryRequirements(device, offscreenPass.color.image, &memReqs);
-	memAlloc.allocationSize = memReqs.size;
-	memAlloc.memoryTypeIndex = vulkanBase->findMemoryType(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+	//memAlloc.allocationSize = memReqs.size;
+	//memAlloc.memoryTypeIndex = vulkanBase->findMemoryType(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 	//vkAllocateMemory(device, &memAlloc, nullptr, &offscreenPass.color.mem);
 	//vkBindImageMemory(device, offscreenPass.color.image, offscreenPass.color.mem, 0);
 
@@ -928,8 +912,8 @@ void HelloTriangleApplication::prepareOffscreenFramebuffer()
 
 	//assert(VK_SUCCESS == vkCreateImage(device, &imageCreateInfo, nullptr, &offscreenPass.depth.image));
 	//vkGetImageMemoryRequirements(device, offscreenPass.depth.image, &memReqs);
-	memAlloc.allocationSize = memReqs.size;
-	memAlloc.memoryTypeIndex = vulkanBase->findMemoryType(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+	//memAlloc.allocationSize = memReqs.size;
+	//memAlloc.memoryTypeIndex = vulkanBase->findMemoryType(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 	//assert(VK_SUCCESS == vkAllocateMemory(device, &memAlloc, nullptr, &offscreenPass.depth.mem));
 	//assert(VK_SUCCESS == vkBindImageMemory(device, offscreenPass.depth.image, offscreenPass.depth.mem, 0));
 

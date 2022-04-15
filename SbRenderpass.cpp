@@ -18,13 +18,13 @@ SbRenderpass::~SbRenderpass()
 }
 
 
-void SbRenderpass::addSwapchainAttachments(SbSwapchain & swapchain)
-{
-	for (size_t i = 0; i < swapchain.getAttachmentCount(); i++)
-	{
-		attachments[i] = swapchain.getAttachmentDescription(i);
-	}
-}
+//void SbRenderpass::addSwapchainAttachments(SbSwapchain & swapchain)
+//{
+//	for (size_t i = 0; i < swapchain.getAttachmentCount(); i++)
+//	{
+//		attachments[i] = swapchain.getAttachmentDescription(i);
+//	}
+//}
 
 void SbRenderpass::addColorAttachmentRef(uint32_t subpassIndex, uint32_t attachmentIndex) 
 {

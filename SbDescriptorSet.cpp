@@ -18,7 +18,7 @@ void SbDescriptorSet::updateDescriptors()
 		{
 			VkDescriptorImageInfo vkInfo = {};
 			vkInfo.imageLayout = imgInfo[i].layout;
-			vkInfo.imageView = (imgInfo[i].instanced) ? imgInfo[i].pView[setInstance] : imgInfo[i].pView[0];
+			vkInfo.imageView = (imgInfo[i].instanced) ? imgInfo[i].view[setInstance] : imgInfo[i].view[0];
 			vkInfo.sampler = imgInfo[i].sampler;
 
 			vkImageInfos[i] = vkInfo;
@@ -66,26 +66,32 @@ SbDescriptorSet::SbDescriptorSet(const VkDevice& device, SbSwapchain& swapchain,
 	setLayout(shaderLayout.results.setLayouts[set])
 {	}
 
-SbDescriptorSet& SbDescriptorSet::addImageBinding(uint32_t binding, VkSampler sampler, VkImageView* imageView)
-{
+SbDescriptorSet& SbDescriptorSet::addImageBinding(uint32_t binding, VkSampler sampler, VkImageView imageView)
+{	
 	imgInfo.push_back(
 		SbImageInfo{ 
 			binding,
 			sampler, 
-			imageView, 
+			{imageView},
 			VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
 			false 
 		});
 	return *this;
 }
 
-SbDescriptorSet& SbDescriptorSet::addInputAttachmentBinding(uint32_t binding, uint32_t attachmentID)
+SbDescriptorSet& SbDescriptorSet::addInputAttachmentBinding(uint32_t binding, uint32_t attachmentID, std::vector<SbFramebuffer> framebufferInstances)
 {
+	std::vector<VkImageView> instanceViews(framebufferInstances.size());
+	for (size_t i = 0; i < framebufferInstances.size(); i++)
+	{
+		instanceViews[i] = framebufferInstances[i].views[attachmentID];
+	}
+
 	imgInfo.push_back(
 		SbImageInfo{
 			binding,
 			VK_NULL_HANDLE,
-			swapchain.getAttachmentViews(attachmentID).data(),
+			std::move(instanceViews),//swapchain.getAttachmentViews(attachmentID).data(),
 			VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
 			true
 		});

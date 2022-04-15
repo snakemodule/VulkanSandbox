@@ -31,7 +31,7 @@ public:
 	
 	virtual void setUpRenderpass(SbSwapchain& swapchain) = 0;
 
-	void addSwapchainAttachments(SbSwapchain & swapchain);
+	//void addSwapchainAttachments(SbSwapchain & swapchain);
 	void addColorAttachmentRef(uint32_t subpassIndex, uint32_t attachmentIndex);
 	void addInputAttachmentRef(uint32_t subpassIndex, uint32_t attachmentIndex);
 	void setDepthStencilAttachmentRef(uint32_t subpassIndex, uint32_t attachmentIndex);

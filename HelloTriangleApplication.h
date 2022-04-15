@@ -49,7 +49,7 @@
 #include "vk_mem_alloc.h"
 #include "vulkan/vulkan.hpp"
 
-
+#include "SbFramebuffer.h"
 
 class SbTextureImage;
 class SbVulkanBase;
@@ -84,7 +84,7 @@ struct SbAllocatedBuffer {
 
 class HelloTriangleApplication {
 public:
-	
+
 	VmaAllocator vmaAllocator;
 
 	//SbTextureImage* shadowCubeMap;
@@ -97,7 +97,7 @@ public:
 		VkImageView view;
 	} shadowCubeMap;
 
-	
+
 
 	struct {
 		SbPipeline opaque;
@@ -114,10 +114,10 @@ public:
 		//SbPipeline transparentCharacter;
 	} pipelines;
 
-		
-	
 
-	struct 
+
+
+	struct
 	{
 		SbShaderLayout gbuf;
 		SbShaderLayout sponza;
@@ -131,7 +131,7 @@ public:
 		SbShaderLayout lightAssignment;
 
 		SbShaderLayout offscreenShadow;
-	} shaderLayouts ;
+	} shaderLayouts;
 
 	struct DrawableMesh {
 		VkBuffer VertexBuffer;
@@ -146,7 +146,7 @@ public:
 		float Shininess;
 	};
 	std::vector<DrawableMesh> drawables;
-	
+
 	struct LightGrid {
 		uint32_t offset;
 		uint32_t count;
@@ -174,7 +174,7 @@ public:
 		float sliceBiasFactor;
 	};
 
-	struct MatrixBufferObject 
+	struct MatrixBufferObject
 	{
 		alignas(16) glm::mat4 model;
 		alignas(16) glm::mat4 view;
@@ -207,19 +207,53 @@ private:
 
 	SbSwapchain* swapchain;
 
+	struct deferred_subpasses {
+		enum {
+			GBUF,
+			COMPOSE,
+			COUNT
+		};
+	};
+
+	struct deferred_attachments {
+		enum {
+			BACK,
+			POSITION,
+			NORMAL,
+			ALBEDO,
+			DEPTH,
+			COUNT
+		};
+	};
+
+
 	std::vector<SbFramebuffer> deferredFrameBuffers = {};
 	RenderpassHelper* deferredRenderPass;
+
+	struct shadow_subpasses {
+		enum {
+			DEPTH,
+			COUNT
+		};
+	};
+
+	struct	shadow_attachments {
+		enum {
+			DEPTH,
+			COUNT
+		};
+	};
 
 	std::vector<SbFramebuffer> shadowFrameBuffers = {};
 	RenderpassHelper* shadowRenderPass;
 
 	//std::unique_ptr<SbSwapchain> swapchain;
-		
+
 	vk::Sampler textureSampler;
 
 	AnimatedModel* mymodel = nullptr;
 
-	
+
 
 	struct {
 		SbUniformBuffer<AABB>* clusterSSBO;
@@ -236,11 +270,11 @@ private:
 
 		SbUniformBuffer<glm::vec4>* cameraUniform;
 	} shaderStorage;
-	
+
 	std::unique_ptr<SbDescriptorPool> descriptorPool;
 	std::vector<VkCommandBuffer> commandBuffers;
 	VkCommandBuffer computeCommandBuffer;
-		
+
 	struct {
 		//compute
 		SbDescriptorSet* lights;

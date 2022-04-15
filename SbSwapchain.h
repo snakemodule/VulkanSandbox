@@ -29,6 +29,7 @@ private:
 	//std::vector<SwapchainAttachment> swapchainAttachmentSets;
 
 public:
+	VkExtent2D extent;
 	std::vector<VkImage> swapChainImages;
 	std::vector<VkImageView> swapChainImageViews;
 	VkAttachmentDescription swapchainAttachmentDescription; //TODO make use of attachment enums and integrate with renderpass creation
@@ -63,15 +64,15 @@ public:
 
 	//void createFramebuffersForRenderpass(VkRenderPass renderpass);
 
-	void createAttachment(
-		uint32_t attachmentIndex, 
-		VkFormat format,
-		VkImageUsageFlags usage,
-		VkImageUsageFlags additionalUsage = VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT,
-		VkAttachmentLoadOp loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
-		VkAttachmentStoreOp storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
-		VkAttachmentLoadOp stencilLoad = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
-		VkAttachmentStoreOp stencilStore = VK_ATTACHMENT_STORE_OP_DONT_CARE);
+	//void createAttachment(
+	//	uint32_t attachmentIndex, 
+	//	VkFormat format,
+	//	VkImageUsageFlags usage,
+	//	VkImageUsageFlags additionalUsage = VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT,
+	//	VkAttachmentLoadOp loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
+	//	VkAttachmentStoreOp storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
+	//	VkAttachmentLoadOp stencilLoad = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+	//	VkAttachmentStoreOp stencilStore = VK_ATTACHMENT_STORE_OP_DONT_CARE);
 
 	void createSyncObjects(const uint32_t maxFramesInFlight);
 
@@ -91,10 +92,10 @@ public:
 	//VkSemaphore getRenderFinishedSemaphore(uint32_t index);
 	//size_t getCurrentFrame();
 
-	std::vector<VkImageView> & getAttachmentViews(uint32_t index);
-	VkAttachmentDescription getAttachmentDescription(uint32_t index);
+	//std::vector<VkImageView> & getAttachmentViews(uint32_t index);
+	//VkAttachmentDescription getAttachmentDescription(uint32_t index);
 
 	uint32_t getSize();
-	uint32_t getAttachmentCount();
+	//uint32_t getAttachmentCount();
 };
 

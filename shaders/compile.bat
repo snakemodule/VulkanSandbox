@@ -21,6 +21,7 @@ C:/VulkanSDK/1.1.106.0/Bin32/glslangValidator.exe -V sponza.frag -o sponza.frag.
 C:/VulkanSDK/1.1.106.0/Bin32/glslangValidator.exe -V cluster.comp -o cluster.comp.spv
 C:/VulkanSDK/1.1.106.0/Bin32/glslangValidator.exe -V lightassignment.comp -o lightassignment.comp.spv
 
+C:/VulkanSDK/1.1.106.0/Bin32/glslangValidator.exe -V shadow.vert -o shadow.vert.spv
 
 
 pause

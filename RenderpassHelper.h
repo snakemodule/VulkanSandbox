@@ -7,8 +7,6 @@
 
 #include "SbPipeline.h"
 
-#include "SbFramebuffer.h"
-
 class RenderpassHelper
 {
 public:
@@ -41,11 +39,8 @@ public:
 
 	void depthAttachmentDesc(uint32_t attachmentIndex, VkFormat format);
 
-
-	//virtual void setUpRenderpass(SbSwapchain& swapchain) = 0;
-
-
-	
+	void addAttachmentDescription(uint32_t attachmentIndex, VkAttachmentDescription description);
+		
 	void addAttachmentDescription(uint32_t attachmentIndex,
 		VkFormat format,
 		VkImageUsageFlags usage,
@@ -58,25 +53,9 @@ public:
 	void addInputAttachmentRef(uint32_t subpassIndex, uint32_t attachmentIndex);
 	void setDepthStencilAttachmentRef(uint32_t subpassIndex, uint32_t attachmentIndex);
 	void addDependency(VkSubpassDependency dep);
-	//void addAttachment(uint32_t attachmentIndex, VkAttachmentDescription desc);
-	//void addSyncMasks(uint32_t subpassIndex,
-	//	VkPipelineStageFlags stageMaskAsDst, VkPipelineStageFlags stageMaskAsSrc,
-	//	VkAccessFlags accessMaskAsDst, VkAccessFlags accessMaskAsSrc);
-	//void addDependency(uint32_t srcSubpassIndex, uint32_t dstSubpassIndex);
-
-
-
-	void createRenderpass(VkDevice);
-
-	SbFramebuffer createFrameBuffer(SbVulkanBase* base, VkExtent2D extent);
-
 	
-
-	//VkPipeline getSubpassPipeline(uint32_t subpassIndex);
-
-	//VkPipelineLayout getSubpassPipelineLayout(uint32_t subpassIndex);;
-		
-
+	void createRenderpass(VkDevice);
+	
 };
 
 

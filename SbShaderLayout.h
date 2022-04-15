@@ -55,7 +55,8 @@ public:
 
 	void parse(std::vector<uint32_t>& spirv_binary, VkShaderStageFlagBits shaderStage);
 	void reflect(vk::Device device, std::string vert, std::string frag);
-	void reflect(vk::Device device, std::string compute);
+	void reflect_nofrag(vk::Device device, std::string vert);
+	void reflect_compute(vk::Device device, std::string compute);
 
 	void addBuffer() {
 

@@ -12,6 +12,7 @@
 //this is an allocated descriptorset
 
 #include "SbRenderpass.h"
+#include "SbFramebuffer.h"
 
 class SbDescriptorPool;
 
@@ -21,7 +22,7 @@ public:
 	struct SbImageInfo {
 		const uint32_t binding;
 		const VkSampler sampler;
-		const VkImageView* pView; //VkImageView* pView;
+		const std::vector<VkImageView> view; //const VkImageView* pView; 
 		const VkImageLayout layout;
 		const bool instanced;
 	};
@@ -51,8 +52,8 @@ public:
 
 	void updateDescriptors();
 
-	SbDescriptorSet& addImageBinding(uint32_t binding, VkSampler sampler, VkImageView* imageView);
-	SbDescriptorSet& addInputAttachmentBinding(uint32_t binding, uint32_t attachmentID);
+	SbDescriptorSet& addImageBinding(uint32_t binding, VkSampler sampler, VkImageView imageView);
+	SbDescriptorSet& addInputAttachmentBinding(uint32_t binding, uint32_t attachmentID, std::vector<SbFramebuffer> framebufferInstances);
 
 	void allocate(const SbDescriptorPool& descriptorPool);
 

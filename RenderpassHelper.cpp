@@ -10,7 +10,7 @@
 #include "Model.h" //TODO is this necessary, get vertex data some other way?
 
 RenderpassHelper::RenderpassHelper(uint32_t subpassCount, uint32_t attachmentCount)
-	: subpasses(subpassCount), info(attachmentCount)
+	: subpasses(subpassCount), info(attachmentCount), desc(attachmentCount)
 {
 	
 }
@@ -18,6 +18,8 @@ RenderpassHelper::RenderpassHelper(uint32_t subpassCount, uint32_t attachmentCou
 RenderpassHelper::~RenderpassHelper()
 {
 }
+
+
 
 void RenderpassHelper::colorAttachmentDesc(uint32_t attachmentIndex, VkFormat format) 
 {
@@ -27,6 +29,10 @@ void RenderpassHelper::colorAttachmentDesc(uint32_t attachmentIndex, VkFormat fo
 void RenderpassHelper::depthAttachmentDesc(uint32_t attachmentIndex, VkFormat format)
 {
 	addAttachmentDescription(attachmentIndex, format, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT);
+}
+
+void RenderpassHelper::addAttachmentDescription(uint32_t attachmentIndex, VkAttachmentDescription description) {
+	desc[attachmentIndex] = description;
 }
 
 void RenderpassHelper::addAttachmentDescription(uint32_t attachmentIndex, 

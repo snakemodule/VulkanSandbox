@@ -2,11 +2,9 @@
 
 #include "vulkan/vulkan.hpp"
 #include "VulkanInitializers.hpp"
-#include "SbVulkanBase.h"
 
-#include "RenderpassHelper.h"
-
-#include <cassert>
+class RenderpassHelper;
+class SbVulkanBase;
 
 class SbFramebuffer
 {
@@ -28,13 +26,14 @@ public:
 	
 	void addAttachmentImage(uint32_t attachmentIndex, VkImageView imageView);
 
-	void createAttachmentImage(SbVulkanBase* base, RenderpassHelper& rp, uint32_t attachmentIndex);
+	void createAttachmentImage(SbVulkanBase* base, RenderpassHelper* rp, uint32_t attachmentIndex);
 
 	void createFramebuffer(VkDevice device);
 
-	SbFramebuffer(VkExtent2D extent, RenderpassHelper rp);
+	SbFramebuffer(VkExtent2D extent, RenderpassHelper* rp);
+	
 
-
+	SbFramebuffer();
 
 };
 
