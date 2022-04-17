@@ -142,6 +142,7 @@ void HelloTriangleApplication::initVulkan() {
 	//MyRenderPass* pass = new MyRenderPass(*vulkanBase, *swapchain);
 	//renderPass = pass;
 	createDeferredRenderpass();
+	createShadowRenderpass();
 
 	//swapchain->createFramebuffersForRenderpass(renderPass->renderPass);
 
@@ -479,11 +480,7 @@ void HelloTriangleApplication::createPipelines()
 	pipelines.cluster.createPipeline(device, shaderLayouts.cluster);
 	pipelines.lightAssignment.createPipeline(device, shaderLayouts.lightAssignment);
 
-	shaderLayouts.offscreenShadow.reflect_nofrag(device, "shaders/offscreen.vert.spv");
-
-
-
-
+	shaderLayouts.shadow.reflect_nofrag(device, "shaders/shadow.vert.spv");
 
 	//auto& subpassgbuf = renderPass->subpasses[MyRenderPass::kSubpass_GBUF];
 	//const auto bind = AnimatedVertex::getBindingDescriptions();
@@ -498,7 +495,8 @@ void HelloTriangleApplication::createPipelines()
 	const auto vbind = Vertex::getBindingDescriptions();
 	const auto vattr = Vertex::getAttributeDescriptions();
 	pipelines.opaque.shaderLayouts(shaderLayouts.sponza)
-		.addBlendAttachmentStates(vks::initializers::pipelineColorBlendAttachmentState(0xf, VK_FALSE), 0, 3)
+		.setBlendAttachmentStates(vks::initializers::pipelineColorBlendAttachmentState(0xf, VK_FALSE), 
+			deferredRenderPass->subpasses[deferred_subpasses::GBUF].colorAttachments.size()) //todo make this easier?
 		.vertexBindingDescription(std::vector<VkVertexInputBindingDescription> {vbind.begin(), vbind.end()})
 		.vertexAttributeDescription(std::vector<VkVertexInputAttributeDescription> {vattr.begin(), vattr.end()})
 		.subpassIndex(deferred_subpasses::GBUF)
@@ -511,7 +509,7 @@ void HelloTriangleApplication::createPipelines()
 		.subpassIndex(deferred_subpasses::COMPOSE)
 		.createPipeline(deferredRenderPass->renderPass, vulkanBase->getDevice());
 
-	pipelines.offscreen.shaderLayouts(shaderLayouts.offscreenShadow)
+	pipelines.shadow.shaderLayouts(shaderLayouts.shadow)
 		.addBlendAttachmentStates(vks::initializers::pipelineColorBlendAttachmentState(0xf, VK_FALSE), 0, 1)
 		.vertexBindingDescription(std::vector<VkVertexInputBindingDescription> {vbind.begin(), vbind.end()})
 		.vertexAttributeDescription(std::vector<VkVertexInputAttributeDescription> {vattr.begin(), vattr.end()})
@@ -572,6 +570,7 @@ void HelloTriangleApplication::createDescriptorSets()
 	descriptorSets.lightAssignment->addBufferBinding(3, shaderStorage.lightIndexCountSSBO);
 	descriptorSets.lightAssignment->allocate(*descriptorPool.get());
 	descriptorSets.lightAssignment->updateDescriptors();
+
 
 	//------------graphics
 
@@ -1077,7 +1076,7 @@ void HelloTriangleApplication::updateCubeFace(uint32_t faceIndex, VkCommandBuffe
 	//	sizeof(glm::mat4),
 	//	&viewMatrix);
 
-	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.offscreen.handle);//todo create pipeline
+	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.shadow.handle);//todo create pipeline
 	//vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayouts.offscreen, 0, 1, &descriptorSets.offscreen, 0, NULL);
 	//models.scene.draw(commandBuffer);
 
@@ -1322,8 +1321,8 @@ void HelloTriangleApplication::createCommandBuffers() {
 			vkCmdDraw(commandBuffers[cmdIdx], 3, 1, 0, 0);
 		}
 
-
-		vkCmdNextSubpass(commandBuffers[cmdIdx], VK_SUBPASS_CONTENTS_INLINE);
+		//transparent subpass
+		//vkCmdNextSubpass(commandBuffers[cmdIdx], VK_SUBPASS_CONTENTS_INLINE);
 		{
 
 			//vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.transparentCharacter.handle);

@@ -1,5 +1,4 @@
-﻿  Asset.cpp
-  HelloTriangleApplication.cpp
+﻿  HelloTriangleApplication.cpp
 g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(81): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
 g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(83): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
 g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(91): warning C4244: 'initializing': conversion from 'T' to 'float', possible loss of data
@@ -15,93 +14,10 @@ g:\repos\vulkansandbox\vulkansandbox\animatedvertex.h(26): warning C4267: '=': c
               T=int
           ]
 g:\repos\vulkansandbox\vulkansandbox\scenestuff.h(192): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(680): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(723): warning C4018: '<': signed/unsigned mismatch
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(877): warning C4101: 'memReqs': unreferenced local variable
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(927): warning C4101: 'attachments': unreferenced local variable
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(1321): warning C4267: 'argument': conversion from 'size_t' to 'uint32_t', possible loss of data
-  MyRenderPass.cpp
-  RenderpassHelper.cpp
-g:\repos\vulkansandbox\vulkansandbox\animatedvertex.h(26): warning C4267: '=': conversion from 'size_t' to 'T', possible loss of data
-          with
-          [
-              T=int
-          ]
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(81): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(83): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(91): warning C4244: 'initializing': conversion from 'T' to 'float', possible loss of data
-          with
-          [
-              T=double
-          ]
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(93): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(99): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\renderpasshelper.cpp(111): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\renderpasshelper.cpp(115): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
-  SbComputePipeline.cpp
-  SbDescriptorSet.cpp
-g:\repos\vulkansandbox\vulkansandbox\sbdescriptorset.cpp(135): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
-  SbFramebuffer.cpp
-g:\repos\vulkansandbox\vulkansandbox\sbframebuffer.cpp(37): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
-  SbPipeline.cpp
-  SbRenderpass.cpp
-g:\repos\vulkansandbox\vulkansandbox\animatedvertex.h(26): warning C4267: '=': conversion from 'size_t' to 'T', possible loss of data
-          with
-          [
-              T=int
-          ]
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(81): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(83): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(91): warning C4244: 'initializing': conversion from 'T' to 'float', possible loss of data
-          with
-          [
-              T=double
-          ]
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(93): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(99): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\sbrenderpass.cpp(61): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\sbrenderpass.cpp(65): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
-  SbShaderLayout.cpp
-g:\repos\vulkansandbox\vulkansandbox\sbshaderlayout.cpp(43): warning C4244: 'argument': conversion from 'uint64_t' to 'VkShaderStageFlags', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\sbshaderlayout.cpp(46): warning C4244: 'argument': conversion from 'uint64_t' to 'VkShaderStageFlags', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\sbshaderlayout.cpp(49): warning C4244: 'argument': conversion from 'uint64_t' to 'VkShaderStageFlags', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\sbshaderlayout.cpp(52): warning C4244: 'argument': conversion from 'uint64_t' to 'VkShaderStageFlags', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\sbshaderlayout.cpp(67): warning C4267: 'argument': conversion from 'size_t' to 'uint32_t', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\sbshaderlayout.cpp(181): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\sbshaderlayout.cpp(204): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\sbshaderlayout.cpp(223): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-  ShadowRenderpass.cpp
-  Sponza.cpp
-g:\repos\vulkansandbox\vulkansandbox\animatedvertex.h(26): warning C4267: '=': conversion from 'size_t' to 'T', possible loss of data
-          with
-          [
-              T=int
-          ]
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(81): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(83): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(91): warning C4244: 'initializing': conversion from 'T' to 'float', possible loss of data
-          with
-          [
-              T=double
-          ]
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(93): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(99): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\scenestuff.h(192): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
-  main.cpp
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(81): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(83): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(91): warning C4244: 'initializing': conversion from 'T' to 'float', possible loss of data
-          with
-          [
-              T=double
-          ]
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(93): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\skeletalanimationcomponent.h(99): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\animatedvertex.h(26): warning C4267: '=': conversion from 'size_t' to 'T', possible loss of data
-          with
-          [
-              T=int
-          ]
-g:\repos\vulkansandbox\vulkansandbox\scenestuff.h(192): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
-  Generating Code...
+g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(499): warning C4267: 'argument': conversion from 'size_t' to 'uint32_t', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(679): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(722): warning C4018: '<': signed/unsigned mismatch
+g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(876): warning C4101: 'memReqs': unreferenced local variable
+g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(926): warning C4101: 'attachments': unreferenced local variable
+g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(1320): warning C4267: 'argument': conversion from 'size_t' to 'uint32_t', possible loss of data
   VulkanSandbox.vcxproj -> G:\repos\VulkanSandbox\x64\Debug\VulkanSandbox.exe

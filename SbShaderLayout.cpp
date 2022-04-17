@@ -65,6 +65,12 @@ void SbShaderLayout::createDSLayout(vk::Device device, int set)
 void SbShaderLayout::createPipelineLayout(vk::Device device)
 {
 	VkPipelineLayoutCreateInfo pipelineLayoutCI = vks::initializers::pipelineLayoutCreateInfo(results.setLayouts.data(), results.setLayouts.size());
+	if (push_constant.size != 0)
+	{
+		pipelineLayoutCI.pPushConstantRanges = &push_constant;
+		pipelineLayoutCI.pushConstantRangeCount = 1;
+	}
+
 	if (vkCreatePipelineLayout(device, &pipelineLayoutCI, nullptr, &results.pipelineLayout) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create pipeline layout!");
 	}
@@ -151,6 +157,18 @@ void SbShaderLayout::parse(std::vector<uint32_t>& spirv_binary, VkShaderStageFla
 			it->second.stageFlags |= shaderStage;
 		else
 			setBuffers[binding] = { resource.name, (uint64_t)shaderStage };
+	}
+
+	for (auto& resource : resources.push_constant_buffers) {
+		const spirv_cross::SPIRType& type = glsl.get_type(resource.base_type_id);
+		size_t size = glsl.get_declared_struct_size(type);
+
+		//this push constant range starts at the beginning
+		push_constant.offset = 0;
+		//this push constant range takes up the size of a MeshPushConstants struct
+		push_constant.size = size;
+		//this push constant range is accessible only in the vertex shader
+		push_constant.stageFlags |= shaderStage;
 	}
 
 	for (set& s : sets)

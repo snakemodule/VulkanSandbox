@@ -10,10 +10,10 @@ layout(set=1, binding = 0) uniform sampler2D diffuse;
 layout(set=1, binding = 1) uniform sampler2D bump;
 layout(set=1, binding = 2) uniform sampler2D specular;
 
-layout (location = 0) out vec4 outColor;
-layout (location = 1) out vec4 outPosition;
-layout (location = 2) out vec4 outNormal;
-layout (location = 3) out vec4 outAlbedo;
+//layout (location = 0) out vec4 outColor;
+layout (location = 0) out vec4 outPosition;
+layout (location = 1) out vec4 outNormal;
+layout (location = 2) out vec4 outAlbedo;
 
 
 
@@ -42,5 +42,5 @@ void main()
 	outPosition.a = gl_FragCoord.z;
 
 	// Write color attachments to avoid undefined behaviour (validation error)
-	outColor = vec4(1.0);
+	//outColor = vec4(1.0);
 }

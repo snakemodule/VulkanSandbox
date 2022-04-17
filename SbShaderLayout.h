@@ -41,6 +41,8 @@ public:
 		std::map<unsigned, SampledImage> imageSamplers;
 	};
 	std::vector<set> sets;
+
+	VkPushConstantRange push_constant;
 		
 	struct {
 		std::vector<std::vector<VkDescriptorSetLayoutBinding>> bindingInfo;

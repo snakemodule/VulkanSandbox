@@ -97,8 +97,6 @@ public:
 		VkImageView view;
 	} shadowCubeMap;
 
-
-
 	struct {
 		SbPipeline opaque;
 		SbPipeline masked;
@@ -108,14 +106,11 @@ public:
 		SbComputePipeline cluster;
 		SbComputePipeline lightAssignment;
 
-		SbPipeline offscreen; //todo create pipeline
+		SbPipeline shadow; //todo create pipeline
 
 		//SbPipeline character;
 		//SbPipeline transparentCharacter;
 	} pipelines;
-
-
-
 
 	struct
 	{
@@ -130,7 +125,7 @@ public:
 		SbShaderLayout cluster;
 		SbShaderLayout lightAssignment;
 
-		SbShaderLayout offscreenShadow;
+		SbShaderLayout shadow;
 	} shaderLayouts;
 
 	struct DrawableMesh {
@@ -252,8 +247,6 @@ private:
 	vk::Sampler textureSampler;
 
 	AnimatedModel* mymodel = nullptr;
-
-
 
 	struct {
 		SbUniformBuffer<AABB>* clusterSSBO;

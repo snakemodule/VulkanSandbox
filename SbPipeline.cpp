@@ -35,8 +35,9 @@ SbPipeline & SbPipeline::vertexAttributeDescription(const std::vector<VkVertexIn
 SbPipeline& SbPipeline::shaderLayouts(SbShaderLayout& shaderLayout)
 {	
 	pipelineCI.layout = shaderLayout.results.pipelineLayout;
-	assert(shaderLayout.results.shaderInfo.size() == 2);
-	shaderStages = { shaderLayout.results.shaderInfo[0], shaderLayout.results.shaderInfo[1] };
+	//assert(shaderLayout.results.shaderInfo.size() == 2);
+	//shaderStages = { shaderLayout.results.shaderInfo[0], shaderLayout.results.shaderInfo[1] };
+	shaderStages = shaderLayout.results.shaderInfo;
 	return *this;
 }
 
@@ -110,6 +111,12 @@ SbPipeline & SbPipeline::addBlendAttachmentStates(VkPipelineColorBlendAttachment
 	return *this;
 }
 
+SbPipeline& SbPipeline::setBlendAttachmentStates(VkPipelineColorBlendAttachmentState blend, uint32_t count) 
+{
+	blendAttachmentStates = std::vector<VkPipelineColorBlendAttachmentState>(count, blend);
+	return *this;
+}
+
 void SbPipeline::createPipeline(const VkRenderPass & renderPass, const VkDevice & device)
 {
 	auto& bind = vertexBindingDescriptions;
@@ -145,8 +152,8 @@ void SbPipeline::createPipeline(const VkRenderPass & renderPass, const VkDevice 
 
 	vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineCI, nullptr, &handle);
 
-	shaderStages[0].pSpecializationInfo = nullptr;
-	shaderStages[1].pSpecializationInfo = nullptr;
+	for (size_t i = 0; i < shaderStages.size(); i++)
+		shaderStages[i].pSpecializationInfo = nullptr;
 }
 
 SbPipeline::SbPipeline()
