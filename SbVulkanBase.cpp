@@ -152,7 +152,18 @@ void SbVulkanBase::createLogicalDevice() {
 	logicalDevice->createLogicalDevice(surface, enableValidationLayers, validationLayers);
 }
 
-void SbVulkanBase::createImage(uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory) {
+void SbVulkanBase::createImage(
+	uint32_t width, 
+	uint32_t height, 
+	uint32_t mipLevels, 
+	VkSampleCountFlagBits numSamples, 
+	VkFormat format, 
+	VkImageTiling tiling, 
+	VkImageUsageFlags usage, 
+	VkMemoryPropertyFlags properties, 
+	VkImage& image, 
+	VkDeviceMemory& imageMemory) 
+{
 	VkImageCreateInfo imageInfo = {};
 	imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 	imageInfo.imageType = VK_IMAGE_TYPE_2D;
@@ -187,8 +198,19 @@ void SbVulkanBase::createImage(uint32_t width, uint32_t height, uint32_t mipLeve
 	vkBindImageMemory(logicalDevice->device, image, imageMemory, 0);
 }
 
-void SbVulkanBase::createImage(VkExtent2D extent, uint32_t mipLevels, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory) {
-	createImage(extent.width, extent.height, mipLevels, numSamples, format, tiling, usage, properties, image, imageMemory);
+void SbVulkanBase::createImage(
+	VkExtent2D extent, 
+	uint32_t mipLevels, 
+	VkSampleCountFlagBits numSamples, 
+	VkFormat format, 
+	VkImageTiling tiling, 
+	VkImageUsageFlags usage, 
+	VkMemoryPropertyFlags properties, 
+	VkImage& image, 
+	VkDeviceMemory& imageMemory) 
+{
+	createImage(extent.width, extent.height, mipLevels, numSamples,
+		format, tiling, usage, properties, image, imageMemory);
 }
 
 uint32_t SbVulkanBase::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {

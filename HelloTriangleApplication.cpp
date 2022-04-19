@@ -143,6 +143,7 @@ void HelloTriangleApplication::initVulkan() {
 	//renderPass = pass;
 	createDeferredRenderpass();
 	createShadowRenderpass();
+	prepareCubeMap();
 
 	//swapchain->createFramebuffersForRenderpass(renderPass->renderPass);
 
@@ -179,11 +180,14 @@ void HelloTriangleApplication::createShadowRenderpass() {
 	shadowRenderPass->setDepthStencilAttachmentRef(sa::DEPTH, ss::DEPTH);
 	shadowRenderPass->createRenderpass(device);
 
+	VkExtent2D extent = { 1024,1024 };
+	
+
 	shadowFrameBuffers.resize(swapchain->getSize());
 	for (size_t i = 0; i < swapchain->getSize(); i++)
 	{
-		shadowFrameBuffers[i] = SbFramebuffer(swapchain->extent, shadowRenderPass);
-		shadowFrameBuffers[i].createAttachmentImage(vulkanBase.get(), shadowRenderPass, sa::DEPTH);
+		shadowFrameBuffers[i] = SbFramebuffer(extent, shadowRenderPass);
+		shadowFrameBuffers[i].createAttachmentImage(vulkanBase.get(), shadowRenderPass, sa::DEPTH, VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
 		shadowFrameBuffers[i].createFramebuffer(device);
 	}
 }
@@ -758,7 +762,8 @@ void HelloTriangleApplication::prepareCubeMap()
 	shadowCubeMap.height = 1024;
 
 	// 32 bit float format for higher precision
-	VkFormat format = VK_FORMAT_R32_SFLOAT;
+	//VkFormat format = VK_FORMAT_R32_SFLOAT; 
+	VkFormat format = vulkanBase->findDepthFormat();
 
 	// Cube map image description
 	VkImageCreateInfo imageCreateInfo = vks::initializers::imageCreateInfo();
@@ -790,14 +795,20 @@ void HelloTriangleApplication::prepareCubeMap()
 	
 	// Image barrier for optimal image (target)
 	VkImageSubresourceRange subresourceRange = {};
-	subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+	subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
 	subresourceRange.baseMipLevel = 0;
 	subresourceRange.levelCount = 1;
 	subresourceRange.layerCount = 6;
 
-	vulkanBase->commandPool->transitionImageLayout(shadowCubeMap.image,
- VK_IMAGE_LAYOUT_UNDEFINED,
+	//vulkanBase->commandPool->transitionImageLayout(shadowCubeMap.image,
+	//	VK_IMAGE_LAYOUT_UNDEFINED,
+	//	VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, subresourceRange);
+
+	VkCommandBuffer cmd = vulkanBase->commandPool->beginSingleTimeCommands();
+	vks::helper::transitionImageLayout(cmd, shadowCubeMap.image,
+		VK_IMAGE_LAYOUT_UNDEFINED,
 		VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, subresourceRange);
+	vulkanBase->commandPool->endSingleTimeCommands(cmd);
 		
 	// Create sampler
 	VkSamplerCreateInfo sampler = vks::initializers::samplerCreateInfo();
@@ -821,15 +832,10 @@ void HelloTriangleApplication::prepareCubeMap()
 	view.viewType = VK_IMAGE_VIEW_TYPE_CUBE;
 	view.format = format;
 	view.components = { VK_COMPONENT_SWIZZLE_R };
-	view.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
+	view.subresourceRange = { VK_IMAGE_ASPECT_DEPTH_BIT, 0, 1, 0, 1 };
 	view.subresourceRange.layerCount = 6;
 	view.image = shadowCubeMap.image;
 	vkCreateImageView(vulkanBase->getDevice(), &view, nullptr, &shadowCubeMap.view);
-}
-
-void HelloTriangleApplication::createOffscreenRenderpass() 
-{
-
 }
 
 // Prepare a new framebuffer for offscreen rendering
@@ -1023,16 +1029,15 @@ void HelloTriangleApplication::setupDescriptorSetLayout()
 // Uses push constants for quick update of view matrix for the current cube map face
 void HelloTriangleApplication::updateCubeFace(uint32_t faceIndex, VkCommandBuffer commandBuffer)
 {
-	VkClearValue clearValues[2];
-	clearValues[0].color = { { 0.0f, 0.0f, 0.0f, 1.0f } };
-	clearValues[1].depthStencil = { 1.0f, 0 };
+	VkClearValue clearValues[1];	
+	clearValues[0].depthStencil = { 1.0f, 0 };
 
 	VkRenderPassBeginInfo renderPassBeginInfo = vks::initializers::renderPassBeginInfo();
 	// Reuse render pass from example pass
-	//renderPassBeginInfo.renderPass = offscreenPass.renderPass;
-	//renderPassBeginInfo.framebuffer = offscreenPass.frameBuffer;
-	//renderPassBeginInfo.renderArea.extent.width = offscreenPass.width;
-	//renderPassBeginInfo.renderArea.extent.height = offscreenPass.height;
+	renderPassBeginInfo.renderPass =  shadowRenderPass->renderPass;
+	renderPassBeginInfo.framebuffer = shadowFrameBuffers[0].frameBuffer;
+	renderPassBeginInfo.renderArea.extent.width = shadowFrameBuffers[0].extent.width;
+	renderPassBeginInfo.renderArea.extent.height = shadowFrameBuffers[0].extent.height;
 	renderPassBeginInfo.clearValueCount = 2;
 	renderPassBeginInfo.pClearValues = clearValues;
 
@@ -1068,60 +1073,85 @@ void HelloTriangleApplication::updateCubeFace(uint32_t faceIndex, VkCommandBuffe
 
 	// Update shader push constant block
 	// Contains current face view matrix
-	//vkCmdPushConstants(
-	//	commandBuffer,
-	//	pipelineLayouts.offscreen,
-	//	VK_SHADER_STAGE_VERTEX_BIT,
-	//	0,
-	//	sizeof(glm::mat4),
-	//	&viewMatrix);
+	vkCmdPushConstants(
+		commandBuffer,
+		shaderLayouts.shadow.results.pipelineLayout,
+		VK_SHADER_STAGE_VERTEX_BIT,
+		0,
+		sizeof(glm::mat4),
+		&viewMatrix);
 
-	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.shadow.handle);//todo create pipeline
-	//vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayouts.offscreen, 0, 1, &descriptorSets.offscreen, 0, NULL);
+	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.shadow.handle);
+	vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, shaderLayouts.shadow.results.pipelineLayout, 0, 1, &descriptorSets.matrixDesc->allocatedDSs[0], 0, NULL);
+	
 	//models.scene.draw(commandBuffer);
+	{
+		VkDeviceSize offsets[] = { 0 };
+		VkBuffer vert[] = { sponza.scene.vertexBuffer.buffer };
+		vkCmdBindVertexBuffers(commandBuffer, 0, 1, vert, offsets);
+		vkCmdBindIndexBuffer(commandBuffer, sponza.scene.indexBuffer.buffer, 0, VK_INDEX_TYPE_UINT32);
+
+		for (size_t meshIdx = 0; meshIdx < sponza.scene.meshes.size(); meshIdx++)
+		{
+			auto currentMaterial = sponza.scene.meshes[meshIdx].material;
+			if (!currentMaterial->hasAlpha &&
+				currentMaterial->hasBump &&
+				currentMaterial->hasSpecular &&
+				meshIdx != 17)
+			{
+				VkDescriptorSet sets[] = { descriptorSets.matrixDesc->allocatedDSs[0], currentMaterial->descriptor->allocatedDSs[0] };
+				vkCmdDrawIndexed(commandBuffer, sponza.scene.meshes[meshIdx].indexCount, 1, sponza.scene.meshes[meshIdx].indexBase, 0, 0);
+			}
+		}
+	}
 
 	vkCmdEndRenderPass(commandBuffer);
-	// Make sure color writes to the framebuffer are finished before using it as transfer source
+
+	// Make sure color writes to the framebuffer are finished before using it as transfer source	
+	vks::helper::transitionImageLayout(
+			commandBuffer,
+			shadowFrameBuffers[0].images[shadow_attachments::DEPTH],
+			VK_IMAGE_ASPECT_DEPTH_BIT,
+			VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+			VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);	 
 	//vks::tools::setImageLayout(
 	//	commandBuffer,
 	//	offscreenPass.color.image,
 	//	VK_IMAGE_ASPECT_COLOR_BIT,
 	//	VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
-	//	VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
-	//vks::helper::transitionImageLayout(commandBuffer, offscreenPass.color.image,
-	//	VK_IMAGE_ASPECT_COLOR_BIT,
-	//	VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
-	//	VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
-
+	//	VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);	 
 
 	VkImageSubresourceRange cubeFaceSubresourceRange = {};
-	cubeFaceSubresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+	cubeFaceSubresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
 	cubeFaceSubresourceRange.baseMipLevel = 0;
 	cubeFaceSubresourceRange.levelCount = 1;
 	cubeFaceSubresourceRange.baseArrayLayer = faceIndex;
 	cubeFaceSubresourceRange.layerCount = 1;
 
 	// Change image layout of one cubemap face to transfer destination
+	vks::helper::transitionImageLayout(
+		commandBuffer, 
+		shadowCubeMap.image, 
+		VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+		VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 
+		cubeFaceSubresourceRange);
 	//vks::tools::setImageLayout(
 	//	commandBuffer,
 	//	shadowCubeMap.image,
 	//	VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
 	//	VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
 	//	cubeFaceSubresourceRange);
-	vks::helper::transitionImageLayout(commandBuffer, shadowCubeMap.image, 
-		VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-		VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, cubeFaceSubresourceRange);
 
 	// Copy region for transfer from framebuffer to cube face
 	VkImageCopy copyRegion = {};
 
-	copyRegion.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+	copyRegion.srcSubresource.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
 	copyRegion.srcSubresource.baseArrayLayer = 0;
 	copyRegion.srcSubresource.mipLevel = 0;
 	copyRegion.srcSubresource.layerCount = 1;
 	copyRegion.srcOffset = { 0, 0, 0 };
 
-	copyRegion.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+	copyRegion.dstSubresource.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
 	copyRegion.dstSubresource.baseArrayLayer = faceIndex;
 	copyRegion.dstSubresource.mipLevel = 0;
 	copyRegion.dstSubresource.layerCount = 1;
@@ -1132,41 +1162,43 @@ void HelloTriangleApplication::updateCubeFace(uint32_t faceIndex, VkCommandBuffe
 	copyRegion.extent.depth = 1;
 
 	// Put image copy into command buffer
-	//vkCmdCopyImage(
-	//	commandBuffer,
-	//	offscreenPass.color.image,
-	//	VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-	//	shadowCubeMap.image,
-	//	VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-	//	1,
-	//	&copyRegion);
+	vkCmdCopyImage(
+		commandBuffer,
+		shadowFrameBuffers[0].images[shadow_attachments::DEPTH],
+		VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+		shadowCubeMap.image,
+		VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+		1,
+		&copyRegion);
 
 	// Transform framebuffer color attachment back
+	vks::helper::transitionImageLayout(
+		commandBuffer,
+		shadowFrameBuffers[0].images[shadow_attachments::DEPTH],
+		VK_IMAGE_ASPECT_DEPTH_BIT,
+		VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+		VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 	//vks::tools::setImageLayout(
 	//	commandBuffer,
 	//	offscreenPass.color.image,
 	//	VK_IMAGE_ASPECT_COLOR_BIT,
 	//	VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
 	//	VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
-	//vks::helper::transitionImageLayout(commandBuffer,
-	//	offscreenPass.color.image,
-	//	VK_IMAGE_ASPECT_COLOR_BIT,
-	//	VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-	//	VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+	
 
 	// Change image layout of copied face to shader read
+	vks::helper::transitionImageLayout(
+		commandBuffer,
+		shadowCubeMap.image,
+		VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+		VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+		cubeFaceSubresourceRange);
 	//vks::tools::setImageLayout(
 	//	commandBuffer,
 	//	shadowCubeMap.image,
 	//	VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
 	//	VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
 	//	cubeFaceSubresourceRange);
-	vks::helper::transitionImageLayout(commandBuffer, 
-		shadowCubeMap.image,
-		VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-		VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-		cubeFaceSubresourceRange);
-
 }
 
 void HelloTriangleApplication::createDescriptorPool() {
@@ -1214,7 +1246,8 @@ void HelloTriangleApplication::createCommandBuffers() {
 		throw std::runtime_error("failed to allocate command buffers!");
 	}
 
-	for (size_t cmdIdx = 0; cmdIdx < commandBuffers.size(); cmdIdx++) {
+	for (size_t cmdIdx = 0; cmdIdx < commandBuffers.size(); cmdIdx++) 
+	{
 		VkCommandBufferBeginInfo beginInfo = {};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 		beginInfo.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
@@ -1222,6 +1255,23 @@ void HelloTriangleApplication::createCommandBuffers() {
 		if (vkBeginCommandBuffer(commandBuffers[cmdIdx], &beginInfo) != VK_SUCCESS) {
 			throw std::runtime_error("failed to begin recording command buffer!");
 		}
+
+		{
+			VkExtent2D framebufferExtent = shadowFrameBuffers[0].extent;
+
+			VkViewport viewport = vks::initializers::viewport(
+				(float)framebufferExtent.width, (float)framebufferExtent.height, 0.0f, 1.0f);
+			vkCmdSetViewport(commandBuffers[cmdIdx], 0, 1, &viewport);
+
+			VkRect2D scissor = vks::initializers::rect2D(framebufferExtent.width, framebufferExtent.height, 0, 0);
+			vkCmdSetScissor(commandBuffers[cmdIdx], 0, 1, &scissor);
+
+			for (uint32_t face = 0; face < 6; face++) {
+				updateCubeFace(face, commandBuffers[cmdIdx]);
+			}
+		}
+
+
 
 		//compute light assignments
 		vkCmdBindPipeline(commandBuffers[cmdIdx],
@@ -1233,6 +1283,41 @@ void HelloTriangleApplication::createCommandBuffers() {
 		vkCmdBindDescriptorSets(commandBuffers[cmdIdx], VK_PIPELINE_BIND_POINT_COMPUTE,
 			pipelines.lightAssignment.getLayout(), 0, 2, sets, 0, nullptr);
 		vkCmdDispatch(commandBuffers[cmdIdx], 1, 1, 6); //todo hard coded
+		/*
+		VkBufferMemoryBarrier lightIndexMemoryBarrier = {
+			VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER,
+			nullptr,
+			VK_ACCESS_SHADER_WRITE_BIT,
+			VK_ACCESS_SHADER_READ_BIT,
+			vulkanBase->commandPool->poolInfo.queueFamilyIndex,
+			vulkanBase->commandPool->poolInfo.queueFamilyIndex,
+			shaderStorage.lightIndexSSBO->buffers[cmdIdx],
+			0,
+			shaderStorage.lightIndexSSBO->bufferSize
+		};
+
+		VkBufferMemoryBarrier lightGridMemoryBarrier = {
+			VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER,
+			nullptr,
+			VK_ACCESS_SHADER_WRITE_BIT,
+			VK_ACCESS_SHADER_READ_BIT,
+			vulkanBase->commandPool->poolInfo.queueFamilyIndex,
+			vulkanBase->commandPool->poolInfo.queueFamilyIndex,
+			shaderStorage.lightGridSSBO->buffers[cmdIdx],
+			0,
+			shaderStorage.lightGridSSBO->bufferSize
+		};
+		
+		VkBufferMemoryBarrier lightBarriers[2] = { lightIndexMemoryBarrier, lightGridMemoryBarrier };
+
+		vkCmdPipelineBarrier(commandBuffers[cmdIdx], 
+			VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, 
+			VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 
+			0, 
+			0, nullptr,
+			2, lightBarriers,
+			0, nullptr);
+		*/
 
 		VkRenderPassBeginInfo renderPassInfo = {};
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -1298,7 +1383,7 @@ void HelloTriangleApplication::createCommandBuffers() {
 				if (!currentMaterial->hasAlpha &&
 					currentMaterial->hasBump &&
 					currentMaterial->hasSpecular &&
-					cmdIdx != 17)
+					meshIdx != 17)
 				{
 					VkDescriptorSet sets[] = { descriptorSets.matrixDesc->allocatedDSs[0], currentMaterial->descriptor->allocatedDSs[0] };
 					vkCmdBindDescriptorSets(commandBuffers[cmdIdx], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.opaque.getLayout(), 0, 2, sets, 0, nullptr);

@@ -66,7 +66,9 @@ VkImageView vks::helper::createImageView(VkDevice device, VkImage image, VkForma
 }
 
 void vks::helper::transitionImageLayout(VkCommandBuffer commandBuffer, VkImage image, 
-	VkImageLayout oldLayout, VkImageLayout newLayout, VkImageSubresourceRange subresourceRange)
+	VkImageLayout oldLayout, VkImageLayout newLayout, VkImageSubresourceRange subresourceRange,
+	VkPipelineStageFlags srcStageMask,
+	VkPipelineStageFlags dstStageMask)
 {
 	VkImageMemoryBarrier barrier = {};
 	barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -77,43 +79,79 @@ void vks::helper::transitionImageLayout(VkCommandBuffer commandBuffer, VkImage i
 	barrier.image = image;
 	barrier.subresourceRange = subresourceRange;
 
-	VkPipelineStageFlags sourceStage;
-	VkPipelineStageFlags destinationStage;
+	//VkPipelineStageFlags sourceStage;
+	//VkPipelineStageFlags destinationStage;
 
-	if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL) {
-		barrier.srcAccessMask = 0;
-		barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
 
-		sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-		destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+	// Source layouts (old)
+	// Source access mask controls actions that have to be finished on the old layout
+	// before it will be transitioned to the new layout
+	switch (oldLayout)
+	{
+	case VK_IMAGE_LAYOUT_UNDEFINED:		// Image layout is undefined (or does not matter)
+		// Only valid as initial layout. 
+		barrier.srcAccessMask = 0; //No flags required, listed only for completeness
+		break;
+
+	case VK_IMAGE_LAYOUT_PREINITIALIZED:// Image is preinitialized
+		// Only valid as initial layout for linear images, preserves memory contents
+		barrier.srcAccessMask = VK_ACCESS_HOST_WRITE_BIT; // Make sure host writes have been finished
+		break;
+
+	case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:// Image is a color attachment		
+		barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;// Make sure any writes to the color buffer have been finished
+		break;
+
+	case VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL:// Image is a depth/stencil attachment				
+		barrier.srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;// Make sure any writes to the depth/stencil buffer have been finished
+		break;
+
+	case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:// Image is a transfer source		
+		barrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;// Make sure any reads from the image have been finished
+		break;
+
+	case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:// Image is a transfer destination
+		barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;// Make sure any writes to the image have been finished
+		break;
+
+	case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:// Image is read by a shader
+		barrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT; // Make sure any shader reads from the image have been finished
+		break;
+	default:
+		// Other source layouts aren't handled (yet)
+		break;
 	}
-	else if (oldLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL) {
-		barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+
+	// Target layouts (new)
+			// Destination access mask controls the dependency for the new image layout
+	switch (newLayout)
+	{
+	case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:// Image will be used as a transfer destination
+		barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;// Make sure any writes to the image have been finished
+		break;
+	case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:// Image will be used as a transfer source
+		barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;// Make sure any reads from the image have been finished
+		break;
+	case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:// Image will be used as a color attachment
+		barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;// Make sure any writes to the color buffer have been finished
+		break;
+	case VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL:// Image layout will be used as a depth/stencil attachment
+		barrier.dstAccessMask = barrier.dstAccessMask | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;// Make sure any writes to depth/stencil buffer have been finished
+		break;
+	case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:// Image will be read in a shader (sampler, input attachment)		
+		// Make sure any writes to the image have been finished
+		if (barrier.srcAccessMask == 0) 
+			barrier.srcAccessMask = VK_ACCESS_HOST_WRITE_BIT | VK_ACCESS_TRANSFER_WRITE_BIT;		
 		barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-
-		sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
-		destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+		break;
+	default:
+		// Other source layouts aren't handled (yet)
+		break;
 	}
-	else if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL) {
-		barrier.srcAccessMask = 0;
-		barrier.dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-
-		sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-		destinationStage = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-	}
-	else if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL) {
-		barrier.srcAccessMask = 0;
-		barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-		sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-		destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-	}
-	else {
-		throw std::invalid_argument("unsupported layout transition!");
-	}
-
+	
 	vkCmdPipelineBarrier(
 		commandBuffer,
-		sourceStage, destinationStage,
+		srcStageMask, dstStageMask,
 		0,
 		0, nullptr,
 		0, nullptr,
@@ -123,7 +161,9 @@ void vks::helper::transitionImageLayout(VkCommandBuffer commandBuffer, VkImage i
 }
 
 void vks::helper::transitionImageLayout(VkCommandBuffer commandBuffer, VkImage image,
-	VkImageAspectFlagBits aspect, VkImageLayout oldLayout, VkImageLayout newLayout)
+	VkImageAspectFlagBits aspect, VkImageLayout oldLayout, VkImageLayout newLayout,
+	VkPipelineStageFlags srcStageMask,
+	VkPipelineStageFlags dstStageMask)
 {
 	VkImageSubresourceRange subresourceRange = {};
 	subresourceRange.aspectMask = aspect;

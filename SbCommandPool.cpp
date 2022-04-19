@@ -6,8 +6,7 @@ SbCommandPool::SbCommandPool(SbVulkanBase & base)
 	:physicalDevice(*base.physicalDevice), logicalDevice(*base.logicalDevice)
 {
 	QueueFamilyIndices queueFamilyIndices = physicalDevice.findQueueFamilies(physicalDevice.device, base.surface);
-
-	VkCommandPoolCreateInfo poolInfo = {};
+		
 	poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
 	poolInfo.queueFamilyIndex = queueFamilyIndices.graphicsFamily.value();
 

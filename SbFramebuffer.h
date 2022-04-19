@@ -26,7 +26,7 @@ public:
 	
 	void addAttachmentImage(uint32_t attachmentIndex, VkImageView imageView);
 
-	void createAttachmentImage(SbVulkanBase* base, RenderpassHelper* rp, uint32_t attachmentIndex);
+	void createAttachmentImage(SbVulkanBase* base, RenderpassHelper* rp, uint32_t attachmentIndex, VkImageUsageFlags additionalImageUsage = 0);
 
 	void createFramebuffer(VkDevice device);
 

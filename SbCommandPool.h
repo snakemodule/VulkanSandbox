@@ -16,6 +16,8 @@ public:
 	SbPhysicalDevice & physicalDevice;
 	SbLogicalDevice & logicalDevice;
 
+	VkCommandPoolCreateInfo poolInfo = {};
+
 	SbCommandPool(SbVulkanBase & base);
 	~SbCommandPool();
 

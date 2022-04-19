@@ -13,7 +13,8 @@ void SbFramebuffer::addAttachmentImage(uint32_t attachmentIndex, VkImageView ima
 	views[attachmentIndex] = imageView;
 }
 
-void SbFramebuffer::createAttachmentImage(SbVulkanBase* base, RenderpassHelper* rp, uint32_t attachmentIndex)
+void SbFramebuffer::createAttachmentImage(SbVulkanBase* base, RenderpassHelper* rp,
+	uint32_t attachmentIndex, VkImageUsageFlags additionalImageUsage)
 {
 	auto& image = images[attachmentIndex];
 	auto& memory = imageMemory[attachmentIndex];
@@ -21,7 +22,7 @@ void SbFramebuffer::createAttachmentImage(SbVulkanBase* base, RenderpassHelper* 
 	
 	VkFormat format = rp->desc[attachmentIndex].format;
 	base->createImage(extent, 1, rp->desc[attachmentIndex].samples, format, VK_IMAGE_TILING_OPTIMAL,
-		rp->info[attachmentIndex].usageMask, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, image, memory);
+		rp->info[attachmentIndex].usageMask | additionalImageUsage, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, image, memory);
 
 	view = vks::helper::createImageView(base->getDevice(), image, format, rp->info[attachmentIndex].aspectMask, 1);
 

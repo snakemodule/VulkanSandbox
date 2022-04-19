@@ -44,7 +44,7 @@ public:
 	void addAttachmentDescription(uint32_t attachmentIndex,
 		VkFormat format,
 		VkImageUsageFlags usage,
-		VkImageUsageFlags additionalUsage = VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT,
+		VkImageUsageFlags additionalUsage = VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT, //todo not all attachments are input attachments
 		VkAttachmentLoadOp loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
 		VkAttachmentStoreOp storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
 		VkAttachmentLoadOp stencilLoad = VK_ATTACHMENT_LOAD_OP_DONT_CARE,

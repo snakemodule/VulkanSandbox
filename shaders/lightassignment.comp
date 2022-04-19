@@ -62,8 +62,8 @@ void main(){
 
         //Iterating within the current batch of lights
         for( uint light = 0; light < threadCount; ++light){
-            if( sharedLights[light].enabled  == 1){
-                if( testSphereAABB(light, tileIndex) ){
+            if( sharedLights[light].enabled  == 1) {
+                if( testSphereAABB(light, tileIndex) ) {
                     visibleLightIndices[visibleLightCount] = batch * threadCount + light;
                     visibleLightCount += 1;
                 }
