@@ -17,6 +17,7 @@
 
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <stdlib.h>
 
 Sponza sponza;
 
@@ -791,19 +792,48 @@ void HelloTriangleApplication::createUniformBuffers() {
 
 	shaderStorage.rayCameraUniform = new SbUniformBuffer<RayCamera>(*vulkanBase, swapchain->getSize());
 	
-	int num_lights = 1;
+	int num_lights = 8;
 	shaderStorage.lightsSSBO = new SbUniformBuffer<PointLight>(*vulkanBase, 1, num_lights, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
 	//TODO generate lights
 
-	for (unsigned int i = 0; i < num_lights; ++i)
+	/*
+	PointLight* pLight = shaderStorage.lightsSSBO->data(0);
+	//Fetching the light from the current scene
+	pLight->position = shadowLightPos;
+	pLight->color = glm::vec4(1.0f);
+	pLight->enabled = 1;
+	pLight->intensity = 50.0f;
+	pLight->range = 6.8f;
+	*/
+
+	srand(1337);
+	for (int i = 0; i < num_lights; ++i)
 	{
+		//float xrange = (((float)rand() / RAND_MAX) * 2 - 1) * 10;
+		//float yrange = ((float)rand() / RAND_MAX) * 5;
+		//float zrange = (((float)rand() / RAND_MAX) * 2 - 1) * 3;
+
 		PointLight* pLight = shaderStorage.lightsSSBO->data(i);
 		//Fetching the light from the current scene
-		pLight->position = shadowLightPos;
-		pLight->color = glm::vec4(1.0f);
+		pLight->position = glm::vec4(4-0.5*i, 2, 0.5, 1);
+		switch (i%3)
+		{
+		case 0:
+			pLight->color = glm::vec4(1,0,0,1);
+			break;
+		case 1:
+			pLight->color = glm::vec4(0, 1, 0, 1);
+			break;
+		case 2:
+			pLight->color = glm::vec4(0, 0, 1, 1);
+			break;
+		default:
+			pLight->color = glm::vec4(1.0f);
+			break;
+		}
 		pLight->enabled = 1;
-		pLight->intensity = 50.0f;
-		pLight->range = 6.8f + (0.1f * i);
+		pLight->intensity = 1.0f;
+		pLight->range = 1;
 	}
 	shaderStorage.lightsSSBO->writeToMappedMemory(0);
 

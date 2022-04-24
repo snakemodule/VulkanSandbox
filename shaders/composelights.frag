@@ -134,21 +134,26 @@ void main()
     uint lightCount       = lightGrid[tileIndex].count;
     uint lightIndexOffset = lightGrid[tileIndex].offset;
 
-	uint myLightCount = 0;
+	//uint myLightCount = 0;
 	
 
 	// Shadow
+	/*
 	vec3 fragToLight = fragPos.xyz - pointLight[0].position.xyz; 
     float closestDepth = texture(shadowCubeMap, fragToLight).r;
 	float currentDepth = length(fragToLight); 
 	float bias = 0.05; 
 	float shadow = currentDepth - bias > closestDepth ? 0.0 : 1.0; 
+	*/
+	float shadow =1;
 
 	//loop lights in this cluster
 	for(uint i = 0; i < lightCount; i++)
 	{
-        uint index = globalLightIndexList[lightIndexOffset + 0];				
+		//myLightCount++;
+        uint index = globalLightIndexList[lightIndexOffset + i];				
         fragcolor += shadow * calcPointLight(index, normal, fragPos.xyz, viewDir, albedo.rgb, albedo.a, viewDistance);		
+		//fragcolor = vec3(color_int(myLightCount));
     }
 
 	float aspect = screenDimensions.x / screenDimensions.y;   
@@ -167,33 +172,24 @@ void main()
 
 	switch(output_mode) {
 		case 0:		
-		//outColor = mix(vec4(fragcolor, 1.0), rayColor, 0.5);			
-		//outColor = texture(shadowCubeMap, ray_direction)/10;
-		outColor = vec4(vec3(closestDepth/zFar), 1.0);
+			//outColor = mix(vec4(fragcolor, 1.0), rayColor, 0.5);			
+			//outColor = texture(shadowCubeMap, ray_direction)/10;
+			outColor = vec4(fragcolor, 1.0);
 		break;
-		case 1:
-		//outColor = vec4(normal, 1.0);
-		//fragcolor += color_int(lightCount);
-		//outColor = vec4(dist.x/10, 0, 0, 1.0);
-		outColor = vec4(vec3(currentDepth/zFar), 1.0);		
+		case 1:	
+			if (lightCount > 0) 
+				fragcolor = vec3(color_int(lightCount));
+			//fragcolor = vec3(color_int(myLightCount));		
+			//fragcolor += color_int(lightCount);
+			//outColor = vec4(dist.x/10, 0, 0, 1.0);
+			//outColor = vec4(vec3(currentDepth/zFar), 1.0);
+			outColor = vec4(fragcolor, 1.0);
 		break;
 		case 2:
-		outColor = rayColor/zFar;		
+			//outColor = vec4(vec3(closestDepth/zFar), 1.0);
 		break;
 		case 3:				
-		//vec3 distC = vec3(dist.x, 0, 1.0);	
-		//vec3 sampC = vec3(sampledDist.x, 0, 1.0);
-		//vec3 diff = abs(distC - sampC);
-		//outColor = vec4(diff/10, 1.0);
-		//fragcolor  = 1-shadow.rrr;
-		outColor = vec4(fragcolor, 1.0);
-		/*
-		if (diff.x > 1.0) {
-			outColor = vec4(0.5,0,0, 1.0);
-		} else {
-			outColor = vec4(fragcolor, 1.0);
-		}*/
-
+			outColor = rayColor/zFar;					
 		break;
 	}	
 }
