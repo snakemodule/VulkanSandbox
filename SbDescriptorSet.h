@@ -53,6 +53,7 @@ public:
 	void updateDescriptors();
 
 	SbDescriptorSet& addImageBinding(uint32_t binding, VkSampler sampler, VkImageView imageView);
+	SbDescriptorSet& addImageBinding(uint32_t binding, VkSampler sampler, std::vector<VkImageView> imageViews);
 	SbDescriptorSet& addInputAttachmentBinding(uint32_t binding, uint32_t attachmentID, std::vector<SbFramebuffer> framebufferInstances);
 
 	void allocate(const SbDescriptorPool& descriptorPool);

@@ -59,8 +59,8 @@ class SbDescriptorPool;
 class RenderPassHelper;
 
 
-const int WIDTH = 800;
-const int HEIGHT = 600;
+const int WIDTH = 800*2;
+const int HEIGHT = 600*2;
 
 const std::string TEXTURE_PATH = "textures/chalet.jpg";
 
@@ -90,11 +90,11 @@ public:
 	//SbTextureImage* shadowCubeMap;
 
 	struct {
-		VkImage image;
+		std::vector<VkImage> images;
 		unsigned width, height;
-		VkDeviceMemory deviceMemory;
-		VkSampler sampler;
-		VkImageView view;
+		std::vector<VkDeviceMemory> deviceMemory;
+		VkSampler sampler;		
+		std::vector<VkImageView> views;
 	} shadowCubeMap;
 
 	struct {
@@ -107,6 +107,9 @@ public:
 		SbComputePipeline lightAssignment;
 
 		SbPipeline shadow; //todo create pipeline
+
+		SbPipeline debugCube;
+		SbPipeline virtualCube;
 
 		//SbPipeline character;
 		//SbPipeline transparentCharacter;
@@ -126,6 +129,8 @@ public:
 		SbShaderLayout lightAssignment;
 
 		SbShaderLayout shadow;
+		SbShaderLayout debugCube;
+		SbShaderLayout virtualCube;
 	} shaderLayouts;
 
 	struct DrawableMesh {
@@ -176,6 +181,14 @@ public:
 		alignas(16) glm::mat4 proj;
 	};
 
+	struct ShadowUBO
+	{
+		glm::mat4 model;
+		glm::mat4 view;
+		glm::mat4 proj;
+		glm::vec4 lightPos;
+	};
+
 	struct UniformBufferObject {
 		alignas(16) glm::mat4 model;
 		alignas(16) glm::mat4 view;
@@ -187,6 +200,12 @@ public:
 		glm::vec4 specularColor;
 		glm::vec4 diffuseColor;
 		glm::vec4 ambientColor;
+	};
+
+	struct RayCamera {
+		glm::mat4 cameraRotation;
+		glm::uvec2 screenDimensions;
+		float yfovRad;
 	};
 
 	HelloTriangleApplication();
@@ -234,6 +253,7 @@ private:
 
 	struct	shadow_attachments {
 		enum {
+			COLOR,
 			DEPTH,
 			COUNT
 		};
@@ -241,6 +261,10 @@ private:
 
 	std::vector<SbFramebuffer> shadowFrameBuffers = {};
 	RenderpassHelper* shadowRenderPass;
+
+	std::vector<SbFramebuffer> cubedebugFrameBuffers = {};
+	RenderpassHelper* cubedebugRenderPass;
+	//RenderpassHelper* virtualCubeRenderPass;
 
 	//std::unique_ptr<SbSwapchain> swapchain;
 
@@ -257,12 +281,17 @@ private:
 		SbUniformBuffer<uint32_t>* lightIndexCountSSBO;
 
 		SbUniformBuffer<MatrixBufferObject>* matrixUniform;
+		SbUniformBuffer<ShadowUBO>* shadowMatrixUniform;
 		//SbUniformBuffer<UniformBufferObject>* transformUniform;
 		//SbUniformBuffer<ShadingUBO>* shadingUniform;
 		SbUniformBuffer<glm::mat4>* skeletonUniform;
 
 		SbUniformBuffer<glm::vec4>* cameraUniform;
+
+		SbUniformBuffer<RayCamera>* rayCameraUniform;
 	} shaderStorage;
+
+	glm::vec4 shadowLightPos = { -1.0, 2.0, 0.5, 1 };
 
 	std::unique_ptr<SbDescriptorPool> descriptorPool;
 	std::vector<VkCommandBuffer> commandBuffers;
@@ -279,10 +308,14 @@ private:
 		//SbDescriptorSet* compose;
 
 		SbDescriptorSet* matrixDesc;
+		SbDescriptorSet* shadowDesc;
 
 		SbDescriptorSet* gbufDesc;
 		SbDescriptorSet* compDesc;
 		SbDescriptorSet* transDesc;
+
+		SbDescriptorSet* cube;
+		SbDescriptorSet* virtualcube;
 	} descriptorSets;
 
 	bool framebufferResized = false;
@@ -303,8 +336,8 @@ private:
 	void initVulkan();
 
 	void createShadowRenderpass();
-
 	void createDeferredRenderpass();
+	void createCubeDebugRenderpass();
 
 	std::chrono::high_resolution_clock::time_point frameTime = std::chrono::high_resolution_clock::now();
 	float deltaTime = 0;
@@ -326,8 +359,6 @@ private:
 
 	SbAllocatedBuffer create_buffer(size_t allocSize, VkBufferUsageFlags usage, VmaMemoryUsage memoryUsage);
 
-	void prepareComputePipeline();
-
 	void createDescriptorSets();
 
 	void createTextureSampler();
@@ -339,22 +370,24 @@ private:
 
 	void prepareCubeMap();
 
-	void createOffscreenRenderpass();
-
 	void prepareOffscreenFramebuffer();
 
 	void prepareOffscreenRenderpass();
 
 	void setupDescriptorSetLayout();
 
-	void updateCubeFace(uint32_t faceIndex, VkCommandBuffer commandBuffer);
+	void updateCubeFace(uint32_t faceIndex, size_t cmdIdx);
 
 	void createDescriptorPool();
 
 	void createCommandBuffers();
 
-	//todo move this
-	void createSyncObjects();
+	void recordCubeMapRenderpass(size_t idx);
+	void recordVirtualCubeRenderpass(size_t idx);
+
+	void recordDeferredRenderpass(size_t idx);
+	void drawComposition(size_t idx);
+	void drawGBUF(size_t idx);
 
 	void updateUniformBuffer(uint32_t currentImage);
 

@@ -14,10 +14,11 @@ g:\repos\vulkansandbox\vulkansandbox\animatedvertex.h(26): warning C4267: '=': c
               T=int
           ]
 g:\repos\vulkansandbox\vulkansandbox\scenestuff.h(192): warning C4267: 'initializing': conversion from 'size_t' to 'uint32_t', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(503): warning C4267: 'argument': conversion from 'size_t' to 'uint32_t', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(683): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(726): warning C4018: '<': signed/unsigned mismatch
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(882): warning C4101: 'memReqs': unreferenced local variable
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(932): warning C4101: 'attachments': unreferenced local variable
-g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(1405): warning C4267: 'argument': conversion from 'size_t' to 'uint32_t', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(555): warning C4267: 'argument': conversion from 'size_t' to 'uint32_t', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(581): warning C4267: 'argument': conversion from 'size_t' to 'uint32_t', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(754): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(798): warning C4018: '<': signed/unsigned mismatch
+g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(1286): warning C4267: 'argument': conversion from 'size_t' to 'uint32_t', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(1313): warning C4267: 'argument': conversion from 'size_t' to 'uint32_t', possible loss of data
+g:\repos\vulkansandbox\vulkansandbox\hellotriangleapplication.cpp(1358): warning C4267: 'argument': conversion from 'size_t' to 'uint32_t', possible loss of data
   VulkanSandbox.vcxproj -> G:\repos\VulkanSandbox\x64\Debug\VulkanSandbox.exe

@@ -8,18 +8,19 @@ layout(location = 4) in vec3 inTangent;
 layout(location = 5) in vec3 inBitangent;
 
 layout (location = 0) out vec4 outPos;
-layout (location = 1) out vec3 outLightPos;
+layout (location = 1) out vec4 outLightPos;
 
 layout (binding = 0) uniform UBO 
 {
 	mat4 model;
 	mat4 view; 
 	mat4 projection;
+	vec4 lightPos;
 } ubo;
 
 layout(push_constant) uniform PushConsts 
 {
-	mat4 view;
+	mat4 V;
 } pushConsts;
  
 out gl_PerVertex 
@@ -28,8 +29,11 @@ out gl_PerVertex
 };
  
 void main()
-{
-	gl_Position = ubo.projection * pushConsts.view * ubo.model * vec4(inPos, 1.0);
-	//outPos = vec4(inPos, 1.0);	
-	//outLightPos = ubo.lightPos.xyz; 
+{	
+	gl_Position = ubo.projection * pushConsts.V * ubo.model * vec4(inPos, 1.0);
+
+	mat4 invView = inverse(ubo.view); // todo pre-prepare inverse matrix
+
+	outPos = ubo.model * vec4(inPos, 1.0);	
+	outLightPos = ubo.lightPos;
 }

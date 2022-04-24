@@ -67,7 +67,7 @@ void RenderpassHelper::addAttachmentDescription(uint32_t attachmentIndex,
 	att.storeOp = storeOp;
 	att.stencilLoadOp = stencilLoad;
 	att.stencilStoreOp = stencilStore;
-	att.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	att.initialLayout = imageLayout;
 	att.finalLayout = imageLayout;
 
 	desc[attachmentIndex] = att;

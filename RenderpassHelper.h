@@ -46,7 +46,7 @@ public:
 		VkImageUsageFlags usage,
 		VkImageUsageFlags additionalUsage = VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT, //todo not all attachments are input attachments
 		VkAttachmentLoadOp loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
-		VkAttachmentStoreOp storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
+		VkAttachmentStoreOp storeOp = VK_ATTACHMENT_STORE_OP_STORE,
 		VkAttachmentLoadOp stencilLoad = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
 		VkAttachmentStoreOp stencilStore = VK_ATTACHMENT_STORE_OP_DONT_CARE);
 	void addColorAttachmentRef(uint32_t subpassIndex, uint32_t attachmentIndex);
@@ -57,6 +57,4 @@ public:
 	void createRenderpass(VkDevice);
 	
 };
-
-
 

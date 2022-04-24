@@ -15,6 +15,9 @@
 
 #include "RenderpassHelper.h"
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+
 Sponza sponza;
 
 // Wrapper functions for aligned memory allocation
@@ -80,13 +83,13 @@ void HelloTriangleApplication::initWindow() {
 	glfwSetCursorPosCallback(window, mouse_callback);
 
 
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);	
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	assert(glfwRawMouseMotionSupported());
 	glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
 
-	
-	glfwGetCursorPos(window, &last_mouse_pos.x, &last_mouse_pos.y);	
+
+	glfwGetCursorPos(window, &last_mouse_pos.x, &last_mouse_pos.y);
 
 	glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
 }
@@ -105,10 +108,10 @@ void HelloTriangleApplication::key_callback(GLFWwindow* window, int key, int sca
 }
 
 void HelloTriangleApplication::mouse_callback(GLFWwindow* window, double xpos, double ypos)
-{	
-	glm::dvec2 new_mouse_pos(xpos,ypos);	
-	delta_mouse_pos += new_mouse_pos - last_mouse_pos;	
-	last_mouse_pos = new_mouse_pos;	
+{
+	glm::dvec2 new_mouse_pos(xpos, ypos);
+	delta_mouse_pos += new_mouse_pos - last_mouse_pos;
+	last_mouse_pos = new_mouse_pos;
 }
 
 
@@ -141,9 +144,11 @@ void HelloTriangleApplication::initVulkan() {
 
 	//MyRenderPass* pass = new MyRenderPass(*vulkanBase, *swapchain);
 	//renderPass = pass;
+	prepareCubeMap();
+
 	createDeferredRenderpass();
 	createShadowRenderpass();
-	prepareCubeMap();
+	createCubeDebugRenderpass();
 
 	//swapchain->createFramebuffersForRenderpass(renderPass->renderPass);
 
@@ -157,6 +162,7 @@ void HelloTriangleApplication::initVulkan() {
 	createVertexBuffer();
 
 	createUniformBuffers();
+	
 
 
 
@@ -171,28 +177,33 @@ void HelloTriangleApplication::initVulkan() {
 
 void HelloTriangleApplication::createShadowRenderpass() {
 	VkDevice device = vulkanBase->getDevice();
-	
+
 	using sa = shadow_attachments;
 	using ss = shadow_subpasses;
 
 	shadowRenderPass = new RenderpassHelper(ss::COUNT, sa::COUNT);
+	shadowRenderPass->colorAttachmentDesc(sa::COLOR, VK_FORMAT_R32_SFLOAT);
 	shadowRenderPass->depthAttachmentDesc(sa::DEPTH, vulkanBase->findDepthFormat());
-	shadowRenderPass->setDepthStencilAttachmentRef(sa::DEPTH, ss::DEPTH);
+
+	shadowRenderPass->setDepthStencilAttachmentRef(ss::DEPTH, sa::DEPTH);
+	shadowRenderPass->addColorAttachmentRef(ss::DEPTH, sa::COLOR);
+
 	shadowRenderPass->createRenderpass(device);
 
-	VkExtent2D extent = { 1024,1024 };
-	
+	VkExtent2D extent = { shadowCubeMap.width, shadowCubeMap.height };
+
 
 	shadowFrameBuffers.resize(swapchain->getSize());
 	for (size_t i = 0; i < swapchain->getSize(); i++)
 	{
 		shadowFrameBuffers[i] = SbFramebuffer(extent, shadowRenderPass);
-		shadowFrameBuffers[i].createAttachmentImage(vulkanBase.get(), shadowRenderPass, sa::DEPTH, VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
+		shadowFrameBuffers[i].createAttachmentImage(vulkanBase.get(), shadowRenderPass, sa::DEPTH);
+		shadowFrameBuffers[i].createAttachmentImage(vulkanBase.get(), shadowRenderPass, sa::COLOR, VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
 		shadowFrameBuffers[i].createFramebuffer(device);
 	}
 }
 
-void HelloTriangleApplication::createDeferredRenderpass() 
+void HelloTriangleApplication::createDeferredRenderpass()
 {
 	VkDevice device = vulkanBase->getDevice();
 
@@ -216,7 +227,7 @@ void HelloTriangleApplication::createDeferredRenderpass()
 	deferredRenderPass->addInputAttachmentRef(ds::COMPOSE, da::NORMAL);
 	deferredRenderPass->addInputAttachmentRef(ds::COMPOSE, da::ALBEDO);
 	deferredRenderPass->setDepthStencilAttachmentRef(ds::COMPOSE, da::DEPTH);
-	
+
 	std::array<VkSubpassDependency, 3> dependencies;
 
 	dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
@@ -235,7 +246,7 @@ void HelloTriangleApplication::createDeferredRenderpass()
 	dependencies[1].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
 	dependencies[1].dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
 	dependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
-		
+
 	dependencies[2].srcSubpass = ds::COMPOSE;
 	dependencies[2].dstSubpass = VK_SUBPASS_EXTERNAL;
 	dependencies[2].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
@@ -261,7 +272,46 @@ void HelloTriangleApplication::createDeferredRenderpass()
 		deferredFrameBuffers[i].createAttachmentImage(vulkanBase.get(), deferredRenderPass, da::DEPTH);
 		deferredFrameBuffers[i].createFramebuffer(device);
 	}
-	
+}
+
+void HelloTriangleApplication::createCubeDebugRenderpass()
+{
+	VkDevice device = vulkanBase->getDevice();
+
+	cubedebugRenderPass = new RenderpassHelper(1, 1);
+	cubedebugRenderPass->addAttachmentDescription(0, swapchain->swapchainAttachmentDescription);
+	cubedebugRenderPass->addColorAttachmentRef(0, 0);
+
+	std::array<VkSubpassDependency, 2> dependencies;
+
+	dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
+	dependencies[0].dstSubpass = 0;
+	dependencies[0].srcStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+	dependencies[0].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+	dependencies[0].srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+	dependencies[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+	dependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+
+	dependencies[1].srcSubpass = 0;
+	dependencies[1].dstSubpass = VK_SUBPASS_EXTERNAL;
+	dependencies[1].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+	dependencies[1].dstStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+	dependencies[1].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+	dependencies[1].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+	dependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+
+	cubedebugRenderPass->addDependency(dependencies[0]);
+	cubedebugRenderPass->addDependency(dependencies[1]);
+
+	cubedebugRenderPass->createRenderpass(device);
+
+	cubedebugFrameBuffers.resize(swapchain->getSize());
+	for (size_t i = 0; i < swapchain->getSize(); i++)
+	{
+		cubedebugFrameBuffers[i] = SbFramebuffer(swapchain->extent, cubedebugRenderPass);
+		cubedebugFrameBuffers[i].addAttachmentImage(0, swapchain->swapChainImageViews[i]);
+		cubedebugFrameBuffers[i].createFramebuffer(device);
+	}
 }
 
 
@@ -439,8 +489,6 @@ break_out:
 
 	keyPresses.clear();
 
-	
-
 }
 
 void HelloTriangleApplication::setOutputMode(uint32_t mode)
@@ -484,7 +532,11 @@ void HelloTriangleApplication::createPipelines()
 	pipelines.cluster.createPipeline(device, shaderLayouts.cluster);
 	pipelines.lightAssignment.createPipeline(device, shaderLayouts.lightAssignment);
 
-	shaderLayouts.shadow.reflect_nofrag(device, "shaders/shadow.vert.spv");
+	shaderLayouts.shadow.reflect(device, "shaders/shadow.vert.spv", "shaders/shadow.frag.spv");
+	shaderLayouts.debugCube.reflect(device, "shaders/cubedebug.vert.spv", "shaders/cubedebug.frag.spv");
+	shaderLayouts.virtualCube.reflect(device, "shaders/cubedebug.vert.spv", "shaders/virtualcube.frag.spv");
+
+
 
 	//auto& subpassgbuf = renderPass->subpasses[MyRenderPass::kSubpass_GBUF];
 	//const auto bind = AnimatedVertex::getBindingDescriptions();
@@ -499,13 +551,13 @@ void HelloTriangleApplication::createPipelines()
 	const auto vbind = Vertex::getBindingDescriptions();
 	const auto vattr = Vertex::getAttributeDescriptions();
 	pipelines.opaque.shaderLayouts(shaderLayouts.sponza)
-		.setBlendAttachmentStates(vks::initializers::pipelineColorBlendAttachmentState(0xf, VK_FALSE), 
+		.setBlendAttachmentStates(vks::initializers::pipelineColorBlendAttachmentState(0xf, VK_FALSE),
 			deferredRenderPass->subpasses[deferred_subpasses::GBUF].colorAttachments.size()) //todo make this easier?
 		.vertexBindingDescription(std::vector<VkVertexInputBindingDescription> {vbind.begin(), vbind.end()})
 		.vertexAttributeDescription(std::vector<VkVertexInputAttributeDescription> {vattr.begin(), vattr.end()})
 		.subpassIndex(deferred_subpasses::GBUF)
 		.createPipeline(deferredRenderPass->renderPass, vulkanBase->getDevice());
-	
+
 	//auto& subpasscomp = renderPass->subpasses[MyRenderPass::kSubpass_COMPOSE];
 	pipelines.composition.shaderLayouts(shaderLayouts.light_composition)
 		.cullMode(VK_CULL_MODE_NONE)
@@ -513,11 +565,23 @@ void HelloTriangleApplication::createPipelines()
 		.subpassIndex(deferred_subpasses::COMPOSE)
 		.createPipeline(deferredRenderPass->renderPass, vulkanBase->getDevice());
 
+	pipelines.debugCube.shaderLayouts(shaderLayouts.debugCube)
+		.cullMode(VK_CULL_MODE_NONE)
+		.depthWriteEnable(VK_FALSE)
+		.createPipeline(cubedebugRenderPass->renderPass, vulkanBase->getDevice());
+		
+	pipelines.virtualCube.shaderLayouts(shaderLayouts.virtualCube)
+		.cullMode(VK_CULL_MODE_NONE)
+		.depthWriteEnable(VK_FALSE)
+		.createPipeline(cubedebugRenderPass->renderPass, vulkanBase->getDevice());
+
+
 	pipelines.shadow.shaderLayouts(shaderLayouts.shadow)
-		.addBlendAttachmentStates(vks::initializers::pipelineColorBlendAttachmentState(0xf, VK_FALSE), 0, 1)
+		.setBlendAttachmentStates(vks::initializers::pipelineColorBlendAttachmentState(0xf, VK_FALSE),
+			shadowRenderPass->subpasses[0].colorAttachments.size()) //todo make this easier?
+		.cullMode(VK_CULL_MODE_FRONT_BIT) //for some reason it is flipped?
 		.vertexBindingDescription(std::vector<VkVertexInputBindingDescription> {vbind.begin(), vbind.end()})
 		.vertexAttributeDescription(std::vector<VkVertexInputAttributeDescription> {vattr.begin(), vattr.end()})
-		.subpassIndex(0)
 		.createPipeline(shadowRenderPass->renderPass, vulkanBase->getDevice());
 
 	////auto& subpasstransparent = renderPass->subpasses[MyRenderPass::kSubpass_TRANSPARENT];
@@ -582,23 +646,19 @@ void HelloTriangleApplication::createDescriptorSets()
 	descriptorSets.lights_g->addBufferBinding(0, shaderStorage.lightsSSBO);
 	descriptorSets.lights_g->addBufferBinding(1, shaderStorage.lightIndexSSBO);
 	descriptorSets.lights_g->addBufferBinding(2, shaderStorage.lightGridSSBO);
-	descriptorSets.lights_g->addBufferBinding(3, shaderStorage.clusterSSBO);
 	descriptorSets.lights_g->allocate(*descriptorPool.get());
 	descriptorSets.lights_g->updateDescriptors();
-
-	//descriptorSets.gbufDesc = new SbDescriptorSet(vulkanBase->getDevice(), *swapchain, shaderLayouts.gbuf, 0);
-	//descriptorSets.gbufDesc->addBufferBinding(0, shaderStorage.transformUniform);
-	//gbufDesc->addBufferBinding(1, *shadingUniformBuffer);
-	//descriptorSets.gbufDesc->allocate(*descriptorPool.get());
-	//descriptorSets.gbufDesc->updateDescriptors();
-
+	
 	descriptorSets.matrixDesc = new SbDescriptorSet(vulkanBase->getDevice(), *swapchain, shaderLayouts.sponza, 0);
 	descriptorSets.matrixDesc->addBufferBinding(0, shaderStorage.matrixUniform);
 	descriptorSets.matrixDesc->allocate(*descriptorPool.get());
 	descriptorSets.matrixDesc->updateDescriptors();
 
+	descriptorSets.shadowDesc = new SbDescriptorSet(vulkanBase->getDevice(), *swapchain, shaderLayouts.shadow, 0);
+	descriptorSets.shadowDesc->addBufferBinding(0, shaderStorage.shadowMatrixUniform);
+	descriptorSets.shadowDesc->allocate(*descriptorPool.get());
+	descriptorSets.shadowDesc->updateDescriptors();
 
-	
 	descriptorSets.compDesc = new SbDescriptorSet(vulkanBase->getDevice(), *swapchain, shaderLayouts.light_composition, 0);
 	descriptorSets.compDesc->addInputAttachmentBinding(0, deferred_attachments::POSITION, deferredFrameBuffers);
 	descriptorSets.compDesc->addInputAttachmentBinding(1, deferred_attachments::NORMAL, deferredFrameBuffers);
@@ -608,6 +668,17 @@ void HelloTriangleApplication::createDescriptorSets()
 	descriptorSets.compDesc->addBufferBinding(5, shaderStorage.matrixUniform);
 	descriptorSets.compDesc->allocate(*descriptorPool.get());
 	descriptorSets.compDesc->updateDescriptors();
+
+	descriptorSets.cube = new SbDescriptorSet(vulkanBase->getDevice(), *swapchain, shaderLayouts.debugCube, 0);
+	descriptorSets.cube->addImageBinding(0, shadowCubeMap.sampler, shadowCubeMap.views);
+	descriptorSets.cube->allocate(*descriptorPool.get());
+	descriptorSets.cube->updateDescriptors();
+
+	descriptorSets.virtualcube = new SbDescriptorSet(vulkanBase->getDevice(), *swapchain, shaderLayouts.virtualCube, 0);
+	descriptorSets.virtualcube->addImageBinding(0, shadowCubeMap.sampler, shadowCubeMap.views);
+	descriptorSets.virtualcube->addBufferBinding(1, shaderStorage.rayCameraUniform);
+	descriptorSets.virtualcube->allocate(*descriptorPool.get());
+	descriptorSets.virtualcube->updateDescriptors();
 
 	//descriptorSets.transDesc = new SbDescriptorSet(vulkanBase->getDevice(), *swapchain, shaderLayouts.transparent, 0);
 	//descriptorSets.transDesc->addBufferBinding(0, shaderStorage.transformUniform);
@@ -702,12 +773,12 @@ void HelloTriangleApplication::createUniformBuffers() {
 	constexpr glm::uvec3 clusterSizes = { 16, 12, 24 };
 	constexpr uint32_t clusterCount = clusterSizes[0] * clusterSizes[1] * clusterSizes[2];
 
-	shaderStorage.clusterSSBO = new SbUniformBuffer<AABB>(*vulkanBase, 1, clusterCount, 
+	shaderStorage.clusterSSBO = new SbUniformBuffer<AABB>(*vulkanBase, 1, clusterCount,
 		VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
 
 	shaderStorage.screenToViewUniform = new SbUniformBuffer<ScreenToViewUniform>(*vulkanBase, 1);
-	
-	*(shaderStorage.screenToViewUniform->data()) = { 
+
+	*(shaderStorage.screenToViewUniform->data()) = {
 		glm::inverse(cam.getProjectionMatrix()),
 		glm::uvec4(clusterSizes[0], clusterSizes[1], clusterSizes[2], WIDTH / clusterSizes[0]),
 		glm::uvec2(WIDTH, HEIGHT),
@@ -716,22 +787,23 @@ void HelloTriangleApplication::createUniformBuffers() {
 	};
 	shaderStorage.screenToViewUniform->writeToMappedMemory(0);
 
-	shaderStorage.cameraUniform = new SbUniformBuffer<glm::vec4>(*vulkanBase, swapchain->getSize());	
+	shaderStorage.cameraUniform = new SbUniformBuffer<glm::vec4>(*vulkanBase, swapchain->getSize());
 
-
-	int num_lights = 1;
-	shaderStorage.lightsSSBO = new SbUniformBuffer<PointLight>(*vulkanBase, 1, num_lights, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);	
-	//TODO generate lights
+	shaderStorage.rayCameraUniform = new SbUniformBuffer<RayCamera>(*vulkanBase, swapchain->getSize());
 	
-	for (unsigned int i = 0; i < num_lights; ++i) 
+	int num_lights = 1;
+	shaderStorage.lightsSSBO = new SbUniformBuffer<PointLight>(*vulkanBase, 1, num_lights, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
+	//TODO generate lights
+
+	for (unsigned int i = 0; i < num_lights; ++i)
 	{
 		PointLight* pLight = shaderStorage.lightsSSBO->data(i);
 		//Fetching the light from the current scene
-		pLight->position = glm::vec4(1.0, 1.0, 0 , 1);
+		pLight->position = shadowLightPos;
 		pLight->color = glm::vec4(1.0f);
 		pLight->enabled = 1;
 		pLight->intensity = 50.0f;
-		pLight->range = 2.8f+(0.1f * i);
+		pLight->range = 6.8f + (0.1f * i);
 	}
 	shaderStorage.lightsSSBO->writeToMappedMemory(0);
 
@@ -740,8 +812,9 @@ void HelloTriangleApplication::createUniformBuffers() {
 	shaderStorage.lightIndexSSBO = new SbUniformBuffer<uint32_t>(*vulkanBase, swapchain->getSize(), clusterCount * 100, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
 	shaderStorage.lightGridSSBO = new SbUniformBuffer<LightGrid>(*vulkanBase, swapchain->getSize(), clusterCount, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
 	shaderStorage.lightIndexCountSSBO = new SbUniformBuffer<uint32_t>(*vulkanBase, swapchain->getSize(), 1, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
-	
+
 	shaderStorage.matrixUniform = new SbUniformBuffer<MatrixBufferObject>(*vulkanBase, swapchain->getSize());
+	shaderStorage.shadowMatrixUniform = new SbUniformBuffer<ShadowUBO>(*vulkanBase, swapchain->getSize());
 	//shaderStorage.transformUniform = new SbUniformBuffer<UniformBufferObject>(*vulkanBase,swapchain->getSize());
 	//shaderStorage.skeletonUniform = new SbUniformBuffer<glm::mat4>(*vulkanBase, swapchain->getSize(), 52 * 5); //room for 5 skeletons in buffer
 	//shaderStorage.shadingUniform = new SbUniformBuffer<ShadingUBO>(*vulkanBase, 1, drawables.size());
@@ -757,59 +830,76 @@ void HelloTriangleApplication::createUniformBuffers() {
 void HelloTriangleApplication::prepareCubeMap()
 {
 
-	//#define TEX_DIM 1024
 	shadowCubeMap.width = 1024;
 	shadowCubeMap.height = 1024;
 
 	// 32 bit float format for higher precision
-	//VkFormat format = VK_FORMAT_R32_SFLOAT; 
-	VkFormat format = vulkanBase->findDepthFormat();
+	VkFormat format = VK_FORMAT_R32_SFLOAT; //store distance
+	//VkFormat format = vulkanBase->findDepthFormat();
 
-	// Cube map image description
-	VkImageCreateInfo imageCreateInfo = vks::initializers::imageCreateInfo();
-	imageCreateInfo.imageType = VK_IMAGE_TYPE_2D;
-	imageCreateInfo.format = format;
-	imageCreateInfo.extent = { shadowCubeMap.width, shadowCubeMap.height, 1 };
-	imageCreateInfo.mipLevels = 1;
-	imageCreateInfo.arrayLayers = 6; //this image is actually an array of 6 cube images!
-	imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
-	imageCreateInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
-	imageCreateInfo.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
-	imageCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-	imageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-	imageCreateInfo.flags = VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT; //specifies that the image can be used to create a VkImageView of type VK_IMAGE_VIEW_TYPE_CUBE
+	shadowCubeMap.views.resize(swapchain->getSize());
+	shadowCubeMap.deviceMemory.resize(swapchain->getSize());
+	shadowCubeMap.images.resize(swapchain->getSize());
 
-	VkMemoryAllocateInfo memAllocInfo = vks::initializers::memoryAllocateInfo();
-		
-	// Create cube map image	
-	assert(VK_SUCCESS == vkCreateImage(vulkanBase->getDevice(),
-		&imageCreateInfo, nullptr, &shadowCubeMap.image));
+	for (size_t i = 0; i < swapchain->getSize(); i++)
+	{
+		// Cube map image description
+		VkImageCreateInfo imageCreateInfo = vks::initializers::imageCreateInfo();
+		imageCreateInfo.imageType = VK_IMAGE_TYPE_2D;
+		imageCreateInfo.format = format;
+		imageCreateInfo.extent = { shadowCubeMap.width, shadowCubeMap.height, 1 };
+		imageCreateInfo.mipLevels = 1;
+		imageCreateInfo.arrayLayers = 6; //this image is actually an array of 6 cube images!
+		imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+		imageCreateInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+		imageCreateInfo.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+		imageCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+		imageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		imageCreateInfo.flags = VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT; //specifies that the image can be used to create a VkImageView of type VK_IMAGE_VIEW_TYPE_CUBE
 
-	VkMemoryRequirements memReqs;
-	vkGetImageMemoryRequirements(vulkanBase->getDevice(), shadowCubeMap.image, &memReqs);
+		VkMemoryAllocateInfo memAllocInfo = vks::initializers::memoryAllocateInfo();
 
-	memAllocInfo.allocationSize = memReqs.size;
-	memAllocInfo.memoryTypeIndex = vulkanBase->findMemoryType(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-	assert(VK_SUCCESS == vkAllocateMemory(vulkanBase->getDevice(), &memAllocInfo, nullptr, &shadowCubeMap.deviceMemory));
-	assert(VK_SUCCESS == vkBindImageMemory(vulkanBase->getDevice(), shadowCubeMap.image, shadowCubeMap.deviceMemory, 0));
-	
-	// Image barrier for optimal image (target)
-	VkImageSubresourceRange subresourceRange = {};
-	subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
-	subresourceRange.baseMipLevel = 0;
-	subresourceRange.levelCount = 1;
-	subresourceRange.layerCount = 6;
+		// Create cube map image	
+		assert(VK_SUCCESS == vkCreateImage(vulkanBase->getDevice(),
+			&imageCreateInfo, nullptr, &shadowCubeMap.images[i]));
 
-	//vulkanBase->commandPool->transitionImageLayout(shadowCubeMap.image,
-	//	VK_IMAGE_LAYOUT_UNDEFINED,
-	//	VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, subresourceRange);
+		VkMemoryRequirements memReqs;
+		vkGetImageMemoryRequirements(vulkanBase->getDevice(), shadowCubeMap.images[i], &memReqs);
 
-	VkCommandBuffer cmd = vulkanBase->commandPool->beginSingleTimeCommands();
-	vks::helper::transitionImageLayout(cmd, shadowCubeMap.image,
-		VK_IMAGE_LAYOUT_UNDEFINED,
-		VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, subresourceRange);
-	vulkanBase->commandPool->endSingleTimeCommands(cmd);
-		
+		memAllocInfo.allocationSize = memReqs.size;
+		memAllocInfo.memoryTypeIndex = vulkanBase->findMemoryType(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+		assert(VK_SUCCESS == vkAllocateMemory(vulkanBase->getDevice(), &memAllocInfo, nullptr, &shadowCubeMap.deviceMemory[i]));
+		assert(VK_SUCCESS == vkBindImageMemory(vulkanBase->getDevice(), shadowCubeMap.images[i], shadowCubeMap.deviceMemory[i], 0));
+
+		// Image barrier for optimal image (target)
+		VkImageSubresourceRange subresourceRange = {};
+		subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		subresourceRange.baseMipLevel = 0;
+		subresourceRange.levelCount = 1;
+		subresourceRange.layerCount = 6;
+
+		//vulkanBase->commandPool->transitionImageLayout(shadowCubeMap.image,
+		//	VK_IMAGE_LAYOUT_UNDEFINED,
+		//	VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, subresourceRange);
+
+		VkCommandBuffer cmd = vulkanBase->commandPool->beginSingleTimeCommands();
+		vks::helper::transitionImageLayout(cmd, shadowCubeMap.images[i],
+			VK_IMAGE_LAYOUT_UNDEFINED,
+			VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, subresourceRange);
+		vulkanBase->commandPool->endSingleTimeCommands(cmd);
+
+		// Create image view
+		VkImageViewCreateInfo view = vks::initializers::imageViewCreateInfo();
+		view.image = VK_NULL_HANDLE;
+		view.viewType = VK_IMAGE_VIEW_TYPE_CUBE;
+		view.format = format;
+		view.components = { VK_COMPONENT_SWIZZLE_R };
+		view.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
+		view.subresourceRange.layerCount = 6;
+		view.image = shadowCubeMap.images[i];
+		vkCreateImageView(vulkanBase->getDevice(), &view, nullptr, &shadowCubeMap.views[i]);
+	}
+
 	// Create sampler
 	VkSamplerCreateInfo sampler = vks::initializers::samplerCreateInfo();
 	sampler.magFilter = VK_FILTER_LINEAR;
@@ -826,224 +916,41 @@ void HelloTriangleApplication::prepareCubeMap()
 	sampler.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
 	assert(VK_SUCCESS == vkCreateSampler(vulkanBase->getDevice(), &sampler, nullptr, &shadowCubeMap.sampler));
 
-	// Create image view
-	VkImageViewCreateInfo view = vks::initializers::imageViewCreateInfo();
-	view.image = VK_NULL_HANDLE;
-	view.viewType = VK_IMAGE_VIEW_TYPE_CUBE;
-	view.format = format;
-	view.components = { VK_COMPONENT_SWIZZLE_R };
-	view.subresourceRange = { VK_IMAGE_ASPECT_DEPTH_BIT, 0, 1, 0, 1 };
-	view.subresourceRange.layerCount = 6;
-	view.image = shadowCubeMap.image;
-	vkCreateImageView(vulkanBase->getDevice(), &view, nullptr, &shadowCubeMap.view);
-}
-
-// Prepare a new framebuffer for offscreen rendering
-// The contents of this framebuffer are then
-// copied to the different cube map faces
-void HelloTriangleApplication::prepareOffscreenFramebuffer()
-{
-	//offscreenPass.width = 1024;
-	//offscreenPass.height = 1024;
-
-	VkFormat fbColorFormat = VK_FORMAT_R32_SFLOAT;
-
-	VkDevice device = vulkanBase->getDevice();
-
-	// Color attachment
-	VkImageCreateInfo imageCreateInfo = vks::initializers::imageCreateInfo();
-	imageCreateInfo.imageType = VK_IMAGE_TYPE_2D;
-	imageCreateInfo.format = fbColorFormat;
-	//imageCreateInfo.extent.width = offscreenPass.width;
-	//imageCreateInfo.extent.height = offscreenPass.height;
-	imageCreateInfo.extent.depth = 1;
-	imageCreateInfo.mipLevels = 1;
-	imageCreateInfo.arrayLayers = 1;
-	imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
-	imageCreateInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
-	// Image of the framebuffer is blit source
-	imageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-	imageCreateInfo.usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
-	imageCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-
-	VkMemoryAllocateInfo memAlloc = vks::initializers::memoryAllocateInfo();
-
-	VkImageViewCreateInfo colorImageView = vks::initializers::imageViewCreateInfo();
-	colorImageView.viewType = VK_IMAGE_VIEW_TYPE_2D;
-	colorImageView.format = fbColorFormat;
-	colorImageView.flags = 0;
-	colorImageView.subresourceRange = {};
-	colorImageView.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-	colorImageView.subresourceRange.baseMipLevel = 0;
-	colorImageView.subresourceRange.levelCount = 1;
-	colorImageView.subresourceRange.baseArrayLayer = 0;
-	colorImageView.subresourceRange.layerCount = 1;
-
-	VkMemoryRequirements memReqs;
-
-	//assert(VK_SUCCESS == vkCreateImage(device, &imageCreateInfo, nullptr, &offscreenPass.color.image));
-	//vkGetImageMemoryRequirements(device, offscreenPass.color.image, &memReqs);
-	//memAlloc.allocationSize = memReqs.size;
-	//memAlloc.memoryTypeIndex = vulkanBase->findMemoryType(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-	//vkAllocateMemory(device, &memAlloc, nullptr, &offscreenPass.color.mem);
-	//vkBindImageMemory(device, offscreenPass.color.image, offscreenPass.color.mem, 0);
-
-	VkImageSubresourceRange subresourceRange = {};
-	subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-	subresourceRange.baseMipLevel = 0;
-	subresourceRange.levelCount = 1;
-	subresourceRange.layerCount = 1;
-
-	//vulkanBase->commandPool->transitionImageLayout(offscreenPass.color.image, 
-		//VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, subresourceRange);
-
-	//colorImageView.image = offscreenPass.color.image;
-	//assert(VK_SUCCESS == vkCreateImageView(device, &colorImageView, nullptr, &offscreenPass.color.view));
-
-	// Depth stencil attachment
-	imageCreateInfo.format = vulkanBase->findDepthFormat();
-	imageCreateInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
-
-	VkImageViewCreateInfo depthStencilView = vks::initializers::imageViewCreateInfo();
-	depthStencilView.viewType = VK_IMAGE_VIEW_TYPE_2D;
-	depthStencilView.format = imageCreateInfo.format;
-	depthStencilView.flags = 0;
-	depthStencilView.subresourceRange = {};
-	depthStencilView.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
-	depthStencilView.subresourceRange.baseMipLevel = 0;
-	depthStencilView.subresourceRange.levelCount = 1;
-	depthStencilView.subresourceRange.baseArrayLayer = 0;
-	depthStencilView.subresourceRange.layerCount = 1;
-
-	//assert(VK_SUCCESS == vkCreateImage(device, &imageCreateInfo, nullptr, &offscreenPass.depth.image));
-	//vkGetImageMemoryRequirements(device, offscreenPass.depth.image, &memReqs);
-	//memAlloc.allocationSize = memReqs.size;
-	//memAlloc.memoryTypeIndex = vulkanBase->findMemoryType(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-	//assert(VK_SUCCESS == vkAllocateMemory(device, &memAlloc, nullptr, &offscreenPass.depth.mem));
-	//assert(VK_SUCCESS == vkBindImageMemory(device, offscreenPass.depth.image, offscreenPass.depth.mem, 0));
-
-	subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
-	//vulkanBase->commandPool->transitionImageLayout(offscreenPass.depth.image,
-	//	VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, subresourceRange);
-
-	//depthStencilView.image = offscreenPass.depth.image;
-	//assert(VK_SUCCESS == vkCreateImageView(device, &depthStencilView, nullptr, &offscreenPass.depth.view));
-
-	VkImageView attachments[2];
-	//attachments[0] = offscreenPass.color.view;
-	//attachments[1] = offscreenPass.depth.view;
-
-	//VkFramebufferCreateInfo fbufCreateInfo = vks::initializers::framebufferCreateInfo();
-	//fbufCreateInfo.renderPass = offscreenPass.renderPass;
-	//fbufCreateInfo.attachmentCount = 2;
-	//fbufCreateInfo.pAttachments = attachments;
-	//fbufCreateInfo.width = offscreenPass.width;
-	//fbufCreateInfo.height = offscreenPass.height;
-	//fbufCreateInfo.layers = 1;
-
-	//assert(VK_SUCCESS == vkCreateFramebuffer(device, &fbufCreateInfo, nullptr, &offscreenPass.frameBuffer));
-}
-
-void HelloTriangleApplication::prepareOffscreenRenderpass()
-{
-	VkAttachmentDescription osAttachments[2] = {};
-
-	// Find a suitable depth format	
-	VkFormat validDepthFormat = vulkanBase->findDepthFormat();//vks::tools::getSupportedDepthFormat(physicalDevice, &fbDepthFormat);
-	//assert(validDepthFormat);
-
-	osAttachments[0].format = VK_FORMAT_R32_SFLOAT;
-	osAttachments[0].samples = VK_SAMPLE_COUNT_1_BIT;
-	osAttachments[0].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-	osAttachments[0].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-	osAttachments[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-	osAttachments[0].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-	osAttachments[0].initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-	osAttachments[0].finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
-	// Depth attachment
-	osAttachments[1].format = validDepthFormat;
-	osAttachments[1].samples = VK_SAMPLE_COUNT_1_BIT;
-	osAttachments[1].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-	osAttachments[1].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-	osAttachments[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-	osAttachments[1].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-	osAttachments[1].initialLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-	osAttachments[1].finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-
-	VkAttachmentReference colorReference = {};
-	colorReference.attachment = 0;
-	colorReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
-	VkAttachmentReference depthReference = {};
-	depthReference.attachment = 1;
-	depthReference.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-
-	VkSubpassDescription subpass = {};
-	subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-	subpass.colorAttachmentCount = 1;
-	subpass.pColorAttachments = &colorReference;
-	subpass.pDepthStencilAttachment = &depthReference;
-
-	VkRenderPassCreateInfo renderPassCreateInfo = vks::initializers::renderPassCreateInfo();
-	renderPassCreateInfo.attachmentCount = 2;
-	renderPassCreateInfo.pAttachments = osAttachments;
-	renderPassCreateInfo.subpassCount = 1;
-	renderPassCreateInfo.pSubpasses = &subpass;
-
-	//assert(VK_SUCCESS == vkCreateRenderPass(vulkanBase->getDevice(), &renderPassCreateInfo, nullptr, &offscreenPass.renderPass));
-}
-
-void HelloTriangleApplication::setupDescriptorSetLayout()
-{
-	VkDevice device = vulkanBase->getDevice();
-
-
-	// Shared pipeline layout
-	//std::vector<VkDescriptorSetLayoutBinding> setLayoutBindings = {
-		// Binding 0 : Vertex shader uniform buffer
-	//	vks::initializers::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, 0),
-		// Binding 1 : Fragment shader image sampler (cube map)
-	//	vks::initializers::descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1)
-	//};
-
-	//VkDescriptorSetLayoutCreateInfo descriptorLayout = vks::initializers::descriptorSetLayoutCreateInfo(setLayoutBindings.data(), setLayoutBindings.size());
-	//assert(VK_SUCCESS == 
-		//vkCreateDescriptorSetLayout(device, &descriptorLayout, nullptr, &descriptorSetLayout);
-
-	// 3D scene pipeline layout
-	//VkPipelineLayoutCreateInfo pPipelineLayoutCreateInfo = vks::initializers::pipelineLayoutCreateInfo(&descriptorSetLayout, 1);
-	//assert(VK_SUCCESS == vkCreatePipelineLayout(device, &pPipelineLayoutCreateInfo, nullptr, &pipelineLayouts.scene));
-
-	// Offscreen pipeline layout
-	// Push constants for cube map face view matrices
-	//VkPushConstantRange pushConstantRange = vks::initializers::pushConstantRange(VK_SHADER_STAGE_VERTEX_BIT, sizeof(glm::mat4), 0);
-	// Push constant ranges are part of the pipeline layout
-	//pPipelineLayoutCreateInfo.pushConstantRangeCount = 1;
-	//pPipelineLayoutCreateInfo.pPushConstantRanges = &pushConstantRange;
-	//assert(VK_SUCCESS == vkCreatePipelineLayout(device, &pPipelineLayoutCreateInfo, nullptr, &pipelineLayouts.offscreen)=;
 }
 
 // Updates a single cube map face
 // Renders the scene with face's view and does a copy from framebuffer to cube face
 // Uses push constants for quick update of view matrix for the current cube map face
-void HelloTriangleApplication::updateCubeFace(uint32_t faceIndex, VkCommandBuffer commandBuffer)
+void HelloTriangleApplication::updateCubeFace(uint32_t faceIndex, size_t cmdIdx)
 {
-	VkClearValue clearValues[1];	
-	clearValues[0].depthStencil = { 1.0f, 0 };
+	VkCommandBuffer currentCmd = commandBuffers[cmdIdx];
+	SbFramebuffer& currentFrameBuffer = shadowFrameBuffers[cmdIdx];
+	struct {
+		VkImage image;		
+		VkImageView view;
+	} currentCube;
+	currentCube.image = shadowCubeMap.images[cmdIdx];
+	currentCube.view = shadowCubeMap.views[cmdIdx];
+
+	VkClearValue clearValues[2];
+	clearValues[shadow_attachments::COLOR].color = { 0.0f, 0.5f, 0.5f, 1};
+	clearValues[shadow_attachments::COLOR].depthStencil = { 0, 0 };
+	clearValues[shadow_attachments::DEPTH].color = { 0.5f, 0.5f, 0.5f, 1 };
+	clearValues[shadow_attachments::DEPTH].depthStencil = { 1.0, 0 };
 
 	VkRenderPassBeginInfo renderPassBeginInfo = vks::initializers::renderPassBeginInfo();
 	// Reuse render pass from example pass
-	renderPassBeginInfo.renderPass =  shadowRenderPass->renderPass;
-	renderPassBeginInfo.framebuffer = shadowFrameBuffers[0].frameBuffer;
-	renderPassBeginInfo.renderArea.extent.width = shadowFrameBuffers[0].extent.width;
-	renderPassBeginInfo.renderArea.extent.height = shadowFrameBuffers[0].extent.height;
+	renderPassBeginInfo.renderPass = shadowRenderPass->renderPass;
+	renderPassBeginInfo.framebuffer = currentFrameBuffer.frameBuffer;
+	renderPassBeginInfo.renderArea.extent.width = currentFrameBuffer.extent.width;
+	renderPassBeginInfo.renderArea.extent.height = currentFrameBuffer.extent.height;
 	renderPassBeginInfo.clearValueCount = 2;
 	renderPassBeginInfo.pClearValues = clearValues;
 
 	// Update view matrix via push constant
-
 	glm::mat4 viewMatrix = glm::mat4(1.0f);
+
+	/*
 	switch (faceIndex)
 	{
 	case 0: // POSITIVE_X
@@ -1055,7 +962,33 @@ void HelloTriangleApplication::updateCubeFace(uint32_t faceIndex, VkCommandBuffe
 		viewMatrix = glm::rotate(viewMatrix, glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		break;
 	case 2:	// POSITIVE_Y
+		viewMatrix = glm::rotate(viewMatrix, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		break;
+	case 3:	// NEGATIVE_Y
 		viewMatrix = glm::rotate(viewMatrix, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		break;
+	case 4:	// POSITIVE_Z
+		viewMatrix = glm::rotate(viewMatrix, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		//viewMatrix = glm::rotate(viewMatrix, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		break;
+	case 5:	// NEGATIVE_Z
+		viewMatrix = glm::rotate(viewMatrix, glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		//viewMatrix = glm::rotate(viewMatrix, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		break;
+	}
+	*/
+	switch (faceIndex)
+	{
+	case 0: // POSITIVE_X
+		viewMatrix = glm::rotate(viewMatrix, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		viewMatrix = glm::rotate(viewMatrix, glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		break;
+	case 1:	// NEGATIVE_X
+		viewMatrix = glm::rotate(viewMatrix, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		viewMatrix = glm::rotate(viewMatrix, glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		break;
+	case 2:	// POSITIVE_Y
+		viewMatrix = glm::rotate(viewMatrix, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));		
 		break;
 	case 3:	// NEGATIVE_Y
 		viewMatrix = glm::rotate(viewMatrix, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -1068,90 +1001,88 @@ void HelloTriangleApplication::updateCubeFace(uint32_t faceIndex, VkCommandBuffe
 		break;
 	}
 
+	
+	//viewMatrix = glm::translate(viewMatrix, glm::vec3(-shadowLightPos.x, -shadowLightPos.y, -shadowLightPos.z));
+
+	//viewMatrix = cam.getViewMatrix();
+	//glm::mat4 proj = SbCamera::projectionMatrix(90, 1, cam.zNear, cam.zFar);
+	//struct {
+	//	glm::mat4 MVP;
+	//	glm::vec4 lightPos;
+	//} push;
+	//push.MVP = proj * viewMatrix * glm::scale(glm::mat4(1.0f), { 0.05f,0.05f ,0.05f });;
+	//push.lightPos = shadowLightPos;
+
 	// Render scene from cube face's point of view
-	vkCmdBeginRenderPass(commandBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+	vkCmdBeginRenderPass(currentCmd, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
 	// Update shader push constant block
 	// Contains current face view matrix
 	vkCmdPushConstants(
-		commandBuffer,
+		currentCmd,
 		shaderLayouts.shadow.results.pipelineLayout,
 		VK_SHADER_STAGE_VERTEX_BIT,
 		0,
 		sizeof(glm::mat4),
 		&viewMatrix);
 
-	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.shadow.handle);
-	vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, shaderLayouts.shadow.results.pipelineLayout, 0, 1, &descriptorSets.matrixDesc->allocatedDSs[0], 0, NULL);
-	
-	//models.scene.draw(commandBuffer);
-	{
-		VkDeviceSize offsets[] = { 0 };
-		VkBuffer vert[] = { sponza.scene.vertexBuffer.buffer };
-		vkCmdBindVertexBuffers(commandBuffer, 0, 1, vert, offsets);
-		vkCmdBindIndexBuffer(commandBuffer, sponza.scene.indexBuffer.buffer, 0, VK_INDEX_TYPE_UINT32);
+	vkCmdBindPipeline(currentCmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.shadow.handle);
+	vkCmdBindDescriptorSets(currentCmd, VK_PIPELINE_BIND_POINT_GRAPHICS, 
+		shaderLayouts.shadow.results.pipelineLayout, 0, 1, &descriptorSets.shadowDesc->allocatedDSs[cmdIdx], 0, NULL);
 
-		for (size_t meshIdx = 0; meshIdx < sponza.scene.meshes.size(); meshIdx++)
-		{
-			auto currentMaterial = sponza.scene.meshes[meshIdx].material;
-			if (!currentMaterial->hasAlpha &&
-				currentMaterial->hasBump &&
-				currentMaterial->hasSpecular &&
-				meshIdx != 17)
-			{
-				VkDescriptorSet sets[] = { descriptorSets.matrixDesc->allocatedDSs[0], currentMaterial->descriptor->allocatedDSs[0] };
-				vkCmdDrawIndexed(commandBuffer, sponza.scene.meshes[meshIdx].indexCount, 1, sponza.scene.meshes[meshIdx].indexBase, 0, 0);
-			}
+	VkDeviceSize offsets[] = { 0 };
+	VkBuffer vert[] = { sponza.scene.vertexBuffer.buffer };
+	vkCmdBindVertexBuffers(currentCmd, 0, 1, vert, offsets);
+	vkCmdBindIndexBuffer(currentCmd, sponza.scene.indexBuffer.buffer, 0, VK_INDEX_TYPE_UINT32);
+	for (size_t meshIdx = 0; meshIdx < sponza.scene.meshes.size(); meshIdx++)
+	{
+		auto currentMaterial = sponza.scene.meshes[meshIdx].material;
+		if (!currentMaterial->hasAlpha &&
+			currentMaterial->hasBump &&
+			currentMaterial->hasSpecular &&
+			meshIdx != 17)
+		{				
+			vkCmdDrawIndexed(currentCmd, sponza.scene.meshes[meshIdx].indexCount, 1, sponza.scene.meshes[meshIdx].indexBase, 0, 0);
 		}
 	}
 
-	vkCmdEndRenderPass(commandBuffer);
+	vkCmdEndRenderPass(currentCmd);
 
-	// Make sure color writes to the framebuffer are finished before using it as transfer source	
-	vks::helper::transitionImageLayout(
-			commandBuffer,
-			shadowFrameBuffers[0].images[shadow_attachments::DEPTH],
-			VK_IMAGE_ASPECT_DEPTH_BIT,
-			VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-			VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);	 
-	//vks::tools::setImageLayout(
-	//	commandBuffer,
-	//	offscreenPass.color.image,
-	//	VK_IMAGE_ASPECT_COLOR_BIT,
-	//	VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
-	//	VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);	 
+	//transfer to cube!-----------------------
 
 	VkImageSubresourceRange cubeFaceSubresourceRange = {};
-	cubeFaceSubresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+	cubeFaceSubresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 	cubeFaceSubresourceRange.baseMipLevel = 0;
 	cubeFaceSubresourceRange.levelCount = 1;
 	cubeFaceSubresourceRange.baseArrayLayer = faceIndex;
 	cubeFaceSubresourceRange.layerCount = 1;
 
+	// Make sure color writes to the framebuffer are finished before using it as transfer source	
+	vks::helper::transitionImageLayout(
+		currentCmd,
+		currentFrameBuffer.images[shadow_attachments::COLOR],
+		VK_IMAGE_ASPECT_COLOR_BIT,
+		VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+		VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
+
 	// Change image layout of one cubemap face to transfer destination
 	vks::helper::transitionImageLayout(
-		commandBuffer, 
-		shadowCubeMap.image, 
+		currentCmd,
+		currentCube.image,
 		VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-		VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 
+		VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
 		cubeFaceSubresourceRange);
-	//vks::tools::setImageLayout(
-	//	commandBuffer,
-	//	shadowCubeMap.image,
-	//	VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-	//	VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-	//	cubeFaceSubresourceRange);
 
 	// Copy region for transfer from framebuffer to cube face
 	VkImageCopy copyRegion = {};
 
-	copyRegion.srcSubresource.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+	copyRegion.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 	copyRegion.srcSubresource.baseArrayLayer = 0;
 	copyRegion.srcSubresource.mipLevel = 0;
 	copyRegion.srcSubresource.layerCount = 1;
 	copyRegion.srcOffset = { 0, 0, 0 };
 
-	copyRegion.dstSubresource.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+	copyRegion.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 	copyRegion.dstSubresource.baseArrayLayer = faceIndex;
 	copyRegion.dstSubresource.mipLevel = 0;
 	copyRegion.dstSubresource.layerCount = 1;
@@ -1163,42 +1094,30 @@ void HelloTriangleApplication::updateCubeFace(uint32_t faceIndex, VkCommandBuffe
 
 	// Put image copy into command buffer
 	vkCmdCopyImage(
-		commandBuffer,
-		shadowFrameBuffers[0].images[shadow_attachments::DEPTH],
+		currentCmd,
+		currentFrameBuffer.images[shadow_attachments::COLOR],
 		VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-		shadowCubeMap.image,
+		currentCube.image,
 		VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
 		1,
 		&copyRegion);
 
 	// Transform framebuffer color attachment back
 	vks::helper::transitionImageLayout(
-		commandBuffer,
-		shadowFrameBuffers[0].images[shadow_attachments::DEPTH],
-		VK_IMAGE_ASPECT_DEPTH_BIT,
+		currentCmd,
+		currentFrameBuffer.images[shadow_attachments::COLOR],
+		VK_IMAGE_ASPECT_COLOR_BIT,
 		VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-		VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
-	//vks::tools::setImageLayout(
-	//	commandBuffer,
-	//	offscreenPass.color.image,
-	//	VK_IMAGE_ASPECT_COLOR_BIT,
-	//	VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-	//	VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
-	
+		VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
 
 	// Change image layout of copied face to shader read
 	vks::helper::transitionImageLayout(
-		commandBuffer,
-		shadowCubeMap.image,
+		currentCmd,
+		currentCube.image,
 		VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
 		VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
 		cubeFaceSubresourceRange);
-	//vks::tools::setImageLayout(
-	//	commandBuffer,
-	//	shadowCubeMap.image,
-	//	VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-	//	VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-	//	cubeFaceSubresourceRange);
+	
 }
 
 void HelloTriangleApplication::createDescriptorPool() {
@@ -1216,11 +1135,11 @@ void HelloTriangleApplication::createDescriptorPool() {
 }
 
 void HelloTriangleApplication::createCommandBuffers() {
-	
+
 	computeCommandBuffer = vulkanBase->commandPool->beginSingleTimeCommands();
-	 
+
 	vkCmdBindPipeline(computeCommandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, pipelines.cluster.handle);
-	VkDescriptorSet set[] = { descriptorSets.cluster->allocatedDSs[0]};
+	VkDescriptorSet set[] = { descriptorSets.cluster->allocatedDSs[0] };
 	vkCmdBindDescriptorSets(computeCommandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, pipelines.cluster.getLayout(), 0, 1, set, 0, nullptr);
 
 	//constexpr uint32_t workGroupSize = 256;
@@ -1229,7 +1148,7 @@ void HelloTriangleApplication::createCommandBuffers() {
 	vkCmdDispatch(computeCommandBuffer, viewUniform->tileSizes.x, viewUniform->tileSizes.y, viewUniform->tileSizes.z);
 
 	vulkanBase->commandPool->endSingleTimeCommands(computeCommandBuffer);
-	
+
 	shaderStorage.clusterSSBO->readFromMappedMemory(0);
 
 	//----------------
@@ -1239,14 +1158,14 @@ void HelloTriangleApplication::createCommandBuffers() {
 	VkCommandBufferAllocateInfo allocInfo = {};
 	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 	allocInfo.commandPool = vulkanBase->commandPool->handle;
-	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;	
+	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
 	allocInfo.commandBufferCount = (uint32_t)commandBuffers.size();
 
 	if (vkAllocateCommandBuffers(vulkanBase->getDevice(), &allocInfo, commandBuffers.data()) != VK_SUCCESS) {
 		throw std::runtime_error("failed to allocate command buffers!");
 	}
 
-	for (size_t cmdIdx = 0; cmdIdx < commandBuffers.size(); cmdIdx++) 
+	for (size_t cmdIdx = 0; cmdIdx < commandBuffers.size(); cmdIdx++)
 	{
 		VkCommandBufferBeginInfo beginInfo = {};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -1267,7 +1186,7 @@ void HelloTriangleApplication::createCommandBuffers() {
 			vkCmdSetScissor(commandBuffers[cmdIdx], 0, 1, &scissor);
 
 			for (uint32_t face = 0; face < 6; face++) {
-				updateCubeFace(face, commandBuffers[cmdIdx]);
+				updateCubeFace(face, cmdIdx);
 			}
 		}
 
@@ -1275,10 +1194,10 @@ void HelloTriangleApplication::createCommandBuffers() {
 
 		//compute light assignments
 		vkCmdBindPipeline(commandBuffers[cmdIdx],
-			VK_PIPELINE_BIND_POINT_COMPUTE, pipelines.lightAssignment.handle);		
-		VkDescriptorSet sets[] = { 
-			descriptorSets.lightAssignment->allocatedDSs[cmdIdx], 
-			descriptorSets.lights->allocatedDSs[cmdIdx] 
+			VK_PIPELINE_BIND_POINT_COMPUTE, pipelines.lightAssignment.handle);
+		VkDescriptorSet sets[] = {
+			descriptorSets.lightAssignment->allocatedDSs[cmdIdx],
+			descriptorSets.lights->allocatedDSs[cmdIdx]
 		};
 		vkCmdBindDescriptorSets(commandBuffers[cmdIdx], VK_PIPELINE_BIND_POINT_COMPUTE,
 			pipelines.lightAssignment.getLayout(), 0, 2, sets, 0, nullptr);
@@ -1307,41 +1226,18 @@ void HelloTriangleApplication::createCommandBuffers() {
 			0,
 			shaderStorage.lightGridSSBO->bufferSize
 		};
-		
+
 		VkBufferMemoryBarrier lightBarriers[2] = { lightIndexMemoryBarrier, lightGridMemoryBarrier };
 
-		vkCmdPipelineBarrier(commandBuffers[cmdIdx], 
-			VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, 
-			VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 
-			0, 
+		vkCmdPipelineBarrier(commandBuffers[cmdIdx],
+			VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+			VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+			0,
 			0, nullptr,
 			2, lightBarriers,
 			0, nullptr);
 		*/
 
-		VkRenderPassBeginInfo renderPassInfo = {};
-		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-		renderPassInfo.renderPass = deferredRenderPass->renderPass;
-		renderPassInfo.framebuffer = deferredFrameBuffers[cmdIdx].frameBuffer;
-		renderPassInfo.renderArea.offset = { 0, 0 };
-		renderPassInfo.renderArea.extent = swapchain->swapchainCI.imageExtent;
-
-		//std::array<VkClearValue, 2> clearValues = {};
-		//clearValues[0].color = { 0.0f, 0.0f, 0.0f, 1.0f };
-		//clearValues[1].depthStencil = { 1.0f, 0 };
-
-		//todo clearvalues as properties of attachments, and attachments as part of renderpass
-		std::array<VkClearValue, 5> clearValues = {};
-		clearValues[0].color = { { 0.0f, 0.0f, 0.0f, 0.0f } };
-		clearValues[1].color = { { 0.0f, 0.0f, 0.0f, 0.0f } };
-		clearValues[2].color = { { 0.0f, 0.0f, 0.0f, 0.0f } };
-		clearValues[3].color = { { 0.0f, 0.0f, 0.0f, 0.0f } };
-		clearValues[4].depthStencil = { 1.0f, 0 };
-
-		renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
-		renderPassInfo.pClearValues = clearValues.data();
-
-		vkCmdBeginRenderPass(commandBuffers[cmdIdx], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
 		VkViewport viewport = vks::initializers::viewport(
 			(float)swapchain->swapchainCI.imageExtent.width,
@@ -1351,85 +1247,13 @@ void HelloTriangleApplication::createCommandBuffers() {
 		VkRect2D scissor = vks::initializers::rect2D(swapchain->swapchainCI.imageExtent, 0, 0);
 		vkCmdSetScissor(commandBuffers[cmdIdx], 0, 1, &scissor);
 
-		{
-			//vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.character.handle);
-			//
-			//for (size_t j = 0; j < drawables.size() - 1; j++)
-			//{
-			//	uint32_t offset = j * static_cast<uint32_t>(shadingUniformBuffer->dynamicAlignment);
-			//	vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.character.getLayout(),
-			//		0, 1, &gbufDesc->allocatedDSs[i], 0, &offset); //todo dynamic offset count should be what?
-			//
-			//	VkBuffer vert[] = { drawables[j].VertexBuffer };
-			//	VkDeviceSize offsets[] = { 0 };
-			//	vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vert, offsets);
-			//
-			//	//vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer[j], 0, VK_INDEX_TYPE_UINT32);
-			//	vkCmdBindIndexBuffer(commandBuffers[i], drawables[j].IndexBuffer, 0, VK_INDEX_TYPE_UINT32);
-			//
-			//	vkCmdDrawIndexed(commandBuffers[i], drawables[j].IndexCount, 1, 0, 0, 0);
-			//}
-
-			vkCmdBindPipeline(commandBuffers[cmdIdx], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.opaque.handle);
-
-			VkDeviceSize offsets[] = { 0 };
-			VkBuffer vert[] = { sponza.scene.vertexBuffer.buffer };
-			vkCmdBindVertexBuffers(commandBuffers[cmdIdx], 0, 1, vert, offsets);
-			vkCmdBindIndexBuffer(commandBuffers[cmdIdx], sponza.scene.indexBuffer.buffer, 0, VK_INDEX_TYPE_UINT32);
-			//vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.opaque.getLayout(), 0, 1, sets, 0, nullptr);
-			for (size_t meshIdx = 0; meshIdx < sponza.scene.meshes.size(); meshIdx++)
-			{
-				auto currentMaterial = sponza.scene.meshes[meshIdx].material;
-				if (!currentMaterial->hasAlpha &&
-					currentMaterial->hasBump &&
-					currentMaterial->hasSpecular &&
-					meshIdx != 17)
-				{
-					VkDescriptorSet sets[] = { descriptorSets.matrixDesc->allocatedDSs[0], currentMaterial->descriptor->allocatedDSs[0] };
-					vkCmdBindDescriptorSets(commandBuffers[cmdIdx], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.opaque.getLayout(), 0, 2, sets, 0, nullptr);
-
-					vkCmdDrawIndexed(commandBuffers[cmdIdx], sponza.scene.meshes[meshIdx].indexCount, 1, sponza.scene.meshes[meshIdx].indexBase, 0, 0);
-				}
-			}
+		if constexpr (true) {
+			recordDeferredRenderpass(cmdIdx);
 		}
-
-
-		vkCmdNextSubpass(commandBuffers[cmdIdx], VK_SUBPASS_CONTENTS_INLINE);
-		{
-			vkCmdBindPipeline(commandBuffers[cmdIdx], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.composition.handle);
-			std::vector<VkDescriptorSet> sets = { 
-				descriptorSets.compDesc->allocatedDSs[cmdIdx],
-				descriptorSets.lights_g->allocatedDSs[cmdIdx]
-			};
-			vkCmdBindDescriptorSets(commandBuffers[cmdIdx], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.composition.getLayout(),
-				0, sets.size(), sets.data(), 0, NULL);
-			vkCmdDraw(commandBuffers[cmdIdx], 3, 1, 0, 0);
+		else {
+			//recordCubeMapRenderpass(cmdIdx);
+			recordVirtualCubeRenderpass(cmdIdx);
 		}
-
-		//transparent subpass
-		//vkCmdNextSubpass(commandBuffers[cmdIdx], VK_SUBPASS_CONTENTS_INLINE);
-		{
-
-			//vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.transparentCharacter.handle);
-			//
-			//for (size_t j = drawables.size() - 1; j < drawables.size(); j++)
-			//{
-			//	uint32_t offset = j * static_cast<uint32_t>(shadingUniformBuffer->dynamicAlignment);
-			//	vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.transparentCharacter.getLayout(),
-			//		0, 1, &transDesc->allocatedDSs[i], 0, &offset);
-			//
-			//	VkBuffer vert[] = { drawables[j].VertexBuffer };
-			//	VkDeviceSize offsets[] = { 0 };
-			//	vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vert, offsets);
-			//
-			//	//vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer[j], 0, VK_INDEX_TYPE_UINT32);
-			//	vkCmdBindIndexBuffer(commandBuffers[i], drawables[j].IndexBuffer, 0, VK_INDEX_TYPE_UINT32);
-			//
-			//	vkCmdDrawIndexed(commandBuffers[i], drawables[j].IndexCount, 1, 0, 0, 0);
-			//}
-		}
-
-		vkCmdEndRenderPass(commandBuffers[cmdIdx]);
 
 		if (vkEndCommandBuffer(commandBuffers[cmdIdx]) != VK_SUCCESS) {
 			throw std::runtime_error("failed to record command buffer!");
@@ -1437,7 +1261,134 @@ void HelloTriangleApplication::createCommandBuffers() {
 	}
 }
 
+void HelloTriangleApplication::recordCubeMapRenderpass(size_t idx) {
+	VkRenderPassBeginInfo renderPassInfo = {};
+	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+	renderPassInfo.renderPass = cubedebugRenderPass->renderPass;
+	renderPassInfo.framebuffer = cubedebugFrameBuffers[idx].frameBuffer;
+	renderPassInfo.renderArea.offset = { 0, 0 };
+	renderPassInfo.renderArea.extent = swapchain->swapchainCI.imageExtent;
+
+	//todo clearvalues as properties of attachments, and attachments as part of renderpass
+	std::array<VkClearValue, 2> clearValues = {};
+	clearValues[0].color = { { 0.0f, 0.0f, 0.0f, 0.0f } };
+	clearValues[1].depthStencil = { 1.0f, 0 };
+
+	renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
+	renderPassInfo.pClearValues = clearValues.data();
+
+	vkCmdBeginRenderPass(commandBuffers[idx], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+	vkCmdBindPipeline(commandBuffers[idx], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.debugCube.handle);
+	std::array<VkDescriptorSet, 1> sets = {
+		descriptorSets.cube->allocatedDSs[idx]
+	};
+	vkCmdBindDescriptorSets(commandBuffers[idx], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.debugCube.getLayout(),
+		0, sets.size(), sets.data(), 0, NULL);
+	vkCmdDraw(commandBuffers[idx], 3, 1, 0, 0);
+	vkCmdEndRenderPass(commandBuffers[idx]);
+}
+
+void HelloTriangleApplication::recordVirtualCubeRenderpass(size_t idx) {
+	VkRenderPassBeginInfo renderPassInfo = {};
+	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+	renderPassInfo.renderPass = cubedebugRenderPass->renderPass;
+	renderPassInfo.framebuffer = cubedebugFrameBuffers[idx].frameBuffer;
+	renderPassInfo.renderArea.offset = { 0, 0 };
+	renderPassInfo.renderArea.extent = swapchain->swapchainCI.imageExtent;
+
+	//todo clearvalues as properties of attachments, and attachments as part of renderpass
+	std::array<VkClearValue, 2> clearValues = {};
+	clearValues[0].color = { { 0.0f, 0.0f, 0.0f, 0.0f } };
+	clearValues[1].depthStencil = { 1.0f, 0 };
+
+	renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
+	renderPassInfo.pClearValues = clearValues.data();
+
+	vkCmdBeginRenderPass(commandBuffers[idx], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+	vkCmdBindPipeline(commandBuffers[idx], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.virtualCube.handle);
+	std::array<VkDescriptorSet, 1> sets = {
+		descriptorSets.virtualcube->allocatedDSs[idx],
+	};
+	vkCmdBindDescriptorSets(commandBuffers[idx], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.virtualCube.getLayout(),
+		0, sets.size(), sets.data(), 0, NULL);
+	vkCmdDraw(commandBuffers[idx], 3, 1, 0, 0);
+	vkCmdEndRenderPass(commandBuffers[idx]);
+}
+
+
+
+void HelloTriangleApplication::recordDeferredRenderpass(size_t idx) {
+	VkRenderPassBeginInfo renderPassInfo = {};
+	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+	renderPassInfo.renderPass = deferredRenderPass->renderPass;
+	renderPassInfo.framebuffer = deferredFrameBuffers[idx].frameBuffer;
+	renderPassInfo.renderArea.offset = { 0, 0 };
+	renderPassInfo.renderArea.extent = swapchain->swapchainCI.imageExtent;
+
+	//todo clearvalues as properties of attachments, and attachments as part of renderpass
+	std::array<VkClearValue, 5> clearValues = {};
+	clearValues[0].color = { { 0.0f, 0.0f, 0.0f, 0.0f } };
+	clearValues[1].color = { { 0.0f, 0.0f, 0.0f, 0.0f } };
+	clearValues[2].color = { { 0.0f, 0.0f, 0.0f, 0.0f } };
+	clearValues[3].color = { { 0.0f, 0.0f, 0.0f, 0.0f } };
+	clearValues[4].depthStencil = { 1.0f, 0 };
+
+	renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
+	renderPassInfo.pClearValues = clearValues.data();
+
+	vkCmdBeginRenderPass(commandBuffers[idx], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+	drawGBUF(idx);
+
+	vkCmdNextSubpass(commandBuffers[idx], VK_SUBPASS_CONTENTS_INLINE);
+
+	drawComposition(idx);
+
+	vkCmdEndRenderPass(commandBuffers[idx]);
+}
+
+void HelloTriangleApplication::drawComposition(size_t idx) {
+	vkCmdBindPipeline(commandBuffers[idx], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.composition.handle);
+	std::vector<VkDescriptorSet> sets = {
+		descriptorSets.compDesc->allocatedDSs[idx],
+		descriptorSets.lights_g->allocatedDSs[idx],
+		descriptorSets.virtualcube->allocatedDSs[idx]
+	};
+	vkCmdBindDescriptorSets(commandBuffers[idx], VK_PIPELINE_BIND_POINT_GRAPHICS, 
+		pipelines.composition.getLayout(), 0, sets.size(), sets.data(), 0, NULL);
+	vkCmdDraw(commandBuffers[idx], 3, 1, 0, 0);
+};
+
+void HelloTriangleApplication::drawGBUF(size_t idx) {
+	vkCmdBindPipeline(commandBuffers[idx], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.opaque.handle);
+
+	VkDeviceSize offsets[] = { 0 };
+	VkBuffer vert[] = { sponza.scene.vertexBuffer.buffer };
+	vkCmdBindVertexBuffers(commandBuffers[idx], 0, 1, vert, offsets);
+	vkCmdBindIndexBuffer(commandBuffers[idx], sponza.scene.indexBuffer.buffer, 0, VK_INDEX_TYPE_UINT32);
+	//vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.opaque.getLayout(), 0, 1, sets, 0, nullptr);
+	for (size_t meshIdx = 0; meshIdx < sponza.scene.meshes.size(); meshIdx++)
+	{
+		auto currentMaterial = sponza.scene.meshes[meshIdx].material;
+		if (!currentMaterial->hasAlpha &&
+			currentMaterial->hasBump &&
+			currentMaterial->hasSpecular &&
+			meshIdx != 17)
+		{
+			VkDescriptorSet sets[] = { descriptorSets.matrixDesc->allocatedDSs[0], currentMaterial->descriptor->allocatedDSs[0] };
+			vkCmdBindDescriptorSets(commandBuffers[idx], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.opaque.getLayout(), 0, 2, sets, 0, nullptr);
+
+			vkCmdDrawIndexed(commandBuffers[idx], sponza.scene.meshes[meshIdx].indexCount, 1, sponza.scene.meshes[meshIdx].indexBase, 0, 0);
+		}
+	}
+};
+
 void HelloTriangleApplication::updateUniformBuffer(uint32_t currentImage) {
+
+	//(shaderStorage.screenToViewUniform->data())->inverseProjection =
+	//	glm::inverse(SbCamera::projectionMatrix(90, 1, cam.zNear, cam.zFar));
+	//shaderStorage.screenToViewUniform->writeToMappedMemory(0);
+
 
 	auto sideways = glm::normalize(glm::cross(cam.globalUp, cam.forward));
 	glm::mat4 rot = glm::rotate(glm::mat4(1.0f), -(float)delta_mouse_pos.x * 0.001f, cam.globalUp);
@@ -1445,17 +1396,48 @@ void HelloTriangleApplication::updateUniformBuffer(uint32_t currentImage) {
 	//glm::quat horizontal = glm::rotate(glm::quat(), , cam.globalUp);
 	//glm::quat vertical = glm::rotate(glm::quat(), (float)delta_mouse_pos.x, sideways);
 
-	auto deltaMouseQuat = glm::quat(glm::vec3(delta_mouse_pos.y, delta_mouse_pos.x, 0)*0.01f);
+	auto deltaMouseQuat = glm::quat(glm::vec3(delta_mouse_pos.y, delta_mouse_pos.x, 0) * 0.01f);
 	cam.forward = rot * glm::vec4(cam.forward, 1.0f);
 
-	(*shaderStorage.cameraUniform->data()) = { cam.position.x, cam.position.y, cam.position.z, 1 };
-	shaderStorage.cameraUniform->writeToMappedMemory(currentImage);
-
+	
 
 	static auto startTime = std::chrono::high_resolution_clock::now();
 
 	auto currentTime = std::chrono::high_resolution_clock::now();
 	float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+
+	//cam.position.y = std::sinf(time / (3.14f)) + shadowLightPos.y;
+
+	(*shaderStorage.cameraUniform->data()) = { cam.position.x, cam.position.y, cam.position.z, 1 };
+	shaderStorage.cameraUniform->writeToMappedMemory(currentImage);
+
+	//glm::mat4 cameraRotation = glm::rotate(glm::mat4(1.0f), time * glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	//glm::mat4 cameraRotation = glm::lookAt(glm::vec3(0),cam.forward, cam.globalUp);//cam.getViewMatrix();
+	//cameraRotation[3] = glm::vec4(0, 0, 0, 1); // remove camera translation
+	//cameraRotation = glm::inverse(cameraRotation);
+	//glm::translate
+	//glm::mat4 rotation = 
+	glm::vec3 zaxis = cam.forward;
+	glm::vec3 xaxis = glm::normalize(glm::cross(cam.globalUp, zaxis));
+	glm::vec3 yaxis = glm::cross(zaxis, xaxis);
+
+	glm::mat4 raycamOrientation;
+
+	raycamOrientation = {
+		glm::vec4(xaxis.x, xaxis.y, xaxis.z, 0),
+		glm::vec4(-yaxis.x, -yaxis.y, -yaxis.z, 0),
+		glm::vec4(zaxis.x, zaxis.y, zaxis.z, 0),
+		glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)
+	};
+
+	*shaderStorage.rayCameraUniform->data() = {
+		raycamOrientation,
+		glm::uvec2(WIDTH, HEIGHT),
+		glm::radians(85.0f) //todo hardcoded
+	};
+	shaderStorage.rayCameraUniform->writeToMappedMemory(currentImage);
+
+	
 	//float TicksPerSecond = modelScene->mAnimations[0]->mTicksPerSecond != 0 ?
 	//	modelScene->mAnimations[0]->mTicksPerSecond : 25.0f;
 	//float TimeInTicks = time * TicksPerSecond;
@@ -1478,13 +1460,23 @@ void HelloTriangleApplication::updateUniformBuffer(uint32_t currentImage) {
 
 	auto buf = shaderStorage.matrixUniform->data();
 	buf->model = //glm::rotate(glm::mat4(1.0f), time * glm::radians(15.0f), glm::vec3(0.0f, 1.0f, 0.0f))
-			 glm::scale(glm::mat4(1.0f), { 0.05f,0.05f ,0.05f });
+		glm::scale(glm::mat4(1.0f), { 0.05f,0.05f ,0.05f });
 	buf->view = cam.getViewMatrix();
 	buf->proj = cam.getProjectionMatrix();
 	//matrixUniformBuffer->writeBufferData(buf);
 	shaderStorage.matrixUniform->writeToMappedMemory(currentImage);
 
 
+	glm::mat4 scale = glm::scale(glm::mat4(1.0f), { 0.05f,0.05f ,0.05f });
+	glm::mat4 translate = glm::translate(glm::mat4(1.0f),
+		glm::vec3(-shadowLightPos.x, -shadowLightPos.y, -shadowLightPos.z));
+	*shaderStorage.shadowMatrixUniform->data() = { 
+		translate*scale,
+		glm::mat4(1.0f),
+		glm::perspective((float)(M_PI / 2.0), 1.0f, cam.zNear, cam.zFar),
+		shadowLightPos
+	};
+	shaderStorage.shadowMatrixUniform->writeToMappedMemory(currentImage);
 }
 
 void HelloTriangleApplication::drawFrame() {
@@ -1496,7 +1488,7 @@ void HelloTriangleApplication::drawFrame() {
 	vulkanBase->submitCommandBuffers(cmds, waitSem, signalSem, swapchain->getInFlightFence());
 	swapchain->presentImage(imageIndex, signalSem);
 	swapchain->updateFrameInFlightCounter();
-	
+
 }
 
 std::vector<char> HelloTriangleApplication::readFile(const std::string& filename) {

@@ -79,6 +79,20 @@ SbDescriptorSet& SbDescriptorSet::addImageBinding(uint32_t binding, VkSampler sa
 	return *this;
 }
 
+SbDescriptorSet& SbDescriptorSet::addImageBinding(uint32_t binding, VkSampler sampler, std::vector<VkImageView> imageViews)
+{
+	bool instanced = imageViews.size() > 1;
+	imgInfo.push_back(
+		SbImageInfo{
+			binding,
+			sampler,
+			std::move(imageViews),
+			VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+			instanced
+		});
+	return *this;
+}
+
 SbDescriptorSet& SbDescriptorSet::addInputAttachmentBinding(uint32_t binding, uint32_t attachmentID, std::vector<SbFramebuffer> framebufferInstances)
 {
 	std::vector<VkImageView> instanceViews(framebufferInstances.size());

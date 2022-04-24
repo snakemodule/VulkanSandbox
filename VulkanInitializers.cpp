@@ -443,6 +443,7 @@ VkGraphicsPipelineCreateInfo vks::initializers::pipelineCreateInfo()
 	pipelineCreateInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
 	pipelineCreateInfo.basePipelineIndex = -1;
 	pipelineCreateInfo.basePipelineHandle = VK_NULL_HANDLE;
+	pipelineCreateInfo.subpass = 0;
 	return pipelineCreateInfo;
 }
 

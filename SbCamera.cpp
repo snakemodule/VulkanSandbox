@@ -4,6 +4,9 @@
 
 glm::mat4 SbCamera::getViewMatrix()
 {
+	//experimenting, constructing a proper vulkan view matrix. https://johannesugb.github.io/gpu-programming/setting-up-a-proper-vulkan-projection-matrix/
+	//aborted, try again later.
+	/*
 	glm::mat4 X = { 
 		glm::vec4(1, 0, 0, 0), 
 		glm::vec4(0, -1, 0, 0), 
@@ -11,6 +14,7 @@ glm::mat4 SbCamera::getViewMatrix()
 		glm::vec4(0, 0, 0, 1) 
 	};
 	X = glm::inverse(X);
+	*/
 	
 	return  glm::lookAt(position, forward+position, globalUp);
 }
@@ -18,6 +22,13 @@ glm::mat4 SbCamera::getViewMatrix()
 glm::mat4 SbCamera::getProjectionMatrix()
 {
 	auto proj = glm::perspective(glm::radians(85.0f), width / (float)height, zNear, zFar);
+	proj[1][1] *= -1;
+	return proj;
+}
+
+glm::mat4 SbCamera::projectionMatrix(float fovy, float aspect, float zNear, float zFar)
+{
+	auto proj = glm::perspective(glm::radians(fovy), aspect, zNear, zFar);
 	proj[1][1] *= -1;
 	return proj;
 }

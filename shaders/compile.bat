@@ -22,6 +22,9 @@ C:/VulkanSDK/1.1.106.0/Bin32/glslangValidator.exe -V cluster.comp -o cluster.com
 C:/VulkanSDK/1.1.106.0/Bin32/glslangValidator.exe -V lightassignment.comp -o lightassignment.comp.spv
 
 C:/VulkanSDK/1.1.106.0/Bin32/glslangValidator.exe -V shadow.vert -o shadow.vert.spv
-
+C:/VulkanSDK/1.1.106.0/Bin32/glslangValidator.exe -V shadow.frag -o shadow.frag.spv
+C:/VulkanSDK/1.1.106.0/Bin32/glslangValidator.exe -V cubedebug.vert -o cubedebug.vert.spv
+C:/VulkanSDK/1.1.106.0/Bin32/glslangValidator.exe -V cubedebug.frag -o cubedebug.frag.spv
+C:/VulkanSDK/1.1.106.0/Bin32/glslangValidator.exe -V virtualcube.frag -o virtualcube.frag.spv
 
 pause

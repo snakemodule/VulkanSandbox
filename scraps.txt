@@ -397,3 +397,45 @@ VkShaderModule createShaderModule(const std::vector<char>& code) {
 
 -----------------------------------------------
 
+drawing character
+
+//vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.character.handle);
+			//
+			//for (size_t j = 0; j < drawables.size() - 1; j++)
+			//{
+			//	uint32_t offset = j * static_cast<uint32_t>(shadingUniformBuffer->dynamicAlignment);
+			//	vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.character.getLayout(),
+			//		0, 1, &gbufDesc->allocatedDSs[i], 0, &offset); //todo dynamic offset count should be what?
+			//
+			//	VkBuffer vert[] = { drawables[j].VertexBuffer };
+			//	VkDeviceSize offsets[] = { 0 };
+			//	vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vert, offsets);
+			//
+			//	//vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer[j], 0, VK_INDEX_TYPE_UINT32);
+			//	vkCmdBindIndexBuffer(commandBuffers[i], drawables[j].IndexBuffer, 0, VK_INDEX_TYPE_UINT32);
+			//
+			//	vkCmdDrawIndexed(commandBuffers[i], drawables[j].IndexCount, 1, 0, 0, 0);
+			//}
+
+			//transparent subpass
+		//vkCmdNextSubpass(commandBuffers[cmdIdx], VK_SUBPASS_CONTENTS_INLINE);
+		{
+
+			//vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.transparentCharacter.handle);
+			//
+			//for (size_t j = drawables.size() - 1; j < drawables.size(); j++)
+			//{
+			//	uint32_t offset = j * static_cast<uint32_t>(shadingUniformBuffer->dynamicAlignment);
+			//	vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.transparentCharacter.getLayout(),
+			//		0, 1, &transDesc->allocatedDSs[i], 0, &offset);
+			//
+			//	VkBuffer vert[] = { drawables[j].VertexBuffer };
+			//	VkDeviceSize offsets[] = { 0 };
+			//	vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vert, offsets);
+			//
+			//	//vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer[j], 0, VK_INDEX_TYPE_UINT32);
+			//	vkCmdBindIndexBuffer(commandBuffers[i], drawables[j].IndexBuffer, 0, VK_INDEX_TYPE_UINT32);
+			//
+			//	vkCmdDrawIndexed(commandBuffers[i], drawables[j].IndexCount, 1, 0, 0, 0);
+			//}
+		}

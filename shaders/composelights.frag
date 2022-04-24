@@ -31,36 +31,29 @@ layout (set = 1, binding = 0) buffer lightSSBO { PointLight pointLight[]; };
 layout (set = 1, binding = 1) buffer lightIndexSSBO { uint globalLightIndexList[]; };
 struct LightGrid { uint offset; uint count; };
 layout (set = 1, binding = 2) buffer lightGridSSBO { LightGrid lightGrid[]; };
-
-struct VolumeTileAABB{
-    vec4 minPoint;
-    vec4 maxPoint;
-};
-
-layout (set = 1, binding = 3) buffer clusterAABB {
-    VolumeTileAABB cluster[ ];
-};
-
+//layout (set = 1, binding = 3) uniform samplerCube shadowCubeMap;
 //------------------------------------------------------------
+layout (set = 2, binding = 0) uniform samplerCube shadowCubeMap;
+layout (set = 2, binding = 1) uniform ubo {
+    mat4 cameraRotation;
+    uvec2 screenDimensions2; 
+    float yfovRad;
+};
+//-----------------------------
 
 layout (location = 0) out vec4 outColor;
 
 layout (constant_id = 0) const int output_mode = 0;
 
-
+#define EPSILON 0.00
 const float zNear = 0.1f;
 const float zFar = 10.f;
 
 float linearDepth(float depthSample);
 uint getDepthSlice(float depth);
-vec3 calcPointLight(uint index, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 col, float spec, float viewDistance);
+vec3 calcPointLight(uint index, vec3 normal, vec3 fragPos, vec3 viewDir, 
+					vec3 col, float spec, float viewDistance);
 
-
-
-bool insideLightRadius(uint index, vec3 pos);
-
-bool testSphereAABB(float radius, vec3 center, uint tileIndex);
-float sqDistPointAABB(vec3 point, uint tile);
 
 vec3 color_int(uint i) 
 {
@@ -86,25 +79,30 @@ vec3 color_int(uint i)
 	}	
 }
 
-//todo invert this into z index from depth.
-uint verifyCluster(float depth)//uint zIndex) 
+vec4 clipToView(vec4 clip)
 {
-	//Eye position is zero in view space
-    const vec3 eyePos = vec3(0.0);
+    //View space transform
+    vec4 view = inverseProjection * clip;
+
+    //Perspective projection
+    view = view / view.w;
     
-	round(depth);
-	float num = log(depth/zNear)*float(tileSizes[2]);
-	float denom = log(zFar/zNear);
-    uint zIdx = uint(round(num/denom));
-    //Near and far values of the cluster in view space
-    return zIdx;//zNear * pow(zFar/zNear, zIndex/float(tileSizes[2]));
-    //float tileFar   = -zNear * pow(zFar/zNear, (gl_WorkGroupID.z + 1)/float(gl_NumWorkGroups.z));	
+    return view;
 }
 
-bool insideBox3D(vec3 v, vec3 bottomLeft, vec3 topRight) {
-    vec3 s = step(bottomLeft, v) - step(topRight, v);
-    return bool(s.x * s.y * s.z); 
+vec4 screen2View(vec4 screen){
+    //Convert to NDC
+    vec2 texCoord = screen.xy / screenDimensions.xy;
+
+    //Convert to clipSpace
+    // vec4 clip = vec4(vec2(texCoord.x, 1.0 - texCoord.y)* 2.0 - 1.0, screen.z, screen.w);
+    vec4 clip = vec4(vec2(texCoord.x, texCoord.y)* 2.0 - 1.0, screen.z, screen.w);
+    //Not sure which of the two it is just yet
+
+    return clipToView(clip);
 }
+
+
 
 void main() 
 {
@@ -113,7 +111,7 @@ void main()
 	vec3 normal = subpassLoad(samplerNormal).rgb;
 	vec4 albedo = subpassLoad(samplerAlbedo);
 	
-	#define ambient 0.05
+	#define ambient 0.03
 	vec3 fragcolor  = albedo.rgb * ambient;
 	
 	vec3 viewDir   = normalize(cameraPos_wS.xyz - fragPos.xyz);
@@ -121,131 +119,81 @@ void main()
 	
 	//Locating which cluster you are a part of
 	vec4 fragPos_vs = viewMatrix * fragPos;
-    uint zTile     = getDepthSlice(-fragPos_vs.z); //uint(max(log2(linearDepth(gl_FragCoord.z)) * scale + bias, 0));
-	//uint zTile = uint(max(log2(linearDepth(fragPos.a)) * sliceScalingFactor + sliceBiasFactor, 0.0));
+    uint zTile     = getDepthSlice(-fragPos_vs.z); 	
     uvec3 tiles    = uvec3( uvec2( gl_FragCoord.xy / tileSizes[3] ), zTile);
     uint tileIndex = tiles.x +
                      tileSizes.x * tiles.y +
                      (tileSizes.x * tileSizes.y) * tiles.z;
 
 	vec3 zColor = color_int(zTile);
-	
-
-
-
-	//if(round(cluster[tileIndex].maxPoint[3]) == 666){
-	//if(tiles.z < 24){
-		//fragcolor=vec3(0,1,1);
 		
-	//} 
-	//if (tiles.x % 2 == 1) {
-	//	fragcolor=vec3(0,0.5,.5);
-	//}
-
-	if(zTile==0 || !(tileIndex<cluster.length())) {
-		//fragcolor=vec3(1.,0,0.5);
-	} else {
-		//fragcolor = zColor;
-	}
-	
-	
-
-
 	vec3 tileColor = zColor;
 	tileColor = ((tiles.x % 2 == 0 && tiles.y % 2 == 1) 
 				|| (tiles.x % 2 == 1 && tiles.y % 2 == 0)) ? color_int(zTile) : vec3(1)-color_int(zTile);
-	
-	
 	// Point lights
     uint lightCount       = lightGrid[tileIndex].count;
     uint lightIndexOffset = lightGrid[tileIndex].offset;
 
 	uint myLightCount = 0;
 	
+
+	// Shadow
+	vec3 fragToLight = fragPos.xyz - pointLight[0].position.xyz; 
+    float closestDepth = texture(shadowCubeMap, fragToLight).r;
+	float currentDepth = length(fragToLight); 
+	float bias = 0.05; 
+	float shadow = currentDepth - bias > closestDepth ? 0.0 : 1.0; 
+
 	//loop lights in this cluster
 	for(uint i = 0; i < lightCount; i++)
-	//for(uint i = 0; i < lightCount; i++)
 	{
-		
-
-	
-        uint index = globalLightIndexList[lightIndexOffset + i];
-		//if(insideLightRadius(index, fragPos.xyz)) {
-		//	myLightCount++;
-			//fragcolor+= vec3(1,0,0);
-		//}
-		/*// To light
-		vec3 lightPos = pointLight[index].position.xyz;
-		vec3 L = lightPos - fragPos.xyz;
-		float dist = length(L);
-		L = normalize(L);
-
-		// To viewer
-		vec3 viewPos = cameraPos_wS.xyz;//vec3(ubo.view * ubo.model * vec4(ubo.viewPos.xyz, 1.0));
-		vec3 V = viewPos - fragPos.xyz;
-		V = normalize(V);
-
-		// Attenuation		
-		float atten = pointLight[index].range / (pow(dist, 2.0) + 1.0);
-
-		// Diffuse part
-		vec3 N = normalize(normal);
-		float NdotL = max(0.0, dot(N, L));
-		vec3 diff = pointLight[index].color.rgb * albedo.rgb * NdotL * atten;
-
-		// Specular part
-		vec3 R = reflect(-L, N);
-		float NdotR = max(0.0, dot(R, V));
-		vec3 spec = pointLight[index].color.rgb * albedo.a * pow(NdotR, 16.0) * (atten * 1.5);
-
-		//fragcolor += diff + spec;*/
-        fragcolor += calcPointLight(index, normal, fragPos.xyz, viewDir, albedo.rgb, albedo.a, viewDistance);		
+        uint index = globalLightIndexList[lightIndexOffset + 0];				
+        fragcolor += shadow * calcPointLight(index, normal, fragPos.xyz, viewDir, albedo.rgb, albedo.a, viewDistance);		
     }
-	
-	/*for(uint x = 0; x < tileSizes.x; x++) 
-	{
-		for(uint y = 0; y < tileSizes.y; y++) 
-		{
-			uint index = x + 
-						tileSizes.x * y +
-                     	(tileSizes.x * tileSizes.y) * 15;
-			VolumeTileAABB currentCell = cluster[index];
-			if( insideBox3D(fragPos_vs.xyz, currentCell.minPoint.xyz, currentCell.maxPoint.xyz))
-			{
-				fragcolor = vec3(0.2863, 0.0, 0.0);
-			}
-		}
-		
-	}
-	
-	if(zTile == 15 && tiles.x % 2 == 1){
-		fragcolor = vec3(0.9804, 0.0, 0.0);
-	}*/
 
-	//if(testSphereAABB(1, vec3(0,0,-2), tileIndex)) 	{
-			//fragcolor = vec3(1.0, 1.0, 1.0);			
-	//};
+	float aspect = screenDimensions.x / screenDimensions.y;   
+    vec2 uv = gl_FragCoord.xy / screenDimensions.xy;
+    uv = uv * 2.0 - 1.0;
+    uv.x *= aspect;
+    uv.x *= -1;
+    uv *= tan(yfovRad/2);
+    vec3 ray_direction = normalize(vec3(uv, 1.0));
+    ray_direction = (cameraRotation * vec4(ray_direction, 0)).xyz;
+    vec4 rayColor = vec4(texture(shadowCubeMap, ray_direction).xxx,1);
+    //rayColor *= vec4(ray_direction, 1);
+	
+	
+		//outFragColor.rgb *= shadow;
 
 	switch(output_mode) {
-		case 0:
-		outColor = vec4(fragcolor, 1.0);		
+		case 0:		
+		//outColor = mix(vec4(fragcolor, 1.0), rayColor, 0.5);			
+		//outColor = texture(shadowCubeMap, ray_direction)/10;
+		outColor = vec4(vec3(closestDepth/zFar), 1.0);
 		break;
 		case 1:
 		//outColor = vec4(normal, 1.0);
-		fragcolor += color_int(lightCount);
-		outColor = vec4(fragcolor, 1.0);		
+		//fragcolor += color_int(lightCount);
+		//outColor = vec4(dist.x/10, 0, 0, 1.0);
+		outColor = vec4(vec3(currentDepth/zFar), 1.0);		
 		break;
 		case 2:
-		fragcolor = mix(color_int(lightCount), fragcolor, 0.5);	
-		//fragcolor += color_int(uint(max(log2(linearDepth(fragPos.a)) * sliceScalingFactor + sliceBiasFactor, 0.0)));
-		outColor = vec4(fragcolor, 1.0);				
+		outColor = rayColor/zFar;		
 		break;
-		case 3:
-		//if(tiles.z > 0) {
-		//	fragcolor = vec3(1);
-		//}
-		fragcolor = color_int(myLightCount);
-		outColor = vec4(fragcolor, 1.0);				
+		case 3:				
+		//vec3 distC = vec3(dist.x, 0, 1.0);	
+		//vec3 sampC = vec3(sampledDist.x, 0, 1.0);
+		//vec3 diff = abs(distC - sampC);
+		//outColor = vec4(diff/10, 1.0);
+		//fragcolor  = 1-shadow.rrr;
+		outColor = vec4(fragcolor, 1.0);
+		/*
+		if (diff.x > 1.0) {
+			outColor = vec4(0.5,0,0, 1.0);
+		} else {
+			outColor = vec4(fragcolor, 1.0);
+		}*/
+
 		break;
 	}	
 }
@@ -255,19 +203,21 @@ float linearDepth(float depth)
     return zNear * zFar / (zFar + depth * (zNear - zFar));
 }
 
+/*
+float linearDepth(float depth)
+{
+	float z = depth * 2.0f - 1.0f; 
+	return (2.0f * zNear * zFar) / (zFar + zNear - z * (zFar - zNear));	
+}
+*/
+
+
 uint getDepthSlice(float viewZ) 
 {
     uint numSlices = tileSizes[2];    
 	const float numerator = numSlices * log(viewZ/zNear);
 	const float denominator = log(zFar/zNear);
 	return uint(floor(numerator/denominator));
-}
-
-bool insideLightRadius(uint index, vec3 pos) 
-{
-	vec3 light_position = pointLight[index].position.xyz;
-	float range = pointLight[index].range;	
-	return distance(pos, light_position) <= range;
 }
 
 vec3 calcPointLight(uint index, vec3 normal, vec3 fragPos, 
@@ -306,6 +256,9 @@ vec3 calcPointLight(uint index, vec3 normal, vec3 fragPos,
 	//return vec3(1.0, 0.0,0.0);
 	
 }
+
+
+
 
 /*vec3 calcPointLight(uint index, vec3 normal, vec3 fragPos,
                     vec3 viewDir, vec3 albedo, float rough,
@@ -352,27 +305,5 @@ vec3 calcPointLight(uint index, vec3 normal, vec3 fragPos,
     return radiance;
 }*/
 
-bool testSphereAABB(float radius, vec3 center, uint tileIndex){
-    //float radius = pointLight[light].range;
-    //vec3 center  = vec3(viewMatrix * pointLight[light].position);
-    float squaredDistance = sqDistPointAABB(center, tileIndex);
 
-    return squaredDistance <= (radius * radius);
-}
-
-float sqDistPointAABB(vec3 point, uint tileIndex){
-    float sqDist = 0.0;
-    VolumeTileAABB currentCell = cluster[tileIndex];
-    for(int i = 0; i < 3; ++i){
-        float v = point[i];
-        if(v < currentCell.minPoint[i]){
-            sqDist += (currentCell.minPoint[i] - v) * (currentCell.minPoint[i] - v);
-        }
-        if(v > currentCell.maxPoint[i]){
-            sqDist += (v - currentCell.maxPoint[i]) * (v - currentCell.maxPoint[i]);
-        }
-    }
-
-    return sqDist;
-}
 
