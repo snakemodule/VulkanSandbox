@@ -69,6 +69,8 @@ public:
 	const vk::Device& getDevice() { return logicalDevice->device; };
 	//const vk::CommandPool& getMainCommandPool() {  };
 
+	void subgroupProperties();
+
 private:
 	bool checkValidationLayerSupport();
 

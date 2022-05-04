@@ -1,0 +1,158 @@
+#version 450 core
+layout(local_size_x = 16, local_size_y = 12, local_size_z = 4) in;
+
+layout(set = 0, binding = 0) uniform matrixBufferObject {
+    mat4 model;
+    mat4 viewMatrix;
+    mat4 proj;
+} matrices;
+struct ClusterAABB { vec4 minPoint; vec4 maxPoint; };
+layout (set = 0, binding = 1) buffer clusterAABB { ClusterAABB clusters[]; };
+layout (set = 0, binding = 2) uniform screenToView {
+    mat4 inverseProjection;
+    uvec4 tileSizes;
+    uvec2 screenDimensions;
+    float sliceScalingFactor;
+	float sliceBiasFactor;
+};
+layout (set = 0, binding = 3) buffer globalIndexCountSSBO{ uint globalIndexCount; };
+
+// SET 1 LIGHTS ------------------------------------
+struct PointLight {
+    vec4 position;
+    vec4 color;
+    uint enabled;
+    float intensity;
+    float range;
+};
+layout (set = 1, binding = 0) buffer lightSSBO { PointLight pointLight[]; };
+layout (set = 1, binding = 1) buffer lightIndexSSBO { uint globalLightIndexList[]; };
+struct LightGrid { uint offset; uint count; };
+layout (set = 1, binding = 2) buffer lightGridSSBO { LightGrid lightGrid[]; };
+//-------------------------
+
+const uint localThreadCount = gl_WorkGroupSize.x * gl_WorkGroupSize.y * gl_WorkGroupSize.z;
+const uint lightBatchSize = localThreadCount;
+//shared PointLight sharedLights[lightBatchSize];
+
+//Function prototypes
+bool testSphereAABB(uint light, uint tile);
+float sqDistPointAABB(vec3 point, uint tile);
+
+vec4 screen2Clip(vec4 screen) {
+    vec2 texCoord = screen.xy / screenDimensions.xy;
+
+    //Convert to clipSpace
+    // vec4 clip = vec4(vec2(texCoord.x, 1.0 - texCoord.y)* 2.0 - 1.0, screen.z, screen.w);
+    vec4 clip = vec4(vec2(texCoord.x, texCoord.y)* 2.0 - 1.0, screen.z, screen.w);
+    return clip;
+}
+
+const float zNear = 0.1f;
+const float zFar = 10.f;
+
+// Calculates the ::ref::Lerp parameter between of two values.
+float InverseLerp(float a, float b, float value)
+{
+    return (a != b) ? clamp((value - a) / (b - a), 0, 1) : 0;
+}
+
+void main()
+{
+    globalIndexCount = 0;
+    uint localThreadCount = gl_WorkGroupSize.x * gl_WorkGroupSize.y * gl_WorkGroupSize.z;
+    uint lightCount = pointLight.length();
+    uint numBatches = (lightCount + localThreadCount-1) / localThreadCount;
+
+    uint clusterIndex = gl_LocalInvocationIndex + 
+                     localThreadCount * gl_WorkGroupID.z;
+
+
+    //Near and far values of the cluster in view space
+    float tileNear  = zNear * pow(zFar/ zNear, gl_WorkGroupID.z/float(gl_NumWorkGroups.z));
+    float tileFar   = zNear * pow(zFar/ zNear, (gl_WorkGroupID.z + 1) /float(gl_NumWorkGroups.z));
+
+    float tn = InverseLerp(zNear, zFar, tileNear);
+    float tf = InverseLerp(zNear, zFar, tileFar);
+
+    uint tileSizePx = tileSizes[3];
+    //Calculating the min and max point in screen space
+    vec4 maxPoint_sS = vec4(vec2(gl_WorkGroupID.x + 1, gl_WorkGroupID.y + 1) * tileSizePx, -1.0, 1.0); // Top Right
+    vec4 minPoint_sS = vec4(gl_WorkGroupID.xy * tileSizePx, -1.0, 1.0); // Bottom left
+    
+    uint visibleLightCount = 0;
+    uint visibleLightIndices[100];
+
+    for(uint light = 0; light < pointLight.length(); ++light) {
+        if( pointLight[light].enabled  == 1) 
+        {
+            if( testSphereAABB(light, clusterIndex) ) 
+            {
+                visibleLightIndices[visibleLightCount] = light;
+                visibleLightCount += 1;
+            }
+        }
+    }
+
+    /*
+    for( uint batch = 0; batch < numBatches; ++batch)
+    {
+        uint lightIndex = batch * localThreadCount + gl_LocalInvocationIndex;
+
+        //Prevent overflow by clamping to last light which is always null
+        lightIndex = min(lightIndex, lightCount);
+
+        //Populating shared light array
+        sharedLights[gl_LocalInvocationIndex] = pointLight[lightIndex];
+        barrier();
+
+        //Iterating within the current batch of lights
+        for( uint light = 0; light < localThreadCount; ++light){
+            if( sharedLights[light].enabled  == 1) {
+                if( testSphereAABB(light, clusterIndex) ) {
+                    visibleLightIndices[visibleLightCount] = batch * localThreadCount + light;
+                    visibleLightCount += 1;
+                }
+            }
+        }
+    }
+    */
+
+    //We want all thread groups to have completed the light tests before continuing
+    barrier();
+
+    uint offset = atomicAdd(globalIndexCount, visibleLightCount);
+
+    for(uint i = 0; i < visibleLightCount; ++i){
+        globalLightIndexList[offset + i] = visibleLightIndices[i];
+    }
+
+    lightGrid[clusterIndex].offset = offset;
+    lightGrid[clusterIndex].count = visibleLightCount;
+}
+
+bool testSphereAABB(uint light, uint tile)
+{
+    float radius = pointLight[light].range;
+    vec3 center = vec3(matrices.viewMatrix * pointLight[light].position);
+    float squaredDistance = sqDistPointAABB(center, tile);
+
+    return squaredDistance <= (radius * radius);
+}
+
+float sqDistPointAABB(vec3 point, uint tile){
+    float sqDist = 0.0;
+    ClusterAABB currentCell = clusters[tile];
+    //clusters[tile].maxPoint[3] = tile;
+    for(int i = 0; i < 3; ++i){
+        float v = point[i];
+        if(v < currentCell.minPoint[i]){
+            sqDist += (currentCell.minPoint[i] - v) * (currentCell.minPoint[i] - v);
+        }
+        if(v > currentCell.maxPoint[i]){
+            sqDist += (v - currentCell.maxPoint[i]) * (v - currentCell.maxPoint[i]);
+        }
+    }
+
+    return sqDist;
+}

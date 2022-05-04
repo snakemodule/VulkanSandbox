@@ -291,6 +291,7 @@ private:
 		SbUniformBuffer<RayCamera>* rayCameraUniform;
 	} shaderStorage;
 
+	glm::vec4 startLightPos = { -1.0, 2.0, 0.5, 1 };
 	glm::vec4 shadowLightPos = { -1.0, 2.0, 0.5, 1 };
 
 	std::unique_ptr<SbDescriptorPool> descriptorPool;

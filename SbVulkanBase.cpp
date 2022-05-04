@@ -53,6 +53,33 @@ void SbVulkanBase::createInstance(bool validation) {
 	instance = vk::Instance(instanceHandle);	
 }
 
+void SbVulkanBase::subgroupProperties() {
+	auto properties =
+		getPhysicalDevice().getProperties2<vk::PhysicalDeviceProperties2, vk::PhysicalDeviceSubgroupProperties>();
+	auto subgroupProperties =
+		properties.get<vk::PhysicalDeviceSubgroupProperties>();
+
+	auto limits = 
+		getPhysicalDevice().getProperties().limits;
+	//vk::PhysicalDeviceLimits a = limits.get<vk::PhysicalDeviceLimits>();
+
+	std::cout << "max workgroup invocations: "
+		<< limits.maxComputeWorkGroupInvocations
+		<< std::endl;
+
+	std::cout << "max workgroup size x: "
+		<< limits.maxComputeWorkGroupSize[0]
+		<< std::endl;
+
+	std::cout << "Subgroup size: "
+		<< subgroupProperties.subgroupSize
+		<< std::endl;
+
+	std::cout << "Subgroup supported operations: "
+		<< vk::to_string(subgroupProperties.supportedOperations)
+		<< std::endl;
+}
+
 bool SbVulkanBase::checkValidationLayerSupport() {
 	uint32_t layerCount;
 	vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
@@ -145,6 +172,7 @@ void SbVulkanBase::pickPhysicalDevice()
 {
 	//todo should vulkanbase hold devices directly?
 	physicalDevice = std::make_unique<SbPhysicalDevice>(instance, surface);
+	subgroupProperties();
 }
 
 void SbVulkanBase::createLogicalDevice() {

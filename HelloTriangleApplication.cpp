@@ -792,11 +792,9 @@ void HelloTriangleApplication::createUniformBuffers() {
 
 	shaderStorage.rayCameraUniform = new SbUniformBuffer<RayCamera>(*vulkanBase, swapchain->getSize());
 	
-	int num_lights = 8;
+	int num_lights = 32;
 	shaderStorage.lightsSSBO = new SbUniformBuffer<PointLight>(*vulkanBase, 1, num_lights, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
-	//TODO generate lights
-
-	/*
+	//TODO generate lights	
 	PointLight* pLight = shaderStorage.lightsSSBO->data(0);
 	//Fetching the light from the current scene
 	pLight->position = shadowLightPos;
@@ -804,10 +802,8 @@ void HelloTriangleApplication::createUniformBuffers() {
 	pLight->enabled = 1;
 	pLight->intensity = 50.0f;
 	pLight->range = 6.8f;
-	*/
-
-	srand(1337);
-	for (int i = 0; i < num_lights; ++i)
+		
+	for (int i = 1; i < num_lights; ++i)
 	{
 		//float xrange = (((float)rand() / RAND_MAX) * 2 - 1) * 10;
 		//float yrange = ((float)rand() / RAND_MAX) * 5;
@@ -815,7 +811,13 @@ void HelloTriangleApplication::createUniformBuffers() {
 
 		PointLight* pLight = shaderStorage.lightsSSBO->data(i);
 		//Fetching the light from the current scene
-		pLight->position = glm::vec4(4-0.5*i, 2, 0.5, 1);
+		//pLight->position = glm::vec4(4-0.5*i, 2, 0.5, 1);
+		//float z = (i % 2 > 0) ? -0.5 : 0.5);
+		pLight->position = glm::vec4(
+			3-0.20*i, 
+			(i % 4 < 2) ? 2 : 0.5,
+			(i % 2 > 0) ? -0.5 : 0.5,
+			1);
 		switch (i%3)
 		{
 		case 0:
@@ -1031,17 +1033,6 @@ void HelloTriangleApplication::updateCubeFace(uint32_t faceIndex, size_t cmdIdx)
 		break;
 	}
 
-	
-	//viewMatrix = glm::translate(viewMatrix, glm::vec3(-shadowLightPos.x, -shadowLightPos.y, -shadowLightPos.z));
-
-	//viewMatrix = cam.getViewMatrix();
-	//glm::mat4 proj = SbCamera::projectionMatrix(90, 1, cam.zNear, cam.zFar);
-	//struct {
-	//	glm::mat4 MVP;
-	//	glm::vec4 lightPos;
-	//} push;
-	//push.MVP = proj * viewMatrix * glm::scale(glm::mat4(1.0f), { 0.05f,0.05f ,0.05f });;
-	//push.lightPos = shadowLightPos;
 
 	// Render scene from cube face's point of view
 	vkCmdBeginRenderPass(currentCmd, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
@@ -1436,7 +1427,11 @@ void HelloTriangleApplication::updateUniformBuffer(uint32_t currentImage) {
 	auto currentTime = std::chrono::high_resolution_clock::now();
 	float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
-	//cam.position.y = std::sinf(time / (3.14f)) + shadowLightPos.y;
+	shadowLightPos.y = std::sinf(2*time / (3.14f)) + startLightPos.y;
+	shadowLightPos.x = std::cosf(2*time / (3.14f)) + startLightPos.x;
+	PointLight* pLight = shaderStorage.lightsSSBO->data(0);	
+	pLight->position = shadowLightPos;	
+	shaderStorage.lightsSSBO->writeToMappedMemory(0);
 
 	(*shaderStorage.cameraUniform->data()) = { cam.position.x, cam.position.y, cam.position.z, 1 };
 	shaderStorage.cameraUniform->writeToMappedMemory(currentImage);

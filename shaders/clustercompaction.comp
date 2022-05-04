@@ -1,0 +1,88 @@
+#version 450 core
+#extension GL_KHR_shader_subgroup_basic:enable
+#extension GL_KHR_shader_subgroup_arithmetic:enable
+
+layout (constant_id = 0) const uint clusterCountX = 16;
+layout (constant_id = 1) const uint clusterCountY = 12;
+layout (constant_id = 2) const uint clusterCountZ = 24; //=4608
+
+layout (constant_id = 3) const uint localThreadCount = 1152; //=4608/4
+
+layout (constant_id = 4) const uint subgroupCount = 36; //=1152/32
+
+layout (constant_id = 5) const uint workGroupCount = 4;
+
+
+const uint clusterCount = clusterCountX *clusterCountY *clusterCountZ;
+
+layout(local_size_x_id = 0, local_size_y = 1, local_size_z = 1) in;
+
+layout (set = 0, binding = 0) buffer Input {
+    bool activeClusterFlags[clusterCount];
+};
+
+struct CompactRange {
+    uint offset;
+    uint count;
+};
+layout (set = 0, binding = 1) buffer Output {
+    CompactRange ranges[workGroupCount];
+    uint compactedClusterIds[clusterCount];
+};
+
+shared uint subGroupSums[subgroupCount];
+
+
+void main() 
+{
+    const uint invocation_idx = 
+        gl_SubgroupSize * gl_SubgroupID + gl_SubgroupInvocationID;
+    const uint clusterIndex = invocation_idx + gl_WorkGroupID.x*localThreadCount;
+    
+    const bool isActive = activeClusterFlags[invocation_idx];
+
+    uint localSubgroupSum = subgroupAdd(uint(isActive));
+    subGroupSums[gl_SubgroupID] = localSubgroupSum;
+
+    barrier();  //using barrier to synchronize shared memory write
+
+    uint precedingSums = 0;
+    for(uint i = 0; i < gl_SubgroupID; i++) 
+        precedingSums += subGroupSums[i];
+    
+    uint scan = subgroupExclusiveAdd(uint(isActive));
+    scan += precedingSums;
+
+    uint compactRangeOffset = localThreadCount*gl_WorkGroupID.x;  
+
+    if(isActive) 
+    {
+        compactedClusterIds[compactRangeOffset+scan] = invocation_idx; //todo invocation_idx should be cluster idx
+    }
+
+    if(gl_SubgroupID == subgroupCount - 1 //last subgroup
+        && gl_SubgroupInvocationID == 0)  //one thread
+    {
+        ranges[gl_WorkGroupID.x].offset = compactRangeOffset;
+        ranges[gl_WorkGroupID.x].count = precedingSums+localSubgroupSum;
+    }
+
+}
+
+//Input
+//bool clusterActive[]; //non-compacted list
+//uint globalActiveClusterCount; //Number of active clusters
+
+//Output
+//uint uniqueActiveClusters[]; //compacted list of active clusters
+
+
+
+//One compute shader for all clusters, one cluster per thread
+void buildCompactClusterList(){
+    uint clusterIndex  = gl_GlobalInvocationID;
+    if(clusterActive[clusterIndex]){
+       uint offset = atomicAdd(globalActiveClusterCount, 1);
+       uniqueActiveClusters[offset] = clusterIndex;
+    }
+}

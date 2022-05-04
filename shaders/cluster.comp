@@ -58,12 +58,14 @@ void main(){
 
     vec3 minPointAABB = min(min(minPointNear, minPointFar),min(maxPointNear, maxPointFar));
     vec3 maxPointAABB = max(max(minPointNear, minPointFar),max(maxPointNear, maxPointFar));
+    //minPointAABB -= 0.10;
+    //maxPointAABB += 0.1;
 
 
     //Getting the 
     cluster[tileIndex].minPoint  = vec4(minPointAABB, 0.0);//vec4(gl_NumWorkGroups, 0.0f);
     cluster[tileIndex].maxPoint  = vec4(maxPointAABB, 0.0);//vec4(tileIndex);
-    cluster[tileIndex].maxPoint[3] = 666;
+    //cluster[tileIndex].maxPoint[3] = 666;
 }
 
 //Creates a line from the eye to the screenpoint, then finds its intersection

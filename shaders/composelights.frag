@@ -134,64 +134,61 @@ void main()
     uint lightCount       = lightGrid[tileIndex].count;
     uint lightIndexOffset = lightGrid[tileIndex].offset;
 
-	//uint myLightCount = 0;
-	
+
+	uint myLightCount = 0;
 
 	// Shadow
 	/*
-	vec3 fragToLight = fragPos.xyz - pointLight[0].position.xyz; 
-    float closestDepth = texture(shadowCubeMap, fragToLight).r;
-	float currentDepth = length(fragToLight); 
-	float bias = 0.05; 
-	float shadow = currentDepth - bias > closestDepth ? 0.0 : 1.0; 
+	
 	*/
 	float shadow =1;
+    
 
-	//loop lights in this cluster
-	for(uint i = 0; i < lightCount; i++)
-	{
-		//myLightCount++;
-        uint index = globalLightIndexList[lightIndexOffset + i];				
-        fragcolor += shadow * calcPointLight(index, normal, fragPos.xyz, viewDir, albedo.rgb, albedo.a, viewDistance);		
-		//fragcolor = vec3(color_int(myLightCount));
+    if (output_mode == 0) 
+    {
+        vec3 fragToLight = fragPos.xyz - pointLight[0].position.xyz; 
+        float closestDepth = texture(shadowCubeMap, fragToLight).r;
+        float currentDepth = length(fragToLight); 
+        float bias = 0.05; 
+        float shadow = currentDepth - bias > closestDepth ? 0.0 : 1.0; 
+        fragcolor += shadow * calcPointLight(0, normal, fragPos.xyz, viewDir, albedo.rgb, albedo.a, viewDistance);
+    } 
+    else 
+    {
+        for(uint i = 0; i < lightCount; i++)
+        {
+            uint index = globalLightIndexList[lightIndexOffset + i];
+            if(index != 0) {
+                myLightCount++;
+                fragcolor += shadow * calcPointLight(index, normal, fragPos.xyz, viewDir, albedo.rgb, albedo.a, viewDistance);
+            }
+        }
     }
-
-	float aspect = screenDimensions.x / screenDimensions.y;   
-    vec2 uv = gl_FragCoord.xy / screenDimensions.xy;
-    uv = uv * 2.0 - 1.0;
-    uv.x *= aspect;
-    uv.x *= -1;
-    uv *= tan(yfovRad/2);
-    vec3 ray_direction = normalize(vec3(uv, 1.0));
-    ray_direction = (cameraRotation * vec4(ray_direction, 0)).xyz;
-    vec4 rayColor = vec4(texture(shadowCubeMap, ray_direction).xxx,1);
-    //rayColor *= vec4(ray_direction, 1);
-	
-	
-		//outFragColor.rgb *= shadow;
-
+    	
 	switch(output_mode) {
 		case 0:		
-			//outColor = mix(vec4(fragcolor, 1.0), rayColor, 0.5);			
-			//outColor = texture(shadowCubeMap, ray_direction)/10;
-			outColor = vec4(fragcolor, 1.0);
-		break;
-		case 1:	
-			if (lightCount > 0) 
-				fragcolor = vec3(color_int(lightCount));
-			//fragcolor = vec3(color_int(myLightCount));		
-			//fragcolor += color_int(lightCount);
-			//outColor = vec4(dist.x/10, 0, 0, 1.0);
-			//outColor = vec4(vec3(currentDepth/zFar), 1.0);
-			outColor = vec4(fragcolor, 1.0);
-		break;
+		    break;
+		case 1:			
+			float aspect = screenDimensions.x / screenDimensions.y;   
+            vec2 uv = gl_FragCoord.xy / screenDimensions.xy;
+            uv = uv * 2.0 - 1.0;
+            uv.x *= aspect;
+            uv.x *= -1;
+            uv *= tan(yfovRad/2);
+            vec3 ray_direction = normalize(vec3(uv, 1.0));
+            ray_direction = (cameraRotation * vec4(ray_direction, 0)).xyz;
+            vec4 rayColor = vec4(texture(shadowCubeMap, ray_direction).xxx,1);
+            //rayColor *= vec4(ray_direction, 1);			
+			fragcolor = vec3(rayColor/zFar);
+		    break;
 		case 2:
-			//outColor = vec4(vec3(closestDepth/zFar), 1.0);
-		break;
-		case 3:				
-			outColor = rayColor/zFar;					
-		break;
+		    break;
+		case 3:		
+            if (myLightCount>0)  
+			    fragcolor = vec3(color_int(myLightCount));            
+		    break;
 	}	
+    outColor = vec4(fragcolor, 1.0);
 }
 
 float linearDepth(float depth)    

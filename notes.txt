@@ -54,7 +54,7 @@ avalanche:
 *do not cluster with normals
 
 culling
-*cull against the AABB of the clusters, simple solution.
+*cull against the AABB of the clusters, simple solution.	
 *Iterative sphere refinement, how? code example in ppt
 	*spotlight iterative plane narrowing, no example in ppt, skipping
 
