@@ -4,8 +4,6 @@
 
 //#include "SbDescriptorSet.h"
 
-//test comment
-
 #include "ResourceManager.h"
 
 #include "Sponza.h"
